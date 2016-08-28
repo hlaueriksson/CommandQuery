@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace CommandQuery.Sample
 {
@@ -25,6 +26,10 @@ namespace CommandQuery.Sample
         {
             // Add framework services.
             services.AddMvc();
+
+            // Add commands and queries.
+            services.AddCommands(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
