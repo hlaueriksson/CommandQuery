@@ -1,5 +1,13 @@
 ﻿{
-  "version": "1.0.0-*",
+  "title": "CommandQuery",
+  "version": "0.1.0-*",
+  "authors": [ "hlaueriksson" ],
+  "description": "Command Query Separation for ASP.NET Core Microservices",
+  "packOptions": {
+    "tags": [ "CommandQuery", "Command", "Query", "CQS" ],
+    "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png",
+    "projectUrl": "https://github.com/hlaueriksson/CommandQuery"
+  },
 
   "dependencies": {
     "Microsoft.NETCore.App": {
