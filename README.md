@@ -1,1 +1,265 @@
 # CommandQuery
+
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery)
+
+## Introduction
+
+Command Query Separation (CQS) for ASP.NET Core Microservices
+
+Download from NuGet: https://www.nuget.org/packages/CommandQuery/
+
+Inspired by:
+* https://cuttingedge.it/blogs/steven/pivot/entry.php?id=91
+* https://cuttingedge.it/blogs/steven/pivot/entry.php?id=92
+
+For example code, take a look at the [`sample` folder](/sample).
+
+## Commands
+
+> Commands: Change the state of a system but do not return a value.
+>
+>-- <cite>[Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)</cite>
+
+Add a `CommandController`:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace CommandQuery.Sample.Controllers
+{
+    [Route("api/[controller]")]
+    public class CommandController : BaseCommandController
+    {
+        public CommandController(ICommandProcessor commandProcessor) : base(commandProcessor)
+        {
+        }
+    }
+}
+```
+
+Create a `Command` and `CommandHandler`:
+
+```csharp
+using System.Threading.Tasks;
+
+namespace CommandQuery.Sample.Commands
+{
+    public class FooCommand : ICommand
+    {
+        public string Value { get; set; }
+    }
+
+    public class FooCommandHandler : ICommandHandler<FooCommand>
+    {
+        public async Task HandleAsync(FooCommand command)
+        {
+            // TODO: do some real command stuff
+
+            await Task.Delay(10);
+        }
+    }
+}
+```
+
+Configure services in `Startup.cs`
+
+```csharp
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            services.AddMvc();
+
+            // Add commands.
+            services.AddCommands(typeof(Startup).GetTypeInfo().Assembly);
+        }
+```
+
+## Queries
+
+> Queries: Return a result and do not change the observable state of the system (are free of side effects).
+>
+>-- <cite>[Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)</cite>
+
+Add a `QueryController`:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace CommandQuery.Sample.Controllers
+{
+    [Route("api/[controller]")]
+    public class QueryController : BaseQueryController
+    {
+        public QueryController(IQueryProcessor queryProcessor) : base(queryProcessor)
+        {
+        }
+    }
+}
+```
+
+Create a `Query`, `QueryHandler` and `Result`:
+
+```csharp
+using System;
+using System.Threading.Tasks;
+
+namespace CommandQuery.Sample.Queries
+{
+    public class Bar
+    {
+        public int Id { get; set; }
+
+        public string Value { get; set; }
+    }
+
+    public class BarQuery : IQuery<Bar>
+    {
+        public int Id { get; set; }
+    }
+
+    public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
+    {
+        public async Task<Bar> HandleAsync(BarQuery query)
+        {
+            var result = new Bar { Id = query.Id, Value = DateTime.Now.ToString("F") }; // TODO: do some real query stuff
+
+            return await Task.FromResult(result);
+        }
+    }
+}
+```
+
+Configure services in `Startup.cs`
+
+```csharp
+		// This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            services.AddMvc();
+
+            // Add queries.
+            services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);
+        }
+```
+
+## Testing
+
+You can [integration test](https://docs.asp.net/en/latest/testing/integration-testing.html) your controllers and command/query handlers with the `Microsoft.AspNetCore.TestHost`.
+
+For example code, take a look at the [`sample` folder](/sample/CommandQuery.Sample.Specs).
+
+Test commands:
+
+```csharp
+using System.Net.Http;
+using System.Text;
+using CommandQuery.Sample.Controllers;
+using Machine.Specifications;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using It = Machine.Specifications.It;
+
+namespace CommandQuery.Sample.Specs.Controllers
+{
+    public class CommandControllerSpecs
+    {
+        [Subject(typeof(CommandController))]
+        public class when_using_the_real_API
+        {
+            Establish context = () =>
+            {
+                Server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                Client = Server.CreateClient();
+            };
+
+            It should_work = async () =>
+            {
+                var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
+                var response = Client.PostAsync("/api/command/FooCommand", content).Result; // NOTE: await does not work
+
+                response.EnsureSuccessStatusCode();
+
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                responseString.ShouldBeEmpty();
+            };
+
+            It should_handle_errors = async () =>
+            {
+                var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
+                var response = Client.PostAsync("/api/command/FailCommand", content).Result; // NOTE: await does not work
+
+                response.IsSuccessStatusCode.ShouldBeFalse();
+
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                responseString.ShouldEqual("The command type 'FailCommand' could not be found");
+            };
+
+            static TestServer Server;
+            static HttpClient Client;
+        }
+    }
+}
+```
+
+Test queries:
+
+```csharp
+using System.Net.Http;
+using System.Text;
+using CommandQuery.Sample.Controllers;
+using CommandQuery.Sample.Queries;
+using Machine.Specifications;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
+using It = Machine.Specifications.It;
+
+namespace CommandQuery.Sample.Specs.Controllers
+{
+    public class QueryControllerSpecs
+    {
+        [Subject(typeof(QueryController))]
+        public class when_using_the_real_API
+        {
+            Establish context = () =>
+            {
+                Server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                Client = Server.CreateClient();
+            };
+
+            It should_work = async () =>
+            {
+                var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
+                var response = Client.PostAsync("/api/query/BarQuery", content).Result; // NOTE: await does not work
+
+                response.EnsureSuccessStatusCode();
+
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<Bar>(responseString);
+
+                result.Id.ShouldEqual(1);
+                result.Value.ShouldNotBeEmpty();
+            };
+
+            It should_handle_errors = async () =>
+            {
+                var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
+                var response = Client.PostAsync("/api/query/FailQuery", content).Result; // NOTE: await does not work
+
+                response.IsSuccessStatusCode.ShouldBeFalse();
+
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                responseString.ShouldEqual("The query type 'FailQuery' could not be found");
+            };
+
+            static TestServer Server;
+            static HttpClient Client;
+        }
+    }
+}
+```
