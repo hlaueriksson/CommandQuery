@@ -1,6 +1,6 @@
 ﻿{
   "title": "CommandQuery",
-  "version": "0.1.0-*",
+  "version": "0.1.1-*",
   "authors": [ "hlaueriksson" ],
   "description": "Command Query Separation for ASP.NET Core Microservices",
   "packOptions": {
