@@ -12,7 +12,7 @@ namespace CommandQuery.Internal
             var slug = type.Name;
             var json = GetJson(type);
 
-            return $"curl -X POST -d \"{json}\" {baseUrl}/{slug} --header \"Content-Type:application/json\"";
+            return $"curl -X POST -d {json} {baseUrl}/{slug} --header Content-Type:application/json";
         }
 
         private static string GetJson(this Type query)
