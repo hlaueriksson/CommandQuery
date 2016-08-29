@@ -1,6 +1,6 @@
 # CommandQuery
 
-[![Build Status](https://img.shields.io/appveyor/ci/HenrikLauEriksson/commandquery.svg?style=flat-square)](https://ci.appveyor.com/project/HenrikLauEriksson/commandquery)
+[![Build Status](https://img.shields.io/appveyor/ci/hlaueriksson/commandquery.svg?style=flat-square)](https://ci.appveyor.com/project/hlaueriksson/commandquery)
 [![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery)
 
 ## Introduction
