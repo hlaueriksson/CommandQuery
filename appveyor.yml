@@ -1,0 +1,8 @@
+version: "0.1.0.{build}"
+
+before_build: 
+  - ps: "dotnet restore"
+build: 
+  verbosity: minimal
+test_script: 
+  ps: "dotnet test .\\test\\CommandQuery.Specs"
