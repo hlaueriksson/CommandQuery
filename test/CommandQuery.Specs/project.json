@@ -10,7 +10,7 @@
     "Machine.Specifications": "0.11.0",
     "Machine.Specifications.Should": "0.11.0",
     "Moq": "4.6.38-alpha",
-    "CommandQuery": "1.0.0-*"
+    "CommandQuery": "0.1.0-*"
   },
 
   "testRunner": "mspec",
