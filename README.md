@@ -7,6 +7,11 @@
 
 Command Query Separation (CQS) for ASP.NET Core Microservices
 
+* Build microservices that separate the responsibility of commands and queries.
+* Focus on implementing the handlers for commands and queries, not on writing Web APIs.
+* CommandQuery provides generic actions for handling the execution of all commands and queries.
+* CommandQuery provides a API based on HTTP `POST`, not a ~~REST~~ API
+
 Download from NuGet: https://www.nuget.org/packages/CommandQuery/
 
 Inspired by:
@@ -19,7 +24,7 @@ For example code, take a look at the [`sample` folder](/sample).
 
 > Commands: Change the state of a system but do not return a value.
 >
->-- <cite>[Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)</cite>
+>  - [Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)
 
 Add a `CommandController`:
 
@@ -37,6 +42,26 @@ namespace CommandQuery.Sample.Controllers
     }
 }
 ```
+
+Inherit from `BaseCommandController` and pass the `ICommandProcessor` to the base constructor.
+
+The action method from the base class will handle all commands:
+
+```csharp
+        [HttpPost]
+        [Route("{commandName}")]
+        public async Task<object> Handle(string commandName, [FromBody] Newtonsoft.Json.Linq.JObject json)
+```
+
+* The action is requested via HTTP `POST` with the Content-Type `application/json` in the header.
+* The name of the command is the slug of the URL.
+* The command itself is provided as JSON in the body.
+* If the command succeeds; the response is an empty string with the HTTP status code `200`.
+* If the command fails; the response is an error message with the HTTP status code `400` or `500`.
+
+Example of a command request via [curl](https://curl.haxx.se):
+
+`curl -X POST -d "{'Value':'Foo'}" http://localhost:57857/api/command/FooCommand --header "Content-Type:application/json"`
 
 Create a `Command` and `CommandHandler`:
 
@@ -62,6 +87,8 @@ namespace CommandQuery.Sample.Commands
 }
 ```
 
+Commands implements the marker interface `ICommand` and command handlers implements `ICommandHandler<in TCommand>`.
+
 Configure services in `Startup.cs`
 
 ```csharp
@@ -76,11 +103,15 @@ Configure services in `Startup.cs`
         }
 ```
 
+The extension method `AddCommands` will add all command handlers in the given assemblies to the dependency injection container.
+You can pass in a `params` array of `Assembly` arguments if your command handlers are located in different projects.
+If you only have one project you can use `typeof(Startup).GetTypeInfo().Assembly` as a single argument.
+
 ## Queries
 
 > Queries: Return a result and do not change the observable state of the system (are free of side effects).
 >
->-- <cite>[Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)</cite>
+>  - [Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)
 
 Add a `QueryController`:
 
@@ -98,6 +129,26 @@ namespace CommandQuery.Sample.Controllers
     }
 }
 ```
+
+Inherit from `BaseQueryController` and pass the `IQueryProcessor` to the base constructor.
+
+The action method from the base class will handle all queries:
+
+```csharp
+        [HttpPost]
+        [Route("{queryName}")]
+        public async Task<object> Handle(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
+```
+
+* The action is requested via HTTP `POST` with the Content-Type `application/json` in the header.
+* The name of the query is the slug of the URL.
+* The query itself is provided as JSON in the body.
+* If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
+* If the query fails; the response is an error message with the HTTP status code `400` or `500`.
+
+Example of a query request via [curl](https://curl.haxx.se):
+
+`curl -X POST -d "{'Id':1}" http://localhost:57857/api/query/BarQuery --header "Content-Type:application/json"`
 
 Create a `Query`, `QueryHandler` and `Result`:
 
@@ -131,6 +182,8 @@ namespace CommandQuery.Sample.Queries
 }
 ```
 
+Queries implements the marker interface `IQuery<TResult>` and query handlers implements `IQueryHandler<in TQuery, TResult>`.
+
 Configure services in `Startup.cs`
 
 ```csharp
@@ -144,6 +197,10 @@ Configure services in `Startup.cs`
             services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);
         }
 ```
+
+The extension method `AddQueries` will add all query handlers in the given assemblies to the dependency injection container.
+You can pass in a `params` array of `Assembly` arguments if your query handlers are located in different projects.
+If you only have one project you can use `typeof(Startup).GetTypeInfo().Assembly` as a single argument.
 
 ## Testing
 
