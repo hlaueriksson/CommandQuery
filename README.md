@@ -10,13 +10,36 @@ Command Query Separation (CQS) for ASP.NET Core Microservices
 * Build microservices that separate the responsibility of commands and queries.
 * Focus on implementing the handlers for commands and queries, not on writing Web APIs.
 * CommandQuery provides generic actions for handling the execution of all commands and queries.
-* CommandQuery provides a API based on HTTP `POST`, not a ~~REST~~ API
+* CommandQuery provides an API based on HTTP `POST`, not a ~~REST~~ API
 
 Download from NuGet: https://www.nuget.org/packages/CommandQuery/
 
 Inspired by:
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=91
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=92
+
+[Command Query Separation](http://martinfowler.com/bliki/CommandQuerySeparation.html) in a nutshell:
+
+* Commands
+	* Writes (Create, Update, Delete) data
+* Queries
+	* Reads and returns data
+
+## Get Started
+
+1. Create a new ASP.NET Core project
+	* [Tutorials](https://docs.asp.net/en/latest/tutorials/index.html)
+2. Install the `CommandQuery` package from [NuGet](https://www.nuget.org/packages/CommandQuery)
+	* `PM>` `Install-Package CommandQuery`
+3. Create controllers
+	* Inherit from `BaseCommandController` and `BaseQueryController`
+4. Create commands and command handlers
+	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+5. Create queries and query handlers
+	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
+6. Add the handlers to the dependency injection container
+	* `services.AddCommands(typeof(Startup).GetTypeInfo().Assembly);`
+	* `services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);`
 
 For example code, take a look at the [`sample` folder](/sample).
 
