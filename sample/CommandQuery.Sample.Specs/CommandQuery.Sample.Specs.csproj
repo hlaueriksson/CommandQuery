@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <AssemblyName>CommandQuery.Sample.Specs</AssemblyName>
+    <PackageId>CommandQuery.Sample.Specs</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.0.2" />
+    <PackageReference Include="dotnet-test-mspec" Version="0.2.0" />
+    <PackageReference Include="Machine.Specifications" Version="0.11.0" />
+    <PackageReference Include="Machine.Specifications.Should" Version="0.11.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,26 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{382E6C39-5EF6-453D-88DC-9079E57A240E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A4B73B3-4A20-4202-8651-C17A3C54910A}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandQuery", "src\CommandQuery\CommandQuery.xproj", "{9631F3FE-6AF2-419B-B3F9-E1E6832BEF98}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4875335E-26C1-4D2A-80E9-4362C823DF3B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandQuery.Specs", "test\CommandQuery.Specs\CommandQuery.Specs.xproj", "{06863099-DF49-48FD-AB29-AB5089BA0BFD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{2ABED991-418E-4266-B182-B277C311D49E}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandQuery.Sample", "sample\CommandQuery.Sample\CommandQuery.Sample.xproj", "{8226677F-51B2-4648-A1F7-F0632E522F2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery", "src\CommandQuery\CommandQuery.csproj", "{9631F3FE-6AF2-419B-B3F9-E1E6832BEF98}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandQuery.Sample.Specs", "sample\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.xproj", "{2084940E-726C-467E-A791-C0B200B6337B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Specs", "test\CommandQuery.Specs\CommandQuery.Specs.csproj", "{06863099-DF49-48FD-AB29-AB5089BA0BFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample", "sample\CommandQuery.Sample\CommandQuery.Sample.csproj", "{8226677F-51B2-4648-A1F7-F0632E522F2E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Specs", "sample\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.csproj", "{2084940E-726C-467E-A791-C0B200B6337B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
