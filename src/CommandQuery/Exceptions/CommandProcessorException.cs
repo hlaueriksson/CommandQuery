@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CommandQuery.Internal
+namespace CommandQuery.Exceptions
 {
-    internal class CommandProcessorException : Exception
+    public class CommandProcessorException : Exception
     {
         public CommandProcessorException(string message) : base(message)
         {

@@ -1,4 +1,4 @@
-﻿namespace CommandQuery
+﻿namespace CommandQuery.AspNetCore
 {
     public static class LogEvents
     {

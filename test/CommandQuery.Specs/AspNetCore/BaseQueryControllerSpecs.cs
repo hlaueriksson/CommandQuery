@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using CommandQuery.AspNetCore;
 using CommandQuery.Exceptions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using It = Machine.Specifications.It;
 
-namespace CommandQuery.Specs
+namespace CommandQuery.Specs.AspNetCore
 {
     public class BaseQueryControllerSpecs
     {

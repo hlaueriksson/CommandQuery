@@ -1,3 +1,4 @@
+using CommandQuery.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommandQuery.Sample.Controllers

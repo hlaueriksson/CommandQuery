@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommandQuery
+namespace CommandQuery.AspNetCore
 {
     public static class ServiceCollectionExtensions
     {

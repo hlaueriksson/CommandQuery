@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Specs", "sample\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.csproj", "{2084940E-726C-467E-A791-C0B200B6337B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AspNetCore", "src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj", "{39AAD843-BC36-4A8E-92A7-6648C3FA7108}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2084940E-726C-467E-A791-C0B200B6337B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2084940E-726C-467E-A791-C0B200B6337B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2084940E-726C-467E-A791-C0B200B6337B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +54,6 @@ Global
 		{06863099-DF49-48FD-AB29-AB5089BA0BFD} = {4875335E-26C1-4D2A-80E9-4362C823DF3B}
 		{8226677F-51B2-4648-A1F7-F0632E522F2E} = {2ABED991-418E-4266-B182-B277C311D49E}
 		{2084940E-726C-467E-A791-C0B200B6337B} = {2ABED991-418E-4266-B182-B277C311D49E}
+		{39AAD843-BC36-4A8E-92A7-6648C3FA7108} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
 	EndGlobalSection
 EndGlobal

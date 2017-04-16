@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace CommandQuery.Internal
+namespace CommandQuery.AspNetCore.Internal
 {
     internal static class HelpExtensions
     {
