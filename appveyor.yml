@@ -5,4 +5,4 @@ before_build:
 build: 
   verbosity: minimal
 test_script: 
-  ps: "dotnet test .\\test\\CommandQuery.Specs"
+  ps: "dotnet test .\\test\\CommandQuery.Specs\\CommandQuery.Specs.csproj"
