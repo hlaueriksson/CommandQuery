@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Command Query Separation for ASP.NET Core Microservices</Description>
+    <Description>Command Query Separation for .NET Core</Description>
     <AssemblyTitle>CommandQuery</AssemblyTitle>
     <VersionPrefix>0.1.1</VersionPrefix>
     <Authors>hlaueriksson</Authors>
