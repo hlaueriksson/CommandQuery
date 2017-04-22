@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Specs",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AspNetCore", "src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj", "{39AAD843-BC36-4A8E-92A7-6648C3FA7108}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AzureFunctions", "src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj", "{230835A8-7181-4649-87BD-419492FED283}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39AAD843-BC36-4A8E-92A7-6648C3FA7108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{230835A8-7181-4649-87BD-419492FED283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{230835A8-7181-4649-87BD-419492FED283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{230835A8-7181-4649-87BD-419492FED283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{230835A8-7181-4649-87BD-419492FED283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +61,6 @@ Global
 		{8226677F-51B2-4648-A1F7-F0632E522F2E} = {2ABED991-418E-4266-B182-B277C311D49E}
 		{2084940E-726C-467E-A791-C0B200B6337B} = {2ABED991-418E-4266-B182-B277C311D49E}
 		{39AAD843-BC36-4A8E-92A7-6648C3FA7108} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
+		{230835A8-7181-4649-87BD-419492FED283} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
 	EndGlobalSection
 EndGlobal

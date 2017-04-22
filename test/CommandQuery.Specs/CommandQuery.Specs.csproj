@@ -14,10 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Machine.Fakes.Moq" Version="2.8.0" />
     <PackageReference Include="Machine.Specifications.Runner.VisualStudio" Version="2.2.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="Machine.Specifications" Version="0.11.0" />
