@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
-using Newtonsoft.Json.Linq;
-using System.Reflection;
 using CommandQuery.AzureFunctions.Internal;
+using CommandQuery.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.AzureFunctions
 {
@@ -20,6 +23,38 @@ namespace CommandQuery.AzureFunctions
         {
             await _commandProcessor.ProcessAsync(commandName, JObject.Parse(content));
         }
+
+#if NET46
+        public async Task<HttpResponseMessage> Handle(string commandName, HttpRequestMessage req, Microsoft.Azure.WebJobs.Host.TraceWriter log)
+        {
+            log.Info($"Handle {commandName}");
+
+            try
+            {
+                await Handle(commandName, await req.Content.ReadAsStringAsync());
+
+                return req.CreateResponse(HttpStatusCode.OK, string.Empty);
+            }
+            catch (CommandProcessorException exception)
+            {
+                log.Error("Handle command failed", exception);
+
+                return req.CreateResponse(HttpStatusCode.BadRequest, exception.Message);
+            }
+            catch (CommandValidationException exception)
+            {
+                log.Error("Handle command failed", exception);
+
+                return req.CreateResponse(HttpStatusCode.BadRequest, "Validation error: " + exception.Message);
+            }
+            catch (Exception exception)
+            {
+                log.Error("Handle command failed", exception);
+
+                return req.CreateResponse(HttpStatusCode.InternalServerError, "Error: " + exception.Message);
+            }
+        }
+#endif
     }
 
     public class CommandServiceProvider : IServiceProvider
