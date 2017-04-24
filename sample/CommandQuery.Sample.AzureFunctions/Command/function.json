@@ -2,13 +2,13 @@
   "disabled": false,
   "bindings": [
     {
-      "authLevel": "function",
+      "authLevel": "anonymous",
       "name": "req",
       "type": "httpTrigger",
       "direction": "in",
-      "route": "HttpTriggerCSharp/name/{name}",
+      "route": "command/{commandName}",
       "methods": [
-        "get"
+        "post"
       ]
     },
     {

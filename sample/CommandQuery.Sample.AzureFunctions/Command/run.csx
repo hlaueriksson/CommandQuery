@@ -1,9 +1,14 @@
-using System.Net;
+#r "CommandQuery.dll"
+#r "CommandQuery.AzureFunctions.dll"
+#r "CommandQuery.Sample.dll"
 
-public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, string name, TraceWriter log)
-{    
-    log.Info("C# HTTP trigger function processed a request.");
-    
-    // Fetching the name from the path parameter in the request URL
-    return req.CreateResponse(HttpStatusCode.OK, "Hello " + name);
+using System.Net;
+using System.Reflection;
+using CommandQuery.AzureFunctions;
+
+static CommandFunction func = new CommandFunction(Assembly.Load("CommandQuery.Sample").GetCommandProcessor());
+
+public static async Task<HttpResponseMessage> Run(string commandName, HttpRequestMessage req, TraceWriter log)
+{
+    return await func.Handle(commandName, req, log);
 }
