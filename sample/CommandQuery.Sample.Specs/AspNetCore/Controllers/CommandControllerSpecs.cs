@@ -1,12 +1,13 @@
 ﻿using System.Net.Http;
 using System.Text;
-using CommandQuery.Sample.Controllers;
+using CommandQuery.Sample.AspNetCore;
+using CommandQuery.Sample.AspNetCore.Controllers;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using It = Machine.Specifications.It;
 
-namespace CommandQuery.Sample.Specs.Controllers
+namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
 {
     public class CommandControllerSpecs
     {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{382E6C39-5EF6-453D-88DC-9079E57A240E}"
 EndProject
@@ -13,13 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery", "src\Command
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Specs", "test\CommandQuery.Specs\CommandQuery.Specs.csproj", "{06863099-DF49-48FD-AB29-AB5089BA0BFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample", "sample\CommandQuery.Sample\CommandQuery.Sample.csproj", "{8226677F-51B2-4648-A1F7-F0632E522F2E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Specs", "sample\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.csproj", "{2084940E-726C-467E-A791-C0B200B6337B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AspNetCore", "src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj", "{39AAD843-BC36-4A8E-92A7-6648C3FA7108}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AzureFunctions", "src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj", "{230835A8-7181-4649-87BD-419492FED283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNetCore", "sample\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{241C4AF4-327D-4CA6-BEA7-438A61D4183B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample", "sample\CommandQuery.Sample\CommandQuery.Sample.csproj", "{52455585-4055-4747-81AF-13667CE64D3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +37,6 @@ Global
 		{06863099-DF49-48FD-AB29-AB5089BA0BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06863099-DF49-48FD-AB29-AB5089BA0BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06863099-DF49-48FD-AB29-AB5089BA0BFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8226677F-51B2-4648-A1F7-F0632E522F2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8226677F-51B2-4648-A1F7-F0632E522F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8226677F-51B2-4648-A1F7-F0632E522F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8226677F-51B2-4648-A1F7-F0632E522F2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2084940E-726C-467E-A791-C0B200B6337B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2084940E-726C-467E-A791-C0B200B6337B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2084940E-726C-467E-A791-C0B200B6337B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +49,14 @@ Global
 		{230835A8-7181-4649-87BD-419492FED283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{230835A8-7181-4649-87BD-419492FED283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{230835A8-7181-4649-87BD-419492FED283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{241C4AF4-327D-4CA6-BEA7-438A61D4183B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{241C4AF4-327D-4CA6-BEA7-438A61D4183B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{241C4AF4-327D-4CA6-BEA7-438A61D4183B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{241C4AF4-327D-4CA6-BEA7-438A61D4183B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52455585-4055-4747-81AF-13667CE64D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52455585-4055-4747-81AF-13667CE64D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52455585-4055-4747-81AF-13667CE64D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52455585-4055-4747-81AF-13667CE64D3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,9 +64,10 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9631F3FE-6AF2-419B-B3F9-E1E6832BEF98} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
 		{06863099-DF49-48FD-AB29-AB5089BA0BFD} = {4875335E-26C1-4D2A-80E9-4362C823DF3B}
-		{8226677F-51B2-4648-A1F7-F0632E522F2E} = {2ABED991-418E-4266-B182-B277C311D49E}
 		{2084940E-726C-467E-A791-C0B200B6337B} = {2ABED991-418E-4266-B182-B277C311D49E}
 		{39AAD843-BC36-4A8E-92A7-6648C3FA7108} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
 		{230835A8-7181-4649-87BD-419492FED283} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
+		{241C4AF4-327D-4CA6-BEA7-438A61D4183B} = {2ABED991-418E-4266-B182-B277C311D49E}
+		{52455585-4055-4747-81AF-13667CE64D3C} = {2ABED991-418E-4266-B182-B277C311D49E}
 	EndGlobalSection
 EndGlobal

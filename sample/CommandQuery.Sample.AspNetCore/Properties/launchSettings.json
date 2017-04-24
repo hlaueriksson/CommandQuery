@@ -1,4 +1,4 @@
-{
+﻿{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -16,13 +16,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "CommandQuery.Sample": {
+    "CommandQuery.Sample.AspNetCore": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000/api/query",
+      "launchUrl": "api/query",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }

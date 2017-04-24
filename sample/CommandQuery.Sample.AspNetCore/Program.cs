@@ -1,7 +1,8 @@
 ﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
-namespace CommandQuery.Sample
+namespace CommandQuery.Sample.AspNetCore
 {
     public class Program
     {
@@ -12,6 +13,7 @@ namespace CommandQuery.Sample
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseApplicationInsights()
                 .Build();
 
             host.Run();

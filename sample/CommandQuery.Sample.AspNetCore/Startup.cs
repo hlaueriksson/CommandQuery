@@ -1,12 +1,12 @@
-﻿using CommandQuery.AspNetCore;
+﻿using System.Reflection;
+using CommandQuery.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
 
-namespace CommandQuery.Sample
+namespace CommandQuery.Sample.AspNetCore
 {
     public class Startup
     {
@@ -29,8 +29,8 @@ namespace CommandQuery.Sample
             services.AddMvc();
 
             // Add commands and queries.
-            services.AddCommands(typeof(Startup).GetTypeInfo().Assembly);
-            services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddCommands(typeof(CommandQuery.Sample.Commands.FooCommand).GetTypeInfo().Assembly);
+            services.AddQueries(typeof(CommandQuery.Sample.Queries.BarQuery).GetTypeInfo().Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
