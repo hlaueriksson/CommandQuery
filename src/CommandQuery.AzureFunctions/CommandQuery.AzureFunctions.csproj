@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net46</TargetFrameworks>
+    <Version>0.1.1</Version>
+    <Authors>hlaueriksson</Authors>
+    <Description>Command Query Separation for Azure Functions</Description>
+    <PackageId>CommandQuery.AzureFunctions</PackageId>
+    <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
+    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,21 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Command Query Separation for .NET Core</Description>
-    <AssemblyTitle>CommandQuery</AssemblyTitle>
-    <VersionPrefix>0.1.1</VersionPrefix>
-    <Authors>hlaueriksson</Authors>
     <TargetFrameworks>netcoreapp1.1;net46</TargetFrameworks>
-    <AssemblyName>CommandQuery</AssemblyName>
+    <Version>0.1.1</Version>
+    <Authors>hlaueriksson</Authors>
+    <Description>Command Query Separation for .NET Core</Description>
     <PackageId>CommandQuery</PackageId>
-    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
+    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
