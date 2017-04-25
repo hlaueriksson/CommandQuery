@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net46</TargetFrameworks>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>hlaueriksson</Authors>
     <Description>Command Query Separation for .NET Core</Description>
     <PackageId>CommandQuery</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageReleaseNotes>Moved framework specific code to the CommandQuery.AspNetCore and CommandQuery.AzureFunctions packages. This package now only contains common base functionality.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

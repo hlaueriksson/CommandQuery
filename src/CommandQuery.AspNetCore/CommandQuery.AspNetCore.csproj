@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>hlaueriksson</Authors>
     <Description>Command Query Separation for ASP.NET Core</Description>
     <PackageId>CommandQuery.AspNetCore</PackageId>
