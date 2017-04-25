@@ -16,10 +16,13 @@ Commands and Queries:
 * [Queries](#queries)
 
 ASP.NET Core:
-* [CommandQuery.AspNetCore](#commandquery-aspnetcore)
+* [CommandQuery.AspNetCore](#commandqueryaspnetcore)
 
 Azure Functions:
-* [CommandQuery.AzureFunctions](commandquery-azurefunctions)
+* [CommandQuery.AzureFunctions](commandqueryazurefunctions)
+
+Testing:
+* [Testing](#testing)
 
 Inspired by:
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=91
@@ -253,7 +256,7 @@ The extension method `AddQueries` will add all query handlers in the given assem
 You can pass in a `params` array of `Assembly` arguments if your query handlers are located in different projects.
 If you only have one project you can use `typeof(Startup).GetTypeInfo().Assembly` as a single argument.
 
-## Azure Functions
+## CommandQuery.AzureFunctions
 
 * Provides generic function support for commands and queries with **HTTPTriggers**
 * Enables APIs based on HTTP `POST`
@@ -271,7 +274,7 @@ Example code: [`CommandQuery.Sample.AzureFunctions`](/sample/CommandQuery.Sample
 3. Create command and query functions
 	* `func function create`
 4. Modify `function.json`
-    * `"route": "command/{commandName}"`
+    * `"route": "command/{commandName}"` or `"route": "query/{queryName}"`
     * `"methods": ["post"]`
 5. Add `project.json`
     * `"CommandQuery.AzureFunctions": "0.2.0"`
@@ -295,7 +298,7 @@ Modify `function.json`
       "name": "req",
       "type": "httpTrigger",
       "direction": "in",
-      "route": "query/{queryName}",
+      "route": "command/{commandName}",
       "methods": [
         "post"
       ]
@@ -308,6 +311,9 @@ Modify `function.json`
   ]
 }
 ```
+
+* Set the route to `command/{commandName}` and change the methods to `post`.
+* Consider setting the authLevel to `anonymous`.
 
 Add `project.json`
 
@@ -323,9 +329,13 @@ Add `project.json`
 }
 ```
 
+* Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
+
 Add a `bin` folder to the Command function and copy `DLL`'s with commands there
 
 ![bin](azure-functions-command-bin.png)
+
+* The commands needs to be in separate project to generate a `DLL`.
 
 Modify `run.csx`
 
@@ -343,6 +353,9 @@ public static async Task<HttpResponseMessage> Run(string commandName, HttpReques
     return await func.Handle(commandName, req, log);
 }
 ```
+
+* Reference the command assembly by using the `#r "CommandQuery.Sample.dll"` directive.
+* Add all command handlers in the given assembly to the dependency injection container with `Assembly.Load("CommandQuery.Sample").GetCommandProcessor()`
 
 ### Queries
 
@@ -373,6 +386,9 @@ Modify `function.json`
 }
 ```
 
+* Set the route to `query/{queryName}` and change the methods to `post`.
+* Consider setting the authLevel to `anonymous`.
+
 Add `project.json`
 
 ```json
@@ -387,9 +403,13 @@ Add `project.json`
 }
 ```
 
+* Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
+
 Add a `bin` folder to the Query function and copy `DLL`'s with queries there
 
 ![bin](azure-functions-query-bin.png)
+
+* The queries needs to be in separate project to generate a `DLL`.
 
 Modify `run.csx`
 
@@ -407,6 +427,9 @@ public static async Task<HttpResponseMessage> Run(string queryName, HttpRequestM
     return await func.Handle(queryName, req, log);
 }
 ```
+
+* Reference the query assembly by using the `#r "CommandQuery.Sample.dll"` directive.
+* Add all query handlers in the given assembly to the dependency injection container with `Assembly.Load("CommandQuery.Sample").GetQueryProcessor()`
 
 ## Testing
 
