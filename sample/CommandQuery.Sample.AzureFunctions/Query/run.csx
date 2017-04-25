@@ -1,5 +1,3 @@
-#r "CommandQuery.dll"
-#r "CommandQuery.AzureFunctions.dll"
 #r "CommandQuery.Sample.dll"
 
 using System.Net;

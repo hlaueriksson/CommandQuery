@@ -1,0 +1,9 @@
+{
+  "frameworks": {
+    "net46":{
+      "dependencies": {
+        "CommandQuery.AzureFunctions": "0.2.0"
+      }
+    }
+   }
+}
