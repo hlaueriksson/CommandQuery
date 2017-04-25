@@ -19,10 +19,11 @@ ASP.NET Core:
 * [CommandQuery.AspNetCore](#commandqueryaspnetcore)
 
 Azure Functions:
-* [CommandQuery.AzureFunctions](commandqueryazurefunctions)
+* [CommandQuery.AzureFunctions](#commandqueryazurefunctions)
 
 Testing:
-* [Testing](#testing)
+* [CommandQuery.AspNetCore](#commandqueryaspnetcore-1)
+* [CommandQuery.AzureFunctions](#commandqueryazurefunctions-1)
 
 Inspired by:
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=91
