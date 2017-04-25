@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
+    <PackageReference Include="CommandQuery" Version="0.2.0" />
   </ItemGroup>
 
 </Project>
