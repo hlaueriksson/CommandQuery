@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.5.0" />
+    <PackageReference Include="Autofac" Version="4.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
@@ -25,7 +25,7 @@
       <Version>5.2.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Azure.WebJobs">
-      <Version>2.0.0</Version>
+      <Version>2.1.0-beta1</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.0.0</Version>
