@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net46</TargetFrameworks>
-    <Version>0.2.0</Version>
+    <Version>0.2.1-beta</Version>
     <Authors>hlaueriksson</Authors>
     <Description>Command Query Separation for Azure Functions</Description>
     <PackageId>CommandQuery.AzureFunctions</PackageId>
