@@ -5,6 +5,7 @@ using CommandQuery.AspNetCore;
 using CommandQuery.Exceptions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json.Linq;
 using It = Machine.Specifications.It;
@@ -49,17 +50,15 @@ namespace CommandQuery.Specs.AspNetCore
                 result.ShouldEqual(expected);
             };
 
-            It should_handle_QueryValidationException = async () =>
+            private It should_handle_QueryValidationException = async () =>
             {
                 var queryName = "FakeQuery";
                 var json = JObject.Parse("{}");
                 FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new QueryValidationException("invalid"));
 
-                var result = await Subject.Handle(queryName, json);
+                var result = await Subject.Handle(queryName, json) as BadRequestObjectResult;
 
-                result.ShouldEqual("Validation error: invalid");
-
-                FakeHttpResponse.VerifySet(x => x.StatusCode = 400);
+                result.Value.ShouldEqual("invalid");
             };
 
             It should_handle_Exception = async () =>
@@ -68,11 +67,10 @@ namespace CommandQuery.Specs.AspNetCore
                 var json = JObject.Parse("{}");
                 FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(queryName, json);
+                var result = await Subject.Handle(queryName, json) as ObjectResult;
 
-                result.ShouldEqual("Error: fail");
-
-                FakeHttpResponse.VerifySet(x => x.StatusCode = 500);
+                result.StatusCode.ShouldEqual(500);
+                result.Value.ShouldEqual("fail");
             };
 
             static Mock<IQueryProcessor> FakeQueryProcessor;
@@ -115,9 +113,9 @@ namespace CommandQuery.Specs.AspNetCore
                 var queryName = "NotFoundQuery";
                 var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(queryName, json) as string;
+                var result = await Subject.Handle(queryName, json) as BadRequestObjectResult;
 
-                result.ShouldEqual("The query type 'NotFoundQuery' could not be found");
+                result.Value.ShouldEqual("The query type 'NotFoundQuery' could not be found");
             };
 
             static Mock<IQueryHandler<FakeQuery, FakeResult>> FakeQueryHandler;

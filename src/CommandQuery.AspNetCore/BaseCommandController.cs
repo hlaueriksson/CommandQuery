@@ -38,37 +38,31 @@ namespace CommandQuery.AspNetCore
 
         [HttpPost]
         [Route("{commandName}")]
-        public async Task<object> Handle(string commandName, [FromBody] Newtonsoft.Json.Linq.JObject json)
+        public async Task<IActionResult> Handle(string commandName, [FromBody] Newtonsoft.Json.Linq.JObject json)
         {
             try
             {
                 await _commandProcessor.ProcessAsync(commandName, json);
 
-                return string.Empty;
+                return Ok();
             }
             catch (CommandProcessorException exception)
             {
                 _logger?.LogError(LogEvents.CommandProcessorException, exception, "Handle command failed");
 
-                Response.StatusCode = 400; // BadRequest
-
-                return exception.Message;
+                return BadRequest(exception.Message);
             }
             catch (CommandValidationException exception)
             {
                 _logger?.LogError(LogEvents.CommandValidationException, exception, "Handle command failed");
 
-                Response.StatusCode = 400; // BadRequest
-
-                return "Validation error: " + exception.Message;
+                return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.CommandException, exception, "Handle command failed");
 
-                Response.StatusCode = 500; // InternalServerError
-
-                return "Error: " + exception.Message;
+                return StatusCode(500, exception.Message); // InternalServerError
             }
         }
     }

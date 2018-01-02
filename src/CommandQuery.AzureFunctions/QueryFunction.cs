@@ -39,19 +39,19 @@ namespace CommandQuery.AzureFunctions
             {
                 log.Error("Handle query failed", exception);
 
-                return req.CreateResponse(HttpStatusCode.BadRequest, exception.Message);
+                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
             }
             catch (QueryValidationException exception)
             {
                 log.Error("Handle query failed", exception);
 
-                return req.CreateResponse(HttpStatusCode.BadRequest, "Validation error: " + exception.Message);
+                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
             }
             catch (Exception exception)
             {
                 log.Error("Handle query failed", exception);
 
-                return req.CreateResponse(HttpStatusCode.InternalServerError, "Error: " + exception.Message);
+                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
             }
         }
 #endif

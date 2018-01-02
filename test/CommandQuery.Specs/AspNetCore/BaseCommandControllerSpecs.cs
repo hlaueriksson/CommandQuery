@@ -4,6 +4,7 @@ using CommandQuery.AspNetCore;
 using CommandQuery.Exceptions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json.Linq;
 using It = Machine.Specifications.It;
@@ -36,17 +37,15 @@ namespace CommandQuery.Specs.AspNetCore
                 FakeCommandProcessor.Verify(x => x.ProcessAsync(commandName, json));
             };
 
-            It should_handle_CommandValidationException = async () =>
+            private It should_handle_CommandValidationException = async () =>
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
                 FakeCommandProcessor.Setup(x => x.ProcessAsync(commandName, json)).Throws(new CommandValidationException("invalid"));
 
-                var result = await Subject.Handle(commandName, json);
+                var result = await Subject.Handle(commandName, json) as BadRequestObjectResult;
 
-                result.ShouldEqual("Validation error: invalid");
-
-                FakeHttpResponse.VerifySet(x => x.StatusCode = 400);
+                result.Value.ShouldEqual("invalid");
             };
 
             It should_handle_Exception = async () =>
@@ -55,9 +54,10 @@ namespace CommandQuery.Specs.AspNetCore
                 var json = JObject.Parse("{}");
                 FakeCommandProcessor.Setup(x => x.ProcessAsync(commandName, json)).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(commandName, json);
+                var result = await Subject.Handle(commandName, json) as ObjectResult;
 
-                result.ShouldEqual("Error: fail");
+                result.StatusCode.ShouldEqual(500);
+                result.Value.ShouldEqual("fail");
 
                 FakeHttpResponse.VerifySet(x => x.StatusCode = 500);
             };
@@ -88,9 +88,9 @@ namespace CommandQuery.Specs.AspNetCore
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(commandName, json) as string;
+                var result = await Subject.Handle(commandName, json) as OkResult;
 
-                result.ShouldBeEmpty();
+                result.ShouldNotBeNull();
             };
 
             It should_handle_errors = async () =>
@@ -98,9 +98,9 @@ namespace CommandQuery.Specs.AspNetCore
                 var commandName = "NotFoundCommand";
                 var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(commandName, json) as string;
+                var result = await Subject.Handle(commandName, json) as BadRequestObjectResult;
 
-                result.ShouldEqual("The command type 'NotFoundCommand' could not be found");
+                result.Value.ShouldEqual("The command type 'NotFoundCommand' could not be found");
             };
 
             static BaseCommandController Subject;
