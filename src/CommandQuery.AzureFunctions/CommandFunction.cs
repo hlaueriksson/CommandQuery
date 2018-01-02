@@ -7,7 +7,7 @@ using CommandQuery.Exceptions;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 
-#if NET46
+#if NET461
 using System.Net;
 using System.Net.Http;
 #endif
@@ -34,7 +34,7 @@ namespace CommandQuery.AzureFunctions
             await _commandProcessor.ProcessAsync(commandName, JObject.Parse(content));
         }
 
-#if NET46
+#if NET461
         public async Task<HttpResponseMessage> Handle(string commandName, HttpRequestMessage req, TraceWriter log)
         {
             log.Info($"Handle {commandName}");
