@@ -1,12 +1,22 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using CommandQuery.AzureFunctions.Internal;
 using CommandQuery.Exceptions;
+using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
+
+#if NET46
+using System.Net;
+using System.Net.Http;
+#endif
+
+#if NETSTANDARD2_0
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+#endif
 
 namespace CommandQuery.AzureFunctions
 {
@@ -25,7 +35,7 @@ namespace CommandQuery.AzureFunctions
         }
 
 #if NET46
-        public async Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, Microsoft.Azure.WebJobs.Host.TraceWriter log)
+        public async Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log)
         {
             log.Info($"Handle {queryName}");
 
@@ -52,6 +62,41 @@ namespace CommandQuery.AzureFunctions
                 log.Error("Handle query failed", exception);
 
                 return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
+            }
+        }
+#endif
+
+#if NETSTANDARD2_0
+        public async Task<IActionResult> Handle(string queryName, HttpRequest req, TraceWriter log)
+        {
+            log.Info($"Handle {queryName}");
+
+            try
+            {
+                var result = await Handle(queryName, await req.ReadAsStringAsync());
+
+                return new OkObjectResult(result);
+            }
+            catch (QueryProcessorException exception)
+            {
+                log.Error("Handle query failed", exception);
+
+                return new BadRequestObjectResult(exception.Message);
+            }
+            catch (QueryValidationException exception)
+            {
+                log.Error("Handle query failed", exception);
+
+                return new BadRequestObjectResult(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                log.Error("Handle query failed", exception);
+
+                return new ObjectResult(exception.Message)
+                {
+                    StatusCode = 500
+                };
             }
         }
 #endif
