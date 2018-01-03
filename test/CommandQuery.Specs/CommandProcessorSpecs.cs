@@ -53,7 +53,7 @@ namespace CommandQuery.Specs
                 var commandName = "FakeCommand";
                 FakeCommandTypeCollection.Setup(x => x.GetType(commandName)).Returns(typeof(FakeCommand));
 
-                var exception = Catch.Exception(() => Subject.ProcessAsync(commandName, null).Await());
+                var exception = Catch.Exception(() => Subject.ProcessAsync(commandName, (JObject)null).Await());
 
                 exception.ShouldContainErrorMessage("The json could not be converted to an object");
             };

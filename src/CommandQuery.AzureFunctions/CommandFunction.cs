@@ -5,7 +5,6 @@ using Autofac;
 using CommandQuery.AzureFunctions.Internal;
 using CommandQuery.Exceptions;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json.Linq;
 
 #if NET461
 using System.Net;
@@ -31,7 +30,7 @@ namespace CommandQuery.AzureFunctions
 
         public async Task Handle(string commandName, string content)
         {
-            await _commandProcessor.ProcessAsync(commandName, JObject.Parse(content));
+            await _commandProcessor.ProcessAsync(commandName, content);
         }
 
 #if NET461

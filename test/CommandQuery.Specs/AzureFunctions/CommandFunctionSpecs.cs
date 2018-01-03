@@ -2,7 +2,6 @@
 using CommandQuery.AzureFunctions;
 using Machine.Fakes;
 using Machine.Specifications;
-using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.Specs.AzureFunctions
 {
@@ -18,7 +17,7 @@ namespace CommandQuery.Specs.AzureFunctions
 
                 Subject.Handle(commandName, content).Await();
 
-                The<ICommandProcessor>().WasToldTo(x => x.ProcessAsync(commandName, Moq.It.IsAny<JObject>()));
+                The<ICommandProcessor>().WasToldTo(x => x.ProcessAsync(commandName, Moq.It.IsAny<string>()));
             };
 
             It should_not_handle_Exception = () =>
@@ -26,7 +25,7 @@ namespace CommandQuery.Specs.AzureFunctions
                 var commandName = "FakeCommand";
                 var content = "{}";
 
-                The<ICommandProcessor>().WhenToldTo(x => x.ProcessAsync(commandName, Moq.It.IsAny<JObject>())).Throw(new Exception("fail"));
+                The<ICommandProcessor>().WhenToldTo(x => x.ProcessAsync(commandName, Moq.It.IsAny<string>())).Throw(new Exception("fail"));
 
                 Catch.Exception(() => Subject.Handle(commandName, content).Await()).ShouldBeOfExactType<Exception>();
             };
