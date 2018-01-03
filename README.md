@@ -127,7 +127,7 @@ Example code: [`CommandQuery.Sample.AspNetCore`](/sample/CommandQuery.Sample.Asp
 
 ### Get Started
 
-1. Create a new ASP.NET Core project
+1. Create a new **ASP.NET Core 2.0** project
 	* [Tutorials](https://docs.microsoft.com/en-us/aspnet/core/tutorials/)
 2. Install the `CommandQuery.AspNetCore` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AspNetCore/)
 	* `PM>` `Install-Package CommandQuery.AspNetCore`
@@ -138,8 +138,8 @@ Example code: [`CommandQuery.Sample.AspNetCore`](/sample/CommandQuery.Sample.Asp
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Add the handlers to the dependency injection container
-	* `services.AddCommands(typeof(Startup).GetTypeInfo().Assembly);`
-	* `services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);`
+	* `services.AddCommands(typeof(Startup).Assembly);`
+	* `services.AddQueries(typeof(Startup).Assembly);`
 
 ### Commands
 
@@ -174,7 +174,7 @@ public async Task<object> Handle(string commandName, [FromBody] Newtonsoft.Json.
 * The action is requested via HTTP `POST` with the Content-Type `application/json` in the header.
 * The name of the command is the slug of the URL.
 * The command itself is provided as JSON in the body.
-* If the command succeeds; the response is an empty string with the HTTP status code `200`.
+* If the command succeeds; the response is empty with the HTTP status code `200`.
 * If the command fails; the response is an error message with the HTTP status code `400` or `500`.
 
 Example of a command request via [curl](https://curl.haxx.se):
@@ -191,13 +191,13 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc();
 
     // Add commands.
-    services.AddCommands(typeof(Startup).GetTypeInfo().Assembly);
+    services.AddCommands(typeof(Startup).Assembly);
 }
 ```
 
 The extension method `AddCommands` will add all command handlers in the given assemblies to the dependency injection container.
 You can pass in a `params` array of `Assembly` arguments if your command handlers are located in different projects.
-If you only have one project you can use `typeof(Startup).GetTypeInfo().Assembly` as a single argument.
+If you only have one project you can use `typeof(Startup).Assembly` as a single argument.
 
 ### Queries
 
@@ -249,13 +249,13 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc();
 
     // Add queries.
-    services.AddQueries(typeof(Startup).GetTypeInfo().Assembly);
+    services.AddQueries(typeof(Startup).Assembly);
 }
 ```
 
 The extension method `AddQueries` will add all query handlers in the given assemblies to the dependency injection container.
 You can pass in a `params` array of `Assembly` arguments if your query handlers are located in different projects.
-If you only have one project you can use `typeof(Startup).GetTypeInfo().Assembly` as a single argument.
+If you only have one project you can use `typeof(Startup).Assembly` as a single argument.
 
 ## CommandQuery.AzureFunctions
 
@@ -264,173 +264,165 @@ If you only have one project you can use `typeof(Startup).GetTypeInfo().Assembly
 
 Download from NuGet: https://www.nuget.org/packages/CommandQuery.AzureFunctions/
 
-Example code: [`CommandQuery.Sample.AzureFunctions`](/sample/CommandQuery.Sample.AzureFunctions)
+Example code:
+
+* [`CommandQuery.Sample.AzureFunctions.Vs1`](/sample/CommandQuery.Sample.AzureFunctions.Vs1) - Azure Functions v1 (.NET Framework)
+* [`CommandQuery.Sample.AzureFunctions.Vs2`](/sample/CommandQuery.Sample.AzureFunctions.Vs2) - Azure Functions v2 (.NET Core)
+
+Support for ~~[Azure Functions Core Tools](https://github.com/Azure/azure-functions-cli)~~ has been discontinued.
 
 ### Get Started
 
-1. Install the Azure Functions CLI tool
-	* [Azure Functions CLI](https://www.npmjs.com/package/azure-functions-cli)
-2. Create a new Function App
-	* `func init`
-3. Create command and query functions
-	* `func function create`
-4. Modify `function.json`
-    * `"route": "command/{commandName}"` or `"route": "query/{queryName}"`
-    * `"methods": ["post"]`
-5. Add `project.json`
-    * `"CommandQuery.AzureFunctions": "0.2.0"`
-6. Add `bin` folders to the functions and copy `DLL`'s with commands/queries there
-7. Modify `run.csx`
+1. Create a new **Azure Functions** project
+	* [Tutorial](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-your-first-function-visual-studio)
+2. Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
+	* `PM>` `Install-Package CommandQuery.AzureFunctions`
+3. Create functions
+	* For example named `Command` and `Query`
+4. Create commands and command handlers
+	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+5. Create queries and query handlers
+	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 
-![Azure Functions CLI](azure-functions-cli.png)
+![Add New Project - Azure Functions](vs-new-project-azure-functions.png)
+
+When you create a new project in Visual Studio you need to choose the runtime:
+
+* Azure Functions v1 (.NET Framework)
+* Azure Functions v2 (.NET Core)
+
+![Azure Functions v1 (.NET Framework)](vs-azure-functions-v1.png)
+![Azure Functions v2 (.NET Core)](vs-azure-functions-v2.png)
 
 ### Commands
 
-Run the command `func function create` and create a function in `C#` with the `HttpTriggerWithParameter` template and the name `Command`.
+Add a `Command` function in *Azure Functions v1 (.NET Framework)*:
 
-Modify `function.json`
-
-```json
-{
-  "disabled": false,
-  "bindings": [
-    {
-      "authLevel": "anonymous",
-      "name": "req",
-      "type": "httpTrigger",
-      "direction": "in",
-      "route": "command/{commandName}",
-      "methods": [
-        "post"
-      ]
-    },
-    {
-      "name": "$return",
-      "type": "http",
-      "direction": "out"
-    }
-  ]
-}
-```
-
-* Set the route to `command/{commandName}` and change the methods to `post`.
-* Consider setting the authLevel to `anonymous`.
-
-Add `project.json`
-
-```json
-{
-  "frameworks": {
-    "net46":{
-      "dependencies": {
-        "CommandQuery.AzureFunctions": "0.2.0"
-      }
-    }
-   }
-}
-```
-
-* Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
-
-Add a `bin` folder to the Command function and copy `DLL`'s with commands there
-
-![bin](azure-functions-command-bin.png)
-
-* The commands needs to be in separate project to generate a `DLL`.
-
-Modify `run.csx`
-
-```cs
-#r "CommandQuery.Sample.dll"
-
-using System.Net;
-using System.Reflection;
+```csharp
+using System.Net.Http;
+using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
+using CommandQuery.Sample.Commands;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
 
-static CommandFunction func = new CommandFunction(Assembly.Load("CommandQuery.Sample").GetCommandProcessor());
-
-public static async Task<HttpResponseMessage> Run(string commandName, HttpRequestMessage req, TraceWriter log)
+namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
-    return await func.Handle(commandName, req, log);
+    public static class Command
+    {
+        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor());
+
+        [FunctionName("Command")]
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestMessage req, TraceWriter log, string commandName)
+        {
+            return await Func.Handle(commandName, req, log);
+        }
+    }
 }
 ```
 
-* Reference the command assembly by using the `#r "CommandQuery.Sample.dll"` directive.
-* Add all command handlers in the given assembly to the dependency injection container with `Assembly.Load("CommandQuery.Sample").GetCommandProcessor()`
+Add a `Command` function in *Azure Functions v2 (.NET Core)*:
+
+```csharp
+using System.Threading.Tasks;
+using CommandQuery.AzureFunctions;
+using CommandQuery.Sample.Commands;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
+
+namespace CommandQuery.Sample.AzureFunctions.Vs2
+{
+    public static class Command
+    {
+        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor());
+
+        [FunctionName("Command")]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, TraceWriter log, string commandName)
+        {
+            return await Func.Handle(commandName, req, log);
+        }
+    }
+}
+```
+
+* The function is requested via HTTP `POST` with the Content-Type `application/json` in the header.
+* The name of the command is the slug of the URL.
+* The command itself is provided as JSON in the body.
+* If the command succeeds; the response is empty with the HTTP status code `200`.
+* If the command fails; the response is an error message with the HTTP status code `400` or `500`.
+
+Example of a command request via [curl](https://curl.haxx.se):
+
+`curl -X POST -d "{'Value':'Foo'}" http://localhost:7071/api/command/FooCommand --header "Content-Type:application/json"`
 
 ### Queries
 
-Run the command `func function create` and create a function in `C#` with the `HttpTriggerWithParameter` template and the name `Query`.
+Add a `Query` function in *Azure Functions v1 (.NET Framework)*:
 
-Modify `function.json`
-
-```json
-{
-  "disabled": false,
-  "bindings": [
-    {
-      "authLevel": "anonymous",
-      "name": "req",
-      "type": "httpTrigger",
-      "direction": "in",
-      "route": "query/{queryName}",
-      "methods": [
-        "post"
-      ]
-    },
-    {
-      "name": "$return",
-      "type": "http",
-      "direction": "out"
-    }
-  ]
-}
-```
-
-* Set the route to `query/{queryName}` and change the methods to `post`.
-* Consider setting the authLevel to `anonymous`.
-
-Add `project.json`
-
-```json
-{
-  "frameworks": {
-    "net46":{
-      "dependencies": {
-        "CommandQuery.AzureFunctions": "0.2.0"
-      }
-    }
-   }
-}
-```
-
-* Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
-
-Add a `bin` folder to the Query function and copy `DLL`'s with queries there
-
-![bin](azure-functions-query-bin.png)
-
-* The queries needs to be in separate project to generate a `DLL`.
-
-Modify `run.csx`
-
-```cs
-#r "CommandQuery.Sample.dll"
-
-using System.Net;
-using System.Reflection;
+```csharp
+using System.Net.Http;
+using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
+using CommandQuery.Sample.Queries;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
 
-static QueryFunction func = new QueryFunction(Assembly.Load("CommandQuery.Sample").GetQueryProcessor());
-
-public static async Task<HttpResponseMessage> Run(string queryName, HttpRequestMessage req, TraceWriter log)
+namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
-    return await func.Handle(queryName, req, log);
+    public static class Query
+    {
+        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor());
+
+        [FunctionName("Query")]
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "query/{queryName}")] HttpRequestMessage req, TraceWriter log, string queryName)
+        {
+            return await Func.Handle(queryName, req, log);
+        }
+    }
 }
 ```
 
-* Reference the query assembly by using the `#r "CommandQuery.Sample.dll"` directive.
-* Add all query handlers in the given assembly to the dependency injection container with `Assembly.Load("CommandQuery.Sample").GetQueryProcessor()`
+Add a `Query` function in *Azure Functions v2 (.NET Core)*:
+
+```csharp
+using System.Threading.Tasks;
+using CommandQuery.AzureFunctions;
+using CommandQuery.Sample.Queries;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
+
+namespace CommandQuery.Sample.AzureFunctions.Vs2
+{
+    public static class Query
+    {
+        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor());
+
+        [FunctionName("Query")]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "query/{queryName}")] HttpRequest req, TraceWriter log, string queryName)
+        {
+            return await Func.Handle(queryName, req, log);
+        }
+    }
+}
+```
+
+* The function is requested via HTTP `POST` with the Content-Type `application/json` in the header.
+* The name of the query is the slug of the URL.
+* The query itself is provided as JSON in the body.
+* If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
+* If the query fails; the response is an error message with the HTTP status code `400` or `500`.
+
+Example of a query request via [curl](https://curl.haxx.se):
+
+`curl -X POST -d "{'Id':1}" http://localhost:7071/api/query/BarQuery --header "Content-Type:application/json"`
 
 ## Testing
 
@@ -558,15 +550,23 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
 
 ### CommandQuery.AzureFunctions
 
-Launch the functions runtime host with `func host start`
+Launch the functions runtime host with `F5` in Visual Studio
 
-![func host start](azure-functions-cli-func-host-start.png)
+Azure Functions v1 (.NET Framework):
 
-Test with Postman
+![Azure Functions v1 (.NET Framework)](vs-azure-functions-v1-run.png)
 
-![Postman](azure-functions-postman.png)
+Azure Functions v2 (.NET Core):
 
-Test with curl
+![Azure Functions v2 (.NET Core)](vs-azure-functions-v2-run.png)
+
+#### Test with Postman:
+
+![Postman](postman-azure-functions.png)
+
+You can import the collection [CommandQuery.Sample.AzureFunctions.postman_collection.json](CommandQuery.Sample.AzureFunctions.postman_collection.json) to get started.
+
+#### Test with curl:
 
 `curl -X POST -d "{'Value':'Foo'}" http://localhost:7071/api/command/FooCommand --header "Content-Type:application/json"`
 

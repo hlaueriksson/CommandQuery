@@ -1,0 +1,72 @@
+{
+	"info": {
+		"name": "CommandQuery.Sample.AzureFunctions",
+		"_postman_id": "6df0ce8f-a4e8-084b-abf8-d4f98331d845",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:7071/api/Command",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Value\": \"Foo\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/command/FooCommand",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"command",
+						"FooCommand"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:7071/api/Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/query/BarQuery",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"query",
+						"BarQuery"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
