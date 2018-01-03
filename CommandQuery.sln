@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{382E6C39-5EF6-453D-88DC-9079E57A240E}"
 EndProject
@@ -15,13 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Specs", "test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Specs", "sample\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.csproj", "{2084940E-726C-467E-A791-C0B200B6337B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AspNetCore", "src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj", "{39AAD843-BC36-4A8E-92A7-6648C3FA7108}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AspNetCore", "src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj", "{39AAD843-BC36-4A8E-92A7-6648C3FA7108}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.AzureFunctions", "src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj", "{230835A8-7181-4649-87BD-419492FED283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AzureFunctions", "src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj", "{230835A8-7181-4649-87BD-419492FED283}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNetCore", "sample\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{241C4AF4-327D-4CA6-BEA7-438A61D4183B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore", "sample\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{241C4AF4-327D-4CA6-BEA7-438A61D4183B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample", "sample\CommandQuery.Sample\CommandQuery.Sample.csproj", "{52455585-4055-4747-81AF-13667CE64D3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample", "sample\CommandQuery.Sample\CommandQuery.Sample.csproj", "{52455585-4055-4747-81AF-13667CE64D3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AzureFunctions.Vs1", "sample\CommandQuery.Sample.AzureFunctions.Vs1\CommandQuery.Sample.AzureFunctions.Vs1.csproj", "{C515C1A3-7B21-4C7F-AD04-439B2055B39C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{52455585-4055-4747-81AF-13667CE64D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52455585-4055-4747-81AF-13667CE64D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52455585-4055-4747-81AF-13667CE64D3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C515C1A3-7B21-4C7F-AD04-439B2055B39C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C515C1A3-7B21-4C7F-AD04-439B2055B39C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C515C1A3-7B21-4C7F-AD04-439B2055B39C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C515C1A3-7B21-4C7F-AD04-439B2055B39C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,5 +75,9 @@ Global
 		{230835A8-7181-4649-87BD-419492FED283} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
 		{241C4AF4-327D-4CA6-BEA7-438A61D4183B} = {2ABED991-418E-4266-B182-B277C311D49E}
 		{52455585-4055-4747-81AF-13667CE64D3C} = {2ABED991-418E-4266-B182-B277C311D49E}
+		{C515C1A3-7B21-4C7F-AD04-439B2055B39C} = {2ABED991-418E-4266-B182-B277C311D49E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D9F3EA4-8F77-4A20-9943-50764DB157AF}
 	EndGlobalSection
 EndGlobal
