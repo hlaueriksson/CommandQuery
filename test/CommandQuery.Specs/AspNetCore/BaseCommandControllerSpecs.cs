@@ -58,8 +58,6 @@ namespace CommandQuery.Specs.AspNetCore
 
                 result.StatusCode.ShouldEqual(500);
                 result.Value.ShouldEqual("fail");
-
-                FakeHttpResponse.VerifySet(x => x.StatusCode = 500);
             };
 
             static Mock<ICommandProcessor> FakeCommandProcessor;

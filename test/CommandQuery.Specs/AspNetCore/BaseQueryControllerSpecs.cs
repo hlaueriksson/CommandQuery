@@ -45,9 +45,9 @@ namespace CommandQuery.Specs.AspNetCore
                 var json = JObject.Parse("{}");
                 FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(queryName, json);
+                var result = await Subject.Handle(queryName, json) as OkObjectResult;
 
-                result.ShouldEqual(expected);
+                result.Value.ShouldEqual(expected);
             };
 
             private It should_handle_QueryValidationException = async () =>
@@ -103,9 +103,9 @@ namespace CommandQuery.Specs.AspNetCore
                 var queryName = "FakeQuery";
                 var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(queryName, json) as FakeResult;
+                var result = await Subject.Handle(queryName, json) as OkObjectResult;
 
-                result.ShouldEqual(expected);
+                result.Value.ShouldEqual(expected);
             };
 
             It should_handle_errors = async () =>
