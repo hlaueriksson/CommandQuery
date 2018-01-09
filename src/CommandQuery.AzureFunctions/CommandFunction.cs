@@ -80,19 +80,19 @@ namespace CommandQuery.AzureFunctions
             {
                 log.Error("Handle command failed", exception);
 
-                return new BadRequestObjectResult(exception.Message);
+                return new BadRequestObjectResult(exception.ToError());
             }
             catch (CommandValidationException exception)
             {
                 log.Error("Handle command failed", exception);
 
-                return new BadRequestObjectResult(exception.Message);
+                return new BadRequestObjectResult(exception.ToError());
             }
             catch (Exception exception)
             {
                 log.Error("Handle command failed", exception);
 
-                return new ObjectResult(exception.Message)
+                return new ObjectResult(exception.ToError())
                 {
                     StatusCode = 500
                 };

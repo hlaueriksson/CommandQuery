@@ -5,7 +5,6 @@ using Autofac;
 using CommandQuery.AzureFunctions.Internal;
 using CommandQuery.Exceptions;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json.Linq;
 
 #if NET461
 using System.Net;
@@ -31,7 +30,7 @@ namespace CommandQuery.AzureFunctions
 
         public async Task<object> Handle(string queryName, string content)
         {
-            return await _queryProcessor.ProcessAsync<object>(queryName, JObject.Parse(content));
+            return await _queryProcessor.ProcessAsync<object>(queryName, content);
         }
 
 #if NET461
@@ -81,19 +80,19 @@ namespace CommandQuery.AzureFunctions
             {
                 log.Error("Handle query failed", exception);
 
-                return new BadRequestObjectResult(exception.Message);
+                return new BadRequestObjectResult(exception.ToError());
             }
             catch (QueryValidationException exception)
             {
                 log.Error("Handle query failed", exception);
 
-                return new BadRequestObjectResult(exception.Message);
+                return new BadRequestObjectResult(exception.ToError());
             }
             catch (Exception exception)
             {
                 log.Error("Handle query failed", exception);
 
-                return new ObjectResult(exception.Message)
+                return new ObjectResult(exception.ToError())
                 {
                     StatusCode = 500
                 };

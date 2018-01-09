@@ -50,19 +50,19 @@ namespace CommandQuery.AspNetCore
             {
                 _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
 
-                return BadRequest(exception.Message);
+                return BadRequest(exception.ToError());
             }
             catch (QueryValidationException exception)
             {
                 _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
 
-                return BadRequest(exception.Message);
+                return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
-                return StatusCode(500, exception.Message); // InternalServerError
+                return StatusCode(500, exception.ToError()); // InternalServerError
             }
         }
     }

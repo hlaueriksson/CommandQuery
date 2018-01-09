@@ -18,6 +18,8 @@ namespace CommandQuery
 
     public interface IQueryProcessor
     {
+        Task<TResult> ProcessAsync<TResult>(string queryName, string json);
+
         Task<TResult> ProcessAsync<TResult>(string queryName, JObject json);
 
         Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query);
@@ -34,6 +36,11 @@ namespace CommandQuery
         {
             _typeCollection = typeCollection;
             _serviceProvider = serviceProvider;
+        }
+
+        public async Task<TResult> ProcessAsync<TResult>(string queryName, string json)
+        {
+            return await ProcessAsync<TResult>(queryName, JObject.Parse(json));
         }
 
         public async Task<TResult> ProcessAsync<TResult>(string queryName, JObject json)

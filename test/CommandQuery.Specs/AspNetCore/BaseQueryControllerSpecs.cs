@@ -58,7 +58,7 @@ namespace CommandQuery.Specs.AspNetCore
 
                 var result = await Subject.Handle(queryName, json) as BadRequestObjectResult;
 
-                result.Value.ShouldEqual("invalid");
+                result.ShouldBeError("invalid");
             };
 
             It should_handle_Exception = async () =>
@@ -70,7 +70,7 @@ namespace CommandQuery.Specs.AspNetCore
                 var result = await Subject.Handle(queryName, json) as ObjectResult;
 
                 result.StatusCode.ShouldEqual(500);
-                result.Value.ShouldEqual("fail");
+                result.ShouldBeError("fail");
             };
 
             static Mock<IQueryProcessor> FakeQueryProcessor;
@@ -115,7 +115,7 @@ namespace CommandQuery.Specs.AspNetCore
 
                 var result = await Subject.Handle(queryName, json) as BadRequestObjectResult;
 
-                result.Value.ShouldEqual("The query type 'NotFoundQuery' could not be found");
+                result.ShouldBeError("The query type 'NotFoundQuery' could not be found");
             };
 
             static Mock<IQueryHandler<FakeQuery, FakeResult>> FakeQueryHandler;

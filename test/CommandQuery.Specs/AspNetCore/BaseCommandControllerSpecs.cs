@@ -45,7 +45,7 @@ namespace CommandQuery.Specs.AspNetCore
 
                 var result = await Subject.Handle(commandName, json) as BadRequestObjectResult;
 
-                result.Value.ShouldEqual("invalid");
+                result.ShouldBeError("invalid");
             };
 
             It should_handle_Exception = async () =>
@@ -57,7 +57,7 @@ namespace CommandQuery.Specs.AspNetCore
                 var result = await Subject.Handle(commandName, json) as ObjectResult;
 
                 result.StatusCode.ShouldEqual(500);
-                result.Value.ShouldEqual("fail");
+                result.ShouldBeError("fail");
             };
 
             static Mock<ICommandProcessor> FakeCommandProcessor;
@@ -98,7 +98,7 @@ namespace CommandQuery.Specs.AspNetCore
 
                 var result = await Subject.Handle(commandName, json) as BadRequestObjectResult;
 
-                result.Value.ShouldEqual("The command type 'NotFoundCommand' could not be found");
+                result.ShouldBeError("The command type 'NotFoundCommand' could not be found");
             };
 
             static BaseCommandController Subject;

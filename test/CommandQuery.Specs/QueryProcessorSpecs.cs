@@ -68,7 +68,7 @@ namespace CommandQuery.Specs
                 var queryName = "FakeQuery";
                 FakeQueryTypeCollection.Setup(x => x.GetType(queryName)).Returns(typeof(FakeQuery));
 
-                var exception = Catch.Exception(() => Subject.ProcessAsync<object>(queryName, null).Await());
+                var exception = Catch.Exception(() => Subject.ProcessAsync<object>(queryName, (JObject)null).Await());
 
                 exception.ShouldContainErrorMessage("The json could not be converted to an object");
             };
