@@ -5,14 +5,13 @@ using CommandQuery.Sample.AspNetCore.Controllers;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using It = Machine.Specifications.It;
 
 namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
 {
     public class CommandControllerSpecs
     {
         [Subject(typeof(CommandController))]
-        public class when_using_the_real_API
+        public class when_using_the_real_controller
         {
             Establish context = () =>
             {
@@ -20,28 +19,28 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
                 Client = Server.CreateClient();
             };
 
-            It should_work = async () =>
+            It should_work = () =>
             {
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/command/FooCommand", content).Result; // NOTE: await does not work
+                var response = Client.PostAsync("/api/command/FooCommand", content).Result;
 
                 response.EnsureSuccessStatusCode();
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var result = response.Content.ReadAsStringAsync().Result;
 
-                responseString.ShouldBeEmpty();
+                result.ShouldBeEmpty();
             };
 
-            It should_handle_errors = async () =>
+            It should_handle_errors = () =>
             {
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/command/FailCommand", content).Result; // NOTE: await does not work
+                var response = Client.PostAsync("/api/command/FailCommand", content).Result;
 
                 response.IsSuccessStatusCode.ShouldBeFalse();
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var result = response.Content.ReadAsStringAsync().Result;
 
-                responseString.ShouldEqual("The command type 'FailCommand' could not be found");
+                result.ShouldEqual("The command type 'FailCommand' could not be found");
             };
 
             static TestServer Server;
