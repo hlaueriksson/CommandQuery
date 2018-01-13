@@ -1,0 +1,72 @@
+{
+	"info": {
+		"name": "CommandQuery.Sample.AspNetCore",
+		"_postman_id": "5a20b74d-2bb2-dd85-22f4-4bd6f8b21bc8",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:57857/api/command/FooCommand",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Value\": \"Foo\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:57857/api/command/FooCommand",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "57857",
+					"path": [
+						"api",
+						"command",
+						"FooCommand"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:57857/api/query/BarQuery",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:57857/api/query/BarQuery",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "57857",
+					"path": [
+						"api",
+						"query",
+						"BarQuery"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

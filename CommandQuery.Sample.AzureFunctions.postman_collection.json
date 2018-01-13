@@ -7,6 +7,146 @@
 	},
 	"item": [
 		{
+			"name": "v1",
+			"description": "",
+			"item": [
+				{
+					"name": "/api/Command",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Value\": \"Foo\"\n}"
+						},
+						"url": {
+							"raw": "https://commandquery-sample-azurefunctions-vs1.azurewebsites.net/api/command/FooCommand",
+							"protocol": "https",
+							"host": [
+								"commandquery-sample-azurefunctions-vs1",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"command",
+								"FooCommand"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/api/Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Id\": 1\n}"
+						},
+						"url": {
+							"raw": "https://commandquery-sample-azurefunctions-vs1.azurewebsites.net/api/query/BarQuery",
+							"protocol": "https",
+							"host": [
+								"commandquery-sample-azurefunctions-vs1",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"query",
+								"BarQuery"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "v2",
+			"description": "",
+			"item": [
+				{
+					"name": "/api/Command",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Value\": \"Foo\"\n}"
+						},
+						"url": {
+							"raw": "https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/FooCommand",
+							"protocol": "https",
+							"host": [
+								"commandquery-sample-azurefunctions-vs2",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"command",
+								"FooCommand"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/api/Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Id\": 1\n}"
+						},
+						"url": {
+							"raw": "https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/query/BarQuery",
+							"protocol": "https",
+							"host": [
+								"commandquery-sample-azurefunctions-vs2",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"query",
+								"BarQuery"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "http://localhost:7071/api/Command",
 			"request": {
 				"method": "POST",

@@ -24,6 +24,7 @@ Azure Functions:
 Testing:
 * [CommandQuery.AspNetCore](#commandqueryaspnetcore-1)
 * [CommandQuery.AzureFunctions](#commandqueryazurefunctions-1)
+* [Manual Testing](#manual-testing)
 
 Inspired by:
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=91
@@ -442,14 +443,13 @@ using CommandQuery.Sample.AspNetCore.Controllers;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using It = Machine.Specifications.It;
 
 namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
 {
     public class CommandControllerSpecs
     {
         [Subject(typeof(CommandController))]
-        public class when_using_the_real_API
+        public class when_using_the_real_controller
         {
             Establish context = () =>
             {
@@ -457,28 +457,28 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
                 Client = Server.CreateClient();
             };
 
-            It should_work = async () =>
+            It should_work = () =>
             {
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/command/FooCommand", content).Result; // NOTE: await does not work
+                var response = Client.PostAsync("/api/command/FooCommand", content).Result;
 
                 response.EnsureSuccessStatusCode();
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var result = response.Content.ReadAsStringAsync().Result;
 
-                responseString.ShouldBeEmpty();
+                result.ShouldBeEmpty();
             };
 
-            It should_handle_errors = async () =>
+            It should_handle_errors = () =>
             {
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/command/FailCommand", content).Result; // NOTE: await does not work
+                var response = Client.PostAsync("/api/command/FailCommand", content).Result;
 
                 response.IsSuccessStatusCode.ShouldBeFalse();
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var result = response.Content.ReadAsStringAsync().Result;
 
-                responseString.ShouldEqual("The command type 'FailCommand' could not be found");
+                result.ShouldEqual("The command type 'FailCommand' could not be found");
             };
 
             static TestServer Server;
@@ -499,15 +499,13 @@ using CommandQuery.Sample.AspNetCore.Controllers;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
-using It = Machine.Specifications.It;
 
 namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
 {
     public class QueryControllerSpecs
     {
         [Subject(typeof(QueryController))]
-        public class when_using_the_real_API
+        public class when_using_the_real_controller
         {
             Establish context = () =>
             {
@@ -515,30 +513,29 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
                 Client = Server.CreateClient();
             };
 
-            It should_work = async () =>
+            It should_work = () =>
             {
                 var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/query/BarQuery", content).Result; // NOTE: await does not work
+                var response = Client.PostAsync("/api/query/BarQuery", content).Result;
 
                 response.EnsureSuccessStatusCode();
 
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<Bar>(responseString);
+                var result = response.Content.ReadAsAsync<Bar>().Result;
 
                 result.Id.ShouldEqual(1);
                 result.Value.ShouldNotBeEmpty();
             };
 
-            It should_handle_errors = async () =>
+            It should_handle_errors = () =>
             {
                 var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/query/FailQuery", content).Result; // NOTE: await does not work
+                var response = Client.PostAsync("/api/query/FailQuery", content).Result;
 
                 response.IsSuccessStatusCode.ShouldBeFalse();
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var result = response.Content.ReadAsStringAsync().Result;
 
-                responseString.ShouldEqual("The query type 'FailQuery' could not be found");
+                result.ShouldEqual("The query type 'FailQuery' could not be found");
             };
 
             static TestServer Server;
@@ -550,24 +547,141 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
 
 ### CommandQuery.AzureFunctions
 
-Launch the functions runtime host with `F5` in Visual Studio
+Example code: [`CommandQuery.Sample.Specs`](/sample/CommandQuery.Sample.Specs).
 
-Azure Functions v1 (.NET Framework):
+Fake log:
 
-![Azure Functions v1 (.NET Framework)](vs-azure-functions-v1-run.png)
+```csharp
+using System.Diagnostics;
+using Microsoft.Azure.WebJobs.Host;
 
-Azure Functions v2 (.NET Core):
+namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+{
+    public class FakeTraceWriter : TraceWriter
+    {
+        public FakeTraceWriter() : base(TraceLevel.Off)
+        {
+        }
 
-![Azure Functions v2 (.NET Core)](vs-azure-functions-v2-run.png)
+        public override void Trace(TraceEvent traceEvent)
+        {
+        }
+    }
+}
+```
 
-#### Test with Postman:
+Test commands:
 
-![Postman](postman-azure-functions.png)
+```csharp
+using System.IO;
+using CommandQuery.Sample.AzureFunctions.Vs2;
+using Machine.Specifications;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
 
-You can import the collection [CommandQuery.Sample.AzureFunctions.postman_collection.json](CommandQuery.Sample.AzureFunctions.postman_collection.json) to get started.
+namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+{
+    public class CommandSpecs
+    {
+        [Subject(typeof(Command))]
+        public class when_using_the_real_function
+        {
+            It should_work = () =>
+            {
+                var req = GetHttpRequest("{ 'Value': 'Foo' }");
+                var log = new FakeTraceWriter();
 
-#### Test with curl:
+                var result = Command.Run(req, log, "FooCommand").Result as EmptyResult;
 
-`curl -X POST -d "{'Value':'Foo'}" http://localhost:7071/api/command/FooCommand --header "Content-Type:application/json"`
+                result.ShouldNotBeNull();
+            };
 
-`curl -X POST -d "{'Id':1}" http://localhost:7071/api/query/BarQuery --header "Content-Type:application/json"`
+            It should_handle_errors = () =>
+            {
+                var req = GetHttpRequest("{ 'Value': 'Foo' }");
+                var log = new FakeTraceWriter();
+
+                var result = Command.Run(req, log, "FailCommand").Result as BadRequestObjectResult;
+
+                result.Value.ShouldEqual("The command type 'FailCommand' could not be found");
+            };
+
+            static DefaultHttpRequest GetHttpRequest(string content)
+            {
+                var httpContext = new DefaultHttpContext();
+                httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+
+                return new DefaultHttpRequest(httpContext);
+            }
+        }
+    }
+}
+```
+
+Test queries:
+
+```csharp
+using System.IO;
+using CommandQuery.Sample.AzureFunctions.Vs2;
+using CommandQuery.Sample.Queries;
+using Machine.Specifications;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+{
+    public class QuerySpecs
+    {
+        [Subject(typeof(Query))]
+        public class when_using_the_real_function
+        {
+            It should_work = () =>
+            {
+                var req = GetHttpRequest("{ 'Id': 1 }");
+                var log = new FakeTraceWriter();
+
+                var result = Query.Run(req, log, "BarQuery").Result as OkObjectResult;
+                var value = result.Value as Bar;
+
+                value.Id.ShouldEqual(1);
+                value.Value.ShouldNotBeEmpty();
+            };
+
+            It should_handle_errors = () =>
+            {
+                var req = GetHttpRequest("{ 'Id': 1 }");
+                var log = new FakeTraceWriter();
+
+                var result = Query.Run(req, log, "FailQuery").Result as BadRequestObjectResult;
+
+                result.Value.ShouldEqual("The query type 'FailQuery' could not be found");
+            };
+
+            static DefaultHttpRequest GetHttpRequest(string content)
+            {
+                var httpContext = new DefaultHttpContext();
+                httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+
+                return new DefaultHttpRequest(httpContext);
+            }
+        }
+    }
+}
+```
+
+### Manual Testing
+
+1. Select your `AspNetCore` or `AzureFunctions` project and *Set as StartUp Project*
+2. Run the project with `F5`
+3. Manual test with **Postman**
+
+You can import these collections in Postman to get started:
+
+* [CommandQuery.Sample.AspNetCore.postman_collection.json](CommandQuery.Sample.AspNetCore.postman_collection.json)
+* [CommandQuery.Sample.AzureFunctions.postman_collection.json](CommandQuery.Sample.AzureFunctions.postman_collection.json)
+
+![Postman](postman.png)
