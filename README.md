@@ -265,14 +265,17 @@ If you only have one project you can use `typeof(Startup).Assembly` as a single 
 
 Download from NuGet: https://www.nuget.org/packages/CommandQuery.AzureFunctions/
 
-Example code:
+Example code in **Visual Studio**:
 
 * [`CommandQuery.Sample.AzureFunctions.Vs1`](/sample/CommandQuery.Sample.AzureFunctions.Vs1) - Azure Functions v1 (.NET Framework)
 * [`CommandQuery.Sample.AzureFunctions.Vs2`](/sample/CommandQuery.Sample.AzureFunctions.Vs2) - Azure Functions v2 (.NET Core)
 
-Support for ~~[Azure Functions Core Tools](https://github.com/Azure/azure-functions-cli)~~ has been discontinued.
+Example code in **Visual Studio Code**:
 
-### Get Started
+* [`CommandQuery.Sample.AzureFunctions.VsCode1`](/sample/CommandQuery.Sample.AzureFunctions.VsCode1) - Azure Functions v1 (.NET Framework)
+* [`CommandQuery.Sample.AzureFunctions.VsCode2`](/sample/CommandQuery.Sample.AzureFunctions.VsCode2) - Azure Functions v2 (.NET Core)
+
+### Get Started in **Visual Studio**
 
 1. Create a new **Azure Functions** project
 	* [Tutorial](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-your-first-function-visual-studio)
@@ -294,6 +297,33 @@ When you create a new project in Visual Studio you need to choose the runtime:
 
 ![Azure Functions v1 (.NET Framework)](vs-azure-functions-v1.png)
 ![Azure Functions v2 (.NET Core)](vs-azure-functions-v2.png)
+
+### Get Started in **Visual Studio Code**
+
+1. Create a new **Azure Functions** project
+	* [Tutorial](https://code.visualstudio.com/tutorials/functions-extension/getting-started)
+2. Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
+	* Edit the `.csproj` file and add `<PackageReference Include="CommandQuery.AzureFunctions" Version="0.3.2" />`
+3. Create functions
+	* For example named `Command` and `Query`
+4. Create commands and command handlers
+	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+5. Create queries and query handlers
+	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
+
+![Azure Functions for Visual Studio Code](vscode-azure-functions.png)
+
+Before you create a new project in Visual Studio Code you need to install the runtime:
+
+* Azure Functions v1 (.NET Framework)
+    * `npm i -g azure-functions-core-tools`
+* Azure Functions v2 (.NET Core)
+    * `npm i -g azure-functions-core-tools@core --unsafe-perm true`
+
+And install the _.NET Templates for Azure Functions_:
+
+![Azure Functions: Install templates for the .NET CLI](vscode-azure-functions-templates-1.png)
+![Select the template version to install](vscode-azure-functions-templates-2.png)
 
 ### Commands
 
@@ -681,7 +711,7 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
 
 You can import these collections in Postman to get started:
 
-* [CommandQuery.Sample.AspNetCore.postman_collection.json](CommandQuery.Sample.AspNetCore.postman_collection.json)
-* [CommandQuery.Sample.AzureFunctions.postman_collection.json](CommandQuery.Sample.AzureFunctions.postman_collection.json)
+* [CommandQuery.Sample.AspNetCore.postman_collection.json](/sample/CommandQuery.Sample.AspNetCore.postman_collection.json)
+* [CommandQuery.Sample.AzureFunctions.postman_collection.json](/sample/CommandQuery.Sample.AzureFunctions.postman_collection.json)
 
 ![Postman](postman.png)
