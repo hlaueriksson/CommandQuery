@@ -303,7 +303,7 @@ When you create a new project in Visual Studio you need to choose the runtime:
 1. Create a new **Azure Functions** project
 	* [Tutorial](https://code.visualstudio.com/tutorials/functions-extension/getting-started)
 2. Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
-	* Edit the `.csproj` file and add `<PackageReference Include="CommandQuery.AzureFunctions" Version="0.3.2" />`
+	* `dotnet add package CommandQuery.AzureFunctions`
 3. Create functions
 	* For example named `Command` and `Query`
 4. Create commands and command handlers
