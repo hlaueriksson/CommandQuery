@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿#if NETCOREAPP2_0
+using System.Net.Http;
 using System.Text;
 using CommandQuery.Sample.Queries;
 using CommandQuery.Sample.AspNetCore;
@@ -23,26 +24,20 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
             It should_work = () =>
             {
                 var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/query/BarQuery", content).Result;
+                var result = Client.PostAsync("/api/query/BarQuery", content).Result;
+                var value = result.Content.ReadAsAsync<Bar>().Result;
 
-                response.EnsureSuccessStatusCode();
-
-                var result = response.Content.ReadAsAsync<Bar>().Result;
-
-                result.Id.ShouldEqual(1);
-                result.Value.ShouldNotBeEmpty();
+                result.EnsureSuccessStatusCode();
+                value.Id.ShouldEqual(1);
+                value.Value.ShouldNotBeEmpty();
             };
 
             It should_handle_errors = () =>
             {
                 var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/query/FailQuery", content).Result;
+                var result = Client.PostAsync("/api/query/FailQuery", content).Result;
 
-                response.IsSuccessStatusCode.ShouldBeFalse();
-
-                var result = response.Content.ReadAsStringAsync().Result;
-
-                result.ShouldEqual("The query type 'FailQuery' could not be found");
+                result.ShouldBeError("The query type 'FailQuery' could not be found");
             };
 
             static TestServer Server;
@@ -50,3 +45,4 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
         }
     }
 }
+#endif

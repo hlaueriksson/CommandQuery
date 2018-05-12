@@ -1,8 +1,8 @@
-﻿#if NETCOREAPP2_0
+﻿#if NET461
 using System.Diagnostics;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1
 {
     public class FakeTraceWriter : TraceWriter
     {

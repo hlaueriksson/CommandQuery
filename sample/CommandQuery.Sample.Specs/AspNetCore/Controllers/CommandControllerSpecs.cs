@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿#if NETCOREAPP2_0
+using System.Net.Http;
 using System.Text;
 using CommandQuery.Sample.AspNetCore;
 using CommandQuery.Sample.AspNetCore.Controllers;
@@ -22,25 +23,18 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
             It should_work = () =>
             {
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/command/FooCommand", content).Result;
+                var result = Client.PostAsync("/api/command/FooCommand", content).Result;
 
-                response.EnsureSuccessStatusCode();
-
-                var result = response.Content.ReadAsStringAsync().Result;
-
-                result.ShouldBeEmpty();
+                result.EnsureSuccessStatusCode();
+                result.Content.ReadAsStringAsync().Result.ShouldBeEmpty();
             };
 
             It should_handle_errors = () =>
             {
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var response = Client.PostAsync("/api/command/FailCommand", content).Result;
+                var result = Client.PostAsync("/api/command/FailCommand", content).Result;
 
-                response.IsSuccessStatusCode.ShouldBeFalse();
-
-                var result = response.Content.ReadAsStringAsync().Result;
-
-                result.ShouldEqual("The command type 'FailCommand' could not be found");
+                result.ShouldBeError("The command type 'FailCommand' could not be found");
             };
 
             static TestServer Server;
@@ -48,3 +42,4 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
         }
     }
 }
+#endif

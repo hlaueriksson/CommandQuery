@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if NETCOREAPP2_0
+using System.IO;
 using CommandQuery.Sample.AzureFunctions.Vs2;
 using CommandQuery.Sample.Queries;
 using Machine.Specifications;
@@ -33,7 +34,7 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
 
                 var result = Query.Run(req, log, "FailQuery").Result as BadRequestObjectResult;
 
-                result.Value.ShouldEqual("The query type 'FailQuery' could not be found");
+                result.ShouldBeError("The query type 'FailQuery' could not be found");
             };
 
             static DefaultHttpRequest GetHttpRequest(string content)
@@ -46,3 +47,4 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
         }
     }
 }
+#endif

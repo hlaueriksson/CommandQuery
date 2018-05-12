@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if NETCOREAPP2_0
+using System.IO;
 using CommandQuery.Sample.AzureFunctions.Vs2;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
 
                 var result = Command.Run(req, log, "FailCommand").Result as BadRequestObjectResult;
 
-                result.Value.ShouldEqual("The command type 'FailCommand' could not be found");
+                result.ShouldBeError("The command type 'FailCommand' could not be found");
             };
 
             static DefaultHttpRequest GetHttpRequest(string content)
@@ -43,3 +44,4 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
         }
     }
 }
+#endif

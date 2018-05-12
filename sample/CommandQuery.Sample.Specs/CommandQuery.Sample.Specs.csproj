@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -15,9 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <ProjectReference Include="..\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj" />
     <ProjectReference Include="..\CommandQuery.Sample.AzureFunctions.Vs2\CommandQuery.Sample.AzureFunctions.Vs2.csproj" />
-    <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <ProjectReference Include="..\CommandQuery.Sample.AzureFunctions.Vs1\CommandQuery.Sample.AzureFunctions.Vs1.csproj" />
   </ItemGroup>
 
 </Project>
