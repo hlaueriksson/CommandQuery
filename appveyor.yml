@@ -6,5 +6,5 @@ before_build:
 build: 
   verbosity: minimal
 test_script: 
-  ps: "dotnet test .\\test\\CommandQuery.Specs\\CommandQuery.Specs.csproj"
-  ps: "dotnet test .\\sample\\CommandQuery.Sample.Specs\\CommandQuery.Sample.Specs.csproj"
+  - ps: "dotnet test .\\test\\CommandQuery.Specs\\CommandQuery.Specs.csproj"
+  - ps: "dotnet test .\\sample\\CommandQuery.Sample.Specs\\CommandQuery.Sample.Specs.csproj"
