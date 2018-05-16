@@ -1,4 +1,4 @@
-﻿using CommandQuery.AspNetCore.Internal;
+﻿using CommandQuery.AspNetCore;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-﻿using CommandQuery.AzureFunctions.Internal;
+﻿using CommandQuery.AzureFunctions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Mvc;
 
