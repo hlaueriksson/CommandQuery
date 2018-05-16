@@ -32,6 +32,9 @@ namespace CommandQuery.Sample.AspNetCore
             // Add commands and queries.
             services.AddCommands(typeof(FooCommand).Assembly);
             services.AddQueries(typeof(BarQuery).Assembly);
+
+            // Add handler dependencies
+            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
