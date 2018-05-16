@@ -120,18 +120,29 @@ namespace CommandQuery.AzureFunctions
     {
         public static IQueryProcessor GetQueryProcessor(this Assembly assembly)
         {
-            var builder = new ContainerBuilder();
-            builder.AddQueries(assembly);
-
-            return new QueryProcessor(new QueryTypeCollection(assembly), new QueryServiceProvider(builder.Build()));
+            return GetQueryProcessor(new ContainerBuilder(), assembly);
         }
 
         public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies)
         {
-            var builder = new ContainerBuilder();
-            builder.AddQueries(assemblies);
+            return GetQueryProcessor(new ContainerBuilder(), assemblies);
+        }
 
-            return new QueryProcessor(new QueryTypeCollection(assemblies), new QueryServiceProvider(builder.Build()));
+        public static IQueryProcessor GetQueryProcessor(this Assembly assembly, ContainerBuilder containerBuilder)
+        {
+            return GetQueryProcessor(containerBuilder, assembly);
+        }
+
+        public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies, ContainerBuilder containerBuilder)
+        {
+            return GetQueryProcessor(containerBuilder, assemblies);
+        }
+
+        private static IQueryProcessor GetQueryProcessor(ContainerBuilder containerBuilder, params Assembly[] assemblies)
+        {
+            containerBuilder.AddQueries(assemblies);
+
+            return new QueryProcessor(new QueryTypeCollection(assemblies), new QueryServiceProvider(containerBuilder.Build()));
         }
     }
 }
