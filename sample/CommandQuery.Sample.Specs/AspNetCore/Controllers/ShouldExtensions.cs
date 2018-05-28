@@ -1,5 +1,6 @@
 ﻿#if NETCOREAPP2_0
 using System.Net.Http;
+using CommandQuery.AspNetCore;
 using Machine.Specifications;
 
 namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
@@ -10,9 +11,9 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
         {
             result.ShouldNotBeNull();
             result.IsSuccessStatusCode.ShouldBeFalse();
-            var value = result.Content.ReadAsStringAsync().Result;
+            var value = result.Content.ReadAsAsync<Error>().Result;
             value.ShouldNotBeNull();
-            value.ShouldContain(message);
+            value.Message.ShouldEqual(message);
         }
     }
 }
