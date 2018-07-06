@@ -1,5 +1,6 @@
 using CommandQuery.AspNetCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
@@ -40,6 +41,8 @@ namespace CommandQuery.Specs.AspNetCore
 
             fakeHttpContext.Setup(httpContext => httpContext.Request).Returns(fakeHttpRequest.Object);
             fakeHttpContext.Setup(httpContext => httpContext.Response).Returns(fakeHttpResponse.Object);
+
+            fakeHttpRequest.SetupGet(x => x.Query).Returns(new QueryCollection());
 
             var actionContext = new ActionContext(fakeHttpContext.Object, new RouteData(), new ControllerActionDescriptor());
 

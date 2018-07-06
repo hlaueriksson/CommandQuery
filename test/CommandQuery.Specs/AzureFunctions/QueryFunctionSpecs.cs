@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using CommandQuery.AzureFunctions;
-using CommandQuery.Exceptions;
 using Machine.Fakes;
 using Machine.Specifications;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CommandQuery.Specs.AzureFunctions
 {
@@ -14,55 +11,51 @@ namespace CommandQuery.Specs.AzureFunctions
         [Subject(typeof(QueryFunction))]
         public class when_handling_the_query : WithSubject<QueryFunction>
         {
-            Establish context = () =>
+            public class method_Post
             {
-                Req = new DefaultHttpRequest(new DefaultHttpContext());
-                Log = new FakeTraceWriter();
-            };
+                It should_invoke_the_query_processor = () =>
+                {
+                    var queryName = "FakeQuery";
+                    var content = "{}";
 
-            It should_invoke_the_query_processor = () =>
+                    Subject.Handle(queryName, content).Await();
+
+                    The<IQueryProcessor>().WasToldTo(x => x.ProcessAsync<object>(queryName, content));
+                };
+
+                It base_method_should_not_handle_Exception = () =>
+                {
+                    var queryName = "FakeQuery";
+                    var content = "{}";
+
+                    The<IQueryProcessor>().WhenToldTo(x => x.ProcessAsync<object>(queryName, content)).Throw(new Exception("fail"));
+
+                    Catch.Exception(() => Subject.Handle(queryName, content).Await()).ShouldBeOfExactType<Exception>();
+                };
+            }
+
+            public class method_Get
             {
-                var queryName = "FakeQuery";
-                var content = "{}";
+                It should_invoke_the_query_processor = () =>
+                {
+                    var queryName = "FakeQuery";
+                    var query = new Dictionary<string, string>();
 
-                Subject.Handle(queryName, content).Await();
+                    Subject.Handle(queryName, query).Await();
 
-                The<IQueryProcessor>().WasToldTo(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<string>()));
-            };
+                    The<IQueryProcessor>().WasToldTo(x => x.ProcessAsync<object>(queryName, query));
+                };
 
-            It base_method_should_not_handle_Exception = () =>
-            {
-                var queryName = "FakeQuery";
-                var content = "{}";
+                It base_method_should_not_handle_Exception = () =>
+                {
+                    var queryName = "FakeQuery";
+                    var query = new Dictionary<string, string>();
 
-                The<IQueryProcessor>().WhenToldTo(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<string>())).Throw(new Exception("fail"));
+                    The<IQueryProcessor>().WhenToldTo(x => x.ProcessAsync<object>(queryName, query)).Throw(new Exception("fail"));
 
-                Catch.Exception(() => Subject.Handle(queryName, content).Await()).ShouldBeOfExactType<Exception>();
-            };
-
-            It v2_method_should_handle_QueryValidationException = async () =>
-            {
-                var queryName = "FakeQuery";
-                The<IQueryProcessor>().WhenToldTo(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<string>())).Throw(new QueryValidationException("invalid"));
-
-                var result = await Subject.Handle(queryName, Req, Log) as BadRequestObjectResult;
-
-                result.ShouldBeError("invalid");
-            };
-
-            It v2_method_should_handle_Exception = async () =>
-            {
-                var queryName = "FakeQuery";
-                The<IQueryProcessor>().WhenToldTo(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<string>())).Throw(new Exception("fail"));
-
-                var result = await Subject.Handle(queryName, Req, Log) as ObjectResult;
-
-                result.StatusCode.ShouldEqual(500);
-                result.ShouldBeError("fail");
-            };
-
-            static DefaultHttpRequest Req;
-            static FakeTraceWriter Log;
+                    Catch.Exception(() => Subject.Handle(queryName, query).Await()).ShouldBeOfExactType<Exception>();
+                };
+            }
         }
     }
 }

@@ -38,11 +38,41 @@ namespace CommandQuery.AspNetCore
 
         [HttpPost]
         [Route("{queryName}")]
-        public async Task<IActionResult> Handle(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
+        public async Task<IActionResult> HandlePost(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
         {
             try
             {
                 var result = await _queryProcessor.ProcessAsync<object>(queryName, json);
+
+                return Ok(result);
+            }
+            catch (QueryProcessorException exception)
+            {
+                _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
+
+                return BadRequest(exception.ToError());
+            }
+            catch (QueryValidationException exception)
+            {
+                _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
+
+                return BadRequest(exception.ToError());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
+
+                return StatusCode(500, exception.ToError()); // InternalServerError
+            }
+        }
+
+        [HttpGet]
+        [Route("{queryName}")]
+        public async Task<IActionResult> HandleGet(string queryName)
+        {
+            try
+            {
+                var result = await _queryProcessor.ProcessAsync<object>(queryName, Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.First(), StringComparer.OrdinalIgnoreCase));
 
                 return Ok(result);
             }

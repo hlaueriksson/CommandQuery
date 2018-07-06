@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
@@ -33,6 +35,11 @@ namespace CommandQuery.AzureFunctions
             return await _queryProcessor.ProcessAsync<object>(queryName, content);
         }
 
+        public async Task<object> Handle(string queryName, IDictionary<string, string> query)
+        {
+            return await _queryProcessor.ProcessAsync<object>(queryName, query);
+        }
+
 #if NET461
         public async Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log)
         {
@@ -40,7 +47,9 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                var result = await Handle(queryName, await req.Content.ReadAsStringAsync());
+                var result = req.Method == HttpMethod.Get
+                    ? await Handle(queryName, req.GetQueryNameValuePairs().ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase))
+                    : await Handle(queryName, await req.Content.ReadAsStringAsync());
 
                 return req.CreateResponse(HttpStatusCode.OK, result);
             }
@@ -72,7 +81,9 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                var result = await Handle(queryName, await req.ReadAsStringAsync());
+                var result = req.Method == "GET"
+                    ? await Handle(queryName, req.GetQueryParameterDictionary())
+                    : await Handle(queryName, await req.ReadAsStringAsync());
 
                 return new OkObjectResult(result);
             }

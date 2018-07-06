@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using CommandQuery.AspNetCore;
 using CommandQuery.Exceptions;
 using Machine.Specifications;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -17,64 +17,109 @@ namespace CommandQuery.Specs.AspNetCore
         [Subject(typeof(BaseQueryController))]
         public class when_handling_the_query
         {
-            Establish context = () =>
+            private Establish context = () =>
             {
                 FakeQueryProcessor = new Mock<IQueryProcessor>();
-                FakeHttpResponse = new Mock<HttpResponse>();
-
+                
                 Subject = new FakeQueryController(FakeQueryProcessor.Object)
                 {
-                    ControllerContext = Fake.ControllerContext(fakeHttpResponse: FakeHttpResponse)
+                    ControllerContext = Fake.ControllerContext()
                 };
             };
 
-            It should_invoke_the_query_processor = async () =>
+            public class method_Post
             {
-                var queryName = "FakeQuery";
-                var json = JObject.Parse("{}");
+                It should_invoke_the_query_processor = async () =>
+                {
+                    var queryName = "FakeQuery";
+                    var json = JObject.Parse("{}");
 
-                await Subject.Handle(queryName, json);
+                    await Subject.HandlePost(queryName, json);
 
-                FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(queryName, json));
-            };
+                    FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(queryName, json));
+                };
 
-            It should_return_the_result_from_the_query_processor = async () =>
+                It should_return_the_result_from_the_query_processor = async () =>
+                {
+                    var expected = new object();
+                    var queryName = "FakeQuery";
+                    var json = JObject.Parse("{}");
+                    FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Returns(Task.FromResult(expected));
+
+                    var result = await Subject.HandlePost(queryName, json) as OkObjectResult;
+
+                    result.Value.ShouldEqual(expected);
+                };
+
+                private It should_handle_QueryValidationException = async () =>
+                {
+                    var queryName = "FakeQuery";
+                    var json = JObject.Parse("{}");
+                    FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new QueryValidationException("invalid"));
+
+                    var result = await Subject.HandlePost(queryName, json) as BadRequestObjectResult;
+
+                    result.ShouldBeError("invalid");
+                };
+
+                It should_handle_Exception = async () =>
+                {
+                    var queryName = "FakeQuery";
+                    var json = JObject.Parse("{}");
+                    FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new Exception("fail"));
+
+                    var result = await Subject.HandlePost(queryName, json) as ObjectResult;
+
+                    result.StatusCode.ShouldEqual(500);
+                    result.ShouldBeError("fail");
+                };
+            }
+
+            public class method_Get
             {
-                var expected = new object();
-                var queryName = "FakeQuery";
-                var json = JObject.Parse("{}");
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Returns(Task.FromResult(expected));
+                It should_invoke_the_query_processor = async () =>
+                {
+                    var queryName = "FakeQuery";
 
-                var result = await Subject.Handle(queryName, json) as OkObjectResult;
+                    await Subject.HandleGet(queryName);
 
-                result.Value.ShouldEqual(expected);
-            };
+                    FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>()));
+                };
 
-            private It should_handle_QueryValidationException = async () =>
-            {
-                var queryName = "FakeQuery";
-                var json = JObject.Parse("{}");
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new QueryValidationException("invalid"));
+                It should_return_the_result_from_the_query_processor = async () =>
+                {
+                    var expected = new object();
+                    var queryName = "FakeQuery";
+                    FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(queryName, json) as BadRequestObjectResult;
+                    var result = await Subject.HandleGet(queryName) as OkObjectResult;
 
-                result.ShouldBeError("invalid");
-            };
+                    result.Value.ShouldEqual(expected);
+                };
 
-            It should_handle_Exception = async () =>
-            {
-                var queryName = "FakeQuery";
-                var json = JObject.Parse("{}");
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new Exception("fail"));
+                private It should_handle_QueryValidationException = async () =>
+                {
+                    var queryName = "FakeQuery";
+                    FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>())).Throws(new QueryValidationException("invalid"));
 
-                var result = await Subject.Handle(queryName, json) as ObjectResult;
+                    var result = await Subject.HandleGet(queryName) as BadRequestObjectResult;
 
-                result.StatusCode.ShouldEqual(500);
-                result.ShouldBeError("fail");
-            };
+                    result.ShouldBeError("invalid");
+                };
+
+                It should_handle_Exception = async () =>
+                {
+                    var queryName = "FakeQuery";
+                    FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>())).Throws(new Exception("fail"));
+
+                    var result = await Subject.HandleGet(queryName) as ObjectResult;
+
+                    result.StatusCode.ShouldEqual(500);
+                    result.ShouldBeError("fail");
+                };
+            }
 
             static Mock<IQueryProcessor> FakeQueryProcessor;
-            static Mock<HttpResponse> FakeHttpResponse;
             static BaseQueryController Subject;
         }
 
@@ -94,29 +139,57 @@ namespace CommandQuery.Specs.AspNetCore
                 };
             };
 
-            It should_work = async () =>
+            public class method_Post
             {
-                var expected = new FakeResult();
+                It should_work = async () =>
+                {
+                    var expected = new FakeResult();
 
-                FakeQueryHandler.Setup(x => x.HandleAsync(Moq.It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
+                    FakeQueryHandler.Setup(x => x.HandleAsync(Moq.It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
-                var queryName = "FakeQuery";
-                var json = JObject.Parse("{}");
+                    var queryName = "FakeQuery";
+                    var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(queryName, json) as OkObjectResult;
+                    var result = await Subject.HandlePost(queryName, json) as OkObjectResult;
 
-                result.Value.ShouldEqual(expected);
-            };
+                    result.Value.ShouldEqual(expected);
+                };
 
-            It should_handle_errors = async () =>
+                It should_handle_errors = async () =>
+                {
+                    var queryName = "NotFoundQuery";
+                    var json = JObject.Parse("{}");
+
+                    var result = await Subject.HandlePost(queryName, json) as BadRequestObjectResult;
+
+                    result.ShouldBeError("The query type 'NotFoundQuery' could not be found");
+                };
+            }
+
+            public class method_Get
             {
-                var queryName = "NotFoundQuery";
-                var json = JObject.Parse("{}");
+                It should_work = async () =>
+                {
+                    var expected = new FakeResult();
 
-                var result = await Subject.Handle(queryName, json) as BadRequestObjectResult;
+                    FakeQueryHandler.Setup(x => x.HandleAsync(Moq.It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
-                result.ShouldBeError("The query type 'NotFoundQuery' could not be found");
-            };
+                    var queryName = "FakeQuery";
+
+                    var result = await Subject.HandleGet(queryName) as OkObjectResult;
+
+                    result.Value.ShouldEqual(expected);
+                };
+
+                It should_handle_errors = async () =>
+                {
+                    var queryName = "NotFoundQuery";
+
+                    var result = await Subject.HandleGet(queryName) as BadRequestObjectResult;
+
+                    result.ShouldBeError("The query type 'NotFoundQuery' could not be found");
+                };
+            }
 
             static Mock<IQueryHandler<FakeQuery, FakeResult>> FakeQueryHandler;
             static BaseQueryController Subject;

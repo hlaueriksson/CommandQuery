@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Machine.Specifications;
 using Moq;
@@ -71,6 +72,16 @@ namespace CommandQuery.Specs
                 var exception = Catch.Exception(() => Subject.ProcessAsync<object>(queryName, (JObject)null).Await());
 
                 exception.ShouldContainErrorMessage("The json could not be converted to an object");
+            };
+
+            It should_throw_exception_if_the_dictionary_is_invalid = () =>
+            {
+                var queryName = "FakeQuery";
+                FakeQueryTypeCollection.Setup(x => x.GetType(queryName)).Returns(typeof(FakeQuery));
+
+                var exception = Catch.Exception(() => Subject.ProcessAsync<object>(queryName, (IDictionary<string, string>)null).Await());
+
+                exception.ShouldContainErrorMessage("The dictionary could not be converted to an object");
             };
 
             static Mock<IQueryTypeCollection> FakeQueryTypeCollection;
