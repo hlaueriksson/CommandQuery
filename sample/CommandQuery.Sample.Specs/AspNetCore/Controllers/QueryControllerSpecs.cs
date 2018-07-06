@@ -21,24 +21,47 @@ namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
                 Client = Server.CreateClient();
             };
 
-            It should_work = () =>
+            public class method_Post
             {
-                var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                var result = Client.PostAsync("/api/query/BarQuery", content).Result;
-                var value = result.Content.ReadAsAsync<Bar>().Result;
+                It should_work = () =>
+                {
+                    var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
+                    var result = Client.PostAsync("/api/query/BarQuery", content).Result;
+                    var value = result.Content.ReadAsAsync<Bar>().Result;
 
-                result.EnsureSuccessStatusCode();
-                value.Id.ShouldEqual(1);
-                value.Value.ShouldNotBeEmpty();
-            };
+                    result.EnsureSuccessStatusCode();
+                    value.Id.ShouldEqual(1);
+                    value.Value.ShouldNotBeEmpty();
+                };
 
-            It should_handle_errors = () =>
+                It should_handle_errors = () =>
+                {
+                    var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
+                    var result = Client.PostAsync("/api/query/FailQuery", content).Result;
+
+                    result.ShouldBeError("The query type 'FailQuery' could not be found");
+                };
+            }
+
+            public class method_Get
             {
-                var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                var result = Client.PostAsync("/api/query/FailQuery", content).Result;
+                It should_work = () =>
+                {
+                    var result = Client.GetAsync("/api/query/BarQuery?Id=1").Result;
+                    var value = result.Content.ReadAsAsync<Bar>().Result;
 
-                result.ShouldBeError("The query type 'FailQuery' could not be found");
-            };
+                    result.EnsureSuccessStatusCode();
+                    value.Id.ShouldEqual(1);
+                    value.Value.ShouldNotBeEmpty();
+                };
+
+                It should_handle_errors = () =>
+                {
+                    var result = Client.GetAsync("/api/query/FailQuery?Id=1").Result;
+
+                    result.ShouldBeError("The query type 'FailQuery' could not be found");
+                };
+            }
 
             static TestServer Server;
             static HttpClient Client;
