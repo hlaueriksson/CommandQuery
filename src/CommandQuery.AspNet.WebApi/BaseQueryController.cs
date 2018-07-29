@@ -19,11 +19,11 @@ namespace CommandQuery.AspNet.WebApi
             _queryProcessor = queryProcessor;
         }
 
-        protected BaseQueryController(IQueryProcessor queryProcessor, ITraceWriter logger)
-        {
-            _queryProcessor = queryProcessor;
-            _logger = logger;
-        }
+        //protected BaseQueryController(IQueryProcessor queryProcessor, ITraceWriter logger)
+        //{
+        //    _queryProcessor = queryProcessor;
+        //    _logger = logger;
+        //}
 
         [HttpGet]
         public IHttpActionResult Help()

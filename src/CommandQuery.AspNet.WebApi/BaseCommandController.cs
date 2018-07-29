@@ -8,7 +8,7 @@ using CommandQuery.Exceptions;
 
 namespace CommandQuery.AspNet.WebApi
 {
-    public class BaseCommandController : ApiController
+    public abstract class BaseCommandController : ApiController
     {
         private readonly ICommandProcessor _commandProcessor;
         private readonly ITraceWriter _logger;
@@ -18,11 +18,11 @@ namespace CommandQuery.AspNet.WebApi
             _commandProcessor = commandProcessor;
         }
 
-        protected BaseCommandController(ICommandProcessor commandProcessor, ITraceWriter logger)
-        {
-            _commandProcessor = commandProcessor;
-            _logger = logger;
-        }
+        //protected BaseCommandController(ICommandProcessor commandProcessor, ITraceWriter logger)
+        //{
+        //    _commandProcessor = commandProcessor;
+        //    _logger = logger;
+        //}
 
         [HttpGet]
         public IHttpActionResult Help()

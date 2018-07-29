@@ -4,15 +4,15 @@ using CommandQuery.AspNet.WebApi;
 
 namespace CommandQuery.Sample.AspNet.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [RoutePrefix("api/command")]
     public class CommandController : BaseCommandController
     {
-        protected CommandController(ICommandProcessor commandProcessor) : base(commandProcessor)
+        public CommandController(ICommandProcessor commandProcessor) : base(commandProcessor)
         {
         }
 
-        protected CommandController(ICommandProcessor commandProcessor, ITraceWriter logger) : base(commandProcessor, logger)
-        {
-        }
+        //public CommandController(ICommandProcessor commandProcessor, ITraceWriter logger) : base(commandProcessor, logger)
+        //{
+        //}
     }
 }

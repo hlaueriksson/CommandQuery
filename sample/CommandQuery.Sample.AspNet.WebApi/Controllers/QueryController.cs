@@ -4,15 +4,15 @@ using CommandQuery.AspNet.WebApi;
 
 namespace CommandQuery.Sample.AspNet.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [RoutePrefix("api/query")]
     public class QueryController : BaseQueryController
     {
-        protected QueryController(IQueryProcessor queryProcessor) : base(queryProcessor)
+        public QueryController(IQueryProcessor queryProcessor) : base(queryProcessor)
         {
         }
 
-        protected QueryController(IQueryProcessor queryProcessor, ITraceWriter logger) : base(queryProcessor, logger)
-        {
-        }
+        //public QueryController(IQueryProcessor queryProcessor, ITraceWriter logger) : base(queryProcessor, logger)
+        //{
+        //}
     }
 }
