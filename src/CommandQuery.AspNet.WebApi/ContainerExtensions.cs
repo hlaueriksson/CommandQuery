@@ -2,43 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unity;
 
-namespace CommandQuery.Sample.AspNet.WebApi
+namespace CommandQuery.AspNet.WebApi
 {
     public static class ContainerExtensions
     {
-        public static IUnityContainer RegisterCommands(this IUnityContainer container, params Assembly[] assemblies)
+        public static void RegisterCommands(this Assembly[] assemblies, Action<Type, Type> registerType, Action<Type, object> registerInstance)
         {
             var genericType = typeof(ICommandHandler<>);
 
-            container.RegisterType<ICommandProcessor, CommandProcessor>();
-            container.RegisterInstance<ICommandTypeCollection>(new CommandTypeCollection(assemblies));
+            registerType(typeof(ICommandProcessor), typeof(CommandProcessor));
+            registerInstance(typeof(ICommandTypeCollection), new CommandTypeCollection(assemblies));
 
-            container.RegisterHandlers(genericType, assemblies);
-
-            return container;
+            assemblies.RegisterHandlers(genericType, registerType);
         }
 
-        public static IUnityContainer RegisterQueries(this IUnityContainer container, params Assembly[] assemblies)
+        public static void RegisterQueries(this Assembly[] assemblies, Action<Type, Type> registerType, Action<Type, object> registerInstance)
         {
             var genericType = typeof(IQueryHandler<,>);
 
-            container.RegisterType<IQueryProcessor, QueryProcessor>();
-            container.RegisterInstance<IQueryTypeCollection>(new QueryTypeCollection(assemblies));
+            registerType(typeof(IQueryProcessor), typeof(QueryProcessor));
+            registerInstance(typeof(IQueryTypeCollection), new QueryTypeCollection(assemblies));
 
-            container.RegisterHandlers(genericType, assemblies);
-
-            return container;
+            assemblies.RegisterHandlers(genericType, registerType);
         }
 
-        private static void RegisterHandlers(this IUnityContainer container, Type genericType, params Assembly[] assemblies)
+        private static void RegisterHandlers(this Assembly[] assemblies, Type genericType, Action<Type, Type> registerType)
         {
             var handlers = assemblies.SelectMany(assembly => GetHandlers(assembly, genericType));
 
             foreach (var handler in handlers)
             {
-                container.RegisterType(handler.GetHandlerInterface(genericType), handler);
+                registerType(handler.GetHandlerInterface(genericType), handler);
             }
         }
 
@@ -57,21 +52,6 @@ namespace CommandQuery.Sample.AspNet.WebApi
         private static Type GetHandlerInterface(this Type type, Type genericType)
         {
             return type.GetInterfaces().FirstOrDefault(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType);
-        }
-    }
-
-    public class UnityServiceProvider : IServiceProvider
-    {
-        private readonly IUnityContainer _container;
-
-        public UnityServiceProvider(IUnityContainer container)
-        {
-            _container = container;
-        }
-
-        public object GetService(Type serviceType)
-        {
-            return _container.Resolve(serviceType);
         }
     }
 }

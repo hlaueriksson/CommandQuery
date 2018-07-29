@@ -18,11 +18,11 @@ namespace CommandQuery.AspNet.WebApi
             _commandProcessor = commandProcessor;
         }
 
-        //protected BaseCommandController(ICommandProcessor commandProcessor, ITraceWriter logger)
-        //{
-        //    _commandProcessor = commandProcessor;
-        //    _logger = logger;
-        //}
+        protected BaseCommandController(ICommandProcessor commandProcessor, ITraceWriter logger)
+        {
+            _commandProcessor = commandProcessor;
+            _logger = logger;
+        }
 
         [HttpGet]
         public IHttpActionResult Help()

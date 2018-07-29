@@ -83,6 +83,8 @@
   <ItemGroup>
     <Compile Include="BaseCommandController.cs" />
     <Compile Include="BaseQueryController.cs" />
+    <Compile Include="CommandQueryDirectRouteProvider.cs" />
+    <Compile Include="ContainerExtensions.cs" />
     <Compile Include="Internal\HelpExtensions.cs" />
     <Compile Include="LogEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
