@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.4" />
+    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
   </ItemGroup>
 
   <ItemGroup>
