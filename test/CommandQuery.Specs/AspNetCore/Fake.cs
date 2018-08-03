@@ -1,3 +1,4 @@
+#if NETCOREAPP2_0
 using CommandQuery.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
@@ -50,3 +51,4 @@ namespace CommandQuery.Specs.AspNetCore
         }
     }
 }
+#endif

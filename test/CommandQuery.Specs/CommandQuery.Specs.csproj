@@ -1,15 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj" />
-    <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Machine.Fakes.Moq" Version="2.9.0" />
@@ -18,6 +12,23 @@
     <PackageReference Include="Machine.Specifications" Version="0.12.0" />
     <PackageReference Include="Machine.Specifications.Should" Version="0.11.0" />
     <PackageReference Include="Moq" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <ProjectReference Include="..\..\src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <ProjectReference Include="..\..\src\CommandQuery.AspNet.WebApi\CommandQuery.AspNet.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AzureFunctions\V1\" />
   </ItemGroup>
 
 </Project>
