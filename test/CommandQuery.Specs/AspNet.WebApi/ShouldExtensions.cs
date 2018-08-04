@@ -1,5 +1,6 @@
 ﻿#if NET461
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
 using Machine.Specifications;
@@ -13,9 +14,15 @@ namespace CommandQuery.Specs.AspNet.WebApi
             var response = result.ExecuteAsync(CancellationToken.None).Result;
             response.ShouldNotBeNull();
             response.StatusCode.ShouldNotEqual(HttpStatusCode.OK);
-            var value = response.Content.ReadAsStringAsync().Result;
+            var value = response.Content.ReadAsAsync<Error>().Result;
             value.ShouldNotBeNull();
-            value.ShouldEqual(message);
+
+            if (response.StatusCode != HttpStatusCode.InternalServerError) value.Message.ShouldEqual(message);
+        }
+
+        private class Error
+        {
+            public string Message { get; set; }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿#if NET461
 using System;
+using System.Net.Http;
+using System.Web.Http;
 using System.Web.Http.Results;
 using CommandQuery.AspNet.WebApi;
 using CommandQuery.Exceptions;
@@ -20,37 +22,41 @@ namespace CommandQuery.Specs.AspNet.WebApi
             {
                 FakeCommandProcessor = new Mock<ICommandProcessor>();
 
-                Subject = new FakeCommandController(FakeCommandProcessor.Object);
+                Subject = new FakeCommandController(FakeCommandProcessor.Object)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
             };
 
-            It should_invoke_the_command_processor = async () =>
+            It should_invoke_the_command_processor = () =>
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
 
-                await Subject.Handle(commandName, json);
+                Subject.Handle(commandName, json).Await();
 
                 FakeCommandProcessor.Verify(x => x.ProcessAsync(commandName, json));
             };
 
-            It should_handle_CommandValidationException = async () =>
+            It should_handle_CommandValidationException = () =>
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
                 FakeCommandProcessor.Setup(x => x.ProcessAsync(commandName, json)).Throws(new CommandValidationException("invalid"));
 
-                var result = await Subject.Handle(commandName, json) as BadRequestErrorMessageResult;
+                var result = Subject.Handle(commandName, json).Result as BadRequestErrorMessageResult;
 
                 result.ShouldBeError("invalid");
             };
 
-            It should_handle_Exception = async () =>
+            It should_handle_Exception = () =>
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
                 FakeCommandProcessor.Setup(x => x.ProcessAsync(commandName, json)).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(commandName, json) as ExceptionResult;
+                var result = Subject.Handle(commandName, json).Result as ExceptionResult;
 
                 result.ShouldBeError("fail");
             };
@@ -69,25 +75,29 @@ namespace CommandQuery.Specs.AspNet.WebApi
                 var mock = new Mock<IServiceProvider>();
                 mock.Setup(x => x.GetService(typeof(ICommandHandler<FakeCommand>))).Returns(fakeCommandHandler.Object);
 
-                Subject = new FakeCommandController(new CommandProcessor(new CommandTypeCollection(typeof(FakeCommand).Assembly), mock.Object));
+                Subject = new FakeCommandController(new CommandProcessor(new CommandTypeCollection(typeof(FakeCommand).Assembly), mock.Object))
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
             };
 
-            It should_work = async () =>
+            It should_work = () =>
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(commandName, json) as OkResult;
+                var result = Subject.Handle(commandName, json).Result as OkResult;
 
                 result.ShouldNotBeNull();
             };
 
-            It should_handle_errors = async () =>
+            It should_handle_errors = () =>
             {
                 var commandName = "NotFoundCommand";
                 var json = JObject.Parse("{}");
 
-                var result = await Subject.Handle(commandName, json) as BadRequestErrorMessageResult;
+                var result = Subject.Handle(commandName, json).Result as BadRequestErrorMessageResult;
 
                 result.ShouldBeError("The command type 'NotFoundCommand' could not be found");
             };

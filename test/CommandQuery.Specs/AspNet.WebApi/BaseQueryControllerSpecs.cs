@@ -1,7 +1,9 @@
 ﻿#if NET461
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Http.Results;
 using CommandQuery.AspNet.WebApi;
 using CommandQuery.Exceptions;
@@ -22,51 +24,55 @@ namespace CommandQuery.Specs.AspNet.WebApi
             {
                 FakeQueryProcessor = new Mock<IQueryProcessor>();
 
-                Subject = new FakeQueryController(FakeQueryProcessor.Object);
+                Subject = new FakeQueryController(FakeQueryProcessor.Object)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
             };
 
             public class method_Post
             {
-                It should_invoke_the_query_processor = async () =>
+                It should_invoke_the_query_processor = () =>
                 {
                     var queryName = "FakeQuery";
                     var json = JObject.Parse("{}");
 
-                    await Subject.HandlePost(queryName, json);
+                    Subject.HandlePost(queryName, json).Await();
 
                     FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(queryName, json));
                 };
 
-                It should_return_the_result_from_the_query_processor = async () =>
+                It should_return_the_result_from_the_query_processor = () =>
                 {
                     var expected = new object();
                     var queryName = "FakeQuery";
                     var json = JObject.Parse("{}");
                     FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Returns(Task.FromResult(expected));
 
-                    var result = await Subject.HandlePost(queryName, json) as OkNegotiatedContentResult<object>;
+                    var result = Subject.HandlePost(queryName, json).Result as OkNegotiatedContentResult<object>;
 
                     result.Content.ShouldEqual(expected);
                 };
 
-                It should_handle_QueryValidationException = async () =>
+                It should_handle_QueryValidationException = () =>
                 {
                     var queryName = "FakeQuery";
                     var json = JObject.Parse("{}");
                     FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new QueryValidationException("invalid"));
 
-                    var result = await Subject.HandlePost(queryName, json) as BadRequestErrorMessageResult;
+                    var result = Subject.HandlePost(queryName, json).Result as BadRequestErrorMessageResult;
 
                     result.ShouldBeError("invalid");
                 };
 
-                It should_handle_Exception = async () =>
+                It should_handle_Exception = () =>
                 {
                     var queryName = "FakeQuery";
                     var json = JObject.Parse("{}");
                     FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, json)).Throws(new Exception("fail"));
 
-                    var result = await Subject.HandlePost(queryName, json) as ExceptionResult;
+                    var result = Subject.HandlePost(queryName, json).Result as ExceptionResult;
 
                     result.ShouldBeError("fail");
                 };
@@ -74,42 +80,42 @@ namespace CommandQuery.Specs.AspNet.WebApi
 
             public class method_Get
             {
-                It should_invoke_the_query_processor = async () =>
+                It should_invoke_the_query_processor = () =>
                 {
                     var queryName = "FakeQuery";
 
-                    await Subject.HandleGet(queryName);
+                    Subject.HandleGet(queryName).Await();
 
                     FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>()));
                 };
 
-                It should_return_the_result_from_the_query_processor = async () =>
+                It should_return_the_result_from_the_query_processor = () =>
                 {
                     var expected = new object();
                     var queryName = "FakeQuery";
                     FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(expected));
 
-                    var result = await Subject.HandleGet(queryName) as OkNegotiatedContentResult<object>;
+                    var result = Subject.HandleGet(queryName).Result as OkNegotiatedContentResult<object>;
 
                     result.Content.ShouldEqual(expected);
                 };
 
-                It should_handle_QueryValidationException = async () =>
+                It should_handle_QueryValidationException = () =>
                 {
                     var queryName = "FakeQuery";
                     FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>())).Throws(new QueryValidationException("invalid"));
 
-                    var result = await Subject.HandleGet(queryName) as BadRequestErrorMessageResult;
+                    var result = Subject.HandleGet(queryName).Result as BadRequestErrorMessageResult;
 
                     result.ShouldBeError("invalid");
                 };
 
-                It should_handle_Exception = async () =>
+                It should_handle_Exception = () =>
                 {
                     var queryName = "FakeQuery";
                     FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(queryName, Moq.It.IsAny<Dictionary<string, string>>())).Throws(new Exception("fail"));
 
-                    var result = await Subject.HandleGet(queryName) as ExceptionResult;
+                    var result = Subject.HandleGet(queryName).Result as ExceptionResult;
 
                     result.ShouldBeError("fail");
                 };
@@ -131,12 +137,14 @@ namespace CommandQuery.Specs.AspNet.WebApi
 
                 Subject = new FakeQueryController(new QueryProcessor(new QueryTypeCollection(typeof(FakeQuery).Assembly), mock.Object))
                 {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
                 };
             };
 
             public class method_Post
             {
-                It should_work = async () =>
+                It should_work = () =>
                 {
                     var expected = new FakeResult();
 
@@ -145,17 +153,17 @@ namespace CommandQuery.Specs.AspNet.WebApi
                     var queryName = "FakeQuery";
                     var json = JObject.Parse("{}");
 
-                    var result = await Subject.HandlePost(queryName, json) as OkNegotiatedContentResult<object>;
+                    var result = Subject.HandlePost(queryName, json).Result as OkNegotiatedContentResult<object>;
 
                     result.Content.ShouldEqual(expected);
                 };
 
-                It should_handle_errors = async () =>
+                It should_handle_errors = () =>
                 {
                     var queryName = "NotFoundQuery";
                     var json = JObject.Parse("{}");
 
-                    var result = await Subject.HandlePost(queryName, json) as BadRequestErrorMessageResult;
+                    var result = Subject.HandlePost(queryName, json).Result as BadRequestErrorMessageResult;
 
                     result.ShouldBeError("The query type 'NotFoundQuery' could not be found");
                 };
@@ -163,7 +171,7 @@ namespace CommandQuery.Specs.AspNet.WebApi
 
             public class method_Get
             {
-                It should_work = async () =>
+                It should_work = () =>
                 {
                     var expected = new FakeResult();
 
@@ -171,16 +179,16 @@ namespace CommandQuery.Specs.AspNet.WebApi
 
                     var queryName = "FakeQuery";
 
-                    var result = await Subject.HandleGet(queryName) as OkNegotiatedContentResult<object>;
+                    var result = Subject.HandleGet(queryName).Result as OkNegotiatedContentResult<object>;
 
                     result.Content.ShouldEqual(expected);
                 };
 
-                It should_handle_errors = async () =>
+                It should_handle_errors = () =>
                 {
                     var queryName = "NotFoundQuery";
 
-                    var result = await Subject.HandleGet(queryName) as BadRequestErrorMessageResult;
+                    var result = Subject.HandleGet(queryName).Result as BadRequestErrorMessageResult;
 
                     result.ShouldBeError("The query type 'NotFoundQuery' could not be found");
                 };
