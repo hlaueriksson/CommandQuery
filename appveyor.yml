@@ -1,10 +1,11 @@
 version: "0.5.0.{build}"
 image: Visual Studio 2017
 
-before_build: 
+before_build:
   - ps: "dotnet restore"
-build: 
+build:
+  project: CommandQuery.sln
   verbosity: minimal
-test_script: 
+test_script:
   - ps: "dotnet test .\\test\\CommandQuery.Specs\\CommandQuery.Specs.csproj"
   - ps: "dotnet test .\\sample\\CommandQuery.Sample.Specs\\CommandQuery.Sample.Specs.csproj"
