@@ -8,7 +8,7 @@
     <PackageId>CommandQuery.AspNet.WebApi</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
-    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageTags>CommandQuery;Command;Query;CQS;WebApi;AspNetWebApi</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
