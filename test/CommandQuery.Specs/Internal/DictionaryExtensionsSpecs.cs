@@ -18,6 +18,7 @@ namespace CommandQuery.Specs.Internal
                     { "Int", "1" },
                     { "Bool", "true" },
                     { "DateTime", "2018-07-06" },
+                    //{ "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
                     { "NullableDouble", "2" },
                     { "UndefinedProperty", "should_not_be_used" }
                 };
@@ -31,6 +32,7 @@ namespace CommandQuery.Specs.Internal
                 result.Int.ShouldEqual(1);
                 result.Bool.ShouldEqual(true);
                 result.DateTime.ShouldEqual(DateTime.Parse("2018-07-06"));
+                //result.Guid.ShouldEqual(new Guid("3B10C34C-D423-4EC3-8811-DA2E0606E241"));
                 result.NullableDouble.ShouldEqual(2);
             };
 
@@ -43,6 +45,7 @@ namespace CommandQuery.Specs.Internal
             public int Int { get; set; }
             public bool Bool { get; set; }
             public DateTime DateTime { get; set; }
+            //public Guid Guid { get; set; }
             public double? NullableDouble { get; set; }
         }
     }
