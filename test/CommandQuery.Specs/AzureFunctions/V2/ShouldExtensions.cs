@@ -3,7 +3,7 @@ using CommandQuery.AzureFunctions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CommandQuery.Specs.AzureFunctions
+namespace CommandQuery.Specs.AzureFunctions.V2
 {
     public static class ShouldExtensions
     {
