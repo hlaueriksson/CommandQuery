@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.AWSLambda
 {
@@ -50,6 +52,25 @@ namespace CommandQuery.AWSLambda
 
                 return exception.ToInternalServerError();
             }
+        }
+    }
+
+    public static class CommandExtensions
+    {
+        public static ICommandProcessor GetCommandProcessor(this Assembly assembly)
+        {
+            var services = new ServiceCollection();
+            services.AddCommands(assembly);
+
+            return new CommandProcessor(new CommandTypeCollection(assembly), services.BuildServiceProvider());
+        }
+
+        public static ICommandProcessor GetCommandProcessor(this Assembly[] assemblies)
+        {
+            var services = new ServiceCollection();
+            services.AddCommands(assemblies);
+
+            return new CommandProcessor(new CommandTypeCollection(assemblies), services.BuildServiceProvider());
         }
     }
 }
