@@ -21,6 +21,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <ProjectReference Include="..\..\src\CommandQuery.AspNetCore\CommandQuery.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.AWSLambda\CommandQuery.AWSLambda.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
