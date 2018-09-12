@@ -20,6 +20,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <ProjectReference Include="..\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj" />
+    <ProjectReference Include="..\CommandQuery.Sample.AWSLambda\CommandQuery.Sample.AWSLambda.csproj" />
     <ProjectReference Include="..\CommandQuery.Sample.AzureFunctions.Vs2\CommandQuery.Sample.AzureFunctions.Vs2.csproj" />
   </ItemGroup>
 
