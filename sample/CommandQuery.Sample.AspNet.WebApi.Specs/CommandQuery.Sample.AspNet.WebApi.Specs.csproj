@@ -30,11 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandQuery, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.0.5.0\lib\net461\CommandQuery.dll</HintPath>
+    <Reference Include="CommandQuery, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.0.6.0\lib\net461\CommandQuery.dll</HintPath>
     </Reference>
-    <Reference Include="CommandQuery.AspNet.WebApi, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.AspNet.WebApi.0.5.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
+    <Reference Include="CommandQuery.AspNet.WebApi, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.AspNet.WebApi.0.6.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="CommandQuery.Sample">
       <HintPath>..\CommandQuery.Sample\bin\Debug\net461\CommandQuery.Sample.dll</HintPath>
@@ -45,8 +45,14 @@
     <Reference Include="Machine.Specifications.Should, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\Machine.Specifications.Should.0.11.0\lib\net45\Machine.Specifications.Should.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\Microsoft.Extensions.DependencyInjection.2.1.1\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

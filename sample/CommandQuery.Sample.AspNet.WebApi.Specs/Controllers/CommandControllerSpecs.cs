@@ -15,7 +15,7 @@ namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
             private Establish context = () =>
             {
                 var configuration = new HttpConfiguration();
-                configuration.UseUnity();
+                configuration.UseDependencyInjection();
 
                 var commandProcessor = configuration.DependencyResolver.GetService(typeof(ICommandProcessor)) as ICommandProcessor;
 

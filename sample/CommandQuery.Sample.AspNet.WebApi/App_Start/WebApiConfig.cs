@@ -9,7 +9,8 @@ namespace CommandQuery.Sample.AspNet.WebApi
         public static void Register(HttpConfiguration config)
         {
             // IoC
-            config.UseUnity();
+            config.UseDependencyInjection();
+            //config.UseUnity();
 
             // Log
             //config.EnableSystemDiagnosticsTracing();
