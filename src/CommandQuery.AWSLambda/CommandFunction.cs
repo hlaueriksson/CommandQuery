@@ -59,15 +59,26 @@ namespace CommandQuery.AWSLambda
     {
         public static ICommandProcessor GetCommandProcessor(this Assembly assembly)
         {
-            var services = new ServiceCollection();
-            services.AddCommands(assembly);
-
-            return new CommandProcessor(new CommandTypeCollection(assembly), services.BuildServiceProvider());
+            return GetCommandProcessor(new ServiceCollection(), assembly);
         }
 
         public static ICommandProcessor GetCommandProcessor(this Assembly[] assemblies)
         {
-            var services = new ServiceCollection();
+            return GetCommandProcessor(new ServiceCollection(), assemblies);
+        }
+
+        public static ICommandProcessor GetCommandProcessor(this Assembly assembly, IServiceCollection services)
+        {
+            return GetCommandProcessor(services, assembly);
+        }
+
+        public static ICommandProcessor GetCommandProcessor(this Assembly[] assemblies, IServiceCollection services)
+        {
+            return GetCommandProcessor(services, assemblies);
+        }
+
+        private static ICommandProcessor GetCommandProcessor(IServiceCollection services, params Assembly[] assemblies)
+        {
             services.AddCommands(assemblies);
 
             return new CommandProcessor(new CommandTypeCollection(assemblies), services.BuildServiceProvider());
