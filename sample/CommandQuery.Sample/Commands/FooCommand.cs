@@ -9,11 +9,18 @@ namespace CommandQuery.Sample.Commands
 
     public class FooCommandHandler : ICommandHandler<FooCommand>
     {
+        private readonly ICultureService _cultureService;
+
+        public FooCommandHandler(ICultureService cultureService)
+        {
+            _cultureService = cultureService;
+        }
+
         public async Task HandleAsync(FooCommand command)
         {
-            // TODO: do some real command stuff
+            _cultureService.SetCurrentCulture(command.Value);
 
-            await Task.Delay(10);
+            await Task.Delay(10); // TODO: do some real command stuff
         }
     }
 }

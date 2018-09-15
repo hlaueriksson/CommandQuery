@@ -25,9 +25,9 @@ namespace CommandQuery.Sample.Queries
 
         public async Task<Bar> HandleAsync(BarQuery query)
         {
-            var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") }; // TODO: do some real query stuff
+            var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") };
 
-            return await Task.FromResult(result);
+            return await Task.FromResult(result); // TODO: do some real query stuff
         }
     }
 }

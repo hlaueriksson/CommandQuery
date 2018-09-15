@@ -35,6 +35,7 @@ namespace CommandQuery.Sample.AspNetCore
 
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
+            services.AddTransient<ICultureService, CultureService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
