@@ -50,6 +50,10 @@
     <Reference Include="CommandQuery.AspNet.WebApi, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\CommandQuery.AspNet.WebApi.0.5.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="CommandQuery.Sample, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommandQuery.Sample\bin\Debug\net461\CommandQuery.Sample.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>packages\Unity.5.8.6\lib\net46\CommonServiceLocator.dll</HintPath>
     </Reference>
@@ -132,12 +136,6 @@
     </None>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj">
-      <Project>{52455585-4055-4747-81af-13667ce64d3c}</Project>
-      <Name>CommandQuery.Sample</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
