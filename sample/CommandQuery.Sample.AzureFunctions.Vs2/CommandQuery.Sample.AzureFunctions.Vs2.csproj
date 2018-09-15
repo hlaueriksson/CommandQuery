@@ -4,8 +4,8 @@
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandQuery.AzureFunctions" Version="0.5.0" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.14" />
+    <PackageReference Include="CommandQuery.AzureFunctions" Version="0.6.0" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.21" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
