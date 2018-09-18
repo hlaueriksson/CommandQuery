@@ -7,11 +7,9 @@
 	"item": [
 		{
 			"name": "VisualStudio",
-			"description": "",
 			"item": [
 				{
 					"name": "v1",
-					"description": "Azure Functions v1 (.NET Framework)",
 					"item": [
 						{
 							"name": "/api/Command",
@@ -25,7 +23,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"Value\": \"Foo\"\n}"
+									"raw": "{\n    \"Value\": \"sv-SE\"\n}"
 								},
 								"url": {
 									"raw": "https://commandquery-sample-azurefunctions-vs1.azurewebsites.net/api/command/FooCommand",
@@ -74,8 +72,46 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "/api/Query",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Id\": 1\n}"
+								},
+								"url": {
+									"raw": "https://commandquery-sample-azurefunctions-vs1.azurewebsites.net/api/query/BarQuery?Id=1",
+									"protocol": "https",
+									"host": [
+										"commandquery-sample-azurefunctions-vs1",
+										"azurewebsites",
+										"net"
+									],
+									"path": [
+										"api",
+										"query",
+										"BarQuery"
+									],
+									"query": [
+										{
+											"key": "Id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
+					"description": "Azure Functions v1 (.NET Framework)",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -102,7 +138,6 @@
 				},
 				{
 					"name": "v2",
-					"description": "Azure Functions v2 (.NET Core)",
 					"item": [
 						{
 							"name": "/api/Command",
@@ -116,7 +151,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"Value\": \"Foo\"\n}"
+									"raw": "{\n    \"Value\": \"sv-SE\"\n}"
 								},
 								"url": {
 									"raw": "https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/FooCommand",
@@ -165,8 +200,46 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "/api/Query",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Id\": 1\n}"
+								},
+								"url": {
+									"raw": "https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/query/BarQuery?Id=1",
+									"protocol": "https",
+									"host": [
+										"commandquery-sample-azurefunctions-vs2",
+										"azurewebsites",
+										"net"
+									],
+									"path": [
+										"api",
+										"query",
+										"BarQuery"
+									],
+									"query": [
+										{
+											"key": "Id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
+					"description": "Azure Functions v2 (.NET Core)",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -195,11 +268,9 @@
 		},
 		{
 			"name": "VisualStudioCode",
-			"description": "",
 			"item": [
 				{
 					"name": "v1",
-					"description": "Azure Functions v1 (.NET Framework)",
 					"item": [
 						{
 							"name": "/api/Command",
@@ -213,7 +284,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"Value\": \"Foo\"\n}"
+									"raw": "{\n    \"Value\": \"sv-SE\"\n}"
 								},
 								"url": {
 									"raw": "https://commandquery-sample-azurefunctions-vscode1.azurewebsites.net/api/command/FooCommand",
@@ -262,8 +333,46 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "/api/Query",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Id\": 1\n}"
+								},
+								"url": {
+									"raw": "https://commandquery-sample-azurefunctions-vscode1.azurewebsites.net/api/query/BarQuery?Id=1",
+									"protocol": "https",
+									"host": [
+										"commandquery-sample-azurefunctions-vscode1",
+										"azurewebsites",
+										"net"
+									],
+									"path": [
+										"api",
+										"query",
+										"BarQuery"
+									],
+									"query": [
+										{
+											"key": "Id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
+					"description": "Azure Functions v1 (.NET Framework)",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -290,7 +399,6 @@
 				},
 				{
 					"name": "v2",
-					"description": "Azure Functions v2 (.NET Core)",
 					"item": [
 						{
 							"name": "/api/Command",
@@ -304,7 +412,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"Value\": \"Foo\"\n}"
+									"raw": "{\n    \"Value\": \"sv-SE\"\n}"
 								},
 								"url": {
 									"raw": "https://commandquery-sample-azurefunctions-vscode2.azurewebsites.net/api/command/FooCommand",
@@ -353,8 +461,46 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "/api/Query",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Id\": 1\n}"
+								},
+								"url": {
+									"raw": "https://commandquery-sample-azurefunctions-vscode2.azurewebsites.net/api/query/BarQuery?Id=1",
+									"protocol": "https",
+									"host": [
+										"commandquery-sample-azurefunctions-vscode2",
+										"azurewebsites",
+										"net"
+									],
+									"path": [
+										"api",
+										"query",
+										"BarQuery"
+									],
+									"query": [
+										{
+											"key": "Id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
+					"description": "Azure Functions v2 (.NET Core)",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -393,7 +539,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Value\": \"Foo\"\n}"
+					"raw": "{\n    \"Value\": \"sv-SE\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:7071/api/command/FooCommand",
@@ -436,6 +582,42 @@
 						"api",
 						"query",
 						"BarQuery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:7071/api/Query",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/query/BarQuery?Id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"query",
+						"BarQuery"
+					],
+					"query": [
+						{
+							"key": "Id",
+							"value": "1"
+						}
 					]
 				}
 			},

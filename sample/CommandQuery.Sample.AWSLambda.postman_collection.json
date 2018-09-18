@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "c8c9b352-76ba-4e24-b1c5-09fd05a98052",
+		"name": "CommandQuery.Sample.AWSLambda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/Prod/Command/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Value\": \"sv-SE\"\n}"
+				},
+				"url": {
+					"raw": "https://u3rkew3obh.execute-api.eu-central-1.amazonaws.com/Prod/command/FooCommand",
+					"protocol": "https",
+					"host": [
+						"u3rkew3obh",
+						"execute-api",
+						"eu-central-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"Prod",
+						"command",
+						"FooCommand"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/Prod/Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Id\": 1\n}"
+				},
+				"url": {
+					"raw": "https://u3rkew3obh.execute-api.eu-central-1.amazonaws.com/Prod/query/BarQuery",
+					"protocol": "https",
+					"host": [
+						"u3rkew3obh",
+						"execute-api",
+						"eu-central-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"Prod",
+						"query",
+						"BarQuery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/Prod/Query",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Id\": 1\n}"
+				},
+				"url": {
+					"raw": "https://u3rkew3obh.execute-api.eu-central-1.amazonaws.com/Prod/query/BarQuery?Id=1",
+					"protocol": "https",
+					"host": [
+						"u3rkew3obh",
+						"execute-api",
+						"eu-central-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"Prod",
+						"query",
+						"BarQuery"
+					],
+					"query": [
+						{
+							"key": "Id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
