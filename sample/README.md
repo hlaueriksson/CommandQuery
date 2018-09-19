@@ -1,22 +1,65 @@
-# CommandQuery sample code
+# CommandQuery Sample Code
 
-An introduction and instructions on how to get started with `CommandQuery` is documented in the main [README](https://github.com/hlaueriksson/CommandQuery/blob/master/README.md).
+This code has been written with *Visual Studio 2017* and *Visual Studio Code*.
+
+The unit tests are using [Machine.Specifications](https://github.com/machine/machine.specifications/).
+
+Manual testing can be done with [Postman](https://www.getpostman.com).
+[Import](https://www.getpostman.com/docs/v6/postman/collections/data_formats#importing-postman-data) the collections in this folder to get started.
 
 ## Command + Query + Handlers
 
-One command and one query together with corresponding handlers:
+Sample code:
 
 * `CommandQuery.Sample`
 
+## ASP.NET Web API 2
+
+Sample code:
+
+* `CommandQuery.Sample.AspNet.WebApi`
+
+Tests:
+
+* `CommandQuery.Sample.AspNet.WebApi.Specs`
+
+Postman collection:
+
+* `CommandQuery.Sample.AspNet.WebApi.postman_collection.json`
+
 ## ASP.NET Core
 
-Sample code for ASP.NET Core 2.0:
+Sample code:
 
 * `CommandQuery.Sample.AspNetCore`
 
+Tests:
+
+* `CommandQuery.Sample.Specs/AspNetCore`
+
+Postman collection:
+
+* `CommandQuery.Sample.AspNetCore.postman_collection.json`
+
+## AWS Lambda
+
+Sample code:
+
+* `CommandQuery.Sample.AWSLambda`
+
+Tests:
+
+* `CommandQuery.Sample.Specs/AWSLambda`
+
+Postman collection:
+
+* `CommandQuery.Sample.AWSLambda.postman_collection.json`
+
 ## Azure Functions
 
-Functions can be created in both Visual Studio and Visual Studio Code, and run on both .NET Framework and .NET Core:
+Functions can be created in both Visual Studio and Visual Studio Code, and run on both .NET Framework and .NET Core
+
+Sample code:
 
 * `CommandQuery.Sample.AzureFunctions.Vs1`
     * Visual Studio with `v1` (.NET Framework) runtime
@@ -27,15 +70,11 @@ Functions can be created in both Visual Studio and Visual Studio Code, and run o
 * `CommandQuery.Sample.AzureFunctions.VsCode2`
     * Visual Studio Code with `beta` (.NET Core) runtime
 
-## Tests
+Tests:
 
-Tests the handlers in the AspNetCore and AzureFunctions projects with `Machine.Specifications`:
+* `CommandQuery.Sample.Specs/AzureFunctions.Vs1`
+* `CommandQuery.Sample.Specs/AzureFunctions.Vs2`
 
-* `CommandQuery.Sample.Specs`
+Postman collection:
 
-## Postman
-
-Postman collections to get started with manual testing:
-
-* `CommandQuery.Sample.AspNetCore.postman_collection.json`
 * `CommandQuery.Sample.AzureFunctions.postman_collection.json`
