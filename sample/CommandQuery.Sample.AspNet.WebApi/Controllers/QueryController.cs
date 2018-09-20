@@ -7,12 +7,8 @@ namespace CommandQuery.Sample.AspNet.WebApi.Controllers
     [RoutePrefix("api/query")]
     public class QueryController : BaseQueryController
     {
-        public QueryController(IQueryProcessor queryProcessor) : base(queryProcessor)
+        public QueryController(IQueryProcessor queryProcessor, ITraceWriter logger) : base(queryProcessor, logger)
         {
         }
-
-        //public QueryController(IQueryProcessor queryProcessor, ITraceWriter logger) : base(queryProcessor, logger)
-        //{
-        //}
     }
 }

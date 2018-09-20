@@ -22,6 +22,7 @@ namespace CommandQuery.Sample.AspNet.WebApi
             container.RegisterCommands(typeof(FooCommand).Assembly);
             container.RegisterQueries(typeof(BarQuery).Assembly);
 
+            container.RegisterType<ICultureService, CultureService>();
             container.RegisterType<IDateTimeProxy, DateTimeProxy>();
 
             configuration.DependencyResolver = new UnityDependencyResolver(container);

@@ -7,12 +7,8 @@ namespace CommandQuery.Sample.AspNet.WebApi.Controllers
     [RoutePrefix("api/command")]
     public class CommandController : BaseCommandController
     {
-        public CommandController(ICommandProcessor commandProcessor) : base(commandProcessor)
+        public CommandController(ICommandProcessor commandProcessor, ITraceWriter logger) : base(commandProcessor, logger)
         {
         }
-
-        //public CommandController(ICommandProcessor commandProcessor, ITraceWriter logger) : base(commandProcessor, logger)
-        //{
-        //}
     }
 }

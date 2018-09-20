@@ -1,6 +1,10 @@
 ﻿using System.Net.Http.Formatting;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
+using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Queries;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AspNet.WebApi
 {
@@ -9,11 +13,17 @@ namespace CommandQuery.Sample.AspNet.WebApi
         public static void Register(HttpConfiguration config)
         {
             // IoC
-            config.UseDependencyInjection();
-            //config.UseUnity();
+            var services = new ServiceCollection();
 
-            // Log
-            //config.EnableSystemDiagnosticsTracing();
+            services.AddCommands(typeof(FooCommand).Assembly);
+            services.AddQueries(typeof(BarQuery).Assembly);
+
+            services.AddTransient<ICultureService, CultureService>();
+            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
+
+            services.AddTransient<ITraceWriter>(_ => config.EnableSystemDiagnosticsTracing()); // Logging
+
+            config.DependencyResolver = new CommandQueryDependencyResolver(services);
 
             // Json
             config.Formatters.Clear();

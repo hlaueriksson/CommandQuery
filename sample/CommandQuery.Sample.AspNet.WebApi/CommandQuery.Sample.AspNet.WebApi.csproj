@@ -47,8 +47,8 @@
     <Reference Include="CommandQuery, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\CommandQuery.0.6.0\lib\net461\CommandQuery.dll</HintPath>
     </Reference>
-    <Reference Include="CommandQuery.AspNet.WebApi, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\CommandQuery.AspNet.WebApi.0.6.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
+    <Reference Include="CommandQuery.AspNet.WebApi, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CommandQuery.AspNet.WebApi.0.7.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="CommandQuery.Sample, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -102,6 +102,9 @@
     <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Http.Tracing, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Tracing.5.2.6\lib\net45\System.Web.Http.Tracing.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
@@ -139,7 +142,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\DependencyInjection.cs" />
     <Compile Include="App_Start\Unity.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CommandController.cs" />

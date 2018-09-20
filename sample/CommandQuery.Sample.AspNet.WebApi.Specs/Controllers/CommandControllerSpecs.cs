@@ -19,7 +19,7 @@ namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
 
                 var commandProcessor = configuration.DependencyResolver.GetService(typeof(ICommandProcessor)) as ICommandProcessor;
 
-                Subject = new CommandController(commandProcessor)
+                Subject = new CommandController(commandProcessor, null)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = configuration

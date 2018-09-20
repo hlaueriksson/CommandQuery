@@ -21,7 +21,7 @@ namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
 
                 var queryProcessor = configuration.DependencyResolver.GetService(typeof(IQueryProcessor)) as IQueryProcessor;
 
-                Subject = new QueryController(queryProcessor)
+                Subject = new QueryController(queryProcessor, null)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = configuration
