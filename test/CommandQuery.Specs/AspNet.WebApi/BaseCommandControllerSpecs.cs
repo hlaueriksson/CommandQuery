@@ -18,7 +18,7 @@ namespace CommandQuery.Specs.AspNet.WebApi
         [Subject(typeof(BaseCommandController))]
         public class when_handling_the_command
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 FakeCommandProcessor = new Mock<ICommandProcessor>();
 

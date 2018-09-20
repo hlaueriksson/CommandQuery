@@ -36,7 +36,7 @@ namespace CommandQuery.Specs.AWSLambda
                 Catch.Exception(() => Subject.Handle(commandName, content).Await()).ShouldBeOfExactType<Exception>();
             };
 
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Request = new APIGatewayProxyRequest();
                 Context = new Mock<ILambdaContext>();

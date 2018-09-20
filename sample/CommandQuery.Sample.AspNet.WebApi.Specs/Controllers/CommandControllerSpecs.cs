@@ -12,10 +12,10 @@ namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
         [Subject(typeof(CommandController))]
         public class when_using_the_real_controller
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 var configuration = new HttpConfiguration();
-                configuration.UseDependencyInjection();
+                WebApiConfig.Register(configuration);
 
                 var commandProcessor = configuration.DependencyResolver.GetService(typeof(ICommandProcessor)) as ICommandProcessor;
 
