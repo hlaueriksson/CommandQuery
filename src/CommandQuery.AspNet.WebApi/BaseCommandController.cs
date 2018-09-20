@@ -25,6 +25,7 @@ namespace CommandQuery.AspNet.WebApi
         }
 
         [HttpGet]
+        [Route("")]
         public IHttpActionResult Help()
         {
             var baseUrl = Request.RequestUri.ToString();
