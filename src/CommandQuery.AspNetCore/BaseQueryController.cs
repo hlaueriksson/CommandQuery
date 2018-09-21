@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.AspNetCore.Internal;
 using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-﻿namespace CommandQuery.AspNetCore
+﻿namespace CommandQuery
 {
     public class Error
     {

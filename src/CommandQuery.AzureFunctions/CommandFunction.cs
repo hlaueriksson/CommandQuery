@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using CommandQuery.AzureFunctions.Internal;
 using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 using Microsoft.Azure.WebJobs.Host;
 
 #if NET461
