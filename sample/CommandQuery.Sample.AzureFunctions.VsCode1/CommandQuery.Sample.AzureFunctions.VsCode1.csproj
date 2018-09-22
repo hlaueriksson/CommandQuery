@@ -3,8 +3,9 @@
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandQuery.AzureFunctions" Version="0.6.0" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.21" />
+    <PackageReference Include="CommandQuery.AzureFunctions" Version="0.7.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
