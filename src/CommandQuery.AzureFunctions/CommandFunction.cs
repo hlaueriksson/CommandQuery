@@ -104,7 +104,7 @@ namespace CommandQuery.AzureFunctions
 
     public class CommandServiceProvider : IServiceProvider
     {
-        private IContainer _container;
+        private readonly IContainer _container;
 
         public CommandServiceProvider(IContainer container)
         {

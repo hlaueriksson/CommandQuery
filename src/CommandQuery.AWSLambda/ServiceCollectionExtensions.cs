@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommandQuery.AWSLambda.Internal
+namespace CommandQuery.AWSLambda
 {
     public static class ServiceCollectionExtensions
     {

@@ -21,6 +21,7 @@ namespace CommandQuery
         Task<TResult> ProcessAsync<TResult>(string queryName, string json);
 
         Task<TResult> ProcessAsync<TResult>(string queryName, JObject json);
+
         Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, string> dictionary);
 
         Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query);
