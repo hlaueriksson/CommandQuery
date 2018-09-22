@@ -1,4 +1,4 @@
-﻿using CommandQuery.AspNetCore;
+﻿using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using CommandQuery.Sample.Queries;
 using Microsoft.AspNetCore.Builder;

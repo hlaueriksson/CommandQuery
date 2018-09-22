@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandQuery, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.0.6.0\lib\net461\CommandQuery.dll</HintPath>
+    <Reference Include="CommandQuery, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.0.7.0\lib\net461\CommandQuery.dll</HintPath>
     </Reference>
     <Reference Include="CommandQuery.AspNet.WebApi, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.AspNet.WebApi.0.7.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>

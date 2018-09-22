@@ -44,11 +44,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandQuery, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\CommandQuery.0.6.0\lib\net461\CommandQuery.dll</HintPath>
+    <Reference Include="CommandQuery, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CommandQuery.0.7.0\lib\net461\CommandQuery.dll</HintPath>
     </Reference>
     <Reference Include="CommandQuery.AspNet.WebApi, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\CommandQuery.AspNet.WebApi.0.7.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandQuery.DependencyInjection, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CommandQuery.AspNet.WebApi.0.7.0\lib\net461\CommandQuery.DependencyInjection.dll</HintPath>
     </Reference>
     <Reference Include="CommandQuery.Sample, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

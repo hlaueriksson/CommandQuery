@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
-using CommandQuery.AspNet.WebApi;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using CommandQuery.Sample.Queries;
 using Unity;

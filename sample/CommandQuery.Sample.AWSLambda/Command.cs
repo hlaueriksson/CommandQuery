@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,17 +1,18 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Autofac;
 using CommandQuery.AzureFunctions;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetContainerBuilder()));
+        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequestMessage req, TraceWriter log, string queryName)
@@ -19,13 +20,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs1
             return await Func.Handle(queryName, req, log);
         }
 
-        private static ContainerBuilder GetContainerBuilder()
+        private static IServiceCollection GetServiceCollection()
         {
-            var builder = new ContainerBuilder();
-            // Register handler dependencies
-            builder.RegisterType<DateTimeProxy>().As<IDateTimeProxy>();
+            var services = new ServiceCollection();
+            // Add handler dependencies
+            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
-            return builder;
+            return services;
         }
     }
 }
