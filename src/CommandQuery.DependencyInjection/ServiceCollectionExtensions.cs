@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommandQuery.AWSLambda
+namespace CommandQuery.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
@@ -34,29 +33,12 @@ namespace CommandQuery.AWSLambda
 
         private static void AddHandlers(this IServiceCollection services, Type genericType, params Assembly[] assemblies)
         {
-            var handlers = assemblies.SelectMany(assembly => GetHandlers(assembly, genericType));
+            var handlers = assemblies.SelectMany(assembly => assembly.GetHandlers(genericType));
 
             foreach (var handler in handlers)
             {
                 services.AddTransient(handler.GetHandlerInterface(genericType), handler);
             }
-        }
-
-        private static IEnumerable<Type> GetHandlers(Assembly assembly, Type genericType)
-        {
-            return assembly.GetTypes().Where(type => type.GetTypeInfo().IsClass && IsAssignableToGenericType(type, genericType));
-        }
-
-        private static bool IsAssignableToGenericType(Type type, Type genericType)
-        {
-            return type.GetInterfaces().Any(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
-                   || (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericType)
-                   || (type.GetTypeInfo().BaseType != null && IsAssignableToGenericType(type.GetTypeInfo().BaseType, genericType));
-        }
-
-        private static Type GetHandlerInterface(this Type type, Type genericType)
-        {
-            return type.GetInterfaces().FirstOrDefault(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType);
         }
     }
 }

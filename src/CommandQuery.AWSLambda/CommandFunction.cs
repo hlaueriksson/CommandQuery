@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 

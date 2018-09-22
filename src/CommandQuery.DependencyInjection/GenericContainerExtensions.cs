@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace CommandQuery.AspNet.WebApi
+namespace CommandQuery.DependencyInjection
 {
-    public static class ContainerExtensions
+    public static class GenericContainerExtensions
     {
         public static void RegisterCommands(this Assembly[] assemblies, Action<Type, Type> registerType, Action<Type, object> registerInstance)
         {
@@ -29,29 +28,12 @@ namespace CommandQuery.AspNet.WebApi
 
         private static void RegisterHandlers(this Assembly[] assemblies, Type genericType, Action<Type, Type> registerType)
         {
-            var handlers = assemblies.SelectMany(assembly => GetHandlers(assembly, genericType));
+            var handlers = assemblies.SelectMany(assembly => assembly.GetHandlers(genericType));
 
             foreach (var handler in handlers)
             {
                 registerType(handler.GetHandlerInterface(genericType), handler);
             }
-        }
-
-        private static IEnumerable<Type> GetHandlers(Assembly assembly, Type genericType)
-        {
-            return assembly.GetTypes().Where(type => type.GetTypeInfo().IsClass && IsAssignableToGenericType(type, genericType));
-        }
-
-        private static bool IsAssignableToGenericType(Type type, Type genericType)
-        {
-            return type.GetInterfaces().Any(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
-                   || (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericType)
-                   || (type.GetTypeInfo().BaseType != null && IsAssignableToGenericType(type.GetTypeInfo().BaseType, genericType));
-        }
-
-        private static Type GetHandlerInterface(this Type type, Type genericType)
-        {
-            return type.GetInterfaces().FirstOrDefault(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType);
         }
     }
 }
