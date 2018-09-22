@@ -5,6 +5,7 @@
     <Version>0.7.0</Version>
     <Authors>hlaueriksson</Authors>
     <Description>Dependency Injection for CommandQuery</Description>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
