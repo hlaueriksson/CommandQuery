@@ -4,7 +4,14 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Version>0.6.0</Version>
     <Authors>hlaueriksson</Authors>
-    <Description>Command Query Separation for ASP.NET Core</Description>
+    <Description>
+      Command Query Separation for ASP.NET Core 🌐
+
+      ✔ Provides generic actions for handling the execution of commands and queries
+      ✔ Enables APIs based on HTTP POST and GET
+
+      Documentation: https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.AspNetCore.md
+    </Description>
     <PackageId>CommandQuery.AspNetCore</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>

@@ -4,7 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.6.0</Version>
     <Authors>hlaueriksson</Authors>
-    <Description>Command Query Separation for AWS Lambda</Description>
+    <Description>
+      Command Query Separation for AWS Lambda ⚡
+
+      ✔ Provides generic function support for commands and queries with Amazon API Gateway
+      ✔ Enables APIs based on HTTP POST and GET
+
+      Documentation: https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.AWSLambda.md
+    </Description>
     <PackageId>CommandQuery.AWSLambda</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
