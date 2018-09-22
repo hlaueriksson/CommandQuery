@@ -1,9 +1,8 @@
-﻿#if NETCOREAPP2_0
-using System.Reflection;
-using CommandQuery.AWSLambda;
+﻿using System.Reflection;
+using CommandQuery.DependencyInjection;
 using Machine.Specifications;
 
-namespace CommandQuery.Specs.AWSLambda
+namespace CommandQuery.Specs.DependencyInjection
 {
     [Subject(typeof(CommandExtensions))]
     public class CommandExtensionsSpecs
@@ -25,4 +24,3 @@ namespace CommandQuery.Specs.AWSLambda
         };
     }
 }
-#endif

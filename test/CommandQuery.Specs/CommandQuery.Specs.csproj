@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>
 

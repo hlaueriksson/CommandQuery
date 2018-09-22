@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
-using CommandQuery.DependencyInjection;
 using CommandQuery.Exceptions;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace CommandQuery.AWSLambda
@@ -67,36 +64,6 @@ namespace CommandQuery.AWSLambda
 
                 return exception.ToInternalServerError();
             }
-        }
-    }
-
-    public static class QueryExtensions
-    {
-        public static IQueryProcessor GetQueryProcessor(this Assembly assembly)
-        {
-            return GetQueryProcessor(new ServiceCollection(), assembly);
-        }
-
-        public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies)
-        {
-            return GetQueryProcessor(new ServiceCollection(), assemblies);
-        }
-
-        public static IQueryProcessor GetQueryProcessor(this Assembly assembly, IServiceCollection services)
-        {
-            return GetQueryProcessor(services, assembly);
-        }
-
-        public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies, IServiceCollection services)
-        {
-            return GetQueryProcessor(services, assemblies);
-        }
-
-        private static IQueryProcessor GetQueryProcessor(IServiceCollection services, params Assembly[] assemblies)
-        {
-            services.AddQueries(assemblies);
-
-            return new QueryProcessor(new QueryTypeCollection(assemblies), services.BuildServiceProvider());
         }
     }
 }
