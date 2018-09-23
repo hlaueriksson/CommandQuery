@@ -4,13 +4,13 @@
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Version>0.7.0</Version>
     <Authors>hlaueriksson</Authors>
-    <Description>
-      Command Query Separation for Azure Functions ⚡
+    <Description>Command Query Separation for Azure Functions ⚡
 
-      ✔ Provides generic function support for commands and queries with HTTPTriggers
-      ✔ Enables APIs based on HTTP POST and GET
+✔ Provides generic function support for commands and queries with HTTPTriggers
+✔ Enables APIs based on HTTP POST and GET
 
-      Documentation: https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.AzureFunctions.md
+Documentation:
+https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.AzureFunctions.md
     </Description>
     <PackageId>CommandQuery.AzureFunctions</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
