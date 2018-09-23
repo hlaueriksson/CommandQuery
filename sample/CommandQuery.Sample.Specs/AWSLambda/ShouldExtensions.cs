@@ -1,6 +1,5 @@
 ﻿#if NETCOREAPP2_0
 using Amazon.Lambda.APIGatewayEvents;
-using CommandQuery.AWSLambda;
 using Machine.Specifications;
 using Newtonsoft.Json;
 

@@ -26,12 +26,12 @@ namespace CommandQuery.Sample.AspNet.WebApi
 
             config.DependencyResolver = new CommandQueryDependencyResolver(services);
 
+            // Web API routes
+            config.MapHttpAttributeRoutes(new CommandQueryDirectRouteProvider());
+
             // Json
             config.Formatters.Clear();
             config.Formatters.Add(new JsonMediaTypeFormatter());
-
-            // Web API routes
-            config.MapHttpAttributeRoutes(new CommandQueryDirectRouteProvider());
         }
     }
 }

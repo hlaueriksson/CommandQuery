@@ -1,5 +1,4 @@
 ﻿#if NETCOREAPP2_0
-using CommandQuery.AzureFunctions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Mvc;
 

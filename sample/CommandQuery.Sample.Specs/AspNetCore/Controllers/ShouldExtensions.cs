@@ -1,6 +1,5 @@
 ﻿#if NETCOREAPP2_0
 using System.Net.Http;
-using CommandQuery.AspNetCore;
 using Machine.Specifications;
 
 namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
