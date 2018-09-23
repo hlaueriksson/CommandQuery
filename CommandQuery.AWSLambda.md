@@ -1,6 +1,6 @@
 # CommandQuery.AWSLambda
 
-> Command Query Separation for AWS Lambda
+> Command Query Separation for AWS Lambda ⚡
 
 * Provides generic function support for commands and queries with *Amazon API Gateway*
 * Enables APIs based on HTTP `POST` and `GET`
@@ -31,7 +31,15 @@
 	* Implement `ICommand` and `ICommandHandler<in TCommand>`
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
-6. Configure resources
+6. Configure the serverless template
+
+![New Project - AWS Serverless Application (.NET Core)](vs-new-project-aws-serverless-application.png)
+
+Choose the blueprint:
+
+* Empty Serverless Application
+
+![New AWS Serverless Application - Empty Serverless Application](vs-aws-serverless-application-empty.png)
 
 ## Commands
 
@@ -42,6 +50,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -85,6 +94,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -322,7 +332,6 @@ Helpers:
 
 ```csharp
 using Amazon.Lambda.APIGatewayEvents;
-using CommandQuery.AWSLambda;
 using Machine.Specifications;
 using Newtonsoft.Json;
 

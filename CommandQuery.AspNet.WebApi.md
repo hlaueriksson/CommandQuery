@@ -1,6 +1,6 @@
 # CommandQuery.AspNet.WebApi
 
-> Command Query Separation for ASP.NET Web API 2
+> Command Query Separation for ASP.NET Web API 2 🌐
 
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
@@ -37,6 +37,7 @@ Add a `CommandController`:
 
 ```csharp
 using System.Web.Http;
+using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
 
 namespace CommandQuery.Sample.AspNet.WebApi.Controllers
@@ -44,7 +45,7 @@ namespace CommandQuery.Sample.AspNet.WebApi.Controllers
     [RoutePrefix("api/command")]
     public class CommandController : BaseCommandController
     {
-        public CommandController(ICommandProcessor commandProcessor) : base(commandProcessor)
+        public CommandController(ICommandProcessor commandProcessor, ITraceWriter logger) : base(commandProcessor, logger)
         {
         }
     }
@@ -77,6 +78,7 @@ Add a `QueryController`:
 
 ```csharp
 using System.Web.Http;
+using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
 
 namespace CommandQuery.Sample.AspNet.WebApi.Controllers
@@ -84,7 +86,7 @@ namespace CommandQuery.Sample.AspNet.WebApi.Controllers
     [RoutePrefix("api/query")]
     public class QueryController : BaseQueryController
     {
-        public QueryController(IQueryProcessor queryProcessor) : base(queryProcessor)
+        public QueryController(IQueryProcessor queryProcessor, ITraceWriter logger) : base(queryProcessor, logger)
         {
         }
     }
@@ -127,7 +129,9 @@ Configuration in `App_Start/WebApiConfig.cs`
 ```csharp
 using System.Net.Http.Formatting;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using CommandQuery.Sample.Queries;
 using Microsoft.Extensions.DependencyInjection;
@@ -141,21 +145,22 @@ namespace CommandQuery.Sample.AspNet.WebApi
             // IoC
             var services = new ServiceCollection();
 
-            services.AddControllers(typeof(WebApiConfig).Assembly);
-
             services.AddCommands(typeof(FooCommand).Assembly);
             services.AddQueries(typeof(BarQuery).Assembly);
 
+            services.AddTransient<ICultureService, CultureService>();
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
+            services.AddTransient<ITraceWriter>(_ => config.EnableSystemDiagnosticsTracing()); // Logging
+
             config.DependencyResolver = new CommandQueryDependencyResolver(services);
+
+            // Web API routes
+            config.MapHttpAttributeRoutes(new CommandQueryDirectRouteProvider());
 
             // Json
             config.Formatters.Clear();
             config.Formatters.Add(new JsonMediaTypeFormatter());
-
-            // Web API routes
-            config.MapHttpAttributeRoutes(new CommandQueryDirectRouteProvider());
         }
     }
 }
@@ -166,6 +171,14 @@ Register command/query handlers and other dependencies in the `Register` method.
 The extension methods `AddCommands` and `AddQueries` will add all command/query handlers in the given assemblies to the IoC container.
 You can pass in a `params` array of `Assembly` arguments if your handlers are located in different projects.
 If you only have one project you can use `typeof(WebApiConfig).Assembly` as a single argument.
+
+To enable logging, inject a `ITraceWriter` to the constructor of the controllers.
+
+The `CommandQueryDependencyResolver` will manage the dependency injection when controllers are created.
+
+The `CommandQueryDirectRouteProvider` makes sure the routes from the base controllers are inherited.
+
+Consider to use only the `JsonMediaTypeFormatter`.
 
 ## Testing
 

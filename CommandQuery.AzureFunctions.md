@@ -1,6 +1,6 @@
 # CommandQuery.AzureFunctions
 
-> Command Query Separation for Azure Functions
+> Command Query Separation for Azure Functions ⚡
 
 * Provides generic function support for commands and queries with *HTTPTriggers*
 * Enables APIs based on HTTP `POST` and `GET`
@@ -83,18 +83,19 @@ Add a `Command` function in *Azure Functions v1 (.NET Framework)*:
 ```csharp
 using System.Net.Http;
 using System.Threading.Tasks;
-using Autofac;
 using CommandQuery.AzureFunctions;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
     public static class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetContainerBuilder()));
+        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetServiceCollection()));
 
         [FunctionName("Command")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestMessage req, TraceWriter log, string commandName)
@@ -102,13 +103,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs1
             return await Func.Handle(commandName, req, log);
         }
 
-        private static ContainerBuilder GetContainerBuilder()
+        private static IServiceCollection GetServiceCollection()
         {
-            var builder = new ContainerBuilder();
-            // Register handler dependencies
-            builder.RegisterType<CultureService>().As<ICultureService>();
+            var services = new ServiceCollection();
+            // Add handler dependencies
+            services.AddTransient<ICultureService, CultureService>();
 
-            return builder;
+            return services;
         }
     }
 }
@@ -118,20 +119,21 @@ Add a `Command` function in *Azure Functions v2 (.NET Core)*:
 
 ```csharp
 using System.Threading.Tasks;
-using Autofac;
 using CommandQuery.AzureFunctions;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetContainerBuilder()));
+        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetServiceCollection()));
 
         [FunctionName("Command")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, TraceWriter log, string commandName)
@@ -139,13 +141,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2
             return await Func.Handle(commandName, req, log);
         }
 
-        private static ContainerBuilder GetContainerBuilder()
+        private static IServiceCollection GetServiceCollection()
         {
-            var builder = new ContainerBuilder();
-            // Register handler dependencies
-            builder.RegisterType<CultureService>().As<ICultureService>();
+            var services = new ServiceCollection();
+            // Add handler dependencies
+            services.AddTransient<ICultureService, CultureService>();
 
-            return builder;
+            return services;
         }
     }
 }
@@ -168,18 +170,19 @@ Add a `Query` function in *Azure Functions v1 (.NET Framework)*:
 ```csharp
 using System.Net.Http;
 using System.Threading.Tasks;
-using Autofac;
 using CommandQuery.AzureFunctions;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetContainerBuilder()));
+        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequestMessage req, TraceWriter log, string queryName)
@@ -187,13 +190,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs1
             return await Func.Handle(queryName, req, log);
         }
 
-        private static ContainerBuilder GetContainerBuilder()
+        private static IServiceCollection GetServiceCollection()
         {
-            var builder = new ContainerBuilder();
-            // Register handler dependencies
-            builder.RegisterType<DateTimeProxy>().As<IDateTimeProxy>();
+            var services = new ServiceCollection();
+            // Add handler dependencies
+            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
-            return builder;
+            return services;
         }
     }
 }
@@ -203,20 +206,21 @@ Add a `Query` function in *Azure Functions v2 (.NET Core)*:
 
 ```csharp
 using System.Threading.Tasks;
-using Autofac;
 using CommandQuery.AzureFunctions;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetContainerBuilder()));
+        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, TraceWriter log, string queryName)
@@ -224,13 +228,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2
             return await Func.Handle(queryName, req, log);
         }
 
-        private static ContainerBuilder GetContainerBuilder()
+        private static IServiceCollection GetServiceCollection()
         {
-            var builder = new ContainerBuilder();
-            // Register handler dependencies
-            builder.RegisterType<DateTimeProxy>().As<IDateTimeProxy>();
+            var services = new ServiceCollection();
+            // Add handler dependencies
+            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
-            return builder;
+            return services;
         }
     }
 }
@@ -401,7 +405,6 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
 Helpers:
 
 ```csharp
-using CommandQuery.AzureFunctions;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Mvc;
 

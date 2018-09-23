@@ -1,6 +1,6 @@
 # CommandQuery.AspNetCore
 
-> Command Query Separation for ASP.NET Core
+> Command Query Separation for ASP.NET Core 🌐
 
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
@@ -125,7 +125,7 @@ Example of query requests via [curl](https://curl.haxx.se):
 Configuration in `Startup.cs`:
 
 ```csharp
-using CommandQuery.AspNetCore;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
 using CommandQuery.Sample.Queries;
 using Microsoft.AspNetCore.Builder;
@@ -318,7 +318,6 @@ Helpers:
 
 ```csharp
 using System.Net.Http;
-using CommandQuery.AspNetCore;
 using Machine.Specifications;
 
 namespace CommandQuery.Sample.Specs.AspNetCore.Controllers

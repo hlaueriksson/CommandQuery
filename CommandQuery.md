@@ -1,6 +1,6 @@
 # CommandQuery
 
-> Command Query Separation for .NET Core and .NET Framework
+> Command Query Separation for .NET Framework and .NET Standard ⚙
 
 [![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery)
 
