@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Version>0.7.0</Version>
     <Authors>hlaueriksson</Authors>
-    <Description>Command Query Separation for .NET Framework and .NET Standard ⚙
+    <Description>Command Query Separation for .NET Framework and .NET Standard ⚙️
 
 ✔ Build services that separate the responsibility of commands and queries
 ✔ Focus on implementing the handlers for commands and queries
