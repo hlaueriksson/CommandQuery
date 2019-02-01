@@ -10,7 +10,7 @@
 
 ## Sample Code
 
-[`CommandQuery.Sample`](/sample/CommandQuery.Sample)
+[`CommandQuery.Sample`](/samples/CommandQuery.Sample)
 
 ## Commands
 

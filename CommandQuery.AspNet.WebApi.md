@@ -13,9 +13,9 @@
 
 ## Sample Code
 
-[`CommandQuery.Sample.AspNet.WebApi`](/sample/CommandQuery.Sample.AspNet.WebApi)
+[`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
 
-[`CommandQuery.Sample.AspNet.WebApi.Specs`](/sample/CommandQuery.Sample.AspNet.WebApi.Specs)
+[`CommandQuery.Sample.AspNet.WebApi.Specs`](/samples/CommandQuery.Sample.AspNet.WebApi.Specs)
 
 ## Get Started
 

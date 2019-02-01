@@ -13,9 +13,9 @@
 
 ## Sample Code
 
-[`CommandQuery.Sample.AspNetCore`](/sample/CommandQuery.Sample.AspNetCore)
+[`CommandQuery.Sample.AspNetCore`](/samples/CommandQuery.Sample.AspNetCore)
 
-[`CommandQuery.Sample.Specs/AspNetCore`](/sample/CommandQuery.Sample.Specs/AspNetCore)
+[`CommandQuery.Sample.Specs/AspNetCore`](/samples/CommandQuery.Sample.Specs/AspNetCore)
 
 ## Get Started
 

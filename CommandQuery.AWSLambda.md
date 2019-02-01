@@ -13,9 +13,9 @@
 
 ## Sample Code
 
-[`CommandQuery.Sample.AWSLambda`](/sample/CommandQuery.Sample.AWSLambda)
+[`CommandQuery.Sample.AWSLambda`](/samples/CommandQuery.Sample.AWSLambda)
 
-[`CommandQuery.Sample.Specs/AWSLambda`](/sample/CommandQuery.Sample.Specs/AWSLambda)
+[`CommandQuery.Sample.Specs/AWSLambda`](/samples/CommandQuery.Sample.Specs/AWSLambda)
 
 ## Get Started
 

@@ -14,13 +14,13 @@
 ## Sample Code
 
 * *Visual Studio*:
-    * [`CommandQuery.Sample.AzureFunctions.Vs1`](/sample/CommandQuery.Sample.AzureFunctions.Vs1) - Azure Functions v1 (.NET Framework)
-    * [`CommandQuery.Sample.AzureFunctions.Vs2`](/sample/CommandQuery.Sample.AzureFunctions.Vs2) - Azure Functions v2 (.NET Core)
-    * [`CommandQuery.Sample.Specs/AzureFunctions.Vs1`](/sample/CommandQuery.Sample.Specs/AzureFunctions.Vs1)
-    * [`CommandQuery.Sample.Specs/AzureFunctions.Vs2`](/sample/CommandQuery.Sample.Specs/AzureFunctions.Vs2)
+    * [`CommandQuery.Sample.AzureFunctions.Vs1`](/samples/CommandQuery.Sample.AzureFunctions.Vs1) - Azure Functions v1 (.NET Framework)
+    * [`CommandQuery.Sample.AzureFunctions.Vs2`](/samples/CommandQuery.Sample.AzureFunctions.Vs2) - Azure Functions v2 (.NET Core)
+    * [`CommandQuery.Sample.Specs/AzureFunctions.Vs1`](/samples/CommandQuery.Sample.Specs/AzureFunctions.Vs1)
+    * [`CommandQuery.Sample.Specs/AzureFunctions.Vs2`](/samples/CommandQuery.Sample.Specs/AzureFunctions.Vs2)
 * *Visual Studio Code*:
-    * [`CommandQuery.Sample.AzureFunctions.VsCode1`](/sample/CommandQuery.Sample.AzureFunctions.VsCode1) - Azure Functions v1 (.NET Framework)
-    * [`CommandQuery.Sample.AzureFunctions.VsCode2`](/sample/CommandQuery.Sample.AzureFunctions.VsCode2) - Azure Functions v2 (.NET Core)
+    * [`CommandQuery.Sample.AzureFunctions.VsCode1`](/samples/CommandQuery.Sample.AzureFunctions.VsCode1) - Azure Functions v1 (.NET Framework)
+    * [`CommandQuery.Sample.AzureFunctions.VsCode2`](/samples/CommandQuery.Sample.AzureFunctions.VsCode2) - Azure Functions v2 (.NET Core)
 
 ## Get Started in *Visual Studio*
 
