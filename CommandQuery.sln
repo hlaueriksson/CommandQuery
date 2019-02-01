@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{2ABED9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery", "src\CommandQuery\CommandQuery.csproj", "{9631F3FE-6AF2-419B-B3F9-E1E6832BEF98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Specs", "test\CommandQuery.Specs\CommandQuery.Specs.csproj", "{06863099-DF49-48FD-AB29-AB5089BA0BFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Specs", "tests\CommandQuery.Specs\CommandQuery.Specs.csproj", "{06863099-DF49-48FD-AB29-AB5089BA0BFD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Specs", "samples\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.csproj", "{2084940E-726C-467E-A791-C0B200B6337B}"
 EndProject
