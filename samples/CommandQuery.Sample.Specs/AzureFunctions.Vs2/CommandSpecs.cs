@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs.Host;
+using Moq;
+using It = Machine.Specifications.It;
 
 namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
 {
@@ -17,9 +20,9 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
             It should_work = () =>
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new FakeTraceWriter();
+                var log = new Mock<TraceWriter>();
 
-                var result = Command.Run(req, log, "FooCommand").Result as EmptyResult;
+                var result = Command.Run(req, log.Object, "FooCommand").Result as EmptyResult;
 
                 result.ShouldNotBeNull();
             };
@@ -27,9 +30,9 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
             It should_handle_errors = () =>
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new FakeTraceWriter();
+                var log = new Mock<TraceWriter>();
 
-                var result = Command.Run(req, log, "FailCommand").Result as BadRequestObjectResult;
+                var result = Command.Run(req, log.Object, "FailCommand").Result as BadRequestObjectResult;
 
                 result.ShouldBeError("The command type 'FailCommand' could not be found");
             };

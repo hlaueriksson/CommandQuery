@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using Microsoft.Azure.WebJobs.Host;
 
 #if NET461
 using System.Net;
 using System.Net.Http;
+using Microsoft.Azure.WebJobs.Host;
 #endif
 
 #if NETSTANDARD2_0
@@ -13,6 +13,7 @@ using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Logging;
 #endif
 
 namespace CommandQuery.AzureFunctions
@@ -64,9 +65,9 @@ namespace CommandQuery.AzureFunctions
 #endif
 
 #if NETSTANDARD2_0
-        public async Task<IActionResult> Handle(string commandName, HttpRequest req, TraceWriter log)
+        public async Task<IActionResult> Handle(string commandName, HttpRequest req, ILogger log)
         {
-            log.Info($"Handle {commandName}");
+            log.LogInformation($"Handle {commandName}");
 
             try
             {
@@ -76,19 +77,19 @@ namespace CommandQuery.AzureFunctions
             }
             catch (CommandProcessorException exception)
             {
-                log.Error("Handle command failed", exception);
+                log.LogError(exception, "Handle command failed");
 
                 return new BadRequestObjectResult(exception.ToError());
             }
             catch (CommandValidationException exception)
             {
-                log.Error("Handle command failed", exception);
+                log.LogError(exception, "Handle command failed");
 
                 return new BadRequestObjectResult(exception.ToError());
             }
             catch (Exception exception)
             {
-                log.Error("Handle command failed", exception);
+                log.LogError(exception, "Handle command failed");
 
                 return new ObjectResult(exception.ToError())
                 {

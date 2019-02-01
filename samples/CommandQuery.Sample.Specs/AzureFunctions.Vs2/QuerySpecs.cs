@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Azure.WebJobs.Host;
+using Moq;
+using It = Machine.Specifications.It;
 
 namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
 {
@@ -22,7 +25,7 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
                 Establish context = () =>
                 {
                     Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
-                    Log = new FakeTraceWriter();
+                    Log = new Mock<TraceWriter>().Object;
                 };
 
                 It should_work = () =>
@@ -47,7 +50,7 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
                 Establish context = () =>
                 {
                     Req = GetHttpRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
-                    Log = new FakeTraceWriter();
+                    Log = new Mock<TraceWriter>().Object;
                 };
 
                 It should_work = () =>
@@ -68,7 +71,7 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
             }
 
             static DefaultHttpRequest Req;
-            static FakeTraceWriter Log;
+            static TraceWriter Log;
 
             static DefaultHttpRequest GetHttpRequest(string method, string content = null, Dictionary<string, string> query = null)
             {

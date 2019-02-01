@@ -7,6 +7,7 @@ using Machine.Specifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Specs.AzureFunctions.V2
 {
@@ -18,7 +19,7 @@ namespace CommandQuery.Specs.AzureFunctions.V2
             Establish context = () =>
             {
                 Req = new DefaultHttpRequest(new DefaultHttpContext());
-                Log = new FakeTraceWriter();
+                Log = An<ILogger>();
             };
 
             It should_handle_CommandValidationException = async () =>
@@ -43,7 +44,7 @@ namespace CommandQuery.Specs.AzureFunctions.V2
             };
 
             static DefaultHttpRequest Req;
-            static FakeTraceWriter Log;
+            static ILogger Log;
         }
     }
 }

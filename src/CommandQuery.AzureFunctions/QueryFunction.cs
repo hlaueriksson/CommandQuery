@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using Microsoft.Azure.WebJobs.Host;
 
 #if NET461
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Microsoft.Azure.WebJobs.Host;
 #endif
 
 #if NETSTANDARD2_0
@@ -15,6 +15,7 @@ using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Logging;
 #endif
 
 namespace CommandQuery.AzureFunctions
@@ -73,9 +74,9 @@ namespace CommandQuery.AzureFunctions
 #endif
 
 #if NETSTANDARD2_0
-        public async Task<IActionResult> Handle(string queryName, HttpRequest req, TraceWriter log)
+        public async Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log)
         {
-            log.Info($"Handle {queryName}");
+            log.LogInformation($"Handle {queryName}");
 
             try
             {
@@ -87,19 +88,19 @@ namespace CommandQuery.AzureFunctions
             }
             catch (QueryProcessorException exception)
             {
-                log.Error("Handle query failed", exception);
+                log.LogError(exception, "Handle query failed");
 
                 return new BadRequestObjectResult(exception.ToError());
             }
             catch (QueryValidationException exception)
             {
-                log.Error("Handle query failed", exception);
+                log.LogError(exception, "Handle query failed");
 
                 return new BadRequestObjectResult(exception.ToError());
             }
             catch (Exception exception)
             {
-                log.Error("Handle query failed", exception);
+                log.LogError(exception, "Handle query failed");
 
                 return new ObjectResult(exception.ToError())
                 {
