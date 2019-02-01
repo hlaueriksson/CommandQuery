@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{382E6C39-5EF6-453D-88DC-9079E57A240E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4875335E-26C1-4D2A-80E9-4362C823DF3B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4875335E-26C1-4D2A-80E9-4362C823DF3B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{2ABED991-418E-4266-B182-B277C311D49E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{2ABED991-418E-4266-B182-B277C311D49E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery", "src\CommandQuery\CommandQuery.csproj", "{9631F3FE-6AF2-419B-B3F9-E1E6832BEF98}"
 EndProject
@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AWSLambda", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AWSLambda", "samples\CommandQuery.Sample.AWSLambda\CommandQuery.Sample.AWSLambda.csproj", "{8FCB5501-0C6D-4E4C-BCEB-8AF0A1E7B307}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.DependencyInjection", "src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj", "{F890F49F-DFC9-471F-8974-8DC627316E62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.DependencyInjection", "src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj", "{F890F49F-DFC9-471F-8974-8DC627316E62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
