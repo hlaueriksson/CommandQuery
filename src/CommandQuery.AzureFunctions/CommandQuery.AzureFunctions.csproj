@@ -22,7 +22,7 @@ https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.AzureFunct
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.24" />
   </ItemGroup>
 
   <ItemGroup>
