@@ -12,7 +12,7 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommandHandler).Assembly.GetCommandProcessor(GetServiceCollection()));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {

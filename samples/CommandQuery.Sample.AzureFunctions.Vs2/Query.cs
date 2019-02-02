@@ -13,7 +13,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQueryHandler).Assembly.GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, TraceWriter log, string queryName)

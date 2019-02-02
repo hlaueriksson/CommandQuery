@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using CommandQuery.Sample.AzureFunctions.Vs2;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Queries;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.Sample.AWSLambda;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Queries;
 using Machine.Specifications;
 
 namespace CommandQuery.Sample.Specs.AWSLambda

@@ -1,11 +1,11 @@
 ﻿#if NET461
 using System;
 using System.Collections.Generic;
-using CommandQuery.Sample.AzureFunctions.Vs1;
-using CommandQuery.Sample.Queries;
-using Machine.Specifications;
 using System.Net.Http;
 using System.Web.Http;
+using CommandQuery.Sample.AzureFunctions.Vs1;
+using CommandQuery.Sample.Contracts.Queries;
+using Machine.Specifications;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1

@@ -9,8 +9,4 @@
     <PackageReference Include="CommandQuery" Version="0.7.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
-  </ItemGroup>
-
 </Project>

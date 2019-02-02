@@ -1,9 +1,9 @@
 ﻿#if NETCOREAPP2_0
 using System.Net.Http;
 using System.Text;
-using CommandQuery.Sample.Queries;
 using CommandQuery.Sample.AspNetCore;
 using CommandQuery.Sample.AspNetCore.Controllers;
+using CommandQuery.Sample.Contracts.Queries;
 using Machine.Specifications;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;

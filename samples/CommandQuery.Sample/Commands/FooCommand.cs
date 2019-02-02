@@ -1,12 +1,8 @@
 using System.Threading.Tasks;
+using CommandQuery.Sample.Contracts.Commands;
 
 namespace CommandQuery.Sample.Commands
 {
-    public class FooCommand : ICommand
-    {
-        public string Value { get; set; }
-    }
-
     public class FooCommandHandler : ICommandHandler<FooCommand>
     {
         private readonly ICultureService _cultureService;

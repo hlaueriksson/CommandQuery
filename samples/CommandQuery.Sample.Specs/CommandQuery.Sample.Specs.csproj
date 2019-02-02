@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
     <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
   </ItemGroup>
 

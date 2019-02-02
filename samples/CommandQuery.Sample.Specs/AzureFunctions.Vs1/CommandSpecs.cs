@@ -1,8 +1,8 @@
 ﻿#if NET461
-using CommandQuery.Sample.AzureFunctions.Vs1;
-using Machine.Specifications;
 using System.Net.Http;
 using System.Web.Http;
+using CommandQuery.Sample.AzureFunctions.Vs1;
+using Machine.Specifications;
 
 namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1
 {

@@ -30,8 +30,8 @@ namespace CommandQuery.Sample.AspNetCore
             services.AddMvc();
 
             // Add commands and queries.
-            services.AddCommands(typeof(FooCommand).Assembly);
-            services.AddQueries(typeof(BarQuery).Assembly);
+            services.AddCommands(typeof(FooCommandHandler).Assembly);
+            services.AddQueries(typeof(BarQueryHandler).Assembly);
 
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
