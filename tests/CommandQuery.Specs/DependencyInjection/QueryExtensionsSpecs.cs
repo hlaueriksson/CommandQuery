@@ -9,18 +9,20 @@ namespace CommandQuery.Specs.DependencyInjection
     {
         It should_GetQueryProcessor_from_Assembly = () =>
         {
-            var assembly = typeof(QueryExtensions).GetTypeInfo().Assembly;
+            var assembly = typeof(FakeQueryHandler).GetTypeInfo().Assembly;
             var result = assembly.GetQueryProcessor();
 
             result.ShouldNotBeNull();
+            result.GetQueries().ShouldContain(typeof(FakeQuery));
         };
 
         It should_GetQueryProcessor_from_Assemblies = () =>
         {
-            var assemblies = new[] { typeof(QueryExtensions).GetTypeInfo().Assembly };
+            var assemblies = new[] { typeof(FakeQueryHandler).GetTypeInfo().Assembly };
             var result = assemblies.GetQueryProcessor();
 
             result.ShouldNotBeNull();
+            result.GetQueries().ShouldContain(typeof(FakeQuery));
         };
     }
 }
