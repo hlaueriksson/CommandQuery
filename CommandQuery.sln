@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AzureFunctions
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore", "samples\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{241C4AF4-327D-4CA6-BEA7-438A61D4183B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample", "samples\CommandQuery.Sample\CommandQuery.Sample.csproj", "{52455585-4055-4747-81AF-13667CE64D3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Handlers", "samples\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj", "{52455585-4055-4747-81AF-13667CE64D3C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.Vs1", "samples\CommandQuery.Sample.AzureFunctions.Vs1\CommandQuery.Sample.AzureFunctions.Vs1.csproj", "{C515C1A3-7B21-4C7F-AD04-439B2055B39C}"
 EndProject

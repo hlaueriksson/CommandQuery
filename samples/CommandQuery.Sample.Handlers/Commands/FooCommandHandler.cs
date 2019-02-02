@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Commands;
 
-namespace CommandQuery.Sample.Commands
+namespace CommandQuery.Sample.Handlers.Commands
 {
     public class FooCommandHandler : ICommandHandler<FooCommand>
     {

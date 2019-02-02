@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Queries;
 
-namespace CommandQuery.Sample.Queries
+namespace CommandQuery.Sample.Handlers.Queries
 {
     public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
     {

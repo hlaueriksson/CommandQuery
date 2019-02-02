@@ -2,7 +2,8 @@
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;

@@ -37,7 +37,7 @@
       <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\CommandQuery.AspNet.WebApi.0.7.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="CommandQuery.Sample">
-      <HintPath>..\CommandQuery.Sample\bin\Debug\net461\CommandQuery.Sample.dll</HintPath>
+      <HintPath>..\CommandQuery.Sample.Handlers\bin\Debug\net461\CommandQuery.Sample.Handlers.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Specifications, Version=0.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\CommandQuery.Sample.AspNet.WebApi\packages\Machine.Specifications.0.12.0\lib\net45\Machine.Specifications.dll</HintPath>

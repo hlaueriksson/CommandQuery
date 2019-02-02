@@ -3,8 +3,9 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
 using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]

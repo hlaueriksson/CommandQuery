@@ -1,8 +1,9 @@
 ﻿using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace CommandQuery.Sample
+namespace CommandQuery.Sample.Handlers
 {
     public interface ICultureService
     {

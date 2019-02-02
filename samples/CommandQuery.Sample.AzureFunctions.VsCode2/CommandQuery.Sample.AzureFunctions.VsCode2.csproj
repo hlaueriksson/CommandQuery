@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
+    <ProjectReference Include="..\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

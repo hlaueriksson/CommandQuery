@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
-    <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
+    <ProjectReference Include="..\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">

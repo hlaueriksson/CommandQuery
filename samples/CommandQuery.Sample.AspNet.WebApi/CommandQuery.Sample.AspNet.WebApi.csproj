@@ -55,7 +55,7 @@
     </Reference>
     <Reference Include="CommandQuery.Sample, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CommandQuery.Sample\bin\Debug\net461\CommandQuery.Sample.dll</HintPath>
+      <HintPath>..\CommandQuery.Sample.Handlers\bin\Debug\net461\CommandQuery.Sample.Handlers.dll</HintPath>
     </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>packages\Unity.5.8.11\lib\net46\CommonServiceLocator.dll</HintPath>

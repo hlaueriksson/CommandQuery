@@ -1,6 +1,6 @@
 using System;
 
-namespace CommandQuery.Sample
+namespace CommandQuery.Sample.Handlers
 {
     public interface IDateTimeProxy
     {

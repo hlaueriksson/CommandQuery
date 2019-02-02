@@ -4,7 +4,8 @@ using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
 using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AWSLambda
