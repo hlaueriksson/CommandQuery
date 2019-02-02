@@ -9,7 +9,7 @@ namespace CommandQuery.DependencyInjection
     {
         internal static IEnumerable<Type> GetHandlers(this Assembly assembly, Type genericType)
         {
-            return assembly.GetTypes().Where(type => type.GetTypeInfo().IsClass && type.IsAssignableToGenericType(genericType));
+            return assembly.GetTypes().Where(type => type.GetTypeInfo().IsClass && type.IsAssignableToGenericType(genericType)).ToList();
         }
 
         internal static Type GetHandlerInterface(this Type type, Type genericType)
