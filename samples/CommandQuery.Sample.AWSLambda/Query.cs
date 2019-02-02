@@ -3,6 +3,7 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
 using CommandQuery.DependencyInjection;
+using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,9 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQueryHandler).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(
+            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
+                .GetQueryProcessor(GetServiceCollection()));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {

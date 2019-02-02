@@ -4,6 +4,7 @@ using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
 using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Contracts.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -12,7 +13,9 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommandHandler).Assembly.GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(
+            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
+                .GetCommandProcessor(GetServiceCollection()));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {

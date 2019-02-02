@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
+using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,9 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQueryHandler).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(
+            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
+                .GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, TraceWriter log, string queryName)

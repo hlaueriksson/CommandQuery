@@ -8,6 +8,7 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.24" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
     <ProjectReference Include="..\CommandQuery.Sample\CommandQuery.Sample.csproj" />
   </ItemGroup>
   <ItemGroup>

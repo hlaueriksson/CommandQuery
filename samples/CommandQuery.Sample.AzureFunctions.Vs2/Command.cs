@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Contracts.Commands;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -13,7 +14,9 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommandHandler).Assembly.GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(
+            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
+                .GetCommandProcessor(GetServiceCollection()));
 
         [FunctionName("Command")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, TraceWriter log, string commandName)

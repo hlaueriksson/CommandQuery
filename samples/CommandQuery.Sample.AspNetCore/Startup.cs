@@ -1,5 +1,7 @@
 ﻿using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,8 +32,8 @@ namespace CommandQuery.Sample.AspNetCore
             services.AddMvc();
 
             // Add commands and queries.
-            services.AddCommands(typeof(FooCommandHandler).Assembly);
-            services.AddQueries(typeof(BarQueryHandler).Assembly);
+            services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
