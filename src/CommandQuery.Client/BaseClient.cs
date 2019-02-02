@@ -19,6 +19,11 @@ namespace CommandQuery.Client
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        protected BaseClient(string baseUrl, Action<HttpClient> configAction) : this(baseUrl)
+        {
+            configAction(Client);
+        }
+
         protected T BaseGet<T>(object value)
             => Client.GetAsync("api/" + value.GetRequestUri())
                 .ConfigureAwait(false).GetAwaiter().GetResult()

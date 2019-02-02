@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CommandQuery.Client
 {
@@ -13,6 +15,7 @@ namespace CommandQuery.Client
     public class QueryClient : BaseClient, IQueryClient
     {
         public QueryClient(string baseUrl, int timeoutInSeconds = 10) : base(baseUrl, timeoutInSeconds) { }
+        public QueryClient(string baseUrl, Action<HttpClient> configAction) : base(baseUrl, configAction) { }
 
         public TResult Get<TResult>(IQuery<TResult> query) => BaseGet<TResult>(query);
         public async Task<TResult> GetAsync<TResult>(IQuery<TResult> query) => await BaseGetAsync<TResult>(query);

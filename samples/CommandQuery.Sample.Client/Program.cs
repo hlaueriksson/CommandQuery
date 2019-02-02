@@ -13,7 +13,10 @@ namespace CommandQuery.Sample.Client
             Console.WriteLine("Hello, press enter to proceed...");
             Console.ReadLine();
 
-            var commandClient = new CommandClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net");
+            var commandClient = new CommandClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net", x =>
+                {
+                    x.MaxResponseContentBufferSize = 1000000;
+                });
             var queryClient = new QueryClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net");
 
             //commandClient.Post(new FooCommand { Value = "sv-SE" });
