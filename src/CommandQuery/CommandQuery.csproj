@@ -33,4 +33,8 @@ https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.md
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CommandQuery.Abstractions\CommandQuery.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

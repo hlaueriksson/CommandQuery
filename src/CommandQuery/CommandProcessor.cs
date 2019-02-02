@@ -7,15 +7,6 @@ using Newtonsoft.Json.Linq;
 
 namespace CommandQuery
 {
-    public interface ICommand
-    {
-    }
-
-    public interface ICommandHandler<in TCommand> where TCommand : ICommand
-    {
-        Task HandleAsync(TCommand command);
-    }
-
     public interface ICommandProcessor
     {
         Task ProcessAsync(string commandName, string json);
