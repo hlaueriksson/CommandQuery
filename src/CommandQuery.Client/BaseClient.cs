@@ -7,7 +7,7 @@ namespace CommandQuery.Client
 {
     public abstract class BaseClient
     {
-        protected static readonly HttpClient Client = new HttpClient();
+        protected readonly HttpClient Client = new HttpClient();
 
         protected BaseClient(string baseUrl, int timeoutInSeconds = 10)
         {
@@ -25,7 +25,7 @@ namespace CommandQuery.Client
         }
 
         protected T BaseGet<T>(object value)
-            => Client.GetAsync("api/" + value.GetRequestUri())
+            => Client.GetAsync(value.GetRequestUri())
                 .ConfigureAwait(false).GetAwaiter().GetResult()
                 .EnsureSuccessStatusCode()
                 .Content.ReadAsAsync<T>()
@@ -33,24 +33,24 @@ namespace CommandQuery.Client
 
         protected async Task<T> BaseGetAsync<T>(object value)
         {
-            var response = await Client.GetAsync("api/" + value.GetRequestUri());
+            var response = await Client.GetAsync(value.GetRequestUri());
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<T>();
         }
 
         protected void BasePost(object value)
-            => Client.PostAsJsonAsync("api/" + value.GetType().Name, value)
+            => Client.PostAsJsonAsync(value.GetType().Name, value)
                 .ConfigureAwait(false).GetAwaiter().GetResult()
                 .EnsureSuccessStatusCode();
 
         protected async Task BasePostAsync(object value)
         {
-            var response = await Client.PostAsJsonAsync("api/" + value.GetType().Name, value);
+            var response = await Client.PostAsJsonAsync(value.GetType().Name, value);
             response.EnsureSuccessStatusCode();
         }
 
         protected T BasePost<T>(object value)
-            => Client.PostAsJsonAsync("api/" + value.GetType().Name, value)
+            => Client.PostAsJsonAsync(value.GetType().Name, value)
                 .ConfigureAwait(false).GetAwaiter().GetResult()
                 .EnsureSuccessStatusCode()
                 .Content.ReadAsAsync<T>()
@@ -58,7 +58,7 @@ namespace CommandQuery.Client
 
         protected async Task<T> BasePostAsync<T>(object value)
         {
-            var response = await Client.PostAsJsonAsync("api/" + value.GetType().Name, value);
+            var response = await Client.PostAsJsonAsync(value.GetType().Name, value);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<T>();
         }
