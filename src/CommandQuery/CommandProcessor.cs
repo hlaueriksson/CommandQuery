@@ -7,33 +7,77 @@ using Newtonsoft.Json.Linq;
 
 namespace CommandQuery
 {
+    /// <summary>
+    /// Process commands by invoking the corresponding handler.
+    /// </summary>
     public interface ICommandProcessor
     {
+        /// <summary>
+        /// Process a command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ProcessAsync(string commandName, string json);
 
+        /// <summary>
+        /// Process a command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ProcessAsync(string commandName, JObject json);
 
+        /// <summary>
+        /// Process a command.
+        /// </summary>
+        /// <param name="command">The command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ProcessAsync(ICommand command);
 
+        /// <summary>
+        /// Returns the types of commands that can be processed.
+        /// </summary>
+        /// <returns>Supported commands</returns>
         IEnumerable<Type> GetCommands();
     }
 
+    /// <summary>
+    /// Process commands by invoking the corresponding handler.
+    /// </summary>
     public class CommandProcessor : ICommandProcessor
     {
         private readonly ITypeCollection _typeCollection;
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandProcessor" /> class.
+        /// </summary>
+        /// <param name="typeCollection">A collection of supported commands</param>
+        /// <param name="serviceProvider">A service provider with supported command handlers</param>
         public CommandProcessor(ICommandTypeCollection typeCollection, IServiceProvider serviceProvider)
         {
             _typeCollection = typeCollection;
             _serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Process a command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task ProcessAsync(string commandName, string json)
         {
             await ProcessAsync(commandName, JObject.Parse(json));
         }
 
+        /// <summary>
+        /// Process a command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task ProcessAsync(string commandName, JObject json)
         {
             var commandType = _typeCollection.GetType(commandName);
@@ -47,6 +91,11 @@ namespace CommandQuery
             await ProcessAsync((dynamic)command);
         }
 
+        /// <summary>
+        /// Process a command.
+        /// </summary>
+        /// <param name="command">The command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task ProcessAsync(ICommand command)
         {
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
@@ -58,6 +107,10 @@ namespace CommandQuery
             await handler.HandleAsync((dynamic)command);
         }
 
+        /// <summary>
+        /// Returns the types of commands that can be processed.
+        /// </summary>
+        /// <returns>Supported commands</returns>
         public IEnumerable<Type> GetCommands()
         {
             return _typeCollection.GetTypes();

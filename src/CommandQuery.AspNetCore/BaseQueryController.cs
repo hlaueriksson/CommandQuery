@@ -10,22 +10,38 @@ using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AspNetCore
 {
+    /// <summary>
+    /// Base class for query controllers.
+    /// </summary>
     public abstract class BaseQueryController : Controller
     {
         private readonly IQueryProcessor _queryProcessor;
         private readonly ILogger<BaseQueryController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseQueryController" /> class.
+        /// </summary>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
         protected BaseQueryController(IQueryProcessor queryProcessor)
         {
             _queryProcessor = queryProcessor;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseQueryController" /> class.
+        /// </summary>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
+        /// <param name="logger">An <see cref="ILogger" /></param>
         protected BaseQueryController(IQueryProcessor queryProcessor, ILogger<BaseQueryController> logger)
         {
             _queryProcessor = queryProcessor;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets help.
+        /// </summary>
+        /// <returns>Query help</returns>
         [HttpGet]
         public IActionResult Help()
         {
@@ -37,6 +53,12 @@ namespace CommandQuery.AspNetCore
             return Json(result);
         }
 
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="json">The JSON representation of the query</param>
+        /// <returns>The result + 200, 400 or 500</returns>
         [HttpPost]
         [Route("{queryName}")]
         public async Task<IActionResult> HandlePost(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
@@ -67,6 +89,11 @@ namespace CommandQuery.AspNetCore
             }
         }
 
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <returns>The result + 200, 400 or 500</returns>
         [HttpGet]
         [Route("{queryName}")]
         public async Task<IActionResult> HandleGet(string queryName)

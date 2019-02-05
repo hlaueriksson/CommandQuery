@@ -20,26 +20,52 @@ using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
 {
+    /// <summary>
+    /// Handles queries for the Azure function.
+    /// </summary>
     public class QueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryFunction" /> class.
+        /// </summary>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
         public QueryFunction(IQueryProcessor queryProcessor)
         {
             _queryProcessor = queryProcessor;
         }
 
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="content">The JSON representation of the query</param>
+        /// <returns>The result of the query</returns>
         public async Task<object> Handle(string queryName, string content)
         {
             return await _queryProcessor.ProcessAsync<object>(queryName, content);
         }
 
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="query">The key/value representation of the query</param>
+        /// <returns>The result of the query</returns>
         public async Task<object> Handle(string queryName, IDictionary<string, string> query)
         {
             return await _queryProcessor.ProcessAsync<object>(queryName, query);
         }
 
 #if NET461
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="req">A <see cref="HttpRequestMessage" /></param>
+        /// <param name="log">A <see cref="TraceWriter" /></param>
+        /// <returns>The result + 200, 400 or 500</returns>
         public async Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log)
         {
             log.Info($"Handle {queryName}");
@@ -74,6 +100,13 @@ namespace CommandQuery.AzureFunctions
 #endif
 
 #if NETSTANDARD2_0
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="req">A <see cref="HttpRequest" /></param>
+        /// <param name="log">An <see cref="ILogger" /></param>
+        /// <returns>The result + 200, 400 or 500</returns>
         public async Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log)
         {
             log.LogInformation($"Handle {queryName}");

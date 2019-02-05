@@ -5,8 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.DependencyInjection
 {
+    /// <summary>
+    /// Extensions methods for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds command handlers to the <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/></param>
+        /// <param name="assemblies">Assemblies with command handlers</param>
+        /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddCommands(this IServiceCollection services, params Assembly[] assemblies)
         {
             var genericType = typeof(ICommandHandler<>);
@@ -19,6 +28,12 @@ namespace CommandQuery.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds query handlers to the <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/></param>
+        /// <param name="assemblies">Assemblies with query handlers</param>
+        /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddQueries(this IServiceCollection services, params Assembly[] assemblies)
         {
             var genericType = typeof(IQueryHandler<,>);
