@@ -4,7 +4,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using It = Machine.Specifications.It;
 
-namespace CommandQuery.Specs
+namespace CommandQuery.Specs._
 {
     public class CommandProcessorSpecs
     {

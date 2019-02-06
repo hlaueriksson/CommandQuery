@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CommandQuery.Internal;
 using Machine.Specifications;
 
-namespace CommandQuery.Specs.Internal
+namespace CommandQuery.Specs._.Internal
 {
     public class DictionaryExtensionsSpecs
     {

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Machine.Specifications;
 
-namespace CommandQuery.Specs
+namespace CommandQuery.Specs._
 {
     public class QueryTypeCollectionSpecs
     {
