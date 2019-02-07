@@ -14,9 +14,9 @@ namespace CommandQuery.Tests.AzureFunctions.V1
     {
         public async Task when_handling_the_query()
         {
-            Req = new HttpRequestMessage { Method = HttpMethod.Post, Content = new StringContent("") };
-            Req.SetConfiguration(new HttpConfiguration());
-            Log = new FakeTraceWriter();
+            _req = new HttpRequestMessage { Method = HttpMethod.Post, Content = new StringContent("") };
+            _req.SetConfiguration(new HttpConfiguration());
+            _log = new FakeTraceWriter();
 
             Use<Mock<IQueryProcessor>>();
 
@@ -25,7 +25,7 @@ namespace CommandQuery.Tests.AzureFunctions.V1
                 var queryName = "FakeQuery";
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(queryName, It.IsAny<string>())).Throws(new QueryValidationException("invalid"));
 
-                var result = await Subject.Handle(queryName, Req, Log);
+                var result = await Subject.Handle(queryName, _req, _log);
 
                 await result.ShouldBeErrorAsync("invalid");
             }
@@ -35,14 +35,14 @@ namespace CommandQuery.Tests.AzureFunctions.V1
                 var queryName = "FakeQuery";
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(queryName, It.IsAny<string>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(queryName, Req, Log);
+                var result = await Subject.Handle(queryName, _req, _log);
 
                 await result.ShouldBeErrorAsync("fail");
             }
         }
 
-        HttpRequestMessage Req;
-        FakeTraceWriter Log;
+        HttpRequestMessage _req;
+        FakeTraceWriter _log;
     }
 }
 #endif

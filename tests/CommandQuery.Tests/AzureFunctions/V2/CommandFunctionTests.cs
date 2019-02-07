@@ -17,8 +17,8 @@ namespace CommandQuery.Tests.AzureFunctions.V2
     {
         public async Task when_handling_the_command()
         {
-            Req = new DefaultHttpRequest(new DefaultHttpContext());
-            Log = Use<ILogger>();
+            _req = new DefaultHttpRequest(new DefaultHttpContext());
+            _log = Use<ILogger>();
 
             Use<Mock<ICommandProcessor>>();
 
@@ -27,7 +27,7 @@ namespace CommandQuery.Tests.AzureFunctions.V2
                 var commandName = "FakeCommand";
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(commandName, It.IsAny<string>())).Throws(new CommandValidationException("invalid"));
 
-                var result = await Subject.Handle(commandName, Req, Log) as BadRequestObjectResult;
+                var result = await Subject.Handle(commandName, _req, _log) as BadRequestObjectResult;
 
                 result.ShouldBeError("invalid");
             }
@@ -37,15 +37,15 @@ namespace CommandQuery.Tests.AzureFunctions.V2
                 var commandName = "FakeCommand";
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(commandName, It.IsAny<string>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(commandName, Req, Log) as ObjectResult;
+                var result = await Subject.Handle(commandName, _req, _log) as ObjectResult;
 
                 result.StatusCode.Should().Be(500);
                 result.ShouldBeError("fail");
             }
         }
 
-        DefaultHttpRequest Req;
-        ILogger Log;
+        DefaultHttpRequest _req;
+        ILogger _log;
     }
 }
 #endif

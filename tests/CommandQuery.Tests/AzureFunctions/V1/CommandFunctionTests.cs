@@ -14,9 +14,9 @@ namespace CommandQuery.Tests.AzureFunctions.V1
     {
         public async Task when_handling_the_command()
         {
-            Req = new HttpRequestMessage { Method = HttpMethod.Post, Content = new StringContent("") };
-            Req.SetConfiguration(new HttpConfiguration());
-            Log = new FakeTraceWriter();
+            _req = new HttpRequestMessage { Method = HttpMethod.Post, Content = new StringContent("") };
+            _req.SetConfiguration(new HttpConfiguration());
+            _log = new FakeTraceWriter();
 
             Use<Mock<ICommandProcessor>>();
 
@@ -25,7 +25,7 @@ namespace CommandQuery.Tests.AzureFunctions.V1
                 var commandName = "FakeCommand";
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(commandName, It.IsAny<string>())).Throws(new CommandValidationException("invalid"));
 
-                var result = await Subject.Handle(commandName, Req, Log);
+                var result = await Subject.Handle(commandName, _req, _log);
 
                 await result.ShouldBeErrorAsync("invalid");
             }
@@ -35,14 +35,14 @@ namespace CommandQuery.Tests.AzureFunctions.V1
                 var commandName = "FakeCommand";
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(commandName, It.IsAny<string>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(commandName, Req, Log);
+                var result = await Subject.Handle(commandName, _req, _log);
 
                 await result.ShouldBeErrorAsync("fail");
             }
         }
 
-        HttpRequestMessage Req;
-        FakeTraceWriter Log;
+        HttpRequestMessage _req;
+        FakeTraceWriter _log;
     }
 }
 #endif
