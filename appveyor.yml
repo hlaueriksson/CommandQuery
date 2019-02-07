@@ -6,6 +6,3 @@ before_build:
 build:
   project: CommandQuery.sln
   verbosity: minimal
-test_script:
-  - ps: "dotnet test .\\tests\\CommandQuery.Specs\\CommandQuery.Specs.csproj"
-  - ps: "dotnet test .\\samples\\CommandQuery.Sample.Specs\\CommandQuery.Sample.Specs.csproj"
