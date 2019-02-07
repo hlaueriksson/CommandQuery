@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Machine.Specifications.Runner.VisualStudio" Version="2.8.0" />
+    <!--<PackageReference Include="Machine.Specifications.Runner.VisualStudio" Version="2.8.0" />-->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
     <PackageReference Include="Machine.Specifications" Version="0.12.0" />
