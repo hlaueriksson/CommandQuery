@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Version>0.7.0</Version>
-    <Authors>hlaueriksson</Authors>
+    <Authors>Henrik Lau Eriksson</Authors>
     <Description>Dependency Injection for CommandQuery</Description>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

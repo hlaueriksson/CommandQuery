@@ -3,14 +3,24 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Version>0.7.0</Version>
-    <Authors>hlaueriksson</Authors>
-    <Description>Command Query Separation for .NET Framework and .NET Standard</Description>
+    <Authors>Henrik Lau Eriksson</Authors>
+    <Description>Clients for CommandQuery
+
+✔️ CommandClient
+✔️ QueryClient
+📄 https://hlaueriksson.me/CommandQuery.Client/
+    </Description>
     <PackageId>CommandQuery.Client</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

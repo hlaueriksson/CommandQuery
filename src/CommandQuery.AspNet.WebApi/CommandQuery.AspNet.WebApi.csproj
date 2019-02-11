@@ -3,19 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <Version>0.7.0</Version>
-    <Authors>hlaueriksson</Authors>
+    <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for ASP.NET Web API 2 🌐
 
-✔ Provides generic actions for handling the execution of commands and queries
-✔ Enables APIs based on HTTP POST and GET
-
-Documentation:
-https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.AspNet.WebApi.md
+✔️ Provides generic actions for handling the execution of commands and queries
+✔️ Enables APIs based on HTTP POST and GET
+📄 https://hlaueriksson.me/CommandQuery.AspNet.WebApi/
     </Description>
     <PackageId>CommandQuery.AspNet.WebApi</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
     <PackageTags>CommandQuery;Command;Query;CQS;WebApi;AspNetWebApi</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>

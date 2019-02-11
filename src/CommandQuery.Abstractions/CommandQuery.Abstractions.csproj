@@ -4,12 +4,18 @@
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <RootNamespace>CommandQuery</RootNamespace>
     <Version>0.7.0</Version>
-    <Authors>hlaueriksson</Authors>
-    <Description>Command Query Separation for .NET Framework and .NET Standard</Description>
+    <Authors>Henrik Lau Eriksson</Authors>
+    <Description>Interfaces for CommandQuery
+
+✔️ ICommand / ICommandHandler&lt;in TCommand&gt;
+✔️ IQuery&lt;TResult&gt; / IQueryHandler&lt;in TQuery, TResult&gt;
+📄 https://hlaueriksson.me/CommandQuery/
+    </Description>
     <PackageId>CommandQuery.Abstractions</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>

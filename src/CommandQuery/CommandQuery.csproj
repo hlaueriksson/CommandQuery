@@ -3,20 +3,19 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Version>0.7.0</Version>
-    <Authors>hlaueriksson</Authors>
+    <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for .NET Framework and .NET Standard ⚙️
 
-✔ Build services that separate the responsibility of commands and queries
-✔ Focus on implementing the handlers for commands and queries
-✔ Create APIs with less boilerplate code
-
-Documentation:
-https://github.com/hlaueriksson/CommandQuery/blob/master/CommandQuery.md
+✔️ Build services that separate the responsibility of commands and queries
+✔️ Focus on implementing the handlers for commands and queries
+✔️ Create APIs with less boilerplate code
+📄 https://hlaueriksson.me/CommandQuery/
     </Description>
     <PackageId>CommandQuery</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
