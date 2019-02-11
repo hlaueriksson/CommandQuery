@@ -1,8 +1,7 @@
-﻿#if NET461
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1
+namespace CommandQuery.Sample.AzureFunctions.Vs1.Tests
 {
     public class FakeTraceWriter : TraceWriter
     {
@@ -15,4 +14,3 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1
         }
     }
 }
-#endif

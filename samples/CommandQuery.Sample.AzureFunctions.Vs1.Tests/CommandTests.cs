@@ -1,35 +1,36 @@
-﻿#if NET461
-using System.Net.Http;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using CommandQuery.Sample.AzureFunctions.Vs1;
-using Machine.Specifications;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1
+namespace CommandQuery.Sample.AzureFunctions.Vs1.Tests
 {
-    public class CommandSpecs
+    public class CommandTests
     {
-        [Subject(typeof(Command))]
         public class when_using_the_real_function
         {
-            It should_work = () =>
+            [Test]
+            public async Task should_work()
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
                 var log = new FakeTraceWriter();
 
-                var result = Command.Run(req, log, "FooCommand").Result;
+                var result = await Command.Run(req, log, "FooCommand");
 
-                result.ShouldNotBeNull();
-            };
+                result.Should().NotBeNull();
+            }
 
-            It should_handle_errors = () =>
+            [Test]
+            public async Task should_handle_errors()
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
                 var log = new FakeTraceWriter();
 
-                var result = Command.Run(req, log, "FailCommand").Result;
+                var result = await Command.Run(req, log, "FailCommand");
 
-                result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
+                await result.ShouldBeErrorAsync("The command type 'FailCommand' could not be found");
+            }
 
             static HttpRequestMessage GetHttpRequest(string content)
             {
@@ -43,4 +44,3 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs1
         }
     }
 }
-#endif

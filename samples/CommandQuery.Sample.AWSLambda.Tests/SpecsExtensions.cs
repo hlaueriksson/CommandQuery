@@ -1,9 +1,8 @@
-﻿#if NETCOREAPP2_0
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Amazon.Lambda.APIGatewayEvents;
 using Newtonsoft.Json;
 
-namespace CommandQuery.Sample.Specs.AWSLambda
+namespace CommandQuery.Sample.AWSLambda.Tests
 {
     public static class SpecsExtensions
     {
@@ -27,4 +26,3 @@ namespace CommandQuery.Sample.Specs.AWSLambda
         }
     }
 }
-#endif

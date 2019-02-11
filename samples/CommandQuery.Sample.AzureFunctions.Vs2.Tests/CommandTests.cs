@@ -1,43 +1,43 @@
-﻿#if NETCOREAPP2_0
-using System.IO;
-using CommandQuery.Sample.AzureFunctions.Vs2;
-using Machine.Specifications;
+﻿using System.IO;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Host;
 using Moq;
-using It = Machine.Specifications.It;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
 {
-    public class CommandSpecs
+    public class CommandTests
     {
-        [Subject(typeof(Command))]
         public class when_using_the_real_function
         {
-            It should_work = () =>
+            [Test]
+            public async Task should_work()
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new Mock<TraceWriter>();
+                var log = new Mock<TraceWriter>(null);
 
-                var result = Command.Run(req, log.Object, "FooCommand").Result as EmptyResult;
+                var result = await Command.Run(req, log.Object, "FooCommand") as EmptyResult;
 
-                result.ShouldNotBeNull();
-            };
+                result.Should().NotBeNull();
+            }
 
-            It should_handle_errors = () =>
+            [Test]
+            public async Task should_handle_errors()
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new Mock<TraceWriter>();
+                var log = new Mock<TraceWriter>(null);
 
-                var result = Command.Run(req, log.Object, "FailCommand").Result as BadRequestObjectResult;
+                var result = await Command.Run(req, log.Object, "FailCommand") as BadRequestObjectResult;
 
                 result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
+            }
 
-            static DefaultHttpRequest GetHttpRequest(string content)
+            DefaultHttpRequest GetHttpRequest(string content)
             {
                 var httpContext = new DefaultHttpContext();
                 httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
@@ -47,4 +47,3 @@ namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
         }
     }
 }
-#endif

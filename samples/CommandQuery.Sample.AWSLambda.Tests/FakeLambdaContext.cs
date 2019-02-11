@@ -1,8 +1,7 @@
-﻿#if NETCOREAPP2_0
-using System;
+﻿using System;
 using Amazon.Lambda.Core;
 
-namespace CommandQuery.Sample.Specs.AWSLambda
+namespace CommandQuery.Sample.AWSLambda.Tests
 {
     public class FakeLambdaContext : ILambdaContext
     {
@@ -35,4 +34,3 @@ namespace CommandQuery.Sample.Specs.AWSLambda
         }
     }
 }
-#endif
