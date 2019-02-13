@@ -1,18 +1,20 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CommandQuery.Sample.AspNet.WebApi.Controllers;
-using Machine.Specifications;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
+namespace CommandQuery.Sample.AspNet.WebApi.Tests
 {
-    public class CommandControllerSpecs
+    public class CommandControllerTests
     {
-        [Subject(typeof(CommandController))]
         public class when_using_the_real_controller
         {
-            Establish context = () =>
+            [SetUp]
+            public void SetUp()
             {
                 var configuration = new HttpConfiguration();
                 WebApiConfig.Register(configuration);
@@ -24,25 +26,27 @@ namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
                     Request = new HttpRequestMessage(),
                     Configuration = configuration
                 };
-            };
+            }
 
-            It should_work = () =>
+            [Test]
+            public async Task should_work()
             {
                 var json = JObject.Parse("{ 'Value': 'Foo' }");
-                var result = Subject.Handle("FooCommand", json).Result as OkResult;
+                var result = await Subject.Handle("FooCommand", json) as OkResult;
 
-                result.ShouldNotBeNull();
-            };
+                result.Should().NotBeNull();
+            }
 
-            It should_handle_errors = () =>
+            [Test]
+            public async Task should_handle_errors()
             {
                 var json = JObject.Parse("{ 'Value': 'Foo' }");
-                var result = Subject.Handle("FailCommand", json).Result;
+                var result = await Subject.Handle("FailCommand", json);
 
-                result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
+                await result.ShouldBeErrorAsync("The command type 'FailCommand' could not be found");
+            }
 
-            static CommandController Subject;
+            CommandController Subject;
         }
     }
 }

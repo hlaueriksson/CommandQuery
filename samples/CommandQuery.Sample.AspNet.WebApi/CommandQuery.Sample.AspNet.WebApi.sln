@@ -5,7 +5,11 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.WebApi", "CommandQuery.Sample.AspNet.WebApi.csproj", "{A567CCA0-6775-43B7-8BEA-241D09AD7D67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.WebApi.Specs", "..\CommandQuery.Sample.AspNet.WebApi.Specs\CommandQuery.Sample.AspNet.WebApi.Specs.csproj", "{33887CED-6F05-450B-B793-8AD30A9C6BCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.WebApi.Tests", "..\CommandQuery.Sample.AspNet.WebApi.Tests\CommandQuery.Sample.AspNet.WebApi.Tests.csproj", "{33887CED-6F05-450B-B793-8AD30A9C6BCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Contracts", "..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj", "{EEF4A80C-5624-414F-988C-B24F16AC7D41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Handlers", "..\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj", "{E6A0EE34-70DC-4541-8CAF-06F910120155}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF4A80C-5624-414F-988C-B24F16AC7D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF4A80C-5624-414F-988C-B24F16AC7D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF4A80C-5624-414F-988C-B24F16AC7D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF4A80C-5624-414F-988C-B24F16AC7D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6A0EE34-70DC-4541-8CAF-06F910120155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6A0EE34-70DC-4541-8CAF-06F910120155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6A0EE34-70DC-4541-8CAF-06F910120155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6A0EE34-70DC-4541-8CAF-06F910120155}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

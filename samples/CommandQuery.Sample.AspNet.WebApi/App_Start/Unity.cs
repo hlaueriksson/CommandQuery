@@ -4,8 +4,11 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
 using Unity;
 using Unity.Exceptions;
 
@@ -19,8 +22,8 @@ namespace CommandQuery.Sample.AspNet.WebApi
 
             container.RegisterType<IServiceProvider, UnityServiceProvider>();
 
-            container.RegisterCommands(typeof(FooCommand).Assembly);
-            container.RegisterQueries(typeof(BarQuery).Assembly);
+            container.RegisterCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            container.RegisterQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             container.RegisterType<ICultureService, CultureService>();
             container.RegisterType<IDateTimeProxy, DateTimeProxy>();

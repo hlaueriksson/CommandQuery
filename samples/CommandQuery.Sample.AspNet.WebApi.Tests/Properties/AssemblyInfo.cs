@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CommandQuery.Sample.AspNet.WebApi.Specs")]
+[assembly: AssemblyTitle("CommandQuery.Sample.AspNet.WebApi.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CommandQuery.Sample.AspNet.WebApi.Specs")]
+[assembly: AssemblyProduct("CommandQuery.Sample.AspNet.WebApi.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

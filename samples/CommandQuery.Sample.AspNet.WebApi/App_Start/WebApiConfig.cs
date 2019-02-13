@@ -3,8 +3,11 @@ using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AspNet.WebApi
@@ -16,8 +19,8 @@ namespace CommandQuery.Sample.AspNet.WebApi
             // IoC
             var services = new ServiceCollection();
 
-            services.AddCommands(typeof(FooCommand).Assembly);
-            services.AddQueries(typeof(BarQuery).Assembly);
+            services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             services.AddTransient<ICultureService, CultureService>();
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
