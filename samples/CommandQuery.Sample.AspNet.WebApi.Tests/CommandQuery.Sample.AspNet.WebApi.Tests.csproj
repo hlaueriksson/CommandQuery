@@ -40,8 +40,8 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandControllerSpecs.cs" />
-    <Compile Include="QueryControllerSpecs.cs" />
+    <Compile Include="CommandControllerTests.cs" />
+    <Compile Include="QueryControllerTests.cs" />
     <Compile Include="ShouldExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
