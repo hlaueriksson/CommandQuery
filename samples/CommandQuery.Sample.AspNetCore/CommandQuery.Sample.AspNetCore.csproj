@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="CommandQuery.AspNetCore" Version="0.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
     <ProjectReference Include="..\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj" />
