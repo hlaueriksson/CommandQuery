@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -22,7 +22,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             public void SetUp()
             {
                 Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
-                Log = new Mock<TraceWriter>(null).Object;
+                Log = new Mock<ILogger>().Object;
             }
 
             [Test]
@@ -44,7 +44,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             }
 
             DefaultHttpRequest Req;
-            TraceWriter Log;
+            ILogger Log;
         }
 
         public class when_using_the_real_function_via_Get
@@ -53,7 +53,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             public void SetUp()
             {
                 Req = GetHttpRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
-                Log = new Mock<TraceWriter>(null).Object;
+                Log = new Mock<ILogger>().Object;
             }
 
             [Test]
@@ -75,7 +75,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             }
 
             DefaultHttpRequest Req;
-            TraceWriter Log;
+            ILogger Log;
         }
 
         static DefaultHttpRequest GetHttpRequest(string method, string content = null, Dictionary<string, string> query = null)

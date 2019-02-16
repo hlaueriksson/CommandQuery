@@ -20,13 +20,13 @@ namespace CommandQuery.Sample.Client
                 });
             var queryClient = new QueryClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/query/");
 
-            //commandClient.Post(new FooCommand { Value = "sv-SE" });
-            //queryClient.Post(new BarQuery { Id = 1 }).Log();
-            //queryClient.Get(new BarQuery { Id = 1 }).Log();
+            commandClient.Post(new FooCommand { Value = "sv-SE" });
+            queryClient.Post(new BarQuery { Id = 1 }).Log();
+            queryClient.Get(new BarQuery { Id = 1 }).Log();
 
-            //await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
-            //(await queryClient.PostAsync(new BarQuery { Id = 1 })).Log();
-            //(await queryClient.GetAsync(new BarQuery { Id = 1 })).Log();
+            await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
+            (await queryClient.PostAsync(new BarQuery { Id = 1 })).Log();
+            (await queryClient.GetAsync(new BarQuery { Id = 1 })).Log();
 
             Console.WriteLine("Press [Enter] to exit");
             Console.ReadLine();

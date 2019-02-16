@@ -10,7 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CommandQuery.Client\CommandQuery.Client.csproj" />
+    <PackageReference Include="CommandQuery.Client" Version="0.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
   </ItemGroup>
 

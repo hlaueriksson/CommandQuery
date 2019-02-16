@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -19,7 +19,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             public async Task should_work()
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new Mock<TraceWriter>(null);
+                var log = new Mock<ILogger>();
 
                 var result = await Command.Run(req, log.Object, "FooCommand") as EmptyResult;
 
@@ -30,7 +30,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             public async Task should_handle_errors()
             {
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new Mock<TraceWriter>(null);
+                var log = new Mock<ILogger>();
 
                 var result = await Command.Run(req, log.Object, "FailCommand") as BadRequestObjectResult;
 
