@@ -2,7 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Version>0.7.0</Version>
+    <Version>0.8.0</Version>
+    <PackageReleaseNotes>ChangeLog:
+
+✨ Moved interfaces to CommandQuery.Abstractions
+  ✔️ ICommand / ICommandHandler&lt;in TCommand&gt;
+  ✔️ IQuery&lt;TResult&gt; / IQueryHandler&lt;in TQuery, TResult&gt;
+    </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for .NET Framework and .NET Standard ⚙️
 

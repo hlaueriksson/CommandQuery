@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>0.7.0</Version>
+    <Version>0.8.0</Version>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for ASP.NET Core 🌐
 
