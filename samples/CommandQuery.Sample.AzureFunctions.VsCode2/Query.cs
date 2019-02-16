@@ -1,22 +1,26 @@
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.AzureFunctions.VsCode2
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(
+            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
+                .GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, TraceWriter log, string queryName)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, ILogger log, string queryName)
         {
             return await Func.Handle(queryName, req, log);
         }

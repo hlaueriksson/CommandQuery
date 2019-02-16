@@ -5,9 +5,6 @@
       "label": "clean",
       "command": "dotnet clean",
       "type": "shell",
-      "presentation": {
-        "reveal": "always"
-      },
       "problemMatcher": "$msCompile"
     },
     {
@@ -19,25 +16,30 @@
         "kind": "build",
         "isDefault": true
       },
-      "presentation": {
-        "reveal": "always"
-      },
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "Run Functions Host",
-      "identifier": "runFunctionsHost",
+      "label": "clean release",
+      "command": "dotnet clean --configuration Release",
       "type": "shell",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "publish",
+      "command": "dotnet publish --configuration Release",
+      "type": "shell",
+      "dependsOn": "clean release",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "type": "func",
       "dependsOn": "build",
       "options": {
         "cwd": "${workspaceFolder}/bin/Debug/net461"
       },
-      "command": "func host start",
+      "command": "host start",
       "isBackground": true,
-      "presentation": {
-        "reveal": "always"
-      },
-      "problemMatcher": []
+      "problemMatcher": "$func-watch"
     }
   ]
 }

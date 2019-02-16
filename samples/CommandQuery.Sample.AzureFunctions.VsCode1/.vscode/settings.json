@@ -2,5 +2,7 @@
   "azureFunctions.projectRuntime": "~1",
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.templateFilter": "Verified",
-  "azureFunctions.deploySubpath": "bin/Debug/net461"
+  "azureFunctions.deploySubpath": "bin/Release/net461/publish",
+  "azureFunctions.preDeployTask": "publish",
+  "debug.internalConsoleOptions": "neverOpen"
 }
