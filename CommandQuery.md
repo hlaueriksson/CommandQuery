@@ -2,7 +2,7 @@
 
 > Command Query Separation for .NET Framework and .NET Standard ⚙️
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery)
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.svg)](https://www.nuget.org/packages/CommandQuery)
 
 `PM>` `Install-Package CommandQuery`
 
@@ -10,7 +10,9 @@
 
 ## Sample Code
 
-[`CommandQuery.Sample`](/samples/CommandQuery.Sample)
+[`CommandQuery.Sample.Contracts`](/samples/CommandQuery.Sample.Contracts)
+
+[`CommandQuery.Sample.Handlers`](/samples/CommandQuery.Sample.Handlers)
 
 ## Commands
 

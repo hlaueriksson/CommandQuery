@@ -2,7 +2,7 @@
 
 > Clients for CommandQuery
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.Client.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.Client.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery.Client)
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.Client.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.Client.svg)](https://www.nuget.org/packages/CommandQuery.Client)
 
 `PM>` `Install-Package CommandQuery.Client`
 

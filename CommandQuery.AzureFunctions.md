@@ -5,7 +5,7 @@
 * Provides generic function support for commands and queries with *HTTPTriggers*
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AzureFunctions.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery.AzureFunctions)
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AzureFunctions.svg)](https://www.nuget.org/packages/CommandQuery.AzureFunctions)
 
 `PM>` `Install-Package CommandQuery.AzureFunctions`
 
@@ -15,9 +15,9 @@
 
 * *Visual Studio*:
     * [`CommandQuery.Sample.AzureFunctions.Vs1`](/samples/CommandQuery.Sample.AzureFunctions.Vs1) - Azure Functions v1 (.NET Framework)
+    * [`CommandQuery.Sample.AzureFunctions.Vs1.Tests`](/samples/CommandQuery.Sample.AzureFunctions.Vs1.Tests)
     * [`CommandQuery.Sample.AzureFunctions.Vs2`](/samples/CommandQuery.Sample.AzureFunctions.Vs2) - Azure Functions v2 (.NET Core)
-    * [`CommandQuery.Sample.Specs/AzureFunctions.Vs1`](/samples/CommandQuery.Sample.Specs/AzureFunctions.Vs1)
-    * [`CommandQuery.Sample.Specs/AzureFunctions.Vs2`](/samples/CommandQuery.Sample.Specs/AzureFunctions.Vs2)
+    * [`CommandQuery.Sample.AzureFunctions.Vs2.Tests`](/samples/CommandQuery.Sample.AzureFunctions.Vs2.Tests)
 * *Visual Studio Code*:
     * [`CommandQuery.Sample.AzureFunctions.VsCode1`](/samples/CommandQuery.Sample.AzureFunctions.VsCode1) - Azure Functions v1 (.NET Framework)
     * [`CommandQuery.Sample.AzureFunctions.VsCode2`](/samples/CommandQuery.Sample.AzureFunctions.VsCode2) - Azure Functions v2 (.NET Core)
@@ -85,7 +85,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
@@ -95,7 +97,9 @@ namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
     public static class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(
+            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
+                .GetCommandProcessor(GetServiceCollection()));
 
         [FunctionName("Command")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestMessage req, TraceWriter log, string commandName)
@@ -121,22 +125,26 @@ Add a `Command` function in *Azure Functions v2 (.NET Core)*:
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(
+            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
+                .GetCommandProcessor(GetServiceCollection()));
 
         [FunctionName("Command")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, TraceWriter log, string commandName)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, ILogger log, string commandName)
         {
             return await Func.Handle(commandName, req, log);
         }
@@ -172,7 +180,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
@@ -182,7 +192,9 @@ namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(
+            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
+                .GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequestMessage req, TraceWriter log, string queryName)
@@ -208,22 +220,26 @@ Add a `Query` function in *Azure Functions v2 (.NET Core)*:
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
     public static class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(
+            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
+                .GetQueryProcessor(GetServiceCollection()));
 
         [FunctionName("Query")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, TraceWriter log, string queryName)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, ILogger log, string queryName)
         {
             return await Func.Handle(queryName, req, log);
         }
@@ -255,171 +271,96 @@ Example of query requests via [curl](https://curl.haxx.se):
 
 ## Testing
 
-Test commands:
+Test commands in *Azure Functions v1 (.NET Framework)*:
 
 ```csharp
-using System.IO;
-using CommandQuery.Sample.AzureFunctions.Vs2;
-using Machine.Specifications;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+namespace CommandQuery.Sample.AzureFunctions.Vs1.Tests
 {
-    public class CommandSpecs
+    public class CommandTests
     {
-        [Subject(typeof(Command))]
-        public class when_using_the_real_function
+        [Test]
+        public async Task should_work()
         {
-            It should_work = () =>
-            {
-                var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new FakeTraceWriter();
+            var req = GetHttpRequest("{ 'Value': 'Foo' }");
+            var log = new FakeTraceWriter();
 
-                var result = Command.Run(req, log, "FooCommand").Result as EmptyResult;
+            var result = await Command.Run(req, log, "FooCommand");
 
-                result.ShouldNotBeNull();
-            };
+            result.Should().NotBeNull();
+        }
 
-            It should_handle_errors = () =>
-            {
-                var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new FakeTraceWriter();
+        static HttpRequestMessage GetHttpRequest(string content)
+        {
+            var config = new HttpConfiguration();
+            var request = new HttpRequestMessage();
+            request.SetConfiguration(config);
+            request.Content = new StringContent(content);
 
-                var result = Command.Run(req, log, "FailCommand").Result as BadRequestObjectResult;
-
-                result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
-
-            static DefaultHttpRequest GetHttpRequest(string content)
-            {
-                var httpContext = new DefaultHttpContext();
-                httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
-
-                return new DefaultHttpRequest(httpContext);
-            }
+            return request;
         }
     }
 }
 ```
 
-Test queries:
+Test queries in *Azure Functions v2 (.NET Core)*:
 
 ```csharp
-using System.Collections.Generic;
 using System.IO;
-using CommandQuery.Sample.AzureFunctions.Vs2;
-using CommandQuery.Sample.Queries;
-using Machine.Specifications;
+using System.Threading.Tasks;
+using CommandQuery.Sample.Contracts.Queries;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
+namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
 {
-    public class QuerySpecs
+    public class QueryTests
     {
-        [Subject(typeof(Query))]
-        public class when_using_the_real_function
+        [SetUp]
+        public void SetUp()
         {
-            public class method_Post
-            {
-                Establish context = () =>
-                {
-                    Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
-                    Log = new FakeTraceWriter();
-                };
-
-                It should_work = () =>
-                {
-                    var result = Query.Run(Req, Log, "BarQuery").Result as OkObjectResult;
-                    var value = result.Value as Bar;
-
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var result = Query.Run(Req, Log, "FailQuery").Result as BadRequestObjectResult;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            public class method_Get
-            {
-                Establish context = () =>
-                {
-                    Req = GetHttpRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
-                    Log = new FakeTraceWriter();
-                };
-
-                It should_work = () =>
-                {
-                    var result = Query.Run(Req, Log, "BarQuery").Result as OkObjectResult;
-                    var value = result.Value as Bar;
-
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var result = Query.Run(Req, Log, "FailQuery").Result as BadRequestObjectResult;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            static DefaultHttpRequest Req;
-            static FakeTraceWriter Log;
-
-            static DefaultHttpRequest GetHttpRequest(string method, string content = null, Dictionary<string, string> query = null)
-            {
-                var httpContext = new DefaultHttpContext();
-
-                if (content != null)
-                {
-                    httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
-                }
-
-                var request = new DefaultHttpRequest(httpContext) { Method = method };
-
-                if (query != null)
-                {
-                    request.QueryString = new QueryString(QueryHelpers.AddQueryString("", query));
-                }
-
-                return request;
-            }
+            Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
+            Log = new Mock<ILogger>().Object;
         }
-    }
-}
-```
 
-Helpers:
-
-```csharp
-using Machine.Specifications;
-using Microsoft.AspNetCore.Mvc;
-
-namespace CommandQuery.Sample.Specs.AzureFunctions.Vs2
-{
-    public static class ShouldExtensions
-    {
-        public static void ShouldBeError(this ObjectResult result, string message)
+        [Test]
+        public async Task should_work()
         {
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldNotEqual(200);
-            var value = result.Value as Error;
-            value.ShouldNotBeNull();
-            value.Message.ShouldEqual(message);
+            var result = await Query.Run(Req, Log, "BarQuery") as OkObjectResult;
+            var value = result.Value as Bar;
+
+            value.Id.Should().Be(1);
+            value.Value.Should().NotBeEmpty();
         }
+
+        DefaultHttpRequest GetHttpRequest(string method, string content = null)
+        {
+            var httpContext = new DefaultHttpContext();
+
+            if (content != null)
+            {
+                httpContext.Features.Get<IHttpRequestFeature>().Body =
+                    new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+            }
+
+            var request = new DefaultHttpRequest(httpContext) { Method = method };
+
+            return request;
+        }
+
+        DefaultHttpRequest Req;
+        ILogger Log;
     }
 }
 ```

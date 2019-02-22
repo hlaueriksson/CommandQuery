@@ -5,7 +5,7 @@
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNet.WebApi.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNet.WebApi.svg)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
 
 `PM>` `Install-Package CommandQuery.AspNet.WebApi`
 
@@ -15,7 +15,7 @@
 
 [`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
 
-[`CommandQuery.Sample.AspNet.WebApi.Specs`](/samples/CommandQuery.Sample.AspNet.WebApi.Specs)
+[`CommandQuery.Sample.AspNet.WebApi.Tests`](/samples/CommandQuery.Sample.AspNet.WebApi.Tests)
 
 ## Get Started
 
@@ -132,8 +132,11 @@ using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AspNet.WebApi
@@ -145,8 +148,8 @@ namespace CommandQuery.Sample.AspNet.WebApi
             // IoC
             var services = new ServiceCollection();
 
-            services.AddCommands(typeof(FooCommand).Assembly);
-            services.AddQueries(typeof(BarQuery).Assembly);
+            services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             services.AddTransient<ICultureService, CultureService>();
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
@@ -188,51 +191,43 @@ Test commands:
 
 ```csharp
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CommandQuery.Sample.AspNet.WebApi.Controllers;
-using Machine.Specifications;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
+namespace CommandQuery.Sample.AspNet.WebApi.Tests
 {
-    public class CommandControllerSpecs
+    public class CommandControllerTests
     {
-        [Subject(typeof(CommandController))]
-        public class when_using_the_real_controller
+        [SetUp]
+        public void SetUp()
         {
-            Establish context = () =>
+            var configuration = new HttpConfiguration();
+            WebApiConfig.Register(configuration);
+
+            var commandProcessor = configuration.DependencyResolver.GetService(typeof(ICommandProcessor)) as ICommandProcessor;
+
+            Subject = new CommandController(commandProcessor, null)
             {
-                var configuration = new HttpConfiguration();
-                WebApiConfig.Register(configuration);
-
-                var commandProcessor = configuration.DependencyResolver.GetService(typeof(ICommandProcessor)) as ICommandProcessor;
-
-                Subject = new CommandController(commandProcessor)
-                {
-                    Request = new HttpRequestMessage(),
-                    Configuration = configuration
-                };
+                Request = new HttpRequestMessage(),
+                Configuration = configuration
             };
-
-            It should_work = () =>
-            {
-                var json = JObject.Parse("{ 'Value': 'Foo' }");
-                var result = Subject.Handle("FooCommand", json).Result as OkResult;
-
-                result.ShouldNotBeNull();
-            };
-
-            It should_handle_errors = () =>
-            {
-                var json = JObject.Parse("{ 'Value': 'Foo' }");
-                var result = Subject.Handle("FailCommand", json).Result;
-
-                result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
-
-            static CommandController Subject;
         }
+
+        [Test]
+        public async Task should_work()
+        {
+            var json = JObject.Parse("{ 'Value': 'Foo' }");
+            var result = await Subject.Handle("FooCommand", json) as OkResult;
+
+            result.Should().NotBeNull();
+        }
+
+        CommandController Subject;
     }
 }
 ```
@@ -240,117 +235,48 @@ namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
 Test queries:
 
 ```csharp
-using System;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using CommandQuery.Sample.AspNet.WebApi.Controllers;
-using CommandQuery.Sample.Queries;
-using Machine.Specifications;
+using CommandQuery.Sample.Contracts.Queries;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
+namespace CommandQuery.Sample.AspNet.WebApi.Tests
 {
-    public class QueryControllerSpecs
+    public class QueryControllerTests
     {
-        [Subject(typeof(QueryController))]
-        public class when_using_the_real_controller
+        [SetUp]
+        public void SetUp()
         {
-            Establish context = () =>
+            var configuration = new HttpConfiguration();
+            WebApiConfig.Register(configuration);
+
+            var queryProcessor = configuration.DependencyResolver.GetService(typeof(IQueryProcessor)) as IQueryProcessor;
+
+            Subject = new QueryController(queryProcessor, null)
             {
-                var configuration = new HttpConfiguration();
-                WebApiConfig.Register(configuration);
-
-                var queryProcessor = configuration.DependencyResolver.GetService(typeof(IQueryProcessor)) as IQueryProcessor;
-
-                Subject = new QueryController(queryProcessor)
-                {
-                    Request = new HttpRequestMessage(),
-                    Configuration = configuration
-                };
+                Request = new HttpRequestMessage(),
+                Configuration = configuration
             };
-
-            public class method_Post
-            {
-                It should_work = () =>
-                {
-                    var json = JObject.Parse("{ 'Id': 1 }");
-                    var result = Subject.HandlePost("BarQuery", json).Result.ExecuteAsync(CancellationToken.None).Result;
-                    var value = result.Content.ReadAsAsync<Bar>().Result;
-
-                    result.EnsureSuccessStatusCode();
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var json = JObject.Parse("{ 'Id': 1 }");
-                    var result = Subject.HandlePost("FailQuery", json).Result;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            public class method_Get
-            {
-                Establish context = () =>
-                {
-                    Subject.Request = new HttpRequestMessage
-                    {
-                        RequestUri = new Uri("http://localhost/api/query/BarQuery?Id=1")
-                    };
-                };
-
-                It should_work = () =>
-                {
-                    var result = Subject.HandleGet("BarQuery").Result.ExecuteAsync(CancellationToken.None).Result;
-                    var value = result.Content.ReadAsAsync<Bar>().Result;
-
-                    result.EnsureSuccessStatusCode();
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var result = Subject.HandleGet("FailQuery").Result;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            static QueryController Subject;
         }
-    }
-}
-```
 
-Helpers:
-
-```csharp
-using System.Net.Http;
-using System.Threading;
-using System.Web.Http;
-using Machine.Specifications;
-
-namespace CommandQuery.Sample.AspNet.WebApi.Specs.Controllers
-{
-    public static class ShouldExtensions
-    {
-        public static void ShouldBeError(this IHttpActionResult result, string message)
+        [Test]
+        public async Task should_work()
         {
-            result.ExecuteAsync(CancellationToken.None).Result.ShouldBeError(message);
+            var json = JObject.Parse("{ 'Id': 1 }");
+            var result = await (await Subject.HandlePost("BarQuery", json)).ExecuteAsync(CancellationToken.None);
+            var value = await result.Content.ReadAsAsync<Bar>();
+
+            result.EnsureSuccessStatusCode();
+            value.Id.Should().Be(1);
+            value.Value.Should().NotBeEmpty();
         }
 
-        public static void ShouldBeError(this HttpResponseMessage result, string message)
-        {
-            result.ShouldNotBeNull();
-            result.IsSuccessStatusCode.ShouldBeFalse();
-            var value = result.Content.ReadAsStringAsync().Result;
-            value.ShouldNotBeNull();
-            value.ShouldContain(message);
-        }
+        QueryController Subject;
     }
 }
 ```

@@ -5,7 +5,7 @@
 * Provides generic function support for commands and queries with *Amazon API Gateway*
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AWSLambda.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery.AWSLambda)
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AWSLambda.svg)](https://www.nuget.org/packages/CommandQuery.AWSLambda)
 
 `PM>` `Install-Package CommandQuery.AWSLambda`
 
@@ -15,7 +15,7 @@
 
 [`CommandQuery.Sample.AWSLambda`](/samples/CommandQuery.Sample.AWSLambda)
 
-[`CommandQuery.Sample.Specs/AWSLambda`](/samples/CommandQuery.Sample.Specs/AWSLambda)
+[`CommandQuery.Sample.AWSLambda.Tests`](/samples/CommandQuery.Sample.AWSLambda.Tests)
 
 ## Get Started
 
@@ -51,7 +51,9 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -60,7 +62,9 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(typeof(FooCommand).Assembly.GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(
+            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
+                .GetCommandProcessor(GetServiceCollection()));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {
@@ -95,14 +99,18 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AWSLambda
 {
     public class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(typeof(BarQuery).Assembly.GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(
+            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
+                .GetQueryProcessor(GetServiceCollection()));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {
@@ -202,39 +210,27 @@ Configuration in `serverless.template`:
 Test commands:
 
 ```csharp
+using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
-using CommandQuery.Sample.AWSLambda;
-using Machine.Specifications;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AWSLambda
+namespace CommandQuery.Sample.AWSLambda.Tests
 {
-    public class CommandSpecs
+    public class CommandTests
     {
-        [Subject(typeof(Command))]
-        public class when_using_the_real_function
+        [Test]
+        public async Task should_work()
         {
-            It should_work = () =>
-            {
-                var request = GetRequest("{ 'Value': 'Foo' }");
-                var context = new FakeLambdaContext();
+            var request = GetRequest("{ 'Value': 'Foo' }");
+            var context = new FakeLambdaContext();
 
-                var result = new Command().Handle(request.CommandName("FooCommand"), context).Result;
+            var result = await new Command().Handle(request.CommandName("FooCommand"), context);
 
-                result.ShouldNotBeNull();
-            };
-
-            It should_handle_errors = () =>
-            {
-                var request = GetRequest("{ 'Value': 'Foo' }");
-                var context = new FakeLambdaContext();
-
-                var result = new Command().Handle(request.CommandName("FailCommand"), context).Result;
-
-                result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
-
-            static APIGatewayProxyRequest GetRequest(string content) => new APIGatewayProxyRequest { Body = content };
+            result.Should().NotBeNull();
         }
+
+        APIGatewayProxyRequest GetRequest(string content) => new APIGatewayProxyRequest { Body = content };
     }
 }
 ```
@@ -243,110 +239,50 @@ Test queries:
 
 ```csharp
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using CommandQuery.Sample.AWSLambda;
-using CommandQuery.Sample.Queries;
-using Machine.Specifications;
+using CommandQuery.Sample.Contracts.Queries;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AWSLambda
+namespace CommandQuery.Sample.AWSLambda.Tests
 {
-    public class QuerySpecs
+    public class QueryTests
     {
-        [Subject(typeof(Query))]
-        public class when_using_the_real_function
+        [SetUp]
+        public void SetUp()
         {
-            public class method_Post
-            {
-                Establish context = () =>
-                {
-                    Subject = new Query();
-                    Request = GetRequest("POST", content: "{ 'Id': 1 }");
-                    Context = new FakeLambdaContext();
-                };
-
-                It should_work = () =>
-                {
-                    var result = Subject.Handle(Request.QueryName("BarQuery"), Context).Result;
-                    var value = result.As<Bar>();
-
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var result = Subject.Handle(Request.QueryName("FailQuery"), Context).Result;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            public class method_Get
-            {
-                Establish context = () =>
-                {
-                    Subject = new Query();
-                    Request = GetRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
-                    Context = new FakeLambdaContext();
-                };
-
-                It should_work = () =>
-                {
-                    var result = Subject.Handle(Request.QueryName("BarQuery"), Context).Result;
-                    var value = result.As<Bar>();
-
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var result = Subject.Handle(Request.QueryName("FailQuery"), Context).Result;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            static Query Subject;
-            static APIGatewayProxyRequest Request;
-            static ILambdaContext Context;
-
-            static APIGatewayProxyRequest GetRequest(string method, string content = null, Dictionary<string, string> query = null)
-            {
-                var request = new APIGatewayProxyRequest
-                {
-                    HttpMethod = method,
-                    Body = content,
-                    QueryStringParameters = query
-                };
-
-                return request;
-            }
+            Subject = new Query();
+            Request = GetRequest("POST", content: "{ 'Id': 1 }");
+            Context = new FakeLambdaContext();
         }
-    }
-}
-```
 
-Helpers:
-
-```csharp
-using Amazon.Lambda.APIGatewayEvents;
-using Machine.Specifications;
-using Newtonsoft.Json;
-
-namespace CommandQuery.Sample.Specs.AWSLambda
-{
-    public static class ShouldExtensions
-    {
-        public static void ShouldBeError(this APIGatewayProxyResponse result, string message)
+        [Test]
+        public async Task should_work()
         {
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldNotEqual(200);
-            var value = JsonConvert.DeserializeObject<Error>(result.Body);
-            value.ShouldNotBeNull();
-            value.Message.ShouldEqual(message);
+            var result = await Subject.Handle(Request.QueryName("BarQuery"), Context);
+            var value = result.As<Bar>();
+
+            value.Id.Should().Be(1);
+            value.Value.Should().NotBeEmpty();
         }
+
+        APIGatewayProxyRequest GetRequest(string method, string content = null, Dictionary<string, string> query = null)
+        {
+            var request = new APIGatewayProxyRequest
+            {
+                HttpMethod = method,
+                Body = content,
+                QueryStringParameters = query
+            };
+
+            return request;
+        }
+
+        Query Subject;
+        APIGatewayProxyRequest Request;
+        ILambdaContext Context;
     }
 }
 ```

@@ -5,7 +5,7 @@
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg?style=flat-square) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNetCore.svg?style=flat-square)](https://www.nuget.org/packages/CommandQuery.AspNetCore)
+[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNetCore.svg)](https://www.nuget.org/packages/CommandQuery.AspNetCore)
 
 `PM>` `Install-Package CommandQuery.AspNetCore`
 
@@ -15,7 +15,7 @@
 
 [`CommandQuery.Sample.AspNetCore`](/samples/CommandQuery.Sample.AspNetCore)
 
-[`CommandQuery.Sample.Specs/AspNetCore`](/samples/CommandQuery.Sample.Specs/AspNetCore)
+[`CommandQuery.Sample.AspNetCore.Tests`](/samples/CommandQuery.Sample.AspNetCore.Tests)
 
 ## Get Started
 
@@ -126,39 +126,36 @@ Configuration in `Startup.cs`:
 
 ```csharp
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Commands;
-using CommandQuery.Sample.Queries;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.AspNetCore
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Add commands and queries.
-            services.AddCommands(typeof(FooCommand).Assembly);
-            services.AddQueries(typeof(BarQuery).Assembly);
+            services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
@@ -166,16 +163,19 @@ namespace CommandQuery.Sample.AspNetCore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
@@ -197,45 +197,35 @@ Test commands:
 ```csharp
 using System.Net.Http;
 using System.Text;
-using CommandQuery.Sample.AspNetCore;
-using CommandQuery.Sample.AspNetCore.Controllers;
-using Machine.Specifications;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
+namespace CommandQuery.Sample.AspNetCore.Tests
 {
-    public class CommandControllerSpecs
+    public class CommandControllerTests
     {
-        [Subject(typeof(CommandController))]
-        public class when_using_the_real_controller
+        [SetUp]
+        public void SetUp()
         {
-            Establish context = () =>
-            {
-                Server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-                Client = Server.CreateClient();
-            };
-
-            It should_work = () =>
-            {
-                var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var result = Client.PostAsync("/api/command/FooCommand", content).Result;
-
-                result.EnsureSuccessStatusCode();
-                result.Content.ReadAsStringAsync().Result.ShouldBeEmpty();
-            };
-
-            It should_handle_errors = () =>
-            {
-                var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
-                var result = Client.PostAsync("/api/command/FailCommand", content).Result;
-
-                result.ShouldBeError("The command type 'FailCommand' could not be found");
-            };
-
-            static TestServer Server;
-            static HttpClient Client;
+            Server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+            Client = Server.CreateClient();
         }
+
+        [Test]
+        public async Task should_work()
+        {
+            var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
+            var result = await Client.PostAsync("/api/command/FooCommand", content);
+
+            result.EnsureSuccessStatusCode();
+            (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
+        }
+
+        TestServer Server;
+        HttpClient Client;
     }
 }
 ```
@@ -245,93 +235,38 @@ Test queries:
 ```csharp
 using System.Net.Http;
 using System.Text;
-using CommandQuery.Sample.Queries;
-using CommandQuery.Sample.AspNetCore;
-using CommandQuery.Sample.AspNetCore.Controllers;
-using Machine.Specifications;
+using System.Threading.Tasks;
+using CommandQuery.Sample.Contracts.Queries;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using NUnit.Framework;
 
-namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
+namespace CommandQuery.Sample.AspNetCore.Tests
 {
-    public class QueryControllerSpecs
+    public class QueryControllerTests
     {
-        [Subject(typeof(QueryController))]
-        public class when_using_the_real_controller
+        [SetUp]
+        public void SetUp()
         {
-            Establish context = () =>
-            {
-                Server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-                Client = Server.CreateClient();
-            };
-
-            public class method_Post
-            {
-                It should_work = () =>
-                {
-                    var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                    var result = Client.PostAsync("/api/query/BarQuery", content).Result;
-                    var value = result.Content.ReadAsAsync<Bar>().Result;
-
-                    result.EnsureSuccessStatusCode();
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
-                    var result = Client.PostAsync("/api/query/FailQuery", content).Result;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            public class method_Get
-            {
-                It should_work = () =>
-                {
-                    var result = Client.GetAsync("/api/query/BarQuery?Id=1").Result;
-                    var value = result.Content.ReadAsAsync<Bar>().Result;
-
-                    result.EnsureSuccessStatusCode();
-                    value.Id.ShouldEqual(1);
-                    value.Value.ShouldNotBeEmpty();
-                };
-
-                It should_handle_errors = () =>
-                {
-                    var result = Client.GetAsync("/api/query/FailQuery?Id=1").Result;
-
-                    result.ShouldBeError("The query type 'FailQuery' could not be found");
-                };
-            }
-
-            static TestServer Server;
-            static HttpClient Client;
+            Server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+            Client = Server.CreateClient();
         }
-    }
-}
-```
 
-Helpers:
-
-```csharp
-using System.Net.Http;
-using Machine.Specifications;
-
-namespace CommandQuery.Sample.Specs.AspNetCore.Controllers
-{
-    public static class ShouldExtensions
-    {
-        public static void ShouldBeError(this HttpResponseMessage result, string message)
+        [Test]
+        public async Task should_work()
         {
-            result.ShouldNotBeNull();
-            result.IsSuccessStatusCode.ShouldBeFalse();
-            var value = result.Content.ReadAsAsync<Error>().Result;
-            value.ShouldNotBeNull();
-            value.Message.ShouldEqual(message);
+            var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
+            var result = await Client.PostAsync("/api/query/BarQuery", content);
+            var value = await result.Content.ReadAsAsync<Bar>();
+
+            result.EnsureSuccessStatusCode();
+            value.Id.Should().Be(1);
+            value.Value.Should().NotBeEmpty();
         }
+
+        TestServer Server;
+        HttpClient Client;
     }
 }
 ```
