@@ -4,10 +4,12 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://www.codefactor.io/repository/github/hlaueriksson/commandquery)
 
 [![CommandQuery](https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery)](https://www.nuget.org/packages/CommandQuery)
+[![CommandQuery.Abstractions](https://img.shields.io/nuget/v/CommandQuery.Abstractions.svg?label=CommandQuery.Abstractions)](https://www.nuget.org/packages/CommandQuery.Abstractions)
 [![CommandQuery.AspNet.WebApi](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg?label=CommandQuery.AspNet.WebApi)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
 [![CommandQuery.AspNetCore](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg?label=CommandQuery.AspNetCore)](https://www.nuget.org/packages/CommandQuery.AspNetCore)
 [![CommandQuery.AWSLambda](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg?label=CommandQuery.AWSLambda)](https://www.nuget.org/packages/CommandQuery.AWSLambda)
 [![CommandQuery.AzureFunctions](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?label=CommandQuery.AzureFunctions)](https://www.nuget.org/packages/CommandQuery.AzureFunctions)
+[![CommandQuery.Client](https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client)](https://www.nuget.org/packages/CommandQuery.Client)
 
 ## Introduction
 
@@ -49,8 +51,9 @@ Inspired by:
 
 README | Platform | NuGet | Sample
 --- | --- | --- | ---
-[CommandQuery](CommandQuery.md) | .NET Framework and .NET Standard | [![NuGet](https://buildstats.info/nuget/CommandQuery)](https://www.nuget.org/packages/CommandQuery/) | [`CommandQuery.Sample`](/samples/CommandQuery.Sample)
-[CommandQuery.AspNet.WebApi](CommandQuery.AspNet.WebApi.md) | ASP.NET Web API 2 | [![NuGet](https://buildstats.info/nuget/CommandQuery.AspNet.WebApi)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi/) | [`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
-[CommandQuery.AspNetCore](CommandQuery.AspNetCore.md) | ASP.NET Core | [![NuGet](https://buildstats.info/nuget/CommandQuery.AspNetCore)](https://www.nuget.org/packages/CommandQuery.AspNetCore/) | [`CommandQuery.Sample.AspNetCore`](/samples/CommandQuery.Sample.AspNetCore)
-[CommandQuery.AWSLambda](CommandQuery.AWSLambda.md) | AWS Lambda | [![NuGet](https://buildstats.info/nuget/CommandQuery.AWSLambda)](https://www.nuget.org/packages/CommandQuery.AWSLambda/) | [`CommandQuery.Sample.AWSLambda`](/samples/CommandQuery.Sample.AWSLambda)
-[CommandQuery.AzureFunctions](CommandQuery.AzureFunctions.md) | Azure Functions | [![NuGet](https://buildstats.info/nuget/CommandQuery.AzureFunctions)](https://www.nuget.org/packages/CommandQuery.AzureFunctions/) | [`Vs1`](/samples/CommandQuery.Sample.AzureFunctions.Vs1), [`Vs2`](/samples/CommandQuery.Sample.AzureFunctions.Vs2), [`VsCode1`](/samples/CommandQuery.Sample.AzureFunctions.VsCode1), [`VsCode2`](/samples/CommandQuery.Sample.AzureFunctions.VsCode2)
+[CommandQuery](CommandQuery.md) | .NET Framework and .NET Standard | [![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.svg)](https://www.nuget.org/packages/CommandQuery) | [`CommandQuery.Sample.Contracts`](/samples/CommandQuery.Sample.Contracts), [`CommandQuery.Sample.Handlers`](/samples/CommandQuery.Sample.Handlers)
+[CommandQuery.AspNet.WebApi](CommandQuery.AspNet.WebApi.md) | ASP.NET Web API 2 | [![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNet.WebApi.svg)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi) | [`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
+[CommandQuery.AspNetCore](CommandQuery.AspNetCore.md) | ASP.NET Core | [![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNetCore.svg)](https://www.nuget.org/packages/CommandQuery.AspNetCore) | [`CommandQuery.Sample.AspNetCore`](/samples/CommandQuery.Sample.AspNetCore)
+[CommandQuery.AWSLambda](CommandQuery.AWSLambda.md) | AWS Lambda | [![NuGet](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AWSLambda.svg)](https://www.nuget.org/packages/CommandQuery.AWSLambda) | [`CommandQuery.Sample.AWSLambda`](/samples/CommandQuery.Sample.AWSLambda)
+[CommandQuery.AzureFunctions](CommandQuery.AzureFunctions.md) | Azure Functions | [![NuGet](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AzureFunctions.svg)](https://www.nuget.org/packages/CommandQuery.AzureFunctions) | [`Vs1`](/samples/CommandQuery.Sample.AzureFunctions.Vs1), [`Vs2`](/samples/CommandQuery.Sample.AzureFunctions.Vs2), [`VsCode1`](/samples/CommandQuery.Sample.AzureFunctions.VsCode1), [`VsCode2`](/samples/CommandQuery.Sample.AzureFunctions.VsCode2)
+[CommandQuery.Client](CommandQuery.Client.md) | .NET Framework and .NET Standard | [![NuGet](https://img.shields.io/nuget/v/CommandQuery.Client.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.Client.svg)](https://www.nuget.org/packages/CommandQuery.Client) | [`CommandQuery.Sample.Client`](/samples/CommandQuery.Sample.Client)
