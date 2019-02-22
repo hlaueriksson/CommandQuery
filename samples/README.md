@@ -2,26 +2,24 @@
 
 This code has been written with *Visual Studio 2017* and *Visual Studio Code*.
 
-The unit tests are using [Machine.Specifications](https://github.com/machine/machine.specifications/).
+The unit tests are using [NUnit](https://github.com/nunit/nunit).
 
 Manual testing can be done with [Postman](https://www.getpostman.com).
-[Import](https://www.getpostman.com/docs/v6/postman/collections/data_formats#importing-postman-data) the collections in this folder to get started.
+[Import](https://learning.getpostman.com/docs/postman/collections/data_formats/#importing-postman-data) the collections in this folder to get started.
 
 ## Command + Query + Handlers
 
 Sample code:
 
-* `CommandQuery.Sample`
+* `CommandQuery.Sample.Contracts`
+* `CommandQuery.Sample.Handlers`
 
 ## ASP.NET Web API 2
 
 Sample code:
 
 * `CommandQuery.Sample.AspNet.WebApi`
-
-Tests:
-
-* `CommandQuery.Sample.AspNet.WebApi.Specs`
+* `CommandQuery.Sample.AspNet.WebApi.Tests`
 
 Postman collection:
 
@@ -32,10 +30,7 @@ Postman collection:
 Sample code:
 
 * `CommandQuery.Sample.AspNetCore`
-
-Tests:
-
-* `CommandQuery.Sample.Specs/AspNetCore`
+* `CommandQuery.Sample.AspNetCore.Tests`
 
 Postman collection:
 
@@ -46,10 +41,7 @@ Postman collection:
 Sample code:
 
 * `CommandQuery.Sample.AWSLambda`
-
-Tests:
-
-* `CommandQuery.Sample.Specs/AWSLambda`
+* `CommandQuery.Sample.AWSLambda.Tests`
 
 Postman collection:
 
@@ -63,17 +55,14 @@ Sample code:
 
 * `CommandQuery.Sample.AzureFunctions.Vs1`
     * Visual Studio with `v1` (.NET Framework) runtime
+* `CommandQuery.Sample.AzureFunctions.Vs1.Tests`
 * `CommandQuery.Sample.AzureFunctions.Vs2`
     * Visual Studio with `v2` (.NET Core) runtime
+* `CommandQuery.Sample.AzureFunctions.Vs2.Tests`
 * `CommandQuery.Sample.AzureFunctions.VsCode1`
     * Visual Studio Code with `~1` (.NET Framework) runtime
 * `CommandQuery.Sample.AzureFunctions.VsCode2`
     * Visual Studio Code with `beta` (.NET Core) runtime
-
-Tests:
-
-* `CommandQuery.Sample.Specs/AzureFunctions.Vs1`
-* `CommandQuery.Sample.Specs/AzureFunctions.Vs2`
 
 Postman collection:
 
