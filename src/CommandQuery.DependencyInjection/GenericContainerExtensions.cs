@@ -17,12 +17,11 @@ namespace CommandQuery.DependencyInjection
         /// <param name="registerInstance">A delegate to register instances</param>
         public static void RegisterCommands(this Assembly[] assemblies, Action<Type, Type> registerType, Action<Type, object> registerInstance)
         {
-            var genericType = typeof(ICommandHandler<>);
-
             registerType(typeof(ICommandProcessor), typeof(CommandProcessor));
             registerInstance(typeof(ICommandTypeCollection), new CommandTypeCollection(assemblies));
 
-            assemblies.RegisterHandlers(genericType, registerType);
+            assemblies.RegisterHandlers(typeof(ICommandHandler<>), registerType);
+            assemblies.RegisterHandlers(typeof(ICommandHandler<,>), registerType);
         }
 
         /// <summary>
@@ -33,12 +32,10 @@ namespace CommandQuery.DependencyInjection
         /// <param name="registerInstance">A delegate to register instances</param>
         public static void RegisterQueries(this Assembly[] assemblies, Action<Type, Type> registerType, Action<Type, object> registerInstance)
         {
-            var genericType = typeof(IQueryHandler<,>);
-
             registerType(typeof(IQueryProcessor), typeof(QueryProcessor));
             registerInstance(typeof(IQueryTypeCollection), new QueryTypeCollection(assemblies));
 
-            assemblies.RegisterHandlers(genericType, registerType);
+            assemblies.RegisterHandlers(typeof(IQueryHandler<,>), registerType);
         }
 
         private static void RegisterHandlers(this Assembly[] assemblies, Type genericType, Action<Type, Type> registerType)

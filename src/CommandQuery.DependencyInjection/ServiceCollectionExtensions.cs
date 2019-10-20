@@ -18,12 +18,11 @@ namespace CommandQuery.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddCommands(this IServiceCollection services, params Assembly[] assemblies)
         {
-            var genericType = typeof(ICommandHandler<>);
-
             services.AddTransient<ICommandProcessor, CommandProcessor>();
             services.AddTransient<ICommandTypeCollection>(provider => new CommandTypeCollection(assemblies));
 
-            services.AddHandlers(genericType, assemblies);
+            services.AddHandlers(typeof(ICommandHandler<>), assemblies);
+            services.AddHandlers(typeof(ICommandHandler<,>), assemblies);
 
             return services;
         }
@@ -36,12 +35,10 @@ namespace CommandQuery.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddQueries(this IServiceCollection services, params Assembly[] assemblies)
         {
-            var genericType = typeof(IQueryHandler<,>);
-
             services.AddTransient<IQueryProcessor, QueryProcessor>();
             services.AddTransient<IQueryTypeCollection>(provider => new QueryTypeCollection(assemblies));
 
-            services.AddHandlers(genericType, assemblies);
+            services.AddHandlers(typeof(IQueryHandler<,>), assemblies);
 
             return services;
         }
