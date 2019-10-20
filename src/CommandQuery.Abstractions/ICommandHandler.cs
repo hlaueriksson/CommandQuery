@@ -15,4 +15,9 @@ namespace CommandQuery
         /// <returns>A task that represents the asynchronous operation</returns>
         Task HandleAsync(TCommand command);
     }
+
+    public interface ICommandHandler<in TCommand, TResult> where TCommand : ICommand<TResult>
+    {
+        Task<TResult> HandleAsync(TCommand command);
+    }
 }
