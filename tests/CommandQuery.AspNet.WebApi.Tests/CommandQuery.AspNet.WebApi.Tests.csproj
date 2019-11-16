@@ -1,11 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <NoWarn>1701;1702;CS1998;CS8321</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CommandQuery.Tests\Fake.cs" Link="Fake.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.9.0" />
@@ -16,8 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.AspNet.WebApi\CommandQuery.AspNet.WebApi.csproj" />
   </ItemGroup>
 
 </Project>
