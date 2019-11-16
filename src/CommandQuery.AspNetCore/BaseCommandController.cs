@@ -65,9 +65,11 @@ namespace CommandQuery.AspNetCore
         {
             try
             {
-                await _commandProcessor.ProcessAsync(commandName, json);
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, json);
 
-                return Ok();
+                if (result == CommandResult.None) return Ok();
+
+                return Ok(result.Value);
             }
             catch (CommandProcessorException exception)
             {

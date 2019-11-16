@@ -48,9 +48,11 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                await Handle(commandName, await req.Content.ReadAsStringAsync());
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await req.Content.ReadAsStringAsync());
 
-                return req.CreateResponse(HttpStatusCode.OK);
+                if (result == CommandResult.None) return req.CreateResponse(HttpStatusCode.OK);
+
+                return req.CreateResponse(HttpStatusCode.OK, result.Value);
             }
             catch (CommandProcessorException exception)
             {
@@ -87,9 +89,11 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                await Handle(commandName, await req.ReadAsStringAsync());
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await req.ReadAsStringAsync());
 
-                return new EmptyResult();
+                if (result == CommandResult.None) return new OkResult();
+
+                return new OkObjectResult(result.Value);
             }
             catch (CommandProcessorException exception)
             {
@@ -114,10 +118,5 @@ namespace CommandQuery.AzureFunctions
             }
         }
 #endif
-
-        private async Task Handle(string commandName, string content)
-        {
-            await _commandProcessor.ProcessAsync(commandName, content);
-        }
     }
 }

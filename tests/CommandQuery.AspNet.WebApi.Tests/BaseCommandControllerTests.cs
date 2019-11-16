@@ -33,14 +33,14 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 await Subject.Handle(commandName, json);
 
-                FakeCommandProcessor.Verify(x => x.ProcessAsync(commandName, json));
+                FakeCommandProcessor.Verify(x => x.ProcessWithOrWithoutResultAsync(commandName, json));
             }
 
             async Task should_handle_CommandValidationException()
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(commandName, json)).Throws(new CommandValidationException("invalid"));
+                FakeCommandProcessor.Setup(x => x.ProcessWithOrWithoutResultAsync(commandName, json)).Throws(new CommandValidationException("invalid"));
 
                 var result = await Subject.Handle(commandName, json) as BadRequestErrorMessageResult;
 
@@ -51,7 +51,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
             {
                 var commandName = "FakeCommand";
                 var json = JObject.Parse("{}");
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(commandName, json)).Throws(new Exception("fail"));
+                FakeCommandProcessor.Setup(x => x.ProcessWithOrWithoutResultAsync(commandName, json)).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(commandName, json) as ExceptionResult;
 

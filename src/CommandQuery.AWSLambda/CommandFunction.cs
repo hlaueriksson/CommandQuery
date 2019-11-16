@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Exceptions;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AWSLambda
 {
@@ -28,17 +30,6 @@ namespace CommandQuery.AWSLambda
         /// Handle a command.
         /// </summary>
         /// <param name="commandName">The name of the command</param>
-        /// <param name="content">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task Handle(string commandName, string content)
-        {
-            await _commandProcessor.ProcessAsync(commandName, content);
-        }
-
-        /// <summary>
-        /// Handle a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
         /// <param name="request">An <see cref="APIGatewayProxyRequest" /></param>
         /// <param name="context">An <see cref="ILambdaContext" /></param>
         /// <returns>200, 400 or 500</returns>
@@ -48,9 +39,16 @@ namespace CommandQuery.AWSLambda
 
             try
             {
-                await Handle(commandName, request.Body);
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, request.Body);
 
-                return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.OK };
+                if (result == CommandResult.None) return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.OK };
+
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Body = JsonConvert.SerializeObject(result.Value),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
             }
             catch (CommandProcessorException exception)
             {
