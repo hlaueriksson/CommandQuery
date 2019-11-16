@@ -34,17 +34,6 @@ namespace CommandQuery.AzureFunctions
             _commandProcessor = commandProcessor;
         }
 
-        /// <summary>
-        /// Handle a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="content">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task Handle(string commandName, string content)
-        {
-            await _commandProcessor.ProcessAsync(commandName, content);
-        }
-
 #if NET461
         /// <summary>
         /// Handle a command.
@@ -125,5 +114,10 @@ namespace CommandQuery.AzureFunctions
             }
         }
 #endif
+
+        private async Task Handle(string commandName, string content)
+        {
+            await _commandProcessor.ProcessAsync(commandName, content);
+        }
     }
 }

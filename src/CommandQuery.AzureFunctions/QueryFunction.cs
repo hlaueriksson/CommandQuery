@@ -36,28 +36,6 @@ namespace CommandQuery.AzureFunctions
             _queryProcessor = queryProcessor;
         }
 
-        /// <summary>
-        /// Handle a query.
-        /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <param name="content">The JSON representation of the query</param>
-        /// <returns>The result of the query</returns>
-        public async Task<object> Handle(string queryName, string content)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, content);
-        }
-
-        /// <summary>
-        /// Handle a query.
-        /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <param name="query">The key/value representation of the query</param>
-        /// <returns>The result of the query</returns>
-        public async Task<object> Handle(string queryName, IDictionary<string, string> query)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, query);
-        }
-
 #if NET461
         /// <summary>
         /// Handle a query.
@@ -142,5 +120,15 @@ namespace CommandQuery.AzureFunctions
             }
         }
 #endif
+
+        private async Task<object> Handle(string queryName, string content)
+        {
+            return await _queryProcessor.ProcessAsync<object>(queryName, content);
+        }
+
+        private async Task<object> Handle(string queryName, IDictionary<string, string> query)
+        {
+            return await _queryProcessor.ProcessAsync<object>(queryName, query);
+        }
     }
 }
