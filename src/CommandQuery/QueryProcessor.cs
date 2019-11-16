@@ -94,10 +94,7 @@ namespace CommandQuery
         /// <returns>The result of the query</returns>
         public async Task<TResult> ProcessAsync<TResult>(string queryName, JObject json)
         {
-            var queryType = _typeCollection.GetType(queryName);
-
-            if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
-
+            var queryType = GetQueryType(queryName);
             var query = json.SafeToObject(queryType);
 
             if (query == null) throw new QueryProcessorException("The json could not be converted to an object");
@@ -114,10 +111,7 @@ namespace CommandQuery
         /// <returns>The result of the query</returns>
         public async Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, string> dictionary)
         {
-            var queryType = _typeCollection.GetType(queryName);
-
-            if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
-
+            var queryType = GetQueryType(queryName);
             var query = dictionary.SafeToObject(queryType);
 
             if (query == null) throw new QueryProcessorException("The dictionary could not be converted to an object");
@@ -149,6 +143,15 @@ namespace CommandQuery
         public IEnumerable<Type> GetQueries()
         {
             return _typeCollection.GetTypes();
+        }
+
+        private Type GetQueryType(string queryName)
+        {
+            var queryType = _typeCollection.GetType(queryName);
+
+            if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
+
+            return queryType;
         }
     }
 }

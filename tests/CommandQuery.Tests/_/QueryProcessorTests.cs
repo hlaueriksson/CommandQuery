@@ -21,24 +21,47 @@ namespace CommandQuery.Tests._
 
             async Task should_invoke_the_correct_query_handler()
             {
-                var fakeQueryHandler = new FakeQueryHandler(x => { Expected = x; return new FakeResult(); });
+                FakeQuery expectedQuery = null;
+                var fakeQueryHandler = new FakeQueryHandler(x => { expectedQuery = x; return new FakeResult(); });
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler);
 
                 var query = new FakeQuery();
-
                 await Subject.ProcessAsync(query);
 
-                Expected.Should().Be(query);
+                query.Should().Be(expectedQuery);
+            }
+
+            async Task should_create_the_query_from_a_string()
+            {
+                var expectedQueryType = typeof(FakeQuery);
+                var fakeQueryHandler = new Mock<IQueryHandler<FakeQuery, FakeResult>>();
+                FakeQueryTypeCollection.Setup(x => x.GetType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler.Object);
+
+                await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, "{}");
+
+                fakeQueryHandler.Verify(x => x.HandleAsync(It.IsAny<FakeQuery>()));
+            }
+
+            async Task should_create_the_query_from_a_dictionary()
+            {
+                var expectedQueryType = typeof(FakeQuery);
+                var fakeQueryHandler = new Mock<IQueryHandler<FakeQuery, FakeResult>>();
+                FakeQueryTypeCollection.Setup(x => x.GetType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler.Object);
+
+                await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, new Dictionary<string, string>());
+
+                fakeQueryHandler.Verify(x => x.HandleAsync(It.IsAny<FakeQuery>()));
             }
 
             async Task should_return_the_result_from_the_query_handler()
             {
                 var expected = new FakeResult();
-                var query = new FakeQuery();
-
                 var fakeQueryHandler = new FakeQueryHandler(x => expected);
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler);
 
+                var query = new FakeQuery();
                 var result = await Subject.ProcessAsync(query);
 
                 result.Should().Be(expected);
@@ -84,9 +107,22 @@ namespace CommandQuery.Tests._
             }
         }
 
+        [LoFu, Test]
+        public void when_get_queries()
+        {
+            FakeQueryTypeCollection = new Mock<IQueryTypeCollection>();
+            Subject = new QueryProcessor(FakeQueryTypeCollection.Object, null);
+
+            void should_get_all_types_from_the_cache()
+            {
+                Subject.GetQueries();
+
+                FakeQueryTypeCollection.Verify(x => x.GetTypes());
+            }
+        }
+
         Mock<IQueryTypeCollection> FakeQueryTypeCollection;
         Mock<IServiceProvider> FakeServiceProvider;
         QueryProcessor Subject;
-        FakeQuery Expected;
     }
 }

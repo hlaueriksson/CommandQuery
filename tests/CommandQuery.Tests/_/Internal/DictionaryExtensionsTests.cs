@@ -20,7 +20,8 @@ namespace CommandQuery.Tests._.Internal
                 { "DateTime", "2018-07-06" },
                 //{ "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
                 { "NullableDouble", "2" },
-                { "UndefinedProperty", "should_not_be_used" }
+                { "UndefinedProperty", "should_not_be_used" },
+                //{ "Array", "[ 1, 2, 3 ]" }
             };
 
             void should_set_the_property_values()
@@ -33,6 +34,7 @@ namespace CommandQuery.Tests._.Internal
                 result.DateTime.Should().Be(DateTime.Parse("2018-07-06"));
                 //result.Guid.Should().Be(new Guid("3B10C34C-D423-4EC3-8811-DA2E0606E241"));
                 result.NullableDouble.Should().Be(2);
+                //result.Array.Should().Equal(1, 2, 3);
             }
         }
 
@@ -46,6 +48,7 @@ namespace CommandQuery.Tests._.Internal
             public DateTime DateTime { get; set; }
             //public Guid Guid { get; set; }
             public double? NullableDouble { get; set; }
+            public int[] Array { get; set; }
         }
     }
 }
