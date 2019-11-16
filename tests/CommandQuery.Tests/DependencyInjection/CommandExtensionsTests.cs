@@ -19,6 +19,7 @@ namespace CommandQuery.Tests.DependencyInjection
 
                 result.Should().NotBeNull();
                 result.GetCommands().Should().Contain(typeof(FakeCommand));
+                result.GetCommands().Should().Contain(typeof(FakeResultCommand));
             }
 
             void should_add_commands_from_Assemblies()
@@ -27,6 +28,7 @@ namespace CommandQuery.Tests.DependencyInjection
 
                 result.Should().NotBeNull();
                 result.GetCommands().Should().Contain(typeof(FakeCommand));
+                result.GetCommands().Should().Contain(typeof(FakeResultCommand));
             }
         }
 
