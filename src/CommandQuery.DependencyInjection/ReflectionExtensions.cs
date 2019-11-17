@@ -23,8 +23,8 @@ namespace CommandQuery.DependencyInjection
         private static bool IsAssignableToGenericType(this Type type, Type genericType)
         {
             return type.GetInterfaces().Any(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
-                   || type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericType
-                   || type.GetTypeInfo().BaseType != null && type.GetTypeInfo().BaseType.IsAssignableToGenericType(genericType);
+                   || (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericType)
+                   || (type.GetTypeInfo().BaseType != null && type.GetTypeInfo().BaseType.IsAssignableToGenericType(genericType));
         }
     }
 }
