@@ -20,7 +20,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
         {
             Clear();
             Use<Mock<IQueryProcessor>>();
-            _log = new FakeTraceWriter();
+            Logger = new FakeTraceWriter();
             QueryName = "FakeQuery";
         }
 
@@ -34,7 +34,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<string>())).Returns(Task.FromResult(new object()));
 
-                var result = await Subject.Handle(QueryName, Req, _log);
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
                 result.IsSuccessStatusCode.Should().BeTrue();
                 result.Content.Should().NotBeNull();
@@ -44,7 +44,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<string>())).Throws(new QueryValidationException("invalid"));
 
-                var result = await Subject.Handle(QueryName, Req, _log);
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
                 await result.ShouldBeErrorAsync("invalid");
             }
@@ -53,7 +53,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<string>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(QueryName, Req, _log);
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
                 await result.ShouldBeErrorAsync("fail");
             }
@@ -69,7 +69,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, string>>())).Returns(Task.FromResult(new object()));
 
-                var result = await Subject.Handle(QueryName, Req, _log);
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
                 result.IsSuccessStatusCode.Should().BeTrue();
                 result.Content.Should().NotBeNull();
@@ -79,7 +79,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, string>>())).Throws(new QueryValidationException("invalid"));
 
-                var result = await Subject.Handle(QueryName, Req, _log);
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
                 await result.ShouldBeErrorAsync("invalid");
             }
@@ -88,14 +88,14 @@ namespace CommandQuery.AzureFunctions.Tests.V1
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, string>>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(QueryName, Req, _log);
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
                 await result.ShouldBeErrorAsync("fail");
             }
         }
 
         HttpRequestMessage Req;
-        FakeTraceWriter _log;
+        FakeTraceWriter Logger;
         string QueryName;
     }
 }

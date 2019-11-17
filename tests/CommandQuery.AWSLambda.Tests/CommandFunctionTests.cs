@@ -61,16 +61,6 @@ namespace CommandQuery.AWSLambda.Tests
 
                 result.Body.Should().NotBeNull();
             }
-
-            async Task should_handle_Exception()
-            {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Request.Body)).Throws(new Exception("fail"));
-
-                var result = await Subject.Handle(CommandName, Request, Context.Object);
-
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
-            }
         }
 
         APIGatewayProxyRequest Request;
