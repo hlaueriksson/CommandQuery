@@ -110,7 +110,6 @@ namespace CommandQuery.AspNetCore.Tests
         }
 
         Mock<IQueryProcessor> FakeQueryProcessor;
-        Mock<IQueryHandler<FakeQuery, FakeResult>> FakeQueryHandler;
         BaseQueryController Subject;
         string QueryName;
         JObject Json;
