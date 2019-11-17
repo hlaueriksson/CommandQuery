@@ -12,8 +12,20 @@ namespace CommandQuery
     /// </summary>
     public interface ICommandProcessor
     {
+        /// <summary>
+        /// Process a command with or without result.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
         Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, string json);
 
+        /// <summary>
+        /// Process a command with or without result.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
         Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, JObject json);
 
         /// <summary>
@@ -39,10 +51,30 @@ namespace CommandQuery
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ProcessAsync(ICommand command);
 
+        /// <summary>
+        /// Process a command with result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command</returns>
         Task<TResult> ProcessWithResultAsync<TResult>(string commandName, string json);
 
+        /// <summary>
+        /// Process a command with result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command</returns>
         Task<TResult> ProcessWithResultAsync<TResult>(string commandName, JObject json);
 
+        /// <summary>
+        /// Process a command with result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="command">The command</param>
+        /// <returns>The result of the command</returns>
         Task<TResult> ProcessWithResultAsync<TResult>(ICommand<TResult> command);
 
         /// <summary>
@@ -71,11 +103,23 @@ namespace CommandQuery
             _serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Process a command with or without result.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
         public async Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, string json)
         {
             return await ProcessWithOrWithoutResultAsync(commandName, JObject.Parse(json));
         }
 
+        /// <summary>
+        /// Process a command with or without result.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
         public async Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, JObject json)
         {
             var command = GetCommand(commandName, json);
@@ -132,11 +176,25 @@ namespace CommandQuery
             await handler.HandleAsync((dynamic)command);
         }
 
+        /// <summary>
+        /// Process a command with result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command</returns>
         public async Task<TResult> ProcessWithResultAsync<TResult>(string commandName, string json)
         {
             return await ProcessWithResultAsync<TResult>(commandName, JObject.Parse(json));
         }
 
+        /// <summary>
+        /// Process a command with result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="json">The JSON representation of the command</param>
+        /// <returns>The result of the command</returns>
         public async Task<TResult> ProcessWithResultAsync<TResult>(string commandName, JObject json)
         {
             var command = GetCommand(commandName, json);
@@ -144,6 +202,12 @@ namespace CommandQuery
             return await ProcessWithResultAsync<TResult>((dynamic)command);
         }
 
+        /// <summary>
+        /// Process a command with result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="command">The command</param>
+        /// <returns>The result of the command</returns>
         public async Task<TResult> ProcessWithResultAsync<TResult>(ICommand<TResult> command)
         {
             var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResult));

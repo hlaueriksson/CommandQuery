@@ -58,6 +58,11 @@ namespace CommandQuery
             LoadTypeCaches(assemblies);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeCollection" /> class.
+        /// </summary>
+        /// <param name="baseTypes">The base types for commands or queries</param>
+        /// <param name="assemblies">The assemblies with commands or queries to support</param>
         protected TypeCollection(Type[] baseTypes, params Assembly[] assemblies)
         {
             _baseTypes = baseTypes;
