@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CommandQuery.Internal;
 
 namespace CommandQuery
 {
@@ -43,17 +44,28 @@ namespace CommandQuery
     /// </summary>
     public abstract class TypeCollection : ITypeCollection
     {
-        private readonly Type _genericType;
-        private IDictionary<string, Type> _types;
+        private readonly Type[] _baseTypes;
+        private Dictionary<string, Type> _types;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeCollection" /> class.
         /// </summary>
-        /// <param name="genericType">The base type for commands or queries</param>
+        /// <param name="baseType">The base type for commands or queries</param>
         /// <param name="assemblies">The assemblies with commands or queries to support</param>
-        protected TypeCollection(Type genericType, params Assembly[] assemblies)
+        protected TypeCollection(Type baseType, params Assembly[] assemblies)
         {
-            _genericType = genericType;
+            _baseTypes = new[] { baseType };
+            LoadTypeCaches(assemblies);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeCollection" /> class.
+        /// </summary>
+        /// <param name="baseTypes">The base types for commands or queries</param>
+        /// <param name="assemblies">The assemblies with commands or queries to support</param>
+        protected TypeCollection(Type[] baseTypes, params Assembly[] assemblies)
+        {
+            _baseTypes = baseTypes;
             LoadTypeCaches(assemblies);
         }
 
@@ -78,16 +90,17 @@ namespace CommandQuery
 
         private void LoadTypeCaches(params Assembly[] assemblies)
         {
-            var types = GetExportedTypeFor(assemblies)
-                .Where(t => t.GetInterfaces().Any(i => i.Name == _genericType.Name))
-                .ToArray();
+            _types = new Dictionary<string, Type>();
 
-            _types = types.ToDictionary(t => t.Name);
-        }
+            foreach (var baseType in _baseTypes)
+            {
+                var types = assemblies.SelectMany(assembly => assembly.GetTypesAssignableTo(baseType)).ToList();
 
-        private static IEnumerable<Type> GetExportedTypeFor(params Assembly[] assemblies)
-        {
-            return assemblies.SelectMany(a => a.ExportedTypes);
+                foreach (var type in types)
+                {
+                    _types.Add(type.Name, type);
+                }
+            }
         }
     }
 
@@ -100,7 +113,7 @@ namespace CommandQuery
         /// Initializes a new instance of the <see cref="CommandTypeCollection" /> class.
         /// </summary>
         /// <param name="assemblies">The assemblies with commands to support</param>
-        public CommandTypeCollection(params Assembly[] assemblies) : base(typeof(ICommand), assemblies)
+        public CommandTypeCollection(params Assembly[] assemblies) : base(new[] { typeof(ICommand), typeof(ICommand<>) }, assemblies)
         {
         }
     }

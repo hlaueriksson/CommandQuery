@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CommandQuery.Specs"), InternalsVisibleTo("CommandQuery.Tests")]
+[assembly: InternalsVisibleTo("CommandQuery.Tests")]
 
 namespace CommandQuery.Internal
 {

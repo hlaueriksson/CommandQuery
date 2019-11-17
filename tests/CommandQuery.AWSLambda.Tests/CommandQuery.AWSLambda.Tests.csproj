@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\CommandQuery.Tests\Fake.cs" Link="Fake.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.9.0" />
     <PackageReference Include="LoFuUnit.AutoMoq" Version="1.0.1" />
     <PackageReference Include="LoFuUnit.NUnit" Version="1.0.0" />
@@ -16,8 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.AWSLambda\CommandQuery.AWSLambda.csproj" />
   </ItemGroup>
 
 </Project>

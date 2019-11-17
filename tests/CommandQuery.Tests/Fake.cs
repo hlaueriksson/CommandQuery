@@ -22,6 +22,27 @@ namespace CommandQuery.Tests
 
             await Task.CompletedTask;
         }
+    }  
+    
+    public class FakeResultCommand : ICommand<FakeResult>
+    {
+    }
+
+    public class FakeResultCommandHandler : ICommandHandler<FakeResultCommand, FakeResult>
+    {
+        private readonly Func<FakeResultCommand, FakeResult> _callback;
+
+        public FakeResultCommandHandler(Func<FakeResultCommand, FakeResult> callback)
+        {
+            _callback = callback;
+        }
+
+        public async Task<FakeResult> HandleAsync(FakeResultCommand resultCommand)
+        {
+            var result = _callback(resultCommand);
+
+            return await Task.FromResult(result);
+        }
     }
 
     public class FakeQuery : IQuery<FakeResult>

@@ -34,17 +34,6 @@ namespace CommandQuery.AzureFunctions
             _commandProcessor = commandProcessor;
         }
 
-        /// <summary>
-        /// Handle a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="content">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task Handle(string commandName, string content)
-        {
-            await _commandProcessor.ProcessAsync(commandName, content);
-        }
-
 #if NET461
         /// <summary>
         /// Handle a command.
@@ -59,9 +48,11 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                await Handle(commandName, await req.Content.ReadAsStringAsync());
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await req.Content.ReadAsStringAsync());
 
-                return req.CreateResponse(HttpStatusCode.OK);
+                if (result == CommandResult.None) return req.CreateResponse(HttpStatusCode.OK);
+
+                return req.CreateResponse(HttpStatusCode.OK, result.Value);
             }
             catch (CommandProcessorException exception)
             {
@@ -98,9 +89,11 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                await Handle(commandName, await req.ReadAsStringAsync());
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await req.ReadAsStringAsync());
 
-                return new EmptyResult();
+                if (result == CommandResult.None) return new OkResult();
+
+                return new OkObjectResult(result.Value);
             }
             catch (CommandProcessorException exception)
             {
