@@ -14,11 +14,6 @@ namespace CommandQuery.Internal
                 .ToList();
         }
 
-        internal static Type GetInterfaceType(this Type type, Type genericType)
-        {
-            return type.GetInterfaces().FirstOrDefault(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType);
-        }
-
         private static bool IsAssignableToGenericType(this Type type, Type genericType)
         {
             return type.GetInterfaces().Any(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
