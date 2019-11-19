@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 [assembly: InternalsVisibleTo("CommandQuery.Tests")]
 
@@ -8,24 +10,11 @@ namespace CommandQuery.Internal
 {
     internal static class DictionaryExtensions
     {
-        public static object SafeToObject(this IDictionary<string, string> dictionary, Type type)
+        public static object SafeToObject(this IDictionary<string, JToken> dictionary, Type type)
         {
             try
             {
-                var result = Activator.CreateInstance(type);
-
-                foreach (var kv in dictionary)
-                {
-                    var property = type.GetProperty(kv.Key);
-
-                    if (property == null) continue;
-
-                    var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-                    property.SetValue(result, Convert.ChangeType(kv.Value, propertyType));
-                }
-
-                return result;
+                return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(dictionary), type);
             }
             catch
             {

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests.V2
@@ -68,7 +69,7 @@ namespace CommandQuery.AzureFunctions.Tests.V2
 
             async Task should_invoke_the_query_processor()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, string>>())).Returns(Task.FromResult(new object()));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Returns(Task.FromResult(new object()));
 
                 var result = await Subject.Handle(QueryName, Req, Logger) as OkObjectResult;
 
@@ -78,7 +79,7 @@ namespace CommandQuery.AzureFunctions.Tests.V2
 
             async Task should_handle_QueryValidationException()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, string>>())).Throws(new QueryValidationException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new QueryValidationException("invalid"));
 
                 var result = await Subject.Handle(QueryName, Req, Logger) as BadRequestObjectResult;
 
@@ -87,7 +88,7 @@ namespace CommandQuery.AzureFunctions.Tests.V2
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, string>>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(QueryName, Req, Logger) as ObjectResult;
 

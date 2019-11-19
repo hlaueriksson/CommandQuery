@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.AspNetCore.Internal;
 using CommandQuery.Exceptions;
 using CommandQuery.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.AspNetCore
 {
@@ -100,7 +104,7 @@ namespace CommandQuery.AspNetCore
         {
             try
             {
-                var result = await _queryProcessor.ProcessAsync<object>(queryName, Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.First(), StringComparer.OrdinalIgnoreCase));
+                var result = await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(Request.Query));
 
                 return Ok(result);
             }
@@ -121,6 +125,16 @@ namespace CommandQuery.AspNetCore
                 _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
                 return StatusCode(500, exception.ToError()); // InternalServerError
+            }
+
+            Dictionary<string, JToken> Dictionary(IQueryCollection query)
+            {
+                return query.ToDictionary(kv => kv.Key, kv => Token(kv.Value), StringComparer.OrdinalIgnoreCase);
+
+                JToken Token(StringValues value)
+                {
+                    return value.Count > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
+                }
             }
         }
     }

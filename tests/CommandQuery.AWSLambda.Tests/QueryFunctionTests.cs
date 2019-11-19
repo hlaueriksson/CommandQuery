@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -6,6 +7,7 @@ using FluentAssertions;
 using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
 using Moq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests
@@ -47,18 +49,18 @@ namespace CommandQuery.AWSLambda.Tests
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
-            Request = new APIGatewayProxyRequest { HttpMethod = "GET" };
+            Request = new APIGatewayProxyRequest { HttpMethod = "GET", MultiValueQueryStringParameters = new Dictionary<string, IList<string>>() };
 
             async Task should_invoke_the_query_processor()
             {
                 await Subject.Handle(QueryName, Request, Context.Object);
 
-                The<Mock<IQueryProcessor>>().Verify(x => x.ProcessAsync<object>(QueryName, Request.QueryStringParameters));
+                The<Mock<IQueryProcessor>>().Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>()));
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, Request.QueryStringParameters)).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(QueryName, Request, Context.Object);
 

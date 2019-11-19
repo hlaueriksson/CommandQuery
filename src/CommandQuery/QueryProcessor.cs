@@ -37,7 +37,7 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query</param>
         /// <param name="dictionary">The key/value representation of the query</param>
         /// <returns>The result of the query</returns>
-        Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, string> dictionary);
+        Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, JToken> dictionary);
 
         /// <summary>
         /// Process a query.
@@ -109,7 +109,7 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query</param>
         /// <param name="dictionary">The key/value representation of the query</param>
         /// <returns>The result of the query</returns>
-        public async Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, string> dictionary)
+        public async Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, JToken> dictionary)
         {
             var queryType = GetQueryType(queryName);
             var query = dictionary.SafeToObject(queryType);

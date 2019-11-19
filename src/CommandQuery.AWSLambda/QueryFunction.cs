@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
@@ -7,6 +8,7 @@ using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Exceptions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.AWSLambda
 {
@@ -40,8 +42,8 @@ namespace CommandQuery.AWSLambda
             try
             {
                 var result = request.HttpMethod == "GET"
-                    ? await Handle(queryName, request.QueryStringParameters)
-                    : await Handle(queryName, request.Body);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.MultiValueQueryStringParameters))
+                    : await _queryProcessor.ProcessAsync<object>(queryName, request.Body);
 
                 return new APIGatewayProxyResponse
                 {
@@ -68,16 +70,16 @@ namespace CommandQuery.AWSLambda
 
                 return exception.ToInternalServerError();
             }
-        }
 
-        private async Task<object> Handle(string queryName, string content)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, content);
-        }
+            IDictionary<string, JToken> Dictionary(IDictionary<string, IList<string>> query)
+            {
+                return query.ToDictionary(kv => kv.Key, kv => Token(kv.Value), StringComparer.OrdinalIgnoreCase);
 
-        private async Task<object> Handle(string queryName, IDictionary<string, string> query)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, query);
+                JToken Token(IList<string> value)
+                {
+                    return value.Count > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
+                }
+            }
         }
     }
 }

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-
+using Newtonsoft.Json.Linq;
 #if NET461
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Microsoft.Azure.WebJobs.Host;
 #endif
-
 #if NETSTANDARD2_0
 using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 #endif
 
 namespace CommandQuery.AzureFunctions
@@ -51,7 +51,7 @@ namespace CommandQuery.AzureFunctions
             try
             {
                 var result = req.Method == HttpMethod.Get
-                    ? await Handle(queryName, req.GetQueryNameValuePairs().ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase))
+                    ? await Handle(queryName, Dictionary(req.GetQueryNameValuePairs()))
                     : await Handle(queryName, await req.Content.ReadAsStringAsync());
 
                 return req.CreateResponse(HttpStatusCode.OK, result);
@@ -74,6 +74,18 @@ namespace CommandQuery.AzureFunctions
 
                 return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
             }
+
+            Dictionary<string, JToken> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
+            {
+                return query
+                    .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => Token(g.Select(x => x.Value)), StringComparer.OrdinalIgnoreCase);
+
+                JToken Token(IEnumerable<string> value)
+                {
+                    return value.Count() > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
+                }
+            }
         }
 #endif
 
@@ -92,7 +104,7 @@ namespace CommandQuery.AzureFunctions
             try
             {
                 var result = req.Method == "GET"
-                    ? await Handle(queryName, req.GetQueryParameterDictionary())
+                    ? await Handle(queryName, Dictionary(req.Query))
                     : await Handle(queryName, await req.ReadAsStringAsync());
 
                 return new OkObjectResult(result);
@@ -118,6 +130,16 @@ namespace CommandQuery.AzureFunctions
                     StatusCode = 500
                 };
             }
+
+            Dictionary<string, JToken> Dictionary(IQueryCollection query)
+            {
+                return query.ToDictionary(kv => kv.Key, kv => Token(kv.Value), StringComparer.OrdinalIgnoreCase);
+
+                JToken Token(StringValues value)
+                {
+                    return value.Count > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
+                }
+            }
         }
 #endif
 
@@ -126,7 +148,7 @@ namespace CommandQuery.AzureFunctions
             return await _queryProcessor.ProcessAsync<object>(queryName, content);
         }
 
-        private async Task<object> Handle(string queryName, IDictionary<string, string> query)
+        private async Task<object> Handle(string queryName, IDictionary<string, JToken> query)
         {
             return await _queryProcessor.ProcessAsync<object>(queryName, query);
         }

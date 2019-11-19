@@ -1,11 +1,13 @@
 ﻿using CommandQuery.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi.Internal;
+using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -100,7 +102,7 @@ namespace CommandQuery.AspNet.WebApi
         {
             try
             {
-                var result = await _queryProcessor.ProcessAsync<object>(queryName, Request.GetQueryNameValuePairs().ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase));
+                var result = await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(Request.GetQueryNameValuePairs()));
 
                 return Ok(result);
             }
@@ -121,6 +123,18 @@ namespace CommandQuery.AspNet.WebApi
                 _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
 
                 return InternalServerError(exception);
+            }
+
+            Dictionary<string, JToken> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
+            {
+                return query
+                    .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => Token(g.Select(x => x.Value)), StringComparer.OrdinalIgnoreCase);
+
+                JToken Token(IEnumerable<string> value)
+                {
+                    return value.Count() > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
+                }
             }
         }
     }
