@@ -71,14 +71,9 @@ namespace CommandQuery.AWSLambda
                 return exception.ToInternalServerError();
             }
 
-            IDictionary<string, JToken> Dictionary(IDictionary<string, IList<string>> query)
+            Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, IList<string>> query)
             {
-                return query.ToDictionary(kv => kv.Key, kv => Token(kv.Value), StringComparer.OrdinalIgnoreCase);
-
-                JToken Token(IList<string> value)
-                {
-                    return value.Count > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
-                }
+                return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
         }
     }

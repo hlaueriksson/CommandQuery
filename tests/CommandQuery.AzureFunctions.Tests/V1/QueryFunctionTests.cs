@@ -68,7 +68,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
             async Task should_invoke_the_query_processor()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Returns(Task.FromResult(new object()));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Returns(Task.FromResult(new object()));
 
                 var result = await Subject.Handle(QueryName, Req, Logger);
 
@@ -78,7 +78,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
             async Task should_handle_QueryValidationException()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new QueryValidationException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new QueryValidationException("invalid"));
 
                 var result = await Subject.Handle(QueryName, Req, Logger);
 
@@ -87,7 +87,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(QueryName, Req, Logger);
 

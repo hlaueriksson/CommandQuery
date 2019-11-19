@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Internal;
@@ -37,7 +39,7 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query</param>
         /// <param name="dictionary">The key/value representation of the query</param>
         /// <returns>The result of the query</returns>
-        Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, JToken> dictionary);
+        Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, IEnumerable<string>> dictionary);
 
         /// <summary>
         /// Process a query.
@@ -109,10 +111,10 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query</param>
         /// <param name="dictionary">The key/value representation of the query</param>
         /// <returns>The result of the query</returns>
-        public async Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, JToken> dictionary)
+        public async Task<TResult> ProcessAsync<TResult>(string queryName, IDictionary<string, IEnumerable<string>> dictionary)
         {
             var queryType = GetQueryType(queryName);
-            var query = dictionary.SafeToObject(queryType);
+            var query = GetQueryDictionary(dictionary, queryType).SafeToObject(queryType);
 
             if (query == null) throw new QueryProcessorException("The dictionary could not be converted to an object");
 
@@ -152,6 +154,23 @@ namespace CommandQuery
             if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
 
             return queryType;
+        }
+
+        private Dictionary<string, JToken> GetQueryDictionary(IDictionary<string, IEnumerable<string>> query, Type type)
+        {
+            if (query == null) return null;
+
+            var properties = type.GetProperties().Where(p => p.GetValue(query, null) != null).ToList();
+
+            return query.ToDictionary(g => g.Key, Token, StringComparer.OrdinalIgnoreCase);
+
+            JToken Token(KeyValuePair<string, IEnumerable<string>> kv)
+            {
+                var property = properties.FirstOrDefault(x => string.Equals(x.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
+                var isCollection = property?.GetValue(query, null) is ICollection;
+
+                return isCollection ? (JToken)new JArray(kv.Value) : kv.Value.FirstOrDefault();
+            }
         }
     }
 }

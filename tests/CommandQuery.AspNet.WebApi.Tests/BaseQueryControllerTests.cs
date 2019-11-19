@@ -78,13 +78,13 @@ namespace CommandQuery.AspNet.WebApi.Tests
             {
                 await Subject.HandleGet(QueryName);
 
-                FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>()));
+                FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>()));
             }
 
             async Task should_return_the_result_from_the_query_processor()
             {
                 var expected = new object();
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Returns(Task.FromResult(expected));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleGet(QueryName) as OkNegotiatedContentResult<object>;
 
@@ -93,7 +93,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
             async Task should_handle_QueryValidationException()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new QueryValidationException("invalid"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new QueryValidationException("invalid"));
 
                 var result = await Subject.HandleGet(QueryName) as BadRequestErrorMessageResult;
 
@@ -102,7 +102,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
             async Task should_handle_Exception()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new Exception("fail"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new Exception("fail"));
 
                 var result = await Subject.HandleGet(QueryName) as ExceptionResult;
 

@@ -125,16 +125,11 @@ namespace CommandQuery.AspNet.WebApi
                 return InternalServerError(exception);
             }
 
-            Dictionary<string, JToken> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
+            Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
             {
                 return query
                     .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
-                    .ToDictionary(g => g.Key, g => Token(g.Select(x => x.Value)), StringComparer.OrdinalIgnoreCase);
-
-                JToken Token(IEnumerable<string> value)
-                {
-                    return value.Count() > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
-                }
+                    .ToDictionary(g => g.Key, g => g.Select(x => x.Value), StringComparer.OrdinalIgnoreCase);
             }
         }
     }

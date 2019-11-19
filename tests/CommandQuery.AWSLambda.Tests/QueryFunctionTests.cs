@@ -55,12 +55,12 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 await Subject.Handle(QueryName, Request, Context.Object);
 
-                The<Mock<IQueryProcessor>>().Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>()));
+                The<Mock<IQueryProcessor>>().Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>()));
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, JToken>>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(QueryName, Request, Context.Object);
 

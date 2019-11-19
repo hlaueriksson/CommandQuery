@@ -127,14 +127,9 @@ namespace CommandQuery.AspNetCore
                 return StatusCode(500, exception.ToError()); // InternalServerError
             }
 
-            Dictionary<string, JToken> Dictionary(IQueryCollection query)
+            Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
             {
-                return query.ToDictionary(kv => kv.Key, kv => Token(kv.Value), StringComparer.OrdinalIgnoreCase);
-
-                JToken Token(StringValues value)
-                {
-                    return value.Count > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
-                }
+                return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
         }
     }

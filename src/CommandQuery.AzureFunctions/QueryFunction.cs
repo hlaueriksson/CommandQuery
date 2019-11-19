@@ -75,16 +75,11 @@ namespace CommandQuery.AzureFunctions
                 return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
             }
 
-            Dictionary<string, JToken> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
+            Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
             {
                 return query
                     .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
-                    .ToDictionary(g => g.Key, g => Token(g.Select(x => x.Value)), StringComparer.OrdinalIgnoreCase);
-
-                JToken Token(IEnumerable<string> value)
-                {
-                    return value.Count() > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
-                }
+                    .ToDictionary(g => g.Key, g => g.Select(x => x.Value), StringComparer.OrdinalIgnoreCase);
             }
         }
 #endif
@@ -131,14 +126,9 @@ namespace CommandQuery.AzureFunctions
                 };
             }
 
-            Dictionary<string, JToken> Dictionary(IQueryCollection query)
+            Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
             {
-                return query.ToDictionary(kv => kv.Key, kv => Token(kv.Value), StringComparer.OrdinalIgnoreCase);
-
-                JToken Token(StringValues value)
-                {
-                    return value.Count > 1 ? (JToken)new JArray(value) : value.FirstOrDefault();
-                }
+                return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
         }
 #endif
@@ -148,7 +138,7 @@ namespace CommandQuery.AzureFunctions
             return await _queryProcessor.ProcessAsync<object>(queryName, content);
         }
 
-        private async Task<object> Handle(string queryName, IDictionary<string, JToken> query)
+        private async Task<object> Handle(string queryName, IDictionary<string, IEnumerable<string>> query)
         {
             return await _queryProcessor.ProcessAsync<object>(queryName, query);
         }

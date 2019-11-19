@@ -12,6 +12,8 @@ namespace CommandQuery.Internal
     {
         public static object SafeToObject(this IDictionary<string, JToken> dictionary, Type type)
         {
+            if (dictionary == null) return null;
+
             try
             {
                 return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(dictionary), type);

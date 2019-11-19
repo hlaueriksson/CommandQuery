@@ -50,7 +50,7 @@ namespace CommandQuery.Tests
                 FakeQueryTypeCollection.Setup(x => x.GetType(expectedQueryType.Name)).Returns(expectedQueryType);
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler.Object);
 
-                await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, new Dictionary<string, JToken>());
+                await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, new Dictionary<string, IEnumerable<string>>());
 
                 fakeQueryHandler.Verify(x => x.HandleAsync(It.IsAny<FakeQuery>()));
             }
@@ -101,7 +101,7 @@ namespace CommandQuery.Tests
                 var queryName = "FakeQuery";
                 FakeQueryTypeCollection.Setup(x => x.GetType(queryName)).Returns(typeof(FakeQuery));
 
-                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, (IDictionary<string, JToken>)null)).Should()
+                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, (IDictionary<string, IEnumerable<string>>)null)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The dictionary could not be converted to an object");
             }
