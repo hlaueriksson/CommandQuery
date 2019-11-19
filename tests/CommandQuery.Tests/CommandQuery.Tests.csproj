@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\CommandQuery.Client\CommandQuery.Client.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>

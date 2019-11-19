@@ -1,21 +1,40 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("CommandQuery.Tests")]
 
 namespace CommandQuery.Client
 {
     internal static class InternalExtensions
     {
-        internal static string GetRequestUri(this object value)
+        internal static string GetRequestUri(this object query)
         {
-            return value.GetType().Name + "?" + value.QueryString();
+            return query.GetType().Name + "?" + query.QueryString();
         }
 
-        private static string QueryString(this object value)
+        private static string QueryString(this object query)
         {
-            var properties = from p in value.GetType().GetProperties()
-                             where p.GetValue(value, null) != null
-                             select p.Name + "=" + System.Net.WebUtility.UrlEncode(p.GetValue(value, null).ToString());
+            var result = new List<string>();
 
-            return string.Join("&", properties.ToArray());
+            foreach (var p in query.GetType().GetProperties().Where(p => p.GetValue(query, null) != null))
+            {
+                var value = p.GetValue(query, null);
+
+                if (value is ICollection collection)
+                    result.AddRange(from object v in collection select Parameter(p, v));
+                else
+                    result.Add(Parameter(p, value));
+            }
+
+            return string.Join("&", result.ToArray());
+
+            string Parameter(PropertyInfo property, object value)
+            {
+                return $"{property.Name}={System.Net.WebUtility.UrlEncode(value.ToString())}";
+            }
         }
     }
 }
