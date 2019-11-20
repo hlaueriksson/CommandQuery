@@ -1,2 +1,10 @@
-dotnet test .\tests\CommandQuery.Specs\CommandQuery.Specs.csproj
-dotnet test .\samples\CommandQuery.Sample.Specs\CommandQuery.Sample.Specs.csproj
+dotnet test .\tests\CommandQuery.AspNet.WebApi.Tests\CommandQuery.AspNet.WebApi.Tests.csproj
+dotnet test .\tests\CommandQuery.AspNetCore.Tests\CommandQuery.AspNetCore.Tests.csproj
+dotnet test .\tests\CommandQuery.AWSLambda.Tests\CommandQuery.AWSLambda.Tests.csproj
+dotnet test .\tests\CommandQuery.AzureFunctions.Tests\CommandQuery.AzureFunctions.Tests.csproj
+dotnet test .\tests\CommandQuery.Tests\CommandQuery.Tests.csproj
+
+dotnet test .\samples\CommandQuery.Sample.AspNetCore.Tests\CommandQuery.Sample.AspNetCore.Tests.csproj
+dotnet test .\samples\CommandQuery.Sample.AWSLambda.Tests\CommandQuery.Sample.AWSLambda.Tests.csproj
+dotnet test .\samples\CommandQuery.Sample.AzureFunctions.Vs1.Tests\CommandQuery.Sample.AzureFunctions.Vs1.Tests.csproj
+dotnet test .\samples\CommandQuery.Sample.AzureFunctions.Vs2.Tests\CommandQuery.Sample.AzureFunctions.Vs2.Tests.csproj
