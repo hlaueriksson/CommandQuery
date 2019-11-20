@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Tests
@@ -22,8 +23,8 @@ namespace CommandQuery.Tests
 
             await Task.CompletedTask;
         }
-    }  
-    
+    }
+
     public class FakeResultCommand : ICommand<FakeResult>
     {
     }
@@ -63,6 +64,36 @@ namespace CommandQuery.Tests
         }
 
         public async Task<FakeResult> HandleAsync(FakeQuery query)
+        {
+            var result = _callback(query);
+
+            return await Task.FromResult(result);
+        }
+    }
+
+    public class FakeComplexQuery : IQuery<IEnumerable<FakeResult>>
+    {
+        public string String { get; set; }
+        public int Int { get; set; }
+        public bool Bool { get; set; }
+        public DateTime DateTime { get; set; }
+        public Guid Guid { get; set; }
+        public double? NullableDouble { get; set; }
+        public int[] Array { get; set; }
+        public IEnumerable<int> IEnumerable { get; set; }
+        public List<int> List { get; set; }
+    }
+
+    public class FakeComplexQueryHandler : IQueryHandler<FakeComplexQuery, IEnumerable<FakeResult>>
+    {
+        private readonly Func<FakeComplexQuery, IEnumerable<FakeResult>> _callback;
+
+        public FakeComplexQueryHandler(Func<FakeComplexQuery, IEnumerable<FakeResult>> callback)
+        {
+            _callback = callback;
+        }
+
+        public async Task<IEnumerable<FakeResult>> HandleAsync(FakeComplexQuery query)
         {
             var result = _callback(query);
 

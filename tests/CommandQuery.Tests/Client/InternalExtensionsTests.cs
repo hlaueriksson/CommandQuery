@@ -12,7 +12,7 @@ namespace CommandQuery.Tests.Client
         [LoFu, Test]
         public void when_converting_a_dictionary_to_object()
         {
-            var subject = new FakeQuery
+            var subject = new FakeComplexQuery
             {
                 String = "String",
                 Int = 1,
@@ -37,19 +37,6 @@ namespace CommandQuery.Tests.Client
                 .Contain("Array=1&Array=2").And
                 .Contain("IEnumerable=3&IEnumerable=4").And
                 .Contain("List=5&List=6");
-        }
-
-        private class FakeQuery
-        {
-            public string String { get; set; }
-            public int Int { get; set; }
-            public bool Bool { get; set; }
-            public DateTime DateTime { get; set; }
-            public Guid Guid { get; set; }
-            public double? NullableDouble { get; set; }
-            public int[] Array { get; set; }
-            public IEnumerable<int> IEnumerable { get; set; }
-            public List<int> List { get; set; }
         }
     }
 }

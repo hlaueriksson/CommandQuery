@@ -20,42 +20,29 @@ namespace CommandQuery.Tests.Internal
                 { "Bool", "true" },
                 { "DateTime", "2018-07-06" },
                 { "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
-                { "NullableDouble", "2" },
+                { "NullableDouble", "2.1" },
                 { "UndefinedProperty", "should_not_be_used" },
-                { "Array", new JArray("1", "2", "3") },
-                { "IEnumerable", new JArray("1", "2", "3") },
-                { "List", new JArray("1", "2", "3") }
+                { "Array", new JArray("1", "2") },
+                { "IEnumerable", new JArray("3", "4") },
+                { "List", new JArray("5", "6") }
             };
 
             void should_set_the_property_values()
             {
-                var result = Subject.SafeToObject(typeof(FakeQuery)) as FakeQuery;
+                var result = Subject.SafeToObject(typeof(FakeComplexQuery)) as FakeComplexQuery;
 
                 result.String.Should().Be("Value");
                 result.Int.Should().Be(1);
                 result.Bool.Should().Be(true);
                 result.DateTime.Should().Be(DateTime.Parse("2018-07-06"));
                 result.Guid.Should().Be(new Guid("3B10C34C-D423-4EC3-8811-DA2E0606E241"));
-                result.NullableDouble.Should().Be(2);
-                result.Array.Should().Equal(1, 2, 3);
-                result.IEnumerable.Should().Equal(1, 2, 3);
-                result.List.Should().Equal(1, 2, 3);
+                result.NullableDouble.Should().Be(2.1);
+                result.Array.Should().Equal(1, 2);
+                result.IEnumerable.Should().Equal(3, 4);
+                result.List.Should().Equal(5, 6);
             }
         }
 
         IDictionary<string, JToken> Subject;
-
-        private class FakeQuery
-        {
-            public string String { get; set; }
-            public int Int { get; set; }
-            public bool Bool { get; set; }
-            public DateTime DateTime { get; set; }
-            public Guid Guid { get; set; }
-            public double? NullableDouble { get; set; }
-            public int[] Array { get; set; }
-            public IEnumerable<int> IEnumerable { get; set; }
-            public List<int> List { get; set; }
-        }
     }
 }

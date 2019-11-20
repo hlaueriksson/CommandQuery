@@ -55,6 +55,41 @@ namespace CommandQuery.Tests
                 fakeQueryHandler.Verify(x => x.HandleAsync(It.IsAny<FakeQuery>()));
             }
 
+            async Task should_create_a_complex_query_from_a_dictionary()
+            {
+                var expectedQueryType = typeof(FakeComplexQuery);
+                FakeComplexQuery expectedQuery = null;
+                var fakeQueryHandler = new FakeComplexQueryHandler(x => { expectedQuery = x; return new List<FakeResult>(); });
+                FakeQueryTypeCollection.Setup(x => x.GetType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeComplexQuery, IEnumerable<FakeResult>>))).Returns(fakeQueryHandler);
+
+                var query = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"String", new[] {"Value"}},
+                    {"Int", new[] {"1"}},
+                    {"Bool", new[] {"true"}},
+                    {"DateTime", new[] {"2018-07-06"}},
+                    {"Guid", new[] {"3B10C34C-D423-4EC3-8811-DA2E0606E241"}},
+                    {"NullableDouble", new[] {"2.1"}},
+                    {"UndefinedProperty", new[] {"should_not_be_used"}},
+                    {"Array", new[] {"1", "2"}},
+                    {"IEnumerable", new[] {"3", "4"}},
+                    {"List", new[] {"5", "6"}}
+                };
+
+                await Subject.ProcessAsync<IEnumerable<FakeResult>>(expectedQueryType.Name, query);
+
+                expectedQuery.String.Should().Be("Value");
+                expectedQuery.Int.Should().Be(1);
+                expectedQuery.Bool.Should().Be(true);
+                expectedQuery.DateTime.Should().Be(DateTime.Parse("2018-07-06"));
+                expectedQuery.Guid.Should().Be(new Guid("3B10C34C-D423-4EC3-8811-DA2E0606E241"));
+                expectedQuery.NullableDouble.Should().Be(2.1);
+                expectedQuery.Array.Should().Equal(1, 2);
+                expectedQuery.IEnumerable.Should().Equal(3, 4);
+                expectedQuery.List.Should().Equal(5, 6);
+            }
+
             async Task should_return_the_result_from_the_query_handler()
             {
                 var expected = new FakeResult();

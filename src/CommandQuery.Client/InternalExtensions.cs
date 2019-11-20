@@ -23,8 +23,8 @@ namespace CommandQuery.Client
             {
                 var value = p.GetValue(query, null);
 
-                if (value is ICollection collection)
-                    result.AddRange(from object v in collection select Parameter(p, v));
+                if (!(value is string) && value is IEnumerable enumerable)
+                    result.AddRange(from object v in enumerable select Parameter(p, v));
                 else
                     result.Add(Parameter(p, value));
             }

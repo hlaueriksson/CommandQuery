@@ -160,16 +160,16 @@ namespace CommandQuery
         {
             if (query == null) return null;
 
-            var properties = type.GetProperties().Where(p => p.GetValue(query, null) != null).ToList();
+            var properties = type.GetProperties();
 
             return query.ToDictionary(g => g.Key, Token, StringComparer.OrdinalIgnoreCase);
 
             JToken Token(KeyValuePair<string, IEnumerable<string>> kv)
             {
                 var property = properties.FirstOrDefault(x => string.Equals(x.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
-                var isCollection = property?.GetValue(query, null) is ICollection;
+                var isEnumerable = property?.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property?.PropertyType);
 
-                return isCollection ? (JToken)new JArray(kv.Value) : kv.Value.FirstOrDefault();
+                return isEnumerable ? (JToken)new JArray(kv.Value) : kv.Value.FirstOrDefault();
             }
         }
     }
