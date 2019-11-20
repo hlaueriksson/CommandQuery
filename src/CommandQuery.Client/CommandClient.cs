@@ -20,6 +20,22 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="command">The command.</param>
         Task PostAsync(ICommand command);
+
+        /// <summary>
+        /// Sends an <see cref="ICommand&lt;TResult&gt;" /> to the API with <c>POST</c>.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <returns>A result.</returns>
+        TResult Post<TResult>(ICommand<TResult> command);
+
+        /// <summary>
+        /// Sends an <see cref="ICommand&lt;TResult&gt;" /> to the API with <c>POST</c>.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <returns>A result.</returns>
+        Task<TResult> PostAsync<TResult>(ICommand<TResult> command);
     }
 
     /// <summary>
@@ -52,5 +68,21 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="command">The command.</param>
         public async Task PostAsync(ICommand command) => await BasePostAsync(command);
+
+        /// <summary>
+        /// Sends an <see cref="ICommand&lt;TResult&gt;" /> to the API with <c>POST</c>.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <returns>A result.</returns>
+        public TResult Post<TResult>(ICommand<TResult> command) => BasePost<TResult>(command);
+
+        /// <summary>
+        /// Sends an <see cref="ICommand&lt;TResult&gt;" /> to the API with <c>POST</c>.
+        /// </summary>
+        /// <typeparam name="TResult">The type of result.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <returns>A result.</returns>
+        public async Task<TResult> PostAsync<TResult>(ICommand<TResult> command) => await BasePostAsync<TResult>(command);
     }
 }
