@@ -21,7 +21,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
                 var req = GetHttpRequest("{ 'Value': 'Foo' }");
                 var log = new Mock<ILogger>();
 
-                var result = await Command.Run(req, log.Object, "FooCommand") as EmptyResult;
+                var result = await Command.Run(req, log.Object, "FooCommand") as OkResult;
 
                 result.Should().NotBeNull();
             }

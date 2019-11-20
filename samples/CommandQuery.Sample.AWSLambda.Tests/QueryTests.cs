@@ -49,7 +49,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             public void SetUp()
             {
                 Subject = new Query();
-                Request = GetRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
+                Request = GetRequest("GET", query: new Dictionary<string, IList<string>> { { "Id", new List<string> { "1" } } });
                 Context = new FakeLambdaContext();
             }
 
@@ -76,13 +76,13 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             ILambdaContext Context;
         }
 
-        static APIGatewayProxyRequest GetRequest(string method, string content = null, Dictionary<string, string> query = null)
+        static APIGatewayProxyRequest GetRequest(string method, string content = null, Dictionary<string, IList<string>> query = null)
         {
             var request = new APIGatewayProxyRequest
             {
                 HttpMethod = method,
                 Body = content,
-                QueryStringParameters = query
+                MultiValueQueryStringParameters = query
             };
 
             return request;
