@@ -14,19 +14,28 @@ namespace CommandQuery.Sample.Client
             Console.WriteLine("Hello, press [Enter] to proceed...");
             Console.ReadLine();
 
-            var commandClient = new CommandClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/", x =>
-                {
-                    x.MaxResponseContentBufferSize = 1000000;
-                });
-            var queryClient = new QueryClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/query/");
+            var commandClient = new CommandClient("http://localhost:7071/api/command/");
 
             commandClient.Post(new FooCommand { Value = "sv-SE" });
+            await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
+
+            // Command with result
+            commandClient.Post(new BazCommand { Value = "sv-SE" }).Log();
+            (await commandClient.PostAsync(new BazCommand { Value = "en-GB" })).Log();
+
+            var queryClient = new QueryClient("http://localhost:7071/api/query/", client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(10);
+            });
+
             queryClient.Post(new BarQuery { Id = 1 }).Log();
             queryClient.Get(new BarQuery { Id = 1 }).Log();
-
-            await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
             (await queryClient.PostAsync(new BarQuery { Id = 1 })).Log();
             (await queryClient.GetAsync(new BarQuery { Id = 1 })).Log();
+
+            // Query with enumerable property
+            queryClient.Get(new QuxQuery { Ids = new[] { Guid.NewGuid(), Guid.NewGuid() } }).Log();
+            (await queryClient.GetAsync(new QuxQuery { Ids = new[] { Guid.NewGuid(), Guid.NewGuid() } })).Log();
 
             Console.WriteLine("Press [Enter] to exit");
             Console.ReadLine();
