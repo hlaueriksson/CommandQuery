@@ -3,22 +3,32 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <RootNamespace>CommandQuery</RootNamespace>
-    <Version>0.8.0</Version>
+    <Version>0.9.0</Version>
+    <PackageReleaseNotes>ChangeLog:
+
+✨ Support for commands with result
+  ✔️ ICommand&lt;TResult&gt; / ICommandHandler&lt;in TCommand, TResult&gt;
+    </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Interfaces for CommandQuery
 
 ✔️ ICommand / ICommandHandler&lt;in TCommand&gt;
+✔️ ICommand&lt;TResult&gt; / ICommandHandler&lt;in TCommand, TResult&gt;
 ✔️ IQuery&lt;TResult&gt; / IQueryHandler&lt;in TQuery, TResult&gt;
 📄 https://hlaueriksson.me/CommandQuery/
     </Description>
     <PackageId>CommandQuery.Abstractions</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

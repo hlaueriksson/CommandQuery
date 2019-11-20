@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Version>0.8.0</Version>
+    <Version>0.9.0</Version>
     <PackageReleaseNotes>ChangeLog:
 
-✨ Moved interfaces to CommandQuery.Abstractions
-  ✔️ ICommand / ICommandHandler&lt;in TCommand&gt;
-  ✔️ IQuery&lt;TResult&gt; / IQueryHandler&lt;in TQuery, TResult&gt;
+✨ Support for commands with result
+  ✔️ ICommand&lt;TResult&gt; / ICommandHandler&lt;in TCommand, TResult&gt;
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for .NET Framework and .NET Standard ⚙️
@@ -19,12 +18,16 @@
     </Description>
     <PackageId>CommandQuery</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
