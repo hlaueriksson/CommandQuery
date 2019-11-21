@@ -10,7 +10,6 @@ using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using CommandQuery.Sample.Handlers.Queries;
 using Unity;
-using Unity.Exceptions;
 
 namespace CommandQuery.Sample.AspNet.WebApi
 {
