@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CommandQuery.Sample.Contracts.Queries
 {
-    public class QuxQuery : IQuery<IEnumerable<Qux>>
+    public class QuxQuery : IQuery<Qux[]>
     {
-        public IEnumerable<Guid> Ids { get; set; }
+        public Guid[] Ids { get; set; }
     }
 
     public class Qux
