@@ -2,11 +2,17 @@
 
 > Command Query Separation for .NET Framework and .NET Standard ⚙️
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.svg)](https://www.nuget.org/packages/CommandQuery)
+## Installation
 
-`PM>` `Install-Package CommandQuery`
+| NuGet            |       | [![CommandQuery][1]][2]                                       |
+| :--------------- | ----: | :------------------------------------------------------------ |
+| Package Manager  | `PM>` | `Install-Package CommandQuery -Version 0.9.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery --version 0.9.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery" Version="0.9.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery --version 0.9.0`                      |
 
-`>` `dotnet add package CommandQuery`
+[1]: https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery
+[2]: https://www.nuget.org/packages/CommandQuery
 
 ## Sample Code
 
@@ -54,6 +60,58 @@ namespace CommandQuery.Sample.Commands
 Commands implements the marker interface `ICommand` and command handlers implements `ICommandHandler<in TCommand>`.
 
 This example uses the dependency `ICultureService` to set the current culture to the given command value.
+
+:sparkles: The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
+`CommandQuery` has a more pragmatic take and now supports commands with result.
+
+Commands with `Result`:
+
+```csharp
+using System.Threading.Tasks;
+
+namespace CommandQuery.Sample.Commands
+{
+    public class BazCommand : ICommand<Baz>
+    {
+        public string Value { get; set; }
+    }
+
+    public class Baz
+    {
+        public bool Success { get; set; }
+    }
+
+    public class BazCommandHandler : ICommandHandler<BazCommand, Baz>
+    {
+        private readonly ICultureService _cultureService;
+
+        public BazCommandHandler(ICultureService cultureService)
+        {
+            _cultureService = cultureService;
+        }
+
+        public async Task<Baz> HandleAsync(BazCommand command)
+        {
+            var result = new Baz();
+
+            try
+            {
+                _cultureService.SetCurrentCulture(command.Value);
+
+                result.Success = true;
+            }
+            catch
+            {
+                // TODO: do some real log stuff
+            }
+
+            return await Task.FromResult(result);
+        }
+    }
+}
+```
+
+Commands with result implements the marker interface `ICommand<TResult>` and command handlers implements `ICommandHandler<in TCommand, TResult>`.
 
 ## Queries
 

@@ -5,11 +5,17 @@
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNet.WebApi.svg)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
+## Installation
 
-`PM>` `Install-Package CommandQuery.AspNet.WebApi`
+| NuGet            |       | [![CommandQuery.AspNet.WebApi][1]][2]                                       |
+| :--------------- | ----: | :-------------------------------------------------------------------------- |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNet.WebApi -Version 0.9.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNet.WebApi --version 0.9.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AspNet.WebApi" Version="0.9.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AspNet.WebApi --version 0.9.0`                      |
 
-`>` `dotnet add package CommandQuery.AspNet.WebApi`
+[1]: https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg?label=CommandQuery.AspNet.WebApi
+[2]: https://www.nuget.org/packages/CommandQuery.AspNet.WebApi
 
 ## Sample Code
 
@@ -27,6 +33,7 @@
 	* Inherit from `BaseCommandController` and `BaseQueryController`
 4. Create commands and command handlers
 	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure dependency injection

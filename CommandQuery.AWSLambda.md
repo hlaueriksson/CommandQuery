@@ -5,11 +5,17 @@
 * Provides generic function support for commands and queries with *Amazon API Gateway*
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AWSLambda.svg)](https://www.nuget.org/packages/CommandQuery.AWSLambda)
+## Installation
 
-`PM>` `Install-Package CommandQuery.AWSLambda`
+| NuGet            |       | [![CommandQuery.AWSLambda][1]][2]                                       |
+| :--------------- | ----: | :---------------------------------------------------------------------- |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AWSLambda -Version 0.9.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AWSLambda --version 0.9.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AWSLambda" Version="0.9.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AWSLambda --version 0.9.0`                      |
 
-`>` `dotnet add package CommandQuery.AWSLambda`
+[1]: https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg?label=CommandQuery.AWSLambda
+[2]: https://www.nuget.org/packages/CommandQuery.AWSLambda
 
 ## Sample Code
 
@@ -29,6 +35,7 @@
 	* For example named `Command` and `Query`
 4. Create commands and command handlers
 	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure the serverless template

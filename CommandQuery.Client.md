@@ -2,11 +2,17 @@
 
 > Clients for CommandQuery
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.Client.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.Client.svg)](https://www.nuget.org/packages/CommandQuery.Client)
+## Installation
 
-`PM>` `Install-Package CommandQuery.Client`
+| NuGet            |       | [![CommandQuery.Client][1]][2]                                       |
+| :--------------- | ----: | :------------------------------------------------------------------- |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.Client -Version 0.9.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.Client --version 0.9.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.Client" Version="0.9.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.Client --version 0.9.0`                      |
 
-`>` `dotnet add package CommandQuery.Client`
+[1]: https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client
+[2]: https://www.nuget.org/packages/CommandQuery.Client
 
 ## Sample Code
 
@@ -21,6 +27,13 @@ var commandClient = new CommandClient("https://commandquery-sample-azurefunction
 
 commandClient.Post(new FooCommand { Value = "sv-SE" });
 await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
+```
+
+Commands with result:
+
+```csharp
+var result = commandClient.Post(new BazCommand { Value = "sv-SE" });
+result = await commandClient.PostAsync(new BazCommand { Value = "en-GB" });
 ```
 
 ## Queries

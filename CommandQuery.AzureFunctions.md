@@ -5,11 +5,17 @@
 * Provides generic function support for commands and queries with *HTTPTriggers*
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AzureFunctions.svg)](https://www.nuget.org/packages/CommandQuery.AzureFunctions)
+## Installation
 
-`PM>` `Install-Package CommandQuery.AzureFunctions`
+| NuGet            |       | [![CommandQuery.AzureFunctions][1]][2]                                       |
+| :--------------- | ----: | :--------------------------------------------------------------------------- |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AzureFunctions -Version 0.9.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AzureFunctions --version 0.9.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AzureFunctions" Version="0.9.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AzureFunctions --version 0.9.0`                      |
 
-`>` `dotnet add package CommandQuery.AzureFunctions`
+[1]: https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?label=CommandQuery.AzureFunctions
+[2]: https://www.nuget.org/packages/CommandQuery.AzureFunctions
 
 ## Sample Code
 
@@ -34,6 +40,7 @@
 	* For example named `Command` and `Query`
 4. Create commands and command handlers
 	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 
@@ -59,6 +66,7 @@ When you create a new project in Visual Studio you need to choose the runtime:
 	* For example named `Command` and `Query`
 4. Create commands and command handlers
 	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 

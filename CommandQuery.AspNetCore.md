@@ -5,11 +5,17 @@
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNetCore.svg)](https://www.nuget.org/packages/CommandQuery.AspNetCore)
+## Installation
 
-`PM>` `Install-Package CommandQuery.AspNetCore`
+| NuGet            |       | [![CommandQuery.AspNetCore][1]][2]                                       |
+| :--------------- | ----: | :----------------------------------------------------------------------- |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNetCore -Version 0.9.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNetCore --version 0.9.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AspNetCore" Version="0.9.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AspNetCore --version 0.9.0`                      |
 
-`>` `dotnet add package CommandQuery.AspNetCore`
+[1]: https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg?label=CommandQuery.AspNetCore
+[2]: https://www.nuget.org/packages/CommandQuery.AspNetCore
 
 ## Sample Code
 
@@ -27,6 +33,7 @@
 	* Inherit from `BaseCommandController` and `BaseQueryController`
 4. Create commands and command handlers
 	* Implement `ICommand` and `ICommandHandler<in TCommand>`
+	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure dependency injection

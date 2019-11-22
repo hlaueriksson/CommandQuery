@@ -43,7 +43,11 @@ In other words:
 * Queries
   * Reads and returns data
 
+:sparkles: The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
+`CommandQuery` has a more pragmatic take and now supports commands with result.
+
 Inspired by:
+
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=91
 * https://cuttingedge.it/blogs/steven/pivot/entry.php?id=92
 
