@@ -46,7 +46,7 @@ namespace CommandQuery.AspNetCore
         public IActionResult Help()
         {
             var baseUrl = Request.GetEncodedUrl();
-            var commands = _commandProcessor.GetCommands();
+            var commands = _commandProcessor.GetCommandTypes();
 
             var result = commands.Select(x => new { command = x.Name, curl = x.GetCurl(baseUrl) });
 

@@ -150,7 +150,7 @@ namespace CommandQuery.Tests
 
             void should_get_all_types_from_the_cache()
             {
-                Subject.GetQueries();
+                Subject.GetQueryTypes();
 
                 FakeQueryTypeCollection.Verify(x => x.GetTypes());
             }

@@ -18,7 +18,7 @@ namespace CommandQuery.Tests.DependencyInjection
                 var result = Assembly.GetQueryProcessor();
 
                 result.Should().NotBeNull();
-                result.GetQueries().Should().Contain(typeof(FakeQuery));
+                result.GetQueryTypes().Should().Contain(typeof(FakeQuery));
             }
 
             void should_add_queries_from_Assemblies()
@@ -26,7 +26,7 @@ namespace CommandQuery.Tests.DependencyInjection
                 var result = new[] { Assembly }.GetQueryProcessor();
 
                 result.Should().NotBeNull();
-                result.GetQueries().Should().Contain(typeof(FakeQuery));
+                result.GetQueryTypes().Should().Contain(typeof(FakeQuery));
             }
         }
 

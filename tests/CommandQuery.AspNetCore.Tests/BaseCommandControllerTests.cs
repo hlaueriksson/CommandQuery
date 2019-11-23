@@ -23,18 +23,17 @@ namespace CommandQuery.AspNetCore.Tests
             {
                 ControllerContext = Fake.ControllerContext(fakeHttpResponse: FakeHttpResponse)
             };
+            Json = JObject.Parse("{}");
         }
 
         [LoFu, Test]
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
-            Json = JObject.Parse("{}");
+            FakeCommandProcessor.Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Json)).Returns(Task.FromResult(CommandResult.None));
-
                 var result = await Subject.Handle(CommandName, Json) as OkResult;
 
                 result.StatusCode.Should().Be(200);
@@ -42,38 +41,38 @@ namespace CommandQuery.AspNetCore.Tests
 
             async Task should_handle_CommandValidationException()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Json)).Throws(new CommandValidationException("invalid"));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
 
-                var result = await Subject.Handle(CommandName, Json) as BadRequestObjectResult;
+                var result = await Subject.Handle(CommandName, Json);
 
-                result.ShouldBeError("invalid");
+                result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Json)).Throws(new Exception("fail"));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(CommandName, Json) as ObjectResult;
+                var result = await Subject.Handle(CommandName, Json);
 
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.ShouldBeError("fail", 500);
             }
         }
-        
+
         [LoFu, Test]
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
-            Json = JObject.Parse("{}");
+            FakeCommandProcessor.Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
-            async Task should_invoke_the_command_processor()
+            async Task should_return_the_result_from_the_command_processor()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Json)).Returns(Task.FromResult(new CommandResult(new FakeResult())));
+                var expected = new FakeResult();
+                FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.Handle(CommandName, Json) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Value.Should().NotBeNull();
+                result.Value.Should().Be(expected);
             }
         }
 

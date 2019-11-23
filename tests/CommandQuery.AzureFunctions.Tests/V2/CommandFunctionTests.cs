@@ -1,5 +1,7 @@
 ﻿#if NETCOREAPP2_2
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -22,7 +24,10 @@ namespace CommandQuery.AzureFunctions.Tests.V2
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
-            Req = new DefaultHttpRequest(new DefaultHttpContext());
+            Req = new DefaultHttpRequest(new DefaultHttpContext())
+            {
+                Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"))
+            };
             Logger = Use<ILogger>();
         }
 
@@ -30,35 +35,31 @@ namespace CommandQuery.AzureFunctions.Tests.V2
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
+            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, It.IsAny<string>())).Returns(Task.FromResult(CommandResult.None));
-
                 var result = await Subject.Handle(CommandName, Req, Logger) as OkResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Should().NotBeNull();
             }
 
             async Task should_handle_CommandValidationException()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, It.IsAny<string>())).Throws(new CommandValidationException("invalid"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
 
-                var result = await Subject.Handle(CommandName, Req, Logger) as BadRequestObjectResult;
+                var result = await Subject.Handle(CommandName, Req, Logger);
 
-                result.ShouldBeError("invalid");
+                result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                var commandName = "FakeCommand";
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(commandName, It.IsAny<string>())).Throws(new Exception("fail"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(commandName, Req, Logger) as ObjectResult;
+                var result = await Subject.Handle(CommandName, Req, Logger);
 
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.ShouldBeError("fail", 500);
             }
         }     
         
@@ -66,15 +67,17 @@ namespace CommandQuery.AzureFunctions.Tests.V2
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
+            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
-            async Task should_invoke_the_command_processor_and_return_the_result()
+            async Task should_return_the_result_from_the_command_processor()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, It.IsAny<string>())).Returns(Task.FromResult(new CommandResult(new FakeResult())));
+                var expected = new FakeResult();
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.Handle(CommandName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Should().NotBeNull();
+                result.Value.Should().Be(expected);
             }
         }
 

@@ -48,7 +48,7 @@ namespace CommandQuery.AspNet.WebApi
         public IHttpActionResult Help()
         {
             var baseUrl = Request.RequestUri.ToString();
-            var queries = _queryProcessor.GetQueries();
+            var queries = _queryProcessor.GetQueryTypes();
 
             var result = queries.Select(x => new { query = x.Name, curl = x.GetCurl(baseUrl) });
 
