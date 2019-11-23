@@ -8,7 +8,6 @@ using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Exceptions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.AWSLambda
 {

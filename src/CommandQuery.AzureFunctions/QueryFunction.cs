@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using Newtonsoft.Json.Linq;
 #if NET461
 using System.Net;
 using System.Net.Http;
@@ -15,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 #endif
 
 namespace CommandQuery.AzureFunctions

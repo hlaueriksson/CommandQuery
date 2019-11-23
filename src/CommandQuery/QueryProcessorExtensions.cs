@@ -50,14 +50,14 @@ namespace CommandQuery
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, IDictionary<string, IEnumerable<string>> dictionary)
         {
             var queryType = queryProcessor.GetQueryType(queryName);
-            var query = queryProcessor.GetQueryDictionary(dictionary, queryType).SafeToObject(queryType);
+            var query = GetQueryDictionary(dictionary, queryType).SafeToObject(queryType);
 
             if (query == null) throw new QueryProcessorException("The dictionary could not be converted to an object");
 
             return await queryProcessor.ProcessAsync((dynamic)query);
         }
 
-        private static Dictionary<string, JToken> GetQueryDictionary(this IQueryProcessor queryProcessor, IDictionary<string, IEnumerable<string>> query, Type type)
+        private static Dictionary<string, JToken> GetQueryDictionary(IDictionary<string, IEnumerable<string>> query, Type type)
         {
             if (query == null) return null;
 
