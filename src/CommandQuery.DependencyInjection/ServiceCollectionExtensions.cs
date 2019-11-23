@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using CommandQuery.DependencyInjection.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.DependencyInjection

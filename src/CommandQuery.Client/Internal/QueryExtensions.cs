@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("CommandQuery.Tests")]
 
-namespace CommandQuery.Client
+namespace CommandQuery.Client.Internal
 {
-    internal static class InternalExtensions
+    internal static class QueryExtensions
     {
         internal static string GetRequestUri(this object query)
         {

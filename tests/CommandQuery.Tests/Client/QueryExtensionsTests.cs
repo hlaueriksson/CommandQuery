@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-using CommandQuery.Client;
+using CommandQuery.Client.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client
 {
-    public class InternalExtensionsTests
+    public class QueryExtensionsTests
     {
         [LoFu, Test]
         public void when_converting_a_dictionary_to_object()

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("CommandQuery.Tests")]
 
-namespace CommandQuery.DependencyInjection
+namespace CommandQuery.DependencyInjection.Internal
 {
     internal static class ReflectionExtensions
     {

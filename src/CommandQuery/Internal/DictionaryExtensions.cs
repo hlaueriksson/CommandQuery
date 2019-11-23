@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
-[assembly: InternalsVisibleTo("CommandQuery.Tests")]
 
 namespace CommandQuery.Internal
 {

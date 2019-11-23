@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using CommandQuery.DependencyInjection;
+using CommandQuery.DependencyInjection.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
