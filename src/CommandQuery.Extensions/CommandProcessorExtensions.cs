@@ -10,6 +10,7 @@ namespace CommandQuery
         /// <summary>
         /// Process a command with or without result.
         /// </summary>
+        /// <param name="commandProcessor">The command processor</param>
         /// <param name="commandName">The name of the command</param>
         /// <param name="json">The JSON representation of the command</param>
         /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
@@ -21,6 +22,7 @@ namespace CommandQuery
         /// <summary>
         /// Process a command with or without result.
         /// </summary>
+        /// <param name="commandProcessor">The command processor</param>
         /// <param name="commandName">The name of the command</param>
         /// <param name="json">The JSON representation of the command</param>
         /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
@@ -43,6 +45,7 @@ namespace CommandQuery
         /// <summary>
         /// Process a command.
         /// </summary>
+        /// <param name="commandProcessor">The command processor</param>
         /// <param name="commandName">The name of the command</param>
         /// <param name="json">The JSON representation of the command</param>
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -54,6 +57,7 @@ namespace CommandQuery
         /// <summary>
         /// Process a command.
         /// </summary>
+        /// <param name="commandProcessor">The command processor</param>
         /// <param name="commandName">The name of the command</param>
         /// <param name="json">The JSON representation of the command</param>
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -68,6 +72,7 @@ namespace CommandQuery
         /// Process a command with result.
         /// </summary>
         /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="commandProcessor">The command processor</param>
         /// <param name="commandName">The name of the command</param>
         /// <param name="json">The JSON representation of the command</param>
         /// <returns>The result of the command</returns>
@@ -80,6 +85,7 @@ namespace CommandQuery
         /// Process a command with result.
         /// </summary>
         /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="commandProcessor">The command processor</param>
         /// <param name="commandName">The name of the command</param>
         /// <param name="json">The JSON representation of the command</param>
         /// <returns>The result of the command</returns>

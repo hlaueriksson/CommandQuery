@@ -21,9 +21,14 @@ namespace CommandQuery
         /// <summary>
         /// Returns the types of queries that can be processed.
         /// </summary>
-        /// <returns>Supported queries</returns>
+        /// <returns>Supported query types</returns>
         IEnumerable<Type> GetQueryTypes();
 
+        /// <summary>
+        /// Returns the type of query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <returns>The query type</returns>
         Type GetQueryType(string queryName);
     }
 
@@ -66,12 +71,17 @@ namespace CommandQuery
         /// <summary>
         /// Returns the types of queries that can be processed.
         /// </summary>
-        /// <returns>Supported queries</returns>
+        /// <returns>Supported query types</returns>
         public IEnumerable<Type> GetQueryTypes()
         {
             return _typeCollection.GetTypes();
         }
 
+        /// <summary>
+        /// Returns the type of query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <returns>The query type</returns>
         public Type GetQueryType(string queryName)
         {
             return _typeCollection.GetType(queryName);

@@ -15,6 +15,7 @@ namespace CommandQuery
         /// Process a query.
         /// </summary>
         /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="queryProcessor">The query processor</param>
         /// <param name="queryName">The name of the query</param>
         /// <param name="json">The JSON representation of the query</param>
         /// <returns>The result of the query</returns>
@@ -27,6 +28,7 @@ namespace CommandQuery
         /// Process a query.
         /// </summary>
         /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="queryProcessor">The query processor</param>
         /// <param name="queryName">The name of the query</param>
         /// <param name="json">The JSON representation of the query</param>
         /// <returns>The result of the query</returns>
@@ -47,6 +49,7 @@ namespace CommandQuery
         /// Process a query.
         /// </summary>
         /// <typeparam name="TResult">The type of result</typeparam>
+        /// <param name="queryProcessor">The query processor</param>
         /// <param name="queryName">The name of the query</param>
         /// <param name="dictionary">The key/value representation of the query</param>
         /// <returns>The result of the query</returns>

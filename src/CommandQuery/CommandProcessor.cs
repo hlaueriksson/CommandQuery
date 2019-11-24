@@ -28,9 +28,14 @@ namespace CommandQuery
         /// <summary>
         /// Returns the types of commands that can be processed.
         /// </summary>
-        /// <returns>Supported commands</returns>
+        /// <returns>Supported command types</returns>
         IEnumerable<Type> GetCommandTypes();
 
+        /// <summary>
+        /// Returns the type of command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <returns>The command type</returns>
         Type GetCommandType(string commandName);
     }
 
@@ -89,12 +94,17 @@ namespace CommandQuery
         /// <summary>
         /// Returns the types of commands that can be processed.
         /// </summary>
-        /// <returns>Supported commands</returns>
+        /// <returns>Supported command types</returns>
         public IEnumerable<Type> GetCommandTypes()
         {
             return _typeCollection.GetTypes();
         }
 
+        /// <summary>
+        /// Returns the type of command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <returns>The command type</returns>
         public Type GetCommandType(string commandName)
         {
             return _typeCollection.GetType(commandName);
