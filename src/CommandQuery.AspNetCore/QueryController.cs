@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using CommandQuery.AspNetCore.Internal;
 using CommandQuery.Exceptions;
-using CommandQuery.Internal;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,16 +9,18 @@ namespace CommandQuery.AspNetCore
     /// <summary>
     /// Base class for query controllers.
     /// </summary>
-    public abstract class BaseQueryController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    internal class QueryController<TQuery, TResult> : ControllerBase where TQuery : IQuery<TResult>
     {
         private readonly IQueryProcessor _queryProcessor;
-        private readonly ILogger<BaseQueryController> _logger;
+        private readonly ILogger<QueryController<TQuery, TResult>> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseQueryController" /> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
-        protected BaseQueryController(IQueryProcessor queryProcessor)
+        public QueryController(IQueryProcessor queryProcessor)
         {
             _queryProcessor = queryProcessor;
         }
@@ -34,25 +30,10 @@ namespace CommandQuery.AspNetCore
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
         /// <param name="logger">An <see cref="ILogger" /></param>
-        protected BaseQueryController(IQueryProcessor queryProcessor, ILogger<BaseQueryController> logger)
+        public QueryController(IQueryProcessor queryProcessor, ILogger<QueryController<TQuery, TResult>> logger)
         {
             _queryProcessor = queryProcessor;
             _logger = logger;
-        }
-
-        /// <summary>
-        /// Gets help.
-        /// </summary>
-        /// <returns>Query help</returns>
-        [HttpGet]
-        public IActionResult Help()
-        {
-            var baseUrl = Request.GetEncodedUrl();
-            var queries = _queryProcessor.GetQueryTypes();
-
-            var result = queries.Select(x => new { query = x.Name, curl = x.GetCurl(baseUrl) });
-
-            return Json(result);
         }
 
         /// <summary>
@@ -62,12 +43,11 @@ namespace CommandQuery.AspNetCore
         /// <param name="json">The JSON representation of the query</param>
         /// <returns>The result + 200, 400 or 500</returns>
         [HttpPost]
-        [Route("{queryName}")]
-        public async Task<IActionResult> HandlePost(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
+        public async Task<IActionResult> HandlePost(TQuery query)
         {
             try
             {
-                var result = await _queryProcessor.ProcessAsync<object>(queryName, json);
+                var result = await _queryProcessor.ProcessAsync(query);
 
                 return Ok(result);
             }
@@ -75,19 +55,19 @@ namespace CommandQuery.AspNetCore
             {
                 _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
 
-                return BadRequest(exception.ToError());
+                return BadRequest(exception); // TODO
             }
             catch (QueryValidationException exception)
             {
                 _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
 
-                return BadRequest(exception.ToError());
+                return BadRequest(exception);
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
-                return StatusCode(500, exception.ToError()); // InternalServerError
+                return StatusCode(500, exception); // InternalServerError
             }
         }
 
@@ -97,12 +77,11 @@ namespace CommandQuery.AspNetCore
         /// <param name="queryName">The name of the query</param>
         /// <returns>The result + 200, 400 or 500</returns>
         [HttpGet]
-        [Route("{queryName}")]
-        public async Task<IActionResult> HandleGet(string queryName)
+        public async Task<IActionResult> HandleGet([FromQuery] TQuery query)
         {
             try
             {
-                var result = await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(Request.Query));
+                var result = await _queryProcessor.ProcessAsync(query);
 
                 return Ok(result);
             }
@@ -110,24 +89,19 @@ namespace CommandQuery.AspNetCore
             {
                 _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
 
-                return BadRequest(exception.ToError());
+                return BadRequest(exception);
             }
             catch (QueryValidationException exception)
             {
                 _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
 
-                return BadRequest(exception.ToError());
+                return BadRequest(exception);
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
-                return StatusCode(500, exception.ToError()); // InternalServerError
-            }
-
-            Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
-            {
-                return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
+                return StatusCode(500, exception); // InternalServerError
             }
         }
     }

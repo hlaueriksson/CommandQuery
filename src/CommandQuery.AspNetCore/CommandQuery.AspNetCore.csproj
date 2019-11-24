@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Extensions\CommandQuery.Extensions.csproj" />
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
     <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" PrivateAssets="all" />
   </ItemGroup>
