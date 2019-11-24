@@ -74,11 +74,7 @@ namespace CommandQuery
 
         public Type GetQueryType(string queryName)
         {
-            var queryType = _typeCollection.GetType(queryName);
-
-            if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
-
-            return queryType;
+            return _typeCollection.GetType(queryName);
         }
     }
 }

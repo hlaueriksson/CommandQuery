@@ -33,6 +33,9 @@ namespace CommandQuery
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, JObject json)
         {
             var queryType = queryProcessor.GetQueryType(queryName);
+
+            if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
+
             var query = json.SafeToObject(queryType);
 
             if (query == null) throw new QueryProcessorException("The json could not be converted to an object");
@@ -50,6 +53,9 @@ namespace CommandQuery
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, IDictionary<string, IEnumerable<string>> dictionary)
         {
             var queryType = queryProcessor.GetQueryType(queryName);
+
+            if (queryType == null) throw new QueryProcessorException($"The query type '{queryName}' could not be found");
+
             var query = GetQueryDictionary(dictionary, queryType).SafeToObject(queryType);
 
             if (query == null) throw new QueryProcessorException("The dictionary could not be converted to an object");

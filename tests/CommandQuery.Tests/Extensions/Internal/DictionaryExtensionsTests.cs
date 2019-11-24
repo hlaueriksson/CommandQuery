@@ -6,7 +6,7 @@ using LoFuUnit.NUnit;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace CommandQuery.Tests.Internal
+namespace CommandQuery.Tests.Extensions.Internal
 {
     public class DictionaryExtensionsTests
     {
