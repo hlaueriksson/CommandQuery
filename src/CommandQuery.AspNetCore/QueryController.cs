@@ -10,23 +10,14 @@ namespace CommandQuery.AspNetCore
     /// Base class for query controllers.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/query/[controller]")]
     internal class QueryController<TQuery, TResult> : ControllerBase where TQuery : IQuery<TResult>
     {
         private readonly IQueryProcessor _queryProcessor;
         private readonly ILogger<QueryController<TQuery, TResult>> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseQueryController" /> class.
-        /// </summary>
-        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
-        public QueryController(IQueryProcessor queryProcessor)
-        {
-            _queryProcessor = queryProcessor;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseQueryController" /> class.
+        /// Initializes a new instance of the <see cref="QueryController&lt;TQuery, TResult&gt;" /> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
         /// <param name="logger">An <see cref="ILogger" /></param>
@@ -39,8 +30,7 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Handle a query.
         /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <param name="json">The JSON representation of the query</param>
+        /// <param name="query">The query</param>
         /// <returns>The result + 200, 400 or 500</returns>
         [HttpPost]
         public async Task<IActionResult> HandlePost(TQuery query)
@@ -74,7 +64,7 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Handle a query.
         /// </summary>
-        /// <param name="queryName">The name of the query</param>
+        /// <param name="query">The query</param>
         /// <returns>The result + 200, 400 or 500</returns>
         [HttpGet]
         public async Task<IActionResult> HandleGet([FromQuery] TQuery query)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CommandQuery.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -13,20 +14,21 @@ namespace CommandQuery.AspNetCore
 
         public CommandControllerFeatureProvider(params Assembly[] assemblies)
         {
-            _types = assemblies.SelectMany(x => x.GetExportedTypes())
-                .Where(t => !t.IsAbstract)
-                .Where(t => t.BaseType != null)
-                .Where(t => typeof(ICommand).IsAssignableFrom(t) || typeof(ICommand<>).IsAssignableFrom(t))
-                .ToArray();
+            _types = assemblies.GetTypesAssignableTo(typeof(ICommand)).Concat(assemblies.GetTypesAssignableTo(typeof(ICommand<>))).ToArray();
         }
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            foreach (var commandType in _types)
+            foreach (var commandType in _types.Where(x => typeof(ICommand).IsAssignableFrom(x)))
             {
-                var controllerType = commandType.BaseType.IsGenericType
-                    ? typeof(CommandWithResultController<,>).MakeGenericType(commandType, commandType.BaseType.GetGenericArguments()[0])
-                    : typeof(CommandController<>).MakeGenericType(commandType);
+                var controllerType = typeof(CommandController<>).MakeGenericType(commandType);
+
+                feature.Controllers.Add(controllerType.GetTypeInfo());
+            }
+
+            foreach (var commandType in _types.Where(x => x.IsAssignableToGenericType(typeof(ICommand<>))))
+            {
+                var controllerType = typeof(CommandWithResultController<,>).MakeGenericType(commandType, commandType.GetResultType(typeof(ICommand<>)));
 
                 feature.Controllers.Add(controllerType.GetTypeInfo());
             }

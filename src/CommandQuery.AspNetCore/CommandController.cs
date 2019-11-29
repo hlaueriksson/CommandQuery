@@ -7,20 +7,11 @@ using Microsoft.Extensions.Logging;
 namespace CommandQuery.AspNetCore
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/command/[controller]")]
     internal class CommandController<TCommand> : ControllerBase where TCommand : ICommand
     {
         private readonly ICommandProcessor _commandProcessor;
         private readonly ILogger<CommandController<TCommand>> _logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandController&lt;TCommand&gt;" /> class.
-        /// </summary>
-        /// <param name="commandProcessor">An <see cref="ICommandProcessor" /></param>
-        public CommandController(ICommandProcessor commandProcessor)
-        {
-            _commandProcessor = commandProcessor;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandController&lt;TCommand&gt;" /> class.
