@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CommandQuery.AspNetCore.Internal;
 using CommandQuery.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -45,19 +46,19 @@ namespace CommandQuery.AspNetCore
             {
                 _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
 
-                return BadRequest(exception); // TODO
+                return BadRequest(exception.ToError());
             }
             catch (QueryValidationException exception)
             {
                 _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
 
-                return BadRequest(exception);
+                return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
-                return StatusCode(500, exception); // InternalServerError
+                return StatusCode(500, exception.ToError()); // InternalServerError
             }
         }
 
@@ -79,19 +80,19 @@ namespace CommandQuery.AspNetCore
             {
                 _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
 
-                return BadRequest(exception);
+                return BadRequest(exception.ToError());
             }
             catch (QueryValidationException exception)
             {
                 _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
 
-                return BadRequest(exception);
+                return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
-                return StatusCode(500, exception); // InternalServerError
+                return StatusCode(500, exception.ToError()); // InternalServerError
             }
         }
     }

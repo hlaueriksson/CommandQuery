@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using CommandQuery.AspNetCore.Internal;
 using CommandQuery.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,19 +43,19 @@ namespace CommandQuery.AspNetCore
             {
                 _logger?.LogError(LogEvents.CommandProcessorException, exception, "Handle command failed");
 
-                return BadRequest(exception); // TODO
+                return BadRequest(exception.ToError());
             }
             catch (CommandValidationException exception)
             {
                 _logger?.LogError(LogEvents.CommandValidationException, exception, "Handle command failed");
 
-                return BadRequest(exception);
+                return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
                 _logger?.LogError(LogEvents.CommandException, exception, "Handle command failed");
 
-                return StatusCode(500, exception); // InternalServerError
+                return StatusCode(500, exception.ToError()); // InternalServerError
             }
         }
     }
