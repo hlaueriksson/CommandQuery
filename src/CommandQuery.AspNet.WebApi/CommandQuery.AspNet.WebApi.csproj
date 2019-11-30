@@ -22,7 +22,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,13 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Extensions\CommandQuery.Extensions.csproj" />
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
-    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
   </ItemGroup>
-
-  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
-    </ItemGroup>
-  </Target>
 
 </Project>
