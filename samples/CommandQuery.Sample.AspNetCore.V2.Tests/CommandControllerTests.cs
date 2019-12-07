@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNetCore.Tests
+namespace CommandQuery.Sample.AspNetCore.V2.Tests
 {
     public class CommandControllerTests
     {
@@ -35,7 +36,8 @@ namespace CommandQuery.Sample.AspNetCore.Tests
                 var content = new StringContent("{ 'Value': 'Foo' }", Encoding.UTF8, "application/json");
                 var result = await Client.PostAsync("/api/command/FailCommand", content);
 
-                await result.ShouldBeErrorAsync("The command type 'FailCommand' could not be found");
+                result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
             TestServer Server;

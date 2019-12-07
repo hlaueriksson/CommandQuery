@@ -1,4 +1,5 @@
-﻿using CommandQuery.DependencyInjection;
+﻿using CommandQuery.AspNetCore;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommandQuery.Sample.AspNetCore
+namespace CommandQuery.Sample.AspNetCore.V2
 {
     public class Startup
     {
@@ -24,7 +25,14 @@ namespace CommandQuery.Sample.AspNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc(options => options.Conventions.Add(new CommandQueryControllerModelConvention()))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .ConfigureApplicationPartManager(manager =>
+                {
+                    manager.FeatureProviders.Add(new CommandControllerFeatureProvider(typeof(FooCommand).Assembly));
+                    manager.FeatureProviders.Add(new QueryControllerFeatureProvider(typeof(BarQuery).Assembly));
+                });
 
             // Add commands and queries.
             services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);

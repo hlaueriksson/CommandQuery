@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj" />
+    <ProjectReference Include="..\CommandQuery.Sample.AspNetCore.V2\CommandQuery.Sample.AspNetCore.V2.csproj" />
   </ItemGroup>
 
 </Project>

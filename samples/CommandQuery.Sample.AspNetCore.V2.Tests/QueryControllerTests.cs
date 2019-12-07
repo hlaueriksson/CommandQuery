@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Queries;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNetCore.Tests
+namespace CommandQuery.Sample.AspNetCore.V2.Tests
 {
     public class QueryControllerTests
     {
@@ -38,7 +39,8 @@ namespace CommandQuery.Sample.AspNetCore.Tests
                 var content = new StringContent("{ 'Id': 1 }", Encoding.UTF8, "application/json");
                 var result = await Client.PostAsync("/api/query/FailQuery", content);
 
-                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+                result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
             TestServer Server;
@@ -70,7 +72,8 @@ namespace CommandQuery.Sample.AspNetCore.Tests
             {
                 var result = await Client.GetAsync("/api/query/FailQuery?Id=1");
 
-                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+                result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
             TestServer Server;

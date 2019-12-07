@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Contracts", "samples\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj", "{FF932E21-17DE-4BC3-9E25-606502CAE58B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore", "samples\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{98D5C84A-C209-4533-8CF1-57A575EA70EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V2", "samples\CommandQuery.Sample.AspNetCore.V2\CommandQuery.Sample.AspNetCore.V2.csproj", "{98D5C84A-C209-4533-8CF1-57A575EA70EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.Tests", "samples\CommandQuery.Sample.AspNetCore.Tests\CommandQuery.Sample.AspNetCore.Tests.csproj", "{ECC4A711-80E3-47B9-9792-D4B63F06D1F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V2.Tests", "samples\CommandQuery.Sample.AspNetCore.V2.Tests\CommandQuery.Sample.AspNetCore.V2.Tests.csproj", "{ECC4A711-80E3-47B9-9792-D4B63F06D1F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AWSLambda", "samples\CommandQuery.Sample.AWSLambda\CommandQuery.Sample.AWSLambda.csproj", "{6AC1C95D-58A9-4D87-B303-EDF47BD35094}"
 EndProject

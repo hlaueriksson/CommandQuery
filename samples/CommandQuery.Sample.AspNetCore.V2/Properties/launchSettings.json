@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "CommandQuery.Sample.AspNetCore": {
+    "CommandQuery.Sample.AspNetCore.V2": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/query",
