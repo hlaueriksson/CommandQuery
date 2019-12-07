@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.WebApi.Tests", "samples\CommandQuery.Sample.AspNet.WebApi.Tests\CommandQuery.Sample.AspNet.WebApi.Tests.csproj", "{33887CED-6F05-450B-B793-8AD30A9C6BCA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNetCore.V3", "samples\CommandQuery.Sample.AspNetCore.V3\CommandQuery.Sample.AspNetCore.V3.csproj", "{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
