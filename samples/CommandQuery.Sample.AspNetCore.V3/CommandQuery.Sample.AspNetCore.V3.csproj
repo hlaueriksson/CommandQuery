@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandQuery.AspNetCore" Version="0.9.7" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.1.6" />
   </ItemGroup>
 
   <ItemGroup>

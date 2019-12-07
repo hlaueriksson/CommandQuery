@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace CommandQuery.Sample.AspNetCore.V2
 {
@@ -41,6 +42,12 @@ namespace CommandQuery.Sample.AspNetCore.V2
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
             services.AddTransient<ICultureService, CultureService>();
+
+            // Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v2", new Info { Title = "CommandQuery.Sample.AspNetCore.V2", Version = "v2" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +65,13 @@ namespace CommandQuery.Sample.AspNetCore.V2
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CommandQuery.Sample.AspNetCore.V2");
+            });
         }
     }
 }

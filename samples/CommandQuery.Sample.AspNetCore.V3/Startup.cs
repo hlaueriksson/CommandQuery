@@ -40,6 +40,13 @@ namespace CommandQuery.Sample.AspNetCore.V3
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
             services.AddTransient<ICultureService, CultureService>();
+
+            // Swagger
+            services.AddOpenApiDocument(settings =>
+            {
+                settings.DocumentName = "v3";
+                settings.Title = "CommandQuery.Sample.AspNetCore.V3";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +66,15 @@ namespace CommandQuery.Sample.AspNetCore.V3
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            // Swagger
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+            app.UseReDoc(settings =>
+            {
+                settings.Path = "/redoc";
+                settings.DocumentPath = "/swagger/v3/swagger.json";
             });
         }
     }
