@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using CommandQuery.AspNet.WebApi.Internal;
 using CommandQuery.Exceptions;
 
 namespace CommandQuery.AspNet.WebApi
@@ -34,22 +32,6 @@ namespace CommandQuery.AspNet.WebApi
         {
             _commandProcessor = commandProcessor;
             _logger = logger;
-        }
-
-        /// <summary>
-        /// Gets help.
-        /// </summary>
-        /// <returns>Command help</returns>
-        [HttpGet]
-        [Route("")]
-        public IHttpActionResult Help()
-        {
-            var baseUrl = Request.RequestUri.ToString();
-            var commands = _commandProcessor.GetCommandTypes();
-
-            var result = commands.Select(x => new { command = x.Name, curl = x.GetCurl(baseUrl) });
-
-            return Json(result);
         }
 
         /// <summary>
