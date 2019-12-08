@@ -1,37 +1,26 @@
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
-using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Contracts.Commands;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
-    public static class Command
+    public class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(
-            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
-                .GetCommandProcessor(GetServiceCollection()));
+        private readonly ICommandFunction _commandFunction;
 
-        [FunctionName("Command")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, ILogger log, string commandName)
+        public Command(ICommandFunction commandFunction)
         {
-            return await Func.Handle(commandName, req, log);
+            _commandFunction = commandFunction;
         }
 
-        private static IServiceCollection GetServiceCollection()
+        [FunctionName("Command")]
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, ILogger log, string commandName)
         {
-            var services = new ServiceCollection();
-            // Add handler dependencies
-            services.AddTransient<ICultureService, CultureService>();
-
-            return services;
+            return await _commandFunction.Handle(commandName, req, log);
         }
     }
 }
