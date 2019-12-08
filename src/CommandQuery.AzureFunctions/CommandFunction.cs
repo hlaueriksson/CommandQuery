@@ -18,10 +18,21 @@ using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
 {
+    public interface ICommandFunction
+    {
+#if NET461
+        Task<HttpResponseMessage> Handle(string commandName, HttpRequestMessage req, TraceWriter log);
+#endif
+
+#if NETSTANDARD2_0
+        Task<IActionResult> Handle(string commandName, HttpRequest req, ILogger log);
+#endif
+    }
+
     /// <summary>
     /// Handles commands for the Azure function.
     /// </summary>
-    public class CommandFunction
+    public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
 

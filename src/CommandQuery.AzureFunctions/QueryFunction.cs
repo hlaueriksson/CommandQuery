@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
+
 #if NET461
 using System.Net;
 using System.Net.Http;
 using Microsoft.Azure.WebJobs.Host;
 #endif
+
 #if NETSTANDARD2_0
 using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
@@ -18,10 +20,21 @@ using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
 {
+    public interface IQueryFunction
+    {
+#if NET461
+        Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log);
+#endif
+
+#if NETSTANDARD2_0
+        Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log);
+#endif
+    }
+
     /// <summary>
     /// Handles queries for the Azure function.
     /// </summary>
-    public class QueryFunction
+    public class QueryFunction : IQueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
 
