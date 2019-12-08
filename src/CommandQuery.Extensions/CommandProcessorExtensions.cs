@@ -5,6 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace CommandQuery
 {
+    /// <summary>
+    /// Extensions methods for <see cref="ICommandProcessor"/>.
+    /// </summary>
     public static class CommandProcessorExtensions
     {
         /// <summary>
