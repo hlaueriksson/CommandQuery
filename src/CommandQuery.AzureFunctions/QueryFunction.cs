@@ -20,13 +20,30 @@ using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
 {
+    /// <summary>
+    /// Handles queries for the Azure function.
+    /// </summary>
     public interface IQueryFunction
     {
 #if NET461
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="req">A <see cref="HttpRequestMessage" /></param>
+        /// <param name="log">A <see cref="TraceWriter" /></param>
+        /// <returns>The result + 200, 400 or 500</returns>
         Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log);
 #endif
 
 #if NETSTANDARD2_0 || NETCOREAPP3_0
+        /// <summary>
+        /// Handle a query.
+        /// </summary>
+        /// <param name="queryName">The name of the query</param>
+        /// <param name="req">A <see cref="HttpRequest" /></param>
+        /// <param name="log">An <see cref="ILogger" /></param>
+        /// <returns>The result + 200, 400 or 500</returns>
         Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log);
 #endif
     }
