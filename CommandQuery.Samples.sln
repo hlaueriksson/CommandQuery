@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AzureFunctions.Vs3", "samples\CommandQuery.Sample.AzureFunctions.Vs3\CommandQuery.Sample.AzureFunctions.Vs3.csproj", "{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AzureFunctions.Vs3.Tests", "samples\CommandQuery.Sample.AzureFunctions.Vs3.Tests\CommandQuery.Sample.AzureFunctions.Vs3.Tests.csproj", "{C501E086-8F0B-4212-B9C3-AFBA870DF33A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
