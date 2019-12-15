@@ -33,7 +33,7 @@ namespace CommandQuery.Sample.AspNetCore.V3
                     manager.FeatureProviders.Add(new QueryControllerFeatureProvider(typeof(BarQuery).Assembly));
                 });
 
-            // Add commands and queries.
+            // Add commands and queries
             services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
             services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
