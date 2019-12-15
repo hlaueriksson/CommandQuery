@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageReference Include="CommandQuery.AzureFunctions" Version="0.9.8" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj" />
