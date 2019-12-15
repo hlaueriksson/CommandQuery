@@ -8,7 +8,7 @@ using System.Net.Http;
 using Microsoft.Azure.WebJobs.Host;
 #endif
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_0
 using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace CommandQuery.AzureFunctions
         Task<HttpResponseMessage> Handle(string commandName, HttpRequestMessage req, TraceWriter log);
 #endif
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_0
         Task<IActionResult> Handle(string commandName, HttpRequest req, ILogger log);
 #endif
     }
@@ -86,7 +86,7 @@ namespace CommandQuery.AzureFunctions
         }
 #endif
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_0
         /// <summary>
         /// Handle a command.
         /// </summary>
