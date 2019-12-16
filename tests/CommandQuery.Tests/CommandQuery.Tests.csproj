@@ -22,4 +22,9 @@
     <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\..\samples\CommandQuery.Sample.Contracts\Commands\*.cs" LinkBase="Client\Contracts\Commands" />
+    <Compile Include="..\..\samples\CommandQuery.Sample.Contracts\Queries\*.cs" LinkBase="Client\Contracts\Queries" />
+  </ItemGroup>
+
 </Project>

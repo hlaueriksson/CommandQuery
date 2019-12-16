@@ -23,8 +23,6 @@ namespace CommandQuery.Client
         /// <param name="timeoutInSeconds">The timeout for requests.</param>
         protected BaseClient(string baseUrl, int timeoutInSeconds = 10)
         {
-            if (Client.BaseAddress != null) return;
-
             Client.BaseAddress = new Uri(baseUrl);
             Client.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
             Client.DefaultRequestHeaders.Accept.Clear();
