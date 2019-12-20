@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CommandQuery.AspNet.WebApi.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,18 +25,11 @@ namespace CommandQuery.AspNet.WebApi.Tests
         [LoFu, Test]
         public void when_AddControllers()
         {
-            void should_add_controllers_from_the_calling_assembly()
-            {
-                Subject = new ServiceCollection();
-                Subject.AddControllers();
-                Subject.Any(x => x.ServiceType == typeof(FakeCommandController)).Should().BeTrue();
-                Subject.Any(x => x.ServiceType == typeof(FakeQueryController)).Should().BeTrue();
-            }
+            Subject = new ServiceCollection();
+            Subject.AddControllers(typeof(FakeCommandController).Assembly);
 
             void should_add_controllers_from_the_given_assembly()
             {
-                Subject = new ServiceCollection();
-                Subject.AddControllers(typeof(FakeCommandController).Assembly);
                 Subject.Any(x => x.ServiceType == typeof(FakeCommandController)).Should().BeTrue();
                 Subject.Any(x => x.ServiceType == typeof(FakeQueryController)).Should().BeTrue();
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http.Dependencies;
+using CommandQuery.AspNet.WebApi.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.AspNet.WebApi
@@ -16,15 +17,6 @@ namespace CommandQuery.AspNet.WebApi
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandQueryDependencyResolver" /> class.
         /// </summary>
-        /// <param name="provider">An <see cref="IServiceProvider" /></param>
-        public CommandQueryDependencyResolver(IServiceProvider provider)
-        {
-            _provider = provider;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandQueryDependencyResolver" /> class.
-        /// </summary>
         /// <param name="services">An <see cref="IServiceCollection" /></param>
         public CommandQueryDependencyResolver(IServiceCollection services)
         {
@@ -32,6 +24,11 @@ namespace CommandQuery.AspNet.WebApi
             services.AddControllers(Assembly.GetCallingAssembly());
 
             _provider = services.BuildServiceProvider();
+        }
+
+        private CommandQueryDependencyResolver(IServiceProvider provider)
+        {
+            _provider = provider;
         }
 
         /// <summary>Retrieves a service from the scope.</summary>
