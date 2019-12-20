@@ -38,6 +38,15 @@ namespace CommandQuery.AWSLambda.Tests
                 result.Body.Should().BeNull();
             }
 
+            async Task should_handle_CommandProcessorException()
+            {
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+
+                var result = await Subject.Handle(CommandName, Request, Context.Object);
+
+                result.ShouldBeError("fail", 400);
+            }
+
             async Task should_handle_CommandValidationException()
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
@@ -55,8 +64,8 @@ namespace CommandQuery.AWSLambda.Tests
 
                 result.ShouldBeError("fail", 500);
             }
-        }    
-        
+        }
+
         [LoFu, Test]
         public async Task when_handling_the_command_with_result()
         {

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.Http.Tracing;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
@@ -45,6 +46,15 @@ namespace CommandQuery.AspNet.WebApi.Tests
                 result.Content.Should().Be(expected);
             }
 
+            async Task should_handle_QueryProcessorException()
+            {
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+
+                var result = await Subject.HandlePost(QueryName, Json);
+
+                await result.ShouldBeErrorAsync("fail", 400);
+            }
+
             async Task should_handle_QueryValidationException()
             {
                 FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryValidationException("invalid"));
@@ -62,11 +72,28 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 await result.ShouldBeErrorAsync("fail", 500);
             }
+
+            async Task should_log_errors()
+            {
+                var fakeTraceWriter = new Mock<ITraceWriter>();
+                var subject = new FakeQueryController(FakeQueryProcessor.Object, fakeTraceWriter.Object)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
+
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
+
+                await subject.HandlePost(QueryName, Json);
+
+                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), LogEvents.QueryException, TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
+            }
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
+            Subject.Request.RequestUri = new Uri("http://example.com?foo=bar");
             QueryName = "FakeQuery";
             FakeQueryProcessor.Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
 
@@ -79,6 +106,15 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(200);
                 result.Content.Should().Be(expected);
+            }
+
+            async Task should_handle_QueryProcessorException()
+            {
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+
+                var result = await Subject.HandleGet(QueryName);
+
+                await result.ShouldBeErrorAsync("fail", 400);
             }
 
             async Task should_handle_QueryValidationException()

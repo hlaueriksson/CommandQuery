@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using NUnit.Framework;
 
@@ -36,8 +37,24 @@ namespace CommandQuery.AspNetCore.Tests
                 Subject.Apply(result);
                 result.ControllerName.Should().Be("FakeQuery");
             }
+
+            void should_not_handle_non_generic_controllers()
+            {
+                var result = new ControllerModel(typeof(ControllerBase).GetTypeInfo(), new List<object>());
+                Subject.Apply(result);
+                result.ControllerName.Should().BeNull();
+            }
+
+            void should_not_handle_unknown_controllers()
+            {
+                var result = new ControllerModel(typeof(FakeController<>).GetTypeInfo(), new List<object>());
+                Subject.Apply(result);
+                result.ControllerName.Should().BeNull();
+            }
         }
 
         CommandQueryControllerModelConvention Subject;
+
+        class FakeController<T> : ControllerBase { }
     }
 }

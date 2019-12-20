@@ -29,6 +29,15 @@ namespace CommandQuery.AspNetCore.Tests
                 result.StatusCode.Should().Be(200);
             }
 
+            async Task should_handle_CommandProcessorException()
+            {
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+
+                var result = await Subject.Handle(new FakeCommand());
+
+                result.ShouldBeError("fail", 400);
+            }
+
             async Task should_handle_CommandValidationException()
             {
                 FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));

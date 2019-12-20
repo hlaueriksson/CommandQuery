@@ -2,6 +2,7 @@
 using CommandQuery.DependencyInjection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.DependencyInjection
@@ -29,6 +30,12 @@ namespace CommandQuery.Tests.DependencyInjection
                 result.Should().NotBeNull();
                 result.GetCommandTypes().Should().Contain(typeof(FakeCommand));
                 result.GetCommandTypes().Should().Contain(typeof(FakeResultCommand));
+            }
+            
+            void should_add_commands_to_the_given_ServiceCollection()
+            {
+                Assembly.GetCommandProcessor(new ServiceCollection()).Should().NotBeNull();
+                new[] { Assembly }.GetCommandProcessor(new ServiceCollection()).Should().NotBeNull();
             }
         }
 

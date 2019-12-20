@@ -40,6 +40,15 @@ namespace CommandQuery.AzureFunctions.Tests.V1
                 result.Content.Should().BeNull();
             }
 
+            async Task should_handle_CommandProcessorException()
+            {
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+
+                var result = await Subject.Handle(CommandName, Req, Logger);
+
+                await result.ShouldBeErrorAsync("fail", 400);
+            }
+
             async Task should_handle_CommandValidationException()
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
@@ -57,8 +66,8 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
                 await result.ShouldBeErrorAsync("fail", 500);
             }
-        }  
-        
+        }
+
         [LoFu, Test]
         public async Task when_handling_the_command_with_result()
         {

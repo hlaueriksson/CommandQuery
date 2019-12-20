@@ -41,6 +41,21 @@ namespace CommandQuery.Tests.Extensions.Internal
                 result.IEnumerable.Should().Equal(3, 4);
                 result.List.Should().Equal(5, 6);
             }
+
+            void should_return_null_if_dictionary_is_null()
+            {
+                Subject = null;
+                Subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
+            }
+
+            void should_return_null_if_conversion_fails()
+            {
+                Subject = new Dictionary<string, JToken>
+                {
+                    { "Guid", "fail" }
+                };
+                Subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
+            }
         }
 
         IDictionary<string, JToken> Subject;

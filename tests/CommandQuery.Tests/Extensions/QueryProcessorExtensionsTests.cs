@@ -19,7 +19,7 @@ namespace CommandQuery.Tests.Extensions
             FakeQueryProcessor = new Mock<IQueryProcessor>();
             Subject = FakeQueryProcessor.Object;
 
-            async Task should_create_the_query_from_a_string()
+            async Task should_create_the_query_from_a_json_string()
             {
                 var expectedQueryType = typeof(FakeQuery);
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
@@ -29,7 +29,7 @@ namespace CommandQuery.Tests.Extensions
                 FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>()));
             }
 
-            void should_throw_exception_if_the_query_type_is_not_found()
+            void should_throw_exception_if_the_query_type_is_not_found_for_the_json()
             {
                 var queryName = "NotFoundQuery";
                 var json = JObject.Parse("{}");
@@ -56,6 +56,15 @@ namespace CommandQuery.Tests.Extensions
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, new Dictionary<string, IEnumerable<string>>());
 
                 FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>()));
+            }
+
+            async Task should_throw_exception_if_the_query_type_is_not_found_for_the_dictionary()
+            {
+                var queryName = "NotFoundQuery";
+
+                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, new Dictionary<string, IEnumerable<string>>())).Should()
+                    .Throw<QueryProcessorException>()
+                    .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
 
             async Task should_create_a_complex_query_from_a_dictionary()

@@ -41,6 +41,15 @@ namespace CommandQuery.AWSLambda.Tests
                 result.Body.Should().NotBeEmpty();
             }
 
+            async Task should_handle_QueryProcessorException()
+            {
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+
+                var result = await Subject.Handle(QueryName, Request, Context.Object);
+
+                result.ShouldBeError("fail", 400);
+            }
+
             async Task should_handle_QueryValidationException()
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryValidationException("invalid"));
@@ -63,7 +72,7 @@ namespace CommandQuery.AWSLambda.Tests
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
-            Request = new APIGatewayProxyRequest { HttpMethod = "GET", MultiValueQueryStringParameters = new Dictionary<string, IList<string>>() };
+            Request = new APIGatewayProxyRequest { HttpMethod = "GET", MultiValueQueryStringParameters = new Dictionary<string, IList<string>> { { "foo", new List<string> { "bar" } } } };
 
             async Task should_return_the_result_from_the_query_processor()
             {

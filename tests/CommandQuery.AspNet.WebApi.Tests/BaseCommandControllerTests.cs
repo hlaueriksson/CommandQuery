@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.Http.Tracing;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
@@ -43,6 +44,15 @@ namespace CommandQuery.AspNet.WebApi.Tests
                 (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(200);
             }
 
+            async Task should_handle_CommandProcessorException()
+            {
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+
+                var result = await Subject.Handle(CommandName, Json);
+
+                await result.ShouldBeErrorAsync("fail", 400);
+            }
+            
             async Task should_handle_CommandValidationException()
             {
                 FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
@@ -59,6 +69,22 @@ namespace CommandQuery.AspNet.WebApi.Tests
                 var result = await Subject.Handle(CommandName, Json);
 
                 await result.ShouldBeErrorAsync("fail", 500);
+            }
+            
+            async Task should_log_errors()
+            {
+                var fakeTraceWriter = new Mock<ITraceWriter>();
+                var subject = new FakeCommandController(FakeCommandProcessor.Object, fakeTraceWriter.Object)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
+
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
+
+                await subject.Handle(CommandName, Json);
+
+                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), LogEvents.CommandException, TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
             }
         }
         

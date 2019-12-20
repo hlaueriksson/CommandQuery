@@ -1,5 +1,6 @@
 ﻿#if NETCOREAPP2_2
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 
@@ -49,6 +51,15 @@ namespace CommandQuery.AzureFunctions.Tests.V2
                 result.Value.Should().Be(expected);
             }
 
+            async Task should_handle_QueryProcessorException()
+            {
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+
+                var result = await Subject.Handle(QueryName, Req, Logger);
+
+                result.ShouldBeError("fail", 400);
+            }
+
             async Task should_handle_QueryValidationException()
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryValidationException("invalid"));
@@ -74,7 +85,7 @@ namespace CommandQuery.AzureFunctions.Tests.V2
             Req = new DefaultHttpRequest(new DefaultHttpContext())
             {
                 Method = "GET",
-                Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"))
+                Query = new QueryCollection(new Dictionary<string, StringValues> { { "foo", new StringValues("bar") } })
             };
 
             async Task should_return_the_result_from_the_query_processor()

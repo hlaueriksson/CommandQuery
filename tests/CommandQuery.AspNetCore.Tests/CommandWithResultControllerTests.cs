@@ -33,6 +33,15 @@ namespace CommandQuery.AspNetCore.Tests
                 result.Value.Should().Be(expected);
             }
 
+            async Task should_handle_CommandProcessorException()
+            {
+                FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Throws(new CommandProcessorException("fail"));
+
+                var result = await Subject.Handle(new FakeResultCommand());
+
+                result.ShouldBeError("fail", 400);
+            }
+
             async Task should_handle_CommandValidationException()
             {
                 FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Throws(new CommandValidationException("invalid"));
