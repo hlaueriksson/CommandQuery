@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using CommandQuery.Internal;
 using FluentAssertions;
@@ -47,11 +48,15 @@ namespace CommandQuery.Tests.Internal
         }
 
         [Test]
-        public void when_GetHandlerInterface()
+        public void when_GetHandlerInterfaces()
         {
-            typeof(FakeCommandHandler).GetHandlerInterface(typeof(ICommandHandler<>)).Should().Be(typeof(ICommandHandler<FakeCommand>));
-            typeof(FakeResultCommandHandler).GetHandlerInterface(typeof(ICommandHandler<,>)).Should().Be(typeof(ICommandHandler<FakeResultCommand, FakeResult>));
-            typeof(FakeQueryHandler).GetHandlerInterface(typeof(IQueryHandler<,>)).Should().Be(typeof(IQueryHandler<FakeQuery, FakeResult>));
+            typeof(FakeCommandHandler).GetHandlerInterfaces(typeof(ICommandHandler<>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeCommand>));
+            typeof(FakeResultCommandHandler).GetHandlerInterfaces(typeof(ICommandHandler<,>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeResultCommand, FakeResult>));
+            typeof(FakeQueryHandler).GetHandlerInterfaces(typeof(IQueryHandler<,>)).Should().BeEquivalentTo(typeof(IQueryHandler<FakeQuery, FakeResult>));
+
+            typeof(FakeMultiHandler).GetHandlerInterfaces(typeof(ICommandHandler<>)).Count().Should().Be(2);
+            typeof(FakeMultiHandler).GetHandlerInterfaces(typeof(ICommandHandler<,>)).Count().Should().Be(2);
+            typeof(FakeMultiHandler).GetHandlerInterfaces(typeof(IQueryHandler<,>)).Count().Should().Be(2);
         }
 
         Assembly Assembly;

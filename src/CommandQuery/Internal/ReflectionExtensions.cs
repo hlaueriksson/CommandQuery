@@ -30,9 +30,9 @@ namespace CommandQuery.Internal
                 .FirstOrDefault();
         }
 
-        internal static Type GetHandlerInterface(this Type type, Type genericType)
+        internal static IEnumerable<Type> GetHandlerInterfaces(this Type type, Type genericType)
         {
-            return type.GetInterfaces().FirstOrDefault(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType);
+            return type.GetInterfaces().Where(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType).ToList();
         }
 
         private static bool IsAssignableToGenericType(this Type type, Type genericType)
