@@ -49,7 +49,10 @@ namespace CommandQuery.DependencyInjection
 
             foreach (var handler in handlers)
             {
-                services.AddTransient(handler.GetHandlerInterface(baseType), handler);
+                foreach (var abstraction in handler.GetHandlerInterfaces(baseType))
+                {
+                    services.AddTransient(abstraction, handler);
+                }
             }
         }
     }
