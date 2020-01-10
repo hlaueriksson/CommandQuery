@@ -13,23 +13,23 @@ namespace CommandQuery.Tests.Extensions.Internal
         [LoFu, Test]
         public void when_converting_a_dictionary_to_object()
         {
-            Subject = new Dictionary<string, JToken>
-            {
-                { "String", "Value" },
-                { "Int", "1" },
-                { "Bool", "true" },
-                { "DateTime", "2018-07-06" },
-                { "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
-                { "NullableDouble", "2.1" },
-                { "UndefinedProperty", "should_not_be_used" },
-                { "Array", new JArray("1", "2") },
-                { "IEnumerable", new JArray("3", "4") },
-                { "List", new JArray("5", "6") }
-            };
-
             void should_set_the_property_values()
             {
-                var result = Subject.SafeToObject(typeof(FakeComplexQuery)) as FakeComplexQuery;
+                var subject = new Dictionary<string, JToken>
+                {
+                    { "String", "Value" },
+                    { "Int", "1" },
+                    { "Bool", "true" },
+                    { "DateTime", "2018-07-06" },
+                    { "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
+                    { "NullableDouble", "2.1" },
+                    { "UndefinedProperty", "should_not_be_used" },
+                    { "Array", new JArray("1", "2") },
+                    { "IEnumerable", new JArray("3", "4") },
+                    { "List", new JArray("5", "6") }
+                };
+
+                var result = subject.SafeToObject(typeof(FakeComplexQuery)) as FakeComplexQuery;
 
                 result.String.Should().Be("Value");
                 result.Int.Should().Be(1);
@@ -44,20 +44,20 @@ namespace CommandQuery.Tests.Extensions.Internal
 
             void should_return_null_if_dictionary_is_null()
             {
-                Subject = null;
-                Subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
+                IDictionary<string, JToken> subject = null;
+
+                subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
             }
 
             void should_return_null_if_conversion_fails()
             {
-                Subject = new Dictionary<string, JToken>
+                var subject = new Dictionary<string, JToken>
                 {
                     { "Guid", "fail" }
                 };
-                Subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
+
+                subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
             }
         }
-
-        IDictionary<string, JToken> Subject;
     }
 }

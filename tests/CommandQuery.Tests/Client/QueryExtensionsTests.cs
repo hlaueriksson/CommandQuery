@@ -4,14 +4,13 @@ using System.Globalization;
 using System.Threading;
 using CommandQuery.Client.Internal;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client
 {
     public class QueryExtensionsTests
     {
-        [LoFu, Test]
+        [Test]
         public void when_converting_a_dictionary_to_object()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
