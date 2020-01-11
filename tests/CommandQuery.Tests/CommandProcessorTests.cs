@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using FluentAssertions;
@@ -21,7 +22,7 @@ namespace CommandQuery.Tests
             {
                 FakeCommand expectedCommand = null;
                 var fakeCommandHandler = new FakeCommandHandler(x => expectedCommand = x);
-                FakeServiceProvider.Setup(x => x.GetService(typeof(ICommandHandler<FakeCommand>))).Returns(fakeCommandHandler);
+                FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<ICommandHandler<FakeCommand>>))).Returns(new[] { fakeCommandHandler });
 
                 var command = new FakeCommand();
                 await Subject.ProcessAsync(command);
@@ -37,6 +38,19 @@ namespace CommandQuery.Tests
                     .Throw<CommandProcessorException>()
                     .WithMessage($"The command handler for '{command}' could not be found");
             }
+
+            void should_throw_exception_if_multiple_command_handlers_are_found()
+            {
+                var handlerType = typeof(ICommandHandler<FakeMultiCommand1>);
+                var enumerableType = typeof(IEnumerable<ICommandHandler<FakeMultiCommand1>>);
+                FakeServiceProvider.Setup(x => x.GetService(enumerableType)).Returns(new[] { new Mock<ICommandHandler<FakeMultiCommand1>>().Object, new Mock<ICommandHandler<FakeMultiCommand1>>().Object });
+
+                var command = new FakeMultiCommand1();
+
+                Subject.Awaiting(async x => await x.ProcessAsync(command)).Should()
+                    .Throw<CommandProcessorException>()
+                    .WithMessage($"Multiple command handlers for '{handlerType}' was found");
+            }
         }
 
         [LoFu, Test]
@@ -51,7 +65,7 @@ namespace CommandQuery.Tests
                 FakeResultCommand expectedCommand = null;
                 var expectedResult = new FakeResult();
                 var fakeCommandHandler = new FakeResultCommandHandler(x => { expectedCommand = x; return expectedResult; });
-                FakeServiceProvider.Setup(x => x.GetService(typeof(ICommandHandler<FakeResultCommand, FakeResult>))).Returns(fakeCommandHandler);
+                FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<ICommandHandler<FakeResultCommand, FakeResult>>))).Returns(new[] { fakeCommandHandler });
 
                 var command = new FakeResultCommand();
                 var result = await Subject.ProcessWithResultAsync(command);
@@ -67,6 +81,19 @@ namespace CommandQuery.Tests
                 Subject.Awaiting(async x => await x.ProcessWithResultAsync(command)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage($"The command handler for '{command}' could not be found");
+            }
+
+            void should_throw_exception_if_multiple_command_handlers_are_found()
+            {
+                var handlerType = typeof(ICommandHandler<FakeMultiResultCommand1, FakeResult>);
+                var enumerableType = typeof(IEnumerable<ICommandHandler<FakeMultiResultCommand1, FakeResult>>);
+                FakeServiceProvider.Setup(x => x.GetService(enumerableType)).Returns(new[] { new Mock<ICommandHandler<FakeMultiResultCommand1, FakeResult>>().Object, new Mock<ICommandHandler<FakeMultiResultCommand1, FakeResult>>().Object });
+
+                var command = new FakeMultiResultCommand1();
+
+                Subject.Awaiting(async x => await x.ProcessWithResultAsync(command)).Should()
+                    .Throw<CommandProcessorException>()
+                    .WithMessage($"Multiple command handlers for '{handlerType}' was found");
             }
         }
 

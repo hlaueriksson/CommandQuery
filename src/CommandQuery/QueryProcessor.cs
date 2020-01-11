@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 
 namespace CommandQuery
 {
@@ -61,7 +62,7 @@ namespace CommandQuery
         {
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
 
-            dynamic handler = _serviceProvider.GetService(handlerType);
+            dynamic handler = GetService(handlerType);
 
             if (handler == null) throw new QueryProcessorException($"The query handler for '{query}' could not be found");
 
@@ -85,6 +86,18 @@ namespace CommandQuery
         public Type GetQueryType(string queryName)
         {
             return _typeCollection.GetType(queryName);
+        }
+
+        private object GetService(Type handlerType)
+        {
+            try
+            {
+                return _serviceProvider.GetSingleService(handlerType);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new QueryProcessorException($"Multiple query handlers for '{handlerType}' was found");
+            }
         }
     }
 }

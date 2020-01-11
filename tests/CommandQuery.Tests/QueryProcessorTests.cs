@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using FluentAssertions;
@@ -17,28 +18,18 @@ namespace CommandQuery.Tests
             FakeServiceProvider = new Mock<IServiceProvider>();
             Subject = new QueryProcessor(FakeQueryTypeCollection.Object, FakeServiceProvider.Object);
 
-            async Task should_invoke_the_correct_query_handler()
+            async Task should_invoke_the_correct_query_handler_and_return_a_result()
             {
                 FakeQuery expectedQuery = null;
-                var fakeQueryHandler = new FakeQueryHandler(x => { expectedQuery = x; return new FakeResult(); });
-                FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler);
-
-                var query = new FakeQuery();
-                await Subject.ProcessAsync(query);
-
-                query.Should().Be(expectedQuery);
-            }
-
-            async Task should_return_the_result_from_the_query_handler()
-            {
-                var expected = new FakeResult();
-                var fakeQueryHandler = new FakeQueryHandler(x => expected);
-                FakeServiceProvider.Setup(x => x.GetService(typeof(IQueryHandler<FakeQuery, FakeResult>))).Returns(fakeQueryHandler);
+                var expectedResult = new FakeResult();
+                var fakeQueryHandler = new FakeQueryHandler(x => { expectedQuery = x; return expectedResult; });
+                FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<IQueryHandler<FakeQuery, FakeResult>>))).Returns(new[] { fakeQueryHandler });
 
                 var query = new FakeQuery();
                 var result = await Subject.ProcessAsync(query);
 
-                result.Should().Be(expected);
+                query.Should().Be(expectedQuery);
+                result.Should().Be(expectedResult);
             }
 
             void should_throw_exception_if_the_query_handler_is_not_found()
@@ -48,6 +39,19 @@ namespace CommandQuery.Tests
                 Subject.Awaiting(async x => await x.ProcessAsync(query)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage($"The query handler for '{query}' could not be found");
+            }
+
+            void should_throw_exception_if_multiple_query_handlers_are_found()
+            {
+                var handlerType = typeof(IQueryHandler<FakeMultiQuery1, FakeResult>);
+                var enumerableType = typeof(IEnumerable<IQueryHandler<FakeMultiQuery1, FakeResult>>);
+                FakeServiceProvider.Setup(x => x.GetService(enumerableType)).Returns(new[] { new Mock<IQueryHandler<FakeMultiQuery1, FakeResult>>().Object, new Mock<IQueryHandler<FakeMultiQuery1, FakeResult>>().Object });
+
+                var query = new FakeMultiQuery1();
+
+                Subject.Awaiting(async x => await x.ProcessAsync(query)).Should()
+                    .Throw<QueryProcessorException>()
+                    .WithMessage($"Multiple query handlers for '{handlerType}' was found");
             }
         }
 
