@@ -90,7 +90,7 @@ namespace CommandQuery.AzureFunctions
 
                 return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
                 log.Error("Handle query failed", exception);
 
@@ -138,7 +138,7 @@ namespace CommandQuery.AzureFunctions
 
                 return new BadRequestObjectResult(exception.ToError());
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
                 log.LogError(exception, "Handle query failed");
 

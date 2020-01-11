@@ -57,7 +57,7 @@ namespace CommandQuery.AWSLambda
 
                 return exception.ToBadRequest();
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
                 context.Logger.LogLine("Handle query failed: " + exception);
 

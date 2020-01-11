@@ -14,9 +14,9 @@
 
         /// <summary><see cref="Exceptions.QueryProcessorException" /></summary>
         public const string QueryProcessorException = "QueryProcessorException";
-        /// <summary><see cref="Exceptions.QueryValidationException" /></summary>
-        public const string QueryValidationException = "QueryValidationException";
-        /// <summary><see cref="System.Exception" /></summary>
+        /// <summary><see cref="Exceptions.QueryException" /></summary>
         public const string QueryException = "QueryException";
+        /// <summary><see cref="System.Exception" /></summary>
+        public const string UnhandledQueryException = "UnhandledQueryException";
     }
 }

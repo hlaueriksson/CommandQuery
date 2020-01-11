@@ -50,9 +50,9 @@ namespace CommandQuery.AWSLambda.Tests
                 result.ShouldBeError("fail", 400);
             }
 
-            async Task should_handle_QueryValidationException()
+            async Task should_handle_QueryException()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryValidationException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
 
                 var result = await Subject.Handle(QueryName, Request, Context.Object);
 

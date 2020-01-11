@@ -42,9 +42,9 @@ namespace CommandQuery.AspNetCore.Tests
                 result.ShouldBeError("fail", 400);
             }
 
-            async Task should_handle_QueryValidationException()
+            async Task should_handle_QueryException()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryValidationException("invalid"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
 
                 var result = await Subject.HandlePost(new FakeQuery());
 
@@ -84,9 +84,9 @@ namespace CommandQuery.AspNetCore.Tests
                 result.ShouldBeError("fail", 400);
             }
 
-            async Task should_handle_QueryValidationException()
+            async Task should_handle_QueryException()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryValidationException("invalid"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
 
                 var result = await Subject.HandleGet(new FakeQuery());
 

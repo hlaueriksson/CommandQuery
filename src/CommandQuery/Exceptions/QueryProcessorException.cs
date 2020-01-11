@@ -3,7 +3,7 @@
 namespace CommandQuery.Exceptions
 {
     /// <summary>
-    /// Represents errors that occur during query processing.
+    /// Represents errors that occur during query processing in the <see cref="QueryProcessor" />.
     /// </summary>
     public sealed class QueryProcessorException : Exception
     {

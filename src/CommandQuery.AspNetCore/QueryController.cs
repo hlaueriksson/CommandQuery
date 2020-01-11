@@ -48,15 +48,15 @@ namespace CommandQuery.AspNetCore
 
                 return BadRequest(exception.ToError());
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
-                _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
+                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
                 return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
-                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
+                _logger?.LogError(LogEvents.UnhandledQueryException, exception, "Handle query failed");
 
                 return StatusCode(500, exception.ToError()); // InternalServerError
             }
@@ -82,15 +82,15 @@ namespace CommandQuery.AspNetCore
 
                 return BadRequest(exception.ToError());
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
-                _logger?.LogError(LogEvents.QueryValidationException, exception, "Handle query failed");
+                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
 
                 return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
-                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
+                _logger?.LogError(LogEvents.UnhandledQueryException, exception, "Handle query failed");
 
                 return StatusCode(500, exception.ToError()); // InternalServerError
             }

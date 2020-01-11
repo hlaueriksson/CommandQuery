@@ -59,15 +59,15 @@ namespace CommandQuery.AspNet.WebApi
 
                 return BadRequest(exception.Message);
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
-                _logger?.Error(Request, LogEvents.QueryValidationException, exception, "Handle query failed");
+                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
 
                 return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
+                _logger?.Error(Request, LogEvents.UnhandledQueryException, exception, "Handle query failed");
 
                 return InternalServerError(exception);
             }
@@ -94,15 +94,15 @@ namespace CommandQuery.AspNet.WebApi
 
                 return BadRequest(exception.Message);
             }
-            catch (QueryValidationException exception)
+            catch (QueryException exception)
             {
-                _logger?.Error(Request, LogEvents.QueryValidationException, exception, "Handle query failed");
+                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
 
                 return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
+                _logger?.Error(Request, LogEvents.UnhandledQueryException, exception, "Handle query failed");
 
                 return InternalServerError(exception);
             }
