@@ -88,7 +88,7 @@ namespace CommandQuery.AzureFunctions
 
                 return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
             }
-            catch (CommandValidationException exception)
+            catch (CommandException exception)
             {
                 log.Error("Handle command failed", exception);
 
@@ -129,7 +129,7 @@ namespace CommandQuery.AzureFunctions
 
                 return new BadRequestObjectResult(exception.ToError());
             }
-            catch (CommandValidationException exception)
+            catch (CommandException exception)
             {
                 log.LogError(exception, "Handle command failed");
 

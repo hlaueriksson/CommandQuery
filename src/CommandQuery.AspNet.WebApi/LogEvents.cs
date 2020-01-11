@@ -7,10 +7,10 @@
     {
         /// <summary><see cref="Exceptions.CommandProcessorException" /></summary>
         public const string CommandProcessorException = "CommandProcessorException";
-        /// <summary><see cref="Exceptions.CommandValidationException" /></summary>
-        public const string CommandValidationException = "CommandValidationException";
-        /// <summary><see cref="System.Exception" /></summary>
+        /// <summary><see cref="Exceptions.CommandException" /></summary>
         public const string CommandException = "CommandException";
+        /// <summary><see cref="System.Exception" /></summary>
+        public const string UnhandledCommandException = "UnhandledCommandException";
 
         /// <summary><see cref="Exceptions.QueryProcessorException" /></summary>
         public const string QueryProcessorException = "QueryProcessorException";

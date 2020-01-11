@@ -58,15 +58,15 @@ namespace CommandQuery.AspNet.WebApi
 
                 return BadRequest(exception.Message);
             }
-            catch (CommandValidationException exception)
+            catch (CommandException exception)
             {
-                _logger?.Error(Request, LogEvents.CommandValidationException, exception, "Handle command failed");
+                _logger?.Error(Request, LogEvents.CommandException, exception, "Handle command failed");
 
                 return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.CommandException, exception, "Handle command failed");
+                _logger?.Error(Request, LogEvents.UnhandledCommandException, exception, "Handle command failed");
 
                 return InternalServerError(exception);
             }

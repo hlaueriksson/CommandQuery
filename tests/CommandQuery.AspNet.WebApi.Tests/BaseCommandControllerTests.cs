@@ -53,9 +53,9 @@ namespace CommandQuery.AspNet.WebApi.Tests
                 await result.ShouldBeErrorAsync("fail", 400);
             }
             
-            async Task should_handle_CommandValidationException()
+            async Task should_handle_CommandException()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
 
                 var result = await Subject.Handle(CommandName, Json);
 
@@ -84,7 +84,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 await subject.Handle(CommandName, Json);
 
-                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), LogEvents.CommandException, TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
+                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), LogEvents.UnhandledCommandException, TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
             }
         }
         

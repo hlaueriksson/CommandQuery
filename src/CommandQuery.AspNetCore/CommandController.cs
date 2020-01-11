@@ -45,15 +45,15 @@ namespace CommandQuery.AspNetCore
 
                 return BadRequest(exception.ToError());
             }
-            catch (CommandValidationException exception)
+            catch (CommandException exception)
             {
-                _logger?.LogError(LogEvents.CommandValidationException, exception, "Handle command failed");
+                _logger?.LogError(LogEvents.CommandException, exception, "Handle command failed");
 
                 return BadRequest(exception.ToError());
             }
             catch (Exception exception)
             {
-                _logger?.LogError(LogEvents.CommandException, exception, "Handle command failed");
+                _logger?.LogError(LogEvents.UnhandledCommandException, exception, "Handle command failed");
 
                 return StatusCode(500, exception.ToError()); // InternalServerError
             }

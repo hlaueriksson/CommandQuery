@@ -47,9 +47,9 @@ namespace CommandQuery.AWSLambda.Tests
                 result.ShouldBeError("fail", 400);
             }
 
-            async Task should_handle_CommandValidationException()
+            async Task should_handle_CommandException()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandValidationException("invalid"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
 
                 var result = await Subject.Handle(CommandName, Request, Context.Object);
 
