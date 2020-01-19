@@ -85,7 +85,7 @@ namespace CommandQuery.AzureFunctions
             }
             catch (Exception exception)
             {
-                var payload = req.Method == HttpMethod.Get ? (object)req.GetQueryNameValuePairs() : await req.Content.ReadAsStringAsync();
+                var payload = req.Method == HttpMethod.Get ? req.GetQueryNameValuePairs().ToJson() : await req.Content.ReadAsStringAsync();
                 log.Error($"Handle query failed: {queryName}, {payload}", exception);
 
                 return req.CreateErrorResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.Message, exception);

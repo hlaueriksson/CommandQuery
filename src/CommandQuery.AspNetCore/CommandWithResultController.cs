@@ -41,7 +41,7 @@ namespace CommandQuery.AspNetCore
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {Command}", command);
+                _logger?.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {@Command}", command);
 
                 return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }

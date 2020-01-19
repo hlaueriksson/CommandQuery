@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.Internal
@@ -10,6 +11,18 @@ namespace CommandQuery.Internal
             try
             {
                 return json.ToObject(type);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static string ToJson(this object payload)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(payload);
             }
             catch
             {

@@ -53,7 +53,7 @@ namespace CommandQuery.AWSLambda
             }
             catch (Exception exception)
             {
-                var payload = request.HttpMethod == "GET" ? (object)request.MultiValueQueryStringParameters : request.Body;
+                var payload = request.HttpMethod == "GET" ? request.MultiValueQueryStringParameters.ToJson() : request.Body;
                 context.Logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();

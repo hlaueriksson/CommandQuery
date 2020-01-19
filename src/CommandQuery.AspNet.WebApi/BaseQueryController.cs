@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.Internal;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -55,7 +56,7 @@ namespace CommandQuery.AspNet.WebApi
             }
             catch (Exception exception)
             {
-                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, json);
+                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {0}, {1}", queryName, json.ToString(Formatting.None));
 
                 return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
             }
@@ -78,7 +79,8 @@ namespace CommandQuery.AspNet.WebApi
             }
             catch (Exception exception)
             {
-                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, Request.GetQueryNameValuePairs());
+                var payload = Request.GetQueryNameValuePairs().ToJson();
+                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {0}, {1}", queryName, payload);
 
                 return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
             }

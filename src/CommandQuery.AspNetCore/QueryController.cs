@@ -44,7 +44,7 @@ namespace CommandQuery.AspNetCore
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {Query}", query);
+                _logger?.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {@Query}", query);
 
                 return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }
@@ -66,7 +66,7 @@ namespace CommandQuery.AspNetCore
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {Query}", query);
+                _logger?.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {@Query}", query);
 
                 return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }

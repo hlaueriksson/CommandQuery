@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.Internal;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -54,7 +55,7 @@ namespace CommandQuery.AspNet.WebApi
             }
             catch (Exception exception)
             {
-                _logger?.Error(Request, exception.GetCommandCategory(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, json);
+                _logger?.Error(Request, exception.GetCommandCategory(), exception, "Handle command failed: {0}, {1}", commandName, json.ToString(Formatting.None));
 
                 return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
             }
