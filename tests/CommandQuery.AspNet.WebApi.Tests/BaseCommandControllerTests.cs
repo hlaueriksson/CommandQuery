@@ -84,7 +84,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 await subject.Handle(CommandName, Json);
 
-                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), LogEvents.UnhandledCommandException, TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
+                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), "UnhandledCommandException", TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
             }
         }
         

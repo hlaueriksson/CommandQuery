@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 
 #if NET461
 using System.Net;
@@ -9,7 +9,6 @@ using Microsoft.Azure.WebJobs.Host;
 #endif
 
 #if NETSTANDARD2_0 || NETCOREAPP3_0
-using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -82,23 +81,12 @@ namespace CommandQuery.AzureFunctions
 
                 return req.CreateResponse(HttpStatusCode.OK, result.Value);
             }
-            catch (CommandProcessorException exception)
-            {
-                log.Error("Handle command failed", exception);
-
-                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
-            catch (CommandException exception)
-            {
-                log.Error("Handle command failed", exception);
-
-                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
             catch (Exception exception)
             {
-                log.Error("Handle command failed", exception);
+                var payload = await req.Content.ReadAsStringAsync();
+                log.Error($"Handle command failed: {commandName}, {payload}", exception);
 
-                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
+                return req.CreateErrorResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.Message, exception);
             }
         }
 #endif
@@ -123,26 +111,12 @@ namespace CommandQuery.AzureFunctions
 
                 return new OkObjectResult(result.Value);
             }
-            catch (CommandProcessorException exception)
-            {
-                log.LogError(exception, "Handle command failed");
-
-                return new BadRequestObjectResult(exception.ToError());
-            }
-            catch (CommandException exception)
-            {
-                log.LogError(exception, "Handle command failed");
-
-                return new BadRequestObjectResult(exception.ToError());
-            }
             catch (Exception exception)
             {
-                log.LogError(exception, "Handle command failed");
+                var payload = await req.ReadAsStringAsync();
+                log.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
 
-                return new ObjectResult(exception.ToError())
-                {
-                    StatusCode = 500
-                };
+                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
             }
         }
 #endif

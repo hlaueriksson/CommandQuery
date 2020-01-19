@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommandQuery.AspNetCore.Internal;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -42,23 +42,11 @@ namespace CommandQuery.AspNetCore
 
                 return Ok(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
-
-                return BadRequest(exception.ToError());
-            }
-            catch (QueryException exception)
-            {
-                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
-
-                return BadRequest(exception.ToError());
-            }
             catch (Exception exception)
             {
-                _logger?.LogError(LogEvents.UnhandledQueryException, exception, "Handle query failed");
+                _logger?.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {Query}", query);
 
-                return StatusCode(500, exception.ToError()); // InternalServerError
+                return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }
         }
 
@@ -76,23 +64,11 @@ namespace CommandQuery.AspNetCore
 
                 return Ok(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                _logger?.LogError(LogEvents.QueryProcessorException, exception, "Handle query failed");
-
-                return BadRequest(exception.ToError());
-            }
-            catch (QueryException exception)
-            {
-                _logger?.LogError(LogEvents.QueryException, exception, "Handle query failed");
-
-                return BadRequest(exception.ToError());
-            }
             catch (Exception exception)
             {
-                _logger?.LogError(LogEvents.UnhandledQueryException, exception, "Handle query failed");
+                _logger?.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {Query}", query);
 
-                return StatusCode(500, exception.ToError()); // InternalServerError
+                return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }
         }
     }

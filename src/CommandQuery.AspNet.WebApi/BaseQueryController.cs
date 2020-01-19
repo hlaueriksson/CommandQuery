@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -53,23 +53,11 @@ namespace CommandQuery.AspNet.WebApi
 
                 return Ok(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryProcessorException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
-            catch (QueryException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.UnhandledQueryException, exception, "Handle query failed");
+                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, json);
 
-                return InternalServerError(exception);
+                return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
             }
         }
 
@@ -88,23 +76,11 @@ namespace CommandQuery.AspNet.WebApi
 
                 return Ok(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryProcessorException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
-            catch (QueryException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.UnhandledQueryException, exception, "Handle query failed");
+                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, Request.GetQueryNameValuePairs());
 
-                return InternalServerError(exception);
+                return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)

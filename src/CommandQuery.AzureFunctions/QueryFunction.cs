@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 
 #if NET461
 using System.Net;
@@ -11,7 +11,6 @@ using Microsoft.Azure.WebJobs.Host;
 #endif
 
 #if NETSTANDARD2_0 || NETCOREAPP3_0
-using CommandQuery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -84,23 +83,12 @@ namespace CommandQuery.AzureFunctions
 
                 return req.CreateResponse(HttpStatusCode.OK, result);
             }
-            catch (QueryProcessorException exception)
-            {
-                log.Error("Handle query failed", exception);
-
-                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
-            catch (QueryException exception)
-            {
-                log.Error("Handle query failed", exception);
-
-                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
             catch (Exception exception)
             {
-                log.Error("Handle query failed", exception);
+                var payload = req.Method == HttpMethod.Get ? (object)req.GetQueryNameValuePairs() : await req.Content.ReadAsStringAsync();
+                log.Error($"Handle query failed: {queryName}, {payload}", exception);
 
-                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
+                return req.CreateErrorResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.Message, exception);
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
@@ -132,26 +120,12 @@ namespace CommandQuery.AzureFunctions
 
                 return new OkObjectResult(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                log.LogError(exception, "Handle query failed");
-
-                return new BadRequestObjectResult(exception.ToError());
-            }
-            catch (QueryException exception)
-            {
-                log.LogError(exception, "Handle query failed");
-
-                return new BadRequestObjectResult(exception.ToError());
-            }
             catch (Exception exception)
             {
-                log.LogError(exception, "Handle query failed");
+                var payload = req.Method == "GET" ? (object)req.Query : await req.ReadAsStringAsync();
+                log.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, payload);
 
-                return new ObjectResult(exception.ToError())
-                {
-                    StatusCode = 500
-                };
+                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)

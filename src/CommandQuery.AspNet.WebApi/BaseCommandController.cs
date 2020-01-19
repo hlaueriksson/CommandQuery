@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -52,23 +52,11 @@ namespace CommandQuery.AspNet.WebApi
 
                 return Ok(result.Value);
             }
-            catch (CommandProcessorException exception)
-            {
-                _logger?.Error(Request, LogEvents.CommandProcessorException, exception, "Handle command failed");
-
-                return BadRequest(exception.Message);
-            }
-            catch (CommandException exception)
-            {
-                _logger?.Error(Request, LogEvents.CommandException, exception, "Handle command failed");
-
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.UnhandledCommandException, exception, "Handle command failed");
+                _logger?.Error(Request, exception.GetCommandCategory(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, json);
 
-                return InternalServerError(exception);
+                return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
             }
         }
     }
