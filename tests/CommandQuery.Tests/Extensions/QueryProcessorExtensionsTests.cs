@@ -34,7 +34,7 @@ namespace CommandQuery.Tests.Extensions
                 var queryName = "NotFoundQuery";
                 var json = JObject.Parse("{}");
 
-                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, json)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, json)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
@@ -43,7 +43,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, (JObject)null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (JObject)null)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The json could not be converted to an object");
             }
@@ -62,7 +62,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var queryName = "NotFoundQuery";
 
-                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, new Dictionary<string, IEnumerable<string>>())).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, new Dictionary<string, IEnumerable<string>>())).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
@@ -104,7 +104,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(async x => await x.ProcessAsync<object>(queryName, (IDictionary<string, IEnumerable<string>>)null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (IDictionary<string, IEnumerable<string>>)null)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The dictionary could not be converted to an object");
             }

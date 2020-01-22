@@ -36,7 +36,7 @@ namespace CommandQuery.Tests
             {
                 var query = new Mock<IQuery<FakeResult>>().Object;
 
-                Subject.Awaiting(async x => await x.ProcessAsync(query)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(query)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage($"The query handler for '{query}' could not be found");
             }
@@ -49,7 +49,7 @@ namespace CommandQuery.Tests
 
                 var query = new FakeMultiQuery1();
 
-                Subject.Awaiting(async x => await x.ProcessAsync(query)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(query)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage($"Multiple query handlers for '{handlerType}' was found");
             }

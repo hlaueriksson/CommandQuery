@@ -31,7 +31,7 @@ namespace CommandQuery.Tests.Extensions
                 var commandName = "NotFoundCommand";
                 var json = JObject.Parse("{}");
 
-                Subject.Awaiting(async x => await x.ProcessAsync(commandName, json)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(commandName, json)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The command type 'NotFoundCommand' could not be found");
             }
@@ -40,7 +40,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var commandName = "FakeCommand";
 
-                Subject.Awaiting(async x => await x.ProcessAsync(commandName, (JObject)null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(commandName, (JObject)null)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The json could not be converted to an object");
             }
@@ -67,7 +67,7 @@ namespace CommandQuery.Tests.Extensions
                 var commandName = "NotFoundCommand";
                 var json = JObject.Parse("{}");
 
-                Subject.Awaiting(async x => await x.ProcessWithResultAsync<object>(commandName, json)).Should()
+                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(commandName, json)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The command type 'NotFoundCommand' could not be found");
             }
@@ -76,7 +76,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var commandName = "FakeResultCommand";
 
-                Subject.Awaiting(async x => await x.ProcessWithResultAsync<object>(commandName, (JObject)null)).Should()
+                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(commandName, (JObject)null)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The json could not be converted to an object");
             }

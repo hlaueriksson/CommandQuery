@@ -34,7 +34,7 @@ namespace CommandQuery.Tests
             {
                 var command = new Mock<ICommand>().Object;
 
-                Subject.Awaiting(async x => await x.ProcessAsync(command)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage($"The command handler for '{command}' could not be found");
             }
@@ -47,7 +47,7 @@ namespace CommandQuery.Tests
 
                 var command = new FakeMultiCommand1();
 
-                Subject.Awaiting(async x => await x.ProcessAsync(command)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage($"Multiple command handlers for '{handlerType}' was found");
             }
@@ -78,7 +78,7 @@ namespace CommandQuery.Tests
             {
                 var command = new Mock<ICommand<object>>().Object;
 
-                Subject.Awaiting(async x => await x.ProcessWithResultAsync(command)).Should()
+                Subject.Awaiting(x => x.ProcessWithResultAsync(command)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage($"The command handler for '{command}' could not be found");
             }
@@ -91,7 +91,7 @@ namespace CommandQuery.Tests
 
                 var command = new FakeMultiResultCommand1();
 
-                Subject.Awaiting(async x => await x.ProcessWithResultAsync(command)).Should()
+                Subject.Awaiting(x => x.ProcessWithResultAsync(command)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage($"Multiple command handlers for '{handlerType}' was found");
             }
