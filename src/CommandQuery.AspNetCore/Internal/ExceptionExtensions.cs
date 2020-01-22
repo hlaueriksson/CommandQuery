@@ -10,7 +10,15 @@ namespace CommandQuery.AspNetCore.Internal
     {
         public static Error ToError(this Exception exception)
         {
-            return new Error { Message = exception.Message };
+            switch (exception)
+            {
+                case CommandException commandException:
+                    return commandException.ToError();
+                case QueryException queryException:
+                    return queryException.ToError();
+                default:
+                    return new Error { Message = exception.Message };
+            }
         }
 
         public static Error ToError(this CommandException exception)

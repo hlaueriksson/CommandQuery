@@ -58,6 +58,8 @@ namespace CommandQuery.Tests.Extensions.Internal
             Console.WriteLine(JsonConvert.SerializeObject(result));
 
             new CommandException("").ToError().Details.Should().BeNull();
+
+            ((Exception)exception).ToError().Details.Should().NotBeNull();
         }
 
         [Test]
@@ -94,6 +96,8 @@ namespace CommandQuery.Tests.Extensions.Internal
             Console.WriteLine(JsonConvert.SerializeObject(result));
 
             new QueryException("").ToError().Details.Should().BeNull();
+
+            ((Exception)exception).ToError().Details.Should().NotBeNull();
         }
     }
 
