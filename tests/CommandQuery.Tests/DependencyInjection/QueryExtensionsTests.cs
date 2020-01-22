@@ -29,11 +29,12 @@ namespace CommandQuery.Tests.DependencyInjection
                 result.Should().NotBeNull();
                 result.GetQueryTypes().Should().Contain(typeof(FakeQuery));
             }
-            
+
             void should_add_queries_to_the_given_ServiceCollection()
             {
                 Assembly.GetQueryProcessor(new ServiceCollection()).Should().NotBeNull();
                 new[] { Assembly }.GetQueryProcessor(new ServiceCollection()).Should().NotBeNull();
+                new ServiceCollection().GetQueryProcessor(Assembly).Should().NotBeNull();
             }
         }
 

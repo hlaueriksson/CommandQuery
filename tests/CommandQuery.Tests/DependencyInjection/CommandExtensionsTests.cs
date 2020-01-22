@@ -31,11 +31,12 @@ namespace CommandQuery.Tests.DependencyInjection
                 result.GetCommandTypes().Should().Contain(typeof(FakeCommand));
                 result.GetCommandTypes().Should().Contain(typeof(FakeResultCommand));
             }
-            
+
             void should_add_commands_to_the_given_ServiceCollection()
             {
                 Assembly.GetCommandProcessor(new ServiceCollection()).Should().NotBeNull();
                 new[] { Assembly }.GetCommandProcessor(new ServiceCollection()).Should().NotBeNull();
+                new ServiceCollection().GetCommandProcessor(Assembly).Should().NotBeNull();
             }
         }
 

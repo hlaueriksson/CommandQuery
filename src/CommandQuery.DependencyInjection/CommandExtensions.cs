@@ -15,7 +15,7 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="ICommandProcessor"/></returns>
         public static ICommandProcessor GetCommandProcessor(this Assembly assembly)
         {
-            return GetCommandProcessor(new ServiceCollection(), assembly);
+            return new ServiceCollection().GetCommandProcessor(assembly);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="ICommandProcessor"/></returns>
         public static ICommandProcessor GetCommandProcessor(this Assembly[] assemblies)
         {
-            return GetCommandProcessor(new ServiceCollection(), assemblies);
+            return new ServiceCollection().GetCommandProcessor(assemblies);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="ICommandProcessor"/></returns>
         public static ICommandProcessor GetCommandProcessor(this Assembly assembly, IServiceCollection services)
         {
-            return GetCommandProcessor(services, assembly);
+            return services.GetCommandProcessor(assembly);
         }
 
         /// <summary>
@@ -47,10 +47,16 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="ICommandProcessor"/></returns>
         public static ICommandProcessor GetCommandProcessor(this Assembly[] assemblies, IServiceCollection services)
         {
-            return GetCommandProcessor(services, assemblies);
+            return services.GetCommandProcessor(assemblies);
         }
 
-        private static ICommandProcessor GetCommandProcessor(IServiceCollection services, params Assembly[] assemblies)
+        /// <summary>
+        /// Initializes an <see cref="ICommandProcessor"/> from assemblies with commands and handlers.
+        /// </summary>
+        /// <param name="services">A service collection for command handlers</param>
+        /// <param name="assemblies">Assemblies with commands and handlers</param>
+        /// <returns></returns>
+        public static ICommandProcessor GetCommandProcessor(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddCommands(assemblies);
 
