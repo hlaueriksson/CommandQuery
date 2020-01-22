@@ -14,9 +14,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs1
 {
     public static class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(
-            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
-                .GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(GetServiceCollection().GetCommandProcessor(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly));
 
         [FunctionName("Command")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestMessage req, TraceWriter log, string commandName)

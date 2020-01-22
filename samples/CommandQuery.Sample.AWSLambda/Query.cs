@@ -12,9 +12,7 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(
-            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
-                .GetQueryProcessor(GetServiceCollection()));
+        private static readonly QueryFunction Func = new QueryFunction(GetServiceCollection().GetQueryProcessor(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {

@@ -14,9 +14,7 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Command
     {
-        private static readonly CommandFunction Func = new CommandFunction(
-            new[] { typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly }
-                .GetCommandProcessor(GetServiceCollection()));
+        private static readonly CommandFunction Func = new CommandFunction(GetServiceCollection().GetCommandProcessor(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly));
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
         {
