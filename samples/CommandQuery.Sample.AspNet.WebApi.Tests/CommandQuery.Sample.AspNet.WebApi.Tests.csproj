@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="CommandQuery" Version="0.9.21" />
     <PackageReference Include="CommandQuery.AspNet.WebApi" Version="0.9.21" />
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
   </ItemGroup>
