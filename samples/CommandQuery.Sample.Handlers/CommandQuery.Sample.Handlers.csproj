@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandQuery.Abstractions" Version="0.9.21" />
+    <PackageReference Include="CommandQuery" Version="0.9.22" />
+    <PackageReference Include="CommandQuery.Abstractions" Version="0.9.22" />
   </ItemGroup>
 
   <ItemGroup>
