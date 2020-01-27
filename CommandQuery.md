@@ -29,30 +29,27 @@
 Create a `Command` and `CommandHandler`:
 
 ```csharp
-using System.Threading.Tasks;
-
-namespace CommandQuery.Sample.Commands
+public class FooCommand : ICommand
 {
-    public class FooCommand : ICommand
+    public string Value { get; set; }
+}
+
+public class FooCommandHandler : ICommandHandler<FooCommand>
+{
+    private readonly ICultureService _cultureService;
+
+    public FooCommandHandler(ICultureService cultureService)
     {
-        public string Value { get; set; }
+        _cultureService = cultureService;
     }
 
-    public class FooCommandHandler : ICommandHandler<FooCommand>
+    public async Task HandleAsync(FooCommand command)
     {
-        private readonly ICultureService _cultureService;
+        if (command.Value == null) throw new FooCommandException("Value cannot be null", 1337, "Try setting the value to 'en-US'");
 
-        public FooCommandHandler(ICultureService cultureService)
-        {
-            _cultureService = cultureService;
-        }
+        _cultureService.SetCurrentCulture(command.Value);
 
-        public async Task HandleAsync(FooCommand command)
-        {
-            _cultureService.SetCurrentCulture(command.Value);
-
-            await Task.Delay(10); // TODO: do some real command stuff
-        }
+        await Task.CompletedTask;
     }
 }
 ```
@@ -61,52 +58,47 @@ Commands implements the marker interface `ICommand` and command handlers impleme
 
 This example uses the dependency `ICultureService` to set the current culture to the given command value.
 
-:sparkles: The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
-`CommandQuery` has a more pragmatic take and now supports commands with result.
+The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
+`CommandQuery` has a more pragmatic take and also supports commands with result.
 
-Commands with `Result`:
+Commands with result:
 
 ```csharp
-using System.Threading.Tasks;
-
-namespace CommandQuery.Sample.Commands
+public class BazCommand : ICommand<Baz>
 {
-    public class BazCommand : ICommand<Baz>
+    public string Value { get; set; }
+}
+
+public class Baz
+{
+    public bool Success { get; set; }
+}
+
+public class BazCommandHandler : ICommandHandler<BazCommand, Baz>
+{
+    private readonly ICultureService _cultureService;
+
+    public BazCommandHandler(ICultureService cultureService)
     {
-        public string Value { get; set; }
+        _cultureService = cultureService;
     }
 
-    public class Baz
+    public async Task<Baz> HandleAsync(BazCommand command)
     {
-        public bool Success { get; set; }
-    }
+        var result = new Baz();
 
-    public class BazCommandHandler : ICommandHandler<BazCommand, Baz>
-    {
-        private readonly ICultureService _cultureService;
-
-        public BazCommandHandler(ICultureService cultureService)
+        try
         {
-            _cultureService = cultureService;
+            _cultureService.SetCurrentCulture(command.Value);
+
+            result.Success = true;
+        }
+        catch
+        {
+            // TODO: log
         }
 
-        public async Task<Baz> HandleAsync(BazCommand command)
-        {
-            var result = new Baz();
-
-            try
-            {
-                _cultureService.SetCurrentCulture(command.Value);
-
-                result.Success = true;
-            }
-            catch
-            {
-                // TODO: do some real log stuff
-            }
-
-            return await Task.FromResult(result);
-        }
+        return await Task.FromResult(result);
     }
 }
 ```
@@ -122,37 +114,32 @@ Commands with result implements the marker interface `ICommand<TResult>` and com
 Create a `Query`, `QueryHandler` and `Result`:
 
 ```csharp
-using System.Threading.Tasks;
-
-namespace CommandQuery.Sample.Queries
+public class Bar
 {
-    public class Bar
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Value { get; set; }
+    public string Value { get; set; }
+}
+
+public class BarQuery : IQuery<Bar>
+{
+    public int Id { get; set; }
+}
+
+public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
+{
+    private readonly IDateTimeProxy _dateTime;
+
+    public BarQueryHandler(IDateTimeProxy dateTime)
+    {
+        _dateTime = dateTime;
     }
 
-    public class BarQuery : IQuery<Bar>
+    public async Task<Bar> HandleAsync(BarQuery query)
     {
-        public int Id { get; set; }
-    }
+        var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") };
 
-    public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
-    {
-        private readonly IDateTimeProxy _dateTime;
-
-        public BarQueryHandler(IDateTimeProxy dateTime)
-        {
-            _dateTime = dateTime;
-        }
-
-        public async Task<Bar> HandleAsync(BarQuery query)
-        {
-            var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") };
-
-            return await Task.FromResult(result); // TODO: do some real query stuff
-        }
+        return await Task.FromResult(result);
     }
 }
 ```
