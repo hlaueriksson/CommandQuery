@@ -18,7 +18,7 @@ namespace CommandQuery.Sample.Handlers.Commands
 
             _cultureService.SetCurrentCulture(command.Value);
 
-            await Task.Delay(10); // TODO: do some real command stuff
+            await Task.CompletedTask;
         }
     }
 }

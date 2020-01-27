@@ -24,7 +24,7 @@ namespace CommandQuery.Sample.Handlers.Commands
             }
             catch
             {
-                // TODO: do some real log stuff
+                // TODO: log
             }
 
             return await Task.FromResult(result);
