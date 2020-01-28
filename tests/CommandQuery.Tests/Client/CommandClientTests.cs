@@ -20,6 +20,10 @@ namespace CommandQuery.Tests.Client
         public void when_Post()
         {
             Subject.Post(new FooCommand { Value = "sv-SE" });
+
+            Subject.Invoking(x => x.Post(new FailCommand()))
+                .Should().Throw<CommandQueryException>()
+                .And.Error.Should().NotBeNull();
         }
 
         [Test]
@@ -27,12 +31,20 @@ namespace CommandQuery.Tests.Client
         {
             var result = Subject.Post(new BazCommand { Value = "sv-SE" });
             result.Should().NotBeNull();
+
+            Subject.Invoking(x => x.Post(new FailResultCommand()))
+                .Should().Throw<CommandQueryException>()
+                .And.Error.Should().NotBeNull();
         }
 
         [Test]
         public async Task when_PostAsync()
         {
             await Subject.PostAsync(new FooCommand { Value = "sv-SE" });
+
+            Subject.Awaiting(x => x.PostAsync(new FailCommand()))
+                .Should().Throw<CommandQueryException>()
+                .And.Error.Should().NotBeNull();
         }
 
         [Test]
@@ -40,6 +52,10 @@ namespace CommandQuery.Tests.Client
         {
             var result = await Subject.PostAsync(new BazCommand { Value = "sv-SE" });
             result.Should().NotBeNull();
+
+            Subject.Awaiting(x => x.PostAsync(new FailResultCommand()))
+                .Should().Throw<CommandQueryException>()
+                .And.Error.Should().NotBeNull();
         }
 
         [Test]
@@ -51,4 +67,7 @@ namespace CommandQuery.Tests.Client
 
         CommandClient Subject;
     }
+
+    public class FailCommand : ICommand { }
+    public class FailResultCommand : ICommand<object> { }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CommandQuery.Exceptions;
 
 namespace CommandQuery
 {
@@ -15,7 +14,6 @@ namespace CommandQuery
 
         /// <summary>
         /// Details about the error.
-        /// The details are taken from public properties in custom exceptions derived from <see cref="CommandException" /> or <see cref="QueryException" />.
         /// </summary>
         public Dictionary<string, object> Details { get; set; }
     }
