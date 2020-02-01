@@ -86,7 +86,7 @@ namespace CommandQuery.AzureFunctions
                 var payload = await req.Content.ReadAsStringAsync();
                 log.Error($"Handle command failed: {commandName}, {payload}", exception);
 
-                return req.CreateErrorResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.Message, exception);
+                return req.CreateResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
         }
 #endif

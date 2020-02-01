@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -58,7 +59,7 @@ namespace CommandQuery.AspNet.WebApi
             {
                 _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {0}, {1}", queryName, json.ToString(Formatting.None));
 
-                return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
+                return Content(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
         }
 
@@ -82,7 +83,7 @@ namespace CommandQuery.AspNet.WebApi
                 var payload = Request.GetQueryNameValuePairs().ToJson();
                 _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {0}, {1}", queryName, payload);
 
-                return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
+                return Content(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)

@@ -88,7 +88,7 @@ namespace CommandQuery.AzureFunctions
                 var payload = req.Method == HttpMethod.Get ? req.GetQueryNameValuePairs().ToJson() : await req.Content.ReadAsStringAsync();
                 log.Error($"Handle query failed: {queryName}, {payload}", exception);
 
-                return req.CreateErrorResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.Message, exception);
+                return req.CreateResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)

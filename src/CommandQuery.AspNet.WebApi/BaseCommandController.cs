@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
@@ -57,7 +58,7 @@ namespace CommandQuery.AspNet.WebApi
             {
                 _logger?.Error(Request, exception.GetCommandCategory(), exception, "Handle command failed: {0}, {1}", commandName, json.ToString(Formatting.None));
 
-                return exception.IsHandled() ? (IHttpActionResult)BadRequest(exception.Message) : InternalServerError(exception);
+                return Content(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
         }
     }
