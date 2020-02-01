@@ -21,9 +21,12 @@ namespace CommandQuery.Tests.Client
         {
             Subject.Post(new FooCommand { Value = "sv-SE" });
 
-            Subject.Invoking(x => x.Post(new FailCommand()))
+            Subject.Invoking(x => x.Post(new FooCommand()))
                 .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .And.Error.GetErrorCode().Should().Be(1337);
+
+            Subject.Invoking(x => x.Post(new FailCommand()))
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -33,8 +36,7 @@ namespace CommandQuery.Tests.Client
             result.Should().NotBeNull();
 
             Subject.Invoking(x => x.Post(new FailResultCommand()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -42,9 +44,12 @@ namespace CommandQuery.Tests.Client
         {
             await Subject.PostAsync(new FooCommand { Value = "sv-SE" });
 
-            Subject.Awaiting(x => x.PostAsync(new FailCommand()))
+            Subject.Awaiting(x => x.PostAsync(new FooCommand()))
                 .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .And.Error.GetErrorCode().Should().Be(1337);
+
+            Subject.Awaiting(x => x.PostAsync(new FailCommand()))
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -54,8 +59,7 @@ namespace CommandQuery.Tests.Client
             result.Should().NotBeNull();
 
             Subject.Awaiting(x => x.PostAsync(new FailResultCommand()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -70,4 +74,12 @@ namespace CommandQuery.Tests.Client
 
     public class FailCommand : ICommand { }
     public class FailResultCommand : ICommand<object> { }
+
+    public static class FooCommandExceptionExtensions
+    {
+        public static long? GetErrorCode(this Error error)
+        {
+            return error?.Details?["ErrorCode"] as long?;
+        }
+    }
 }

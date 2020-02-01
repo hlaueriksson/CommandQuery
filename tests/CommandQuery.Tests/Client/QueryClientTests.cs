@@ -23,8 +23,7 @@ namespace CommandQuery.Tests.Client
             result.Should().NotBeNull();
 
             Subject.Invoking(x => x.Post(new FailQuery()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -34,8 +33,7 @@ namespace CommandQuery.Tests.Client
             result.Should().NotBeNull();
 
             Subject.Awaiting(x => x.PostAsync(new FailQuery()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -45,8 +43,7 @@ namespace CommandQuery.Tests.Client
             result.Should().NotBeNull();
 
             Subject.Invoking(x => x.Get(new FailQuery()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -56,8 +53,7 @@ namespace CommandQuery.Tests.Client
             result.Should().NotBeNull();
 
             Subject.Awaiting(x => x.GetAsync(new FailQuery()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.Should().NotBeNull();
+                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
