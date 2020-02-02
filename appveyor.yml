@@ -1,4 +1,4 @@
-version: "0.9.0.{build}"
+version: "1.0.0.{build}"
 image: Visual Studio 2019
 before_build:
   - ps: "dotnet restore CommandQuery.sln"

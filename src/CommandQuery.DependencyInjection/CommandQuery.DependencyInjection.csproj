@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Version>0.9.0</Version>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+☑️ Now published as a separate package
+☑️ Removed GenericContainerExtensions
+  ☑️ Extension methods for IServiceCollection from Microsoft.Extensions.DependencyInjection.Abstractions should be sufficient
+    </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Dependency Injection for CommandQuery</Description>
     <PackageId>CommandQuery.DependencyInjection</PackageId>

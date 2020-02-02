@@ -2,11 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Version>0.9.0</Version>
-    <PackageReleaseNotes>ChangeLog:
-
-✨ Support for commands with result
-  ✔️ ICommand&lt;TResult&gt; / ICommandHandler&lt;in TCommand, TResult&gt;
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+☑️ Removed the dependency on Newtonsoft.Json
+☑️ Moved methods with JSON parameters from CommandProcessor and QueryProcessor to extension methods in CommandQuery.Extensions
+☑️ Renamed CommandValidationException to CommandException
+☑️ Renamed QueryValidationException to QueryException
+☑️ Inherit from CommandException and QueryException to create custom exceptions with special properties that can be thrown from handlers
+☑️ Moved Error to CommandQuery.Abstractions
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for .NET Framework and .NET Standard ⚙️

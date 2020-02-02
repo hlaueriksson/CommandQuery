@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <Version>0.9.0</Version>
-    <PackageReleaseNotes>ChangeLog:
-
-✨ Support for commands with result
-  ✔️ ICommand&lt;TResult&gt; / ICommandHandler&lt;in TCommand, TResult&gt;
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+☑️ Removed Help methods
+☑️ Returns Error when exception is thrown
+☑️ Improved logging
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for ASP.NET Web API 2 🌐

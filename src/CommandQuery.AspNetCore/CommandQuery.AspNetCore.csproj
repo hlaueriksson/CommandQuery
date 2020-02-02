@@ -2,11 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
-    <Version>0.9.0</Version>
-    <PackageReleaseNotes>ChangeLog:
-
-✨ Support for commands with result
-  ✔️ ICommand&lt;TResult&gt; / ICommandHandler&lt;in TCommand, TResult&gt;
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+☑️ Target netcoreapp3.1 and netcoreapp2.1
+☑️ Changed dependency from Microsoft.AspNetCore.Mvc to Microsoft.AspNetCore.Mvc.Core
+☑️ Controllers for commands and queries are now generated at runtime
+  ☑️ This is done via extended configuration in Startup.cs
+☑️ Removed the base classes BaseCommandController and BaseQueryController
+☑️ Improved logging
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for ASP.NET Core 🌐
