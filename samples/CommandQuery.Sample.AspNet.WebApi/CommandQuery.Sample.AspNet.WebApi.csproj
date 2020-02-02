@@ -44,20 +44,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandQuery, Version=0.9.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.0.9.21\lib\net461\CommandQuery.dll</HintPath>
+    <Reference Include="CommandQuery, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommandQuery.1.0.0\lib\net461\CommandQuery.dll</HintPath>
     </Reference>
-    <Reference Include="CommandQuery.Abstractions, Version=0.9.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.Abstractions.0.9.21\lib\net461\CommandQuery.Abstractions.dll</HintPath>
+    <Reference Include="CommandQuery.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommandQuery.Abstractions.1.0.0\lib\net461\CommandQuery.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="CommandQuery.AspNet.WebApi, Version=0.9.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.AspNet.WebApi.0.9.21\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
+    <Reference Include="CommandQuery.AspNet.WebApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommandQuery.AspNet.WebApi.1.0.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="CommandQuery.DependencyInjection, Version=0.9.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.DependencyInjection.0.9.21\lib\net461\CommandQuery.DependencyInjection.dll</HintPath>
+    <Reference Include="CommandQuery.DependencyInjection, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommandQuery.DependencyInjection.1.0.0\lib\net461\CommandQuery.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="CommandQuery.Extensions, Version=0.9.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.Extensions.0.9.21\lib\net461\CommandQuery.Extensions.dll</HintPath>
+    <Reference Include="CommandQuery.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommandQuery.Extensions.1.0.0\lib\net461\CommandQuery.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>

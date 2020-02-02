@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandQuery.Client" Version="0.9.21" />
+    <PackageReference Include="CommandQuery.Client" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
