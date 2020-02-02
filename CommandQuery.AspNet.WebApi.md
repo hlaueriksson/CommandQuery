@@ -64,6 +64,12 @@ Inherit from `BaseCommandController` and pass the `ICommandProcessor` to the bas
 The action method from the base class will handle all commands:
 
 ```csharp
+/// <summary>
+/// Handle a command.
+/// </summary>
+/// <param name="commandName">The name of the command</param>
+/// <param name="json">The JSON representation of the command</param>
+/// <returns>200, 400 or 500</returns>
 [HttpPost]
 [Route("{commandName}")]
 public async Task<IHttpActionResult> Handle(string commandName, [FromBody] Newtonsoft.Json.Linq.JObject json)
@@ -74,6 +80,10 @@ public async Task<IHttpActionResult> Handle(string commandName, [FromBody] Newto
 * The command itself is provided as JSON in the body.
 * If the command succeeds; the response is empty with the HTTP status code `200`.
 * If the command fails; the response is an error message with the HTTP status code `400` or `500`.
+
+Commands with result:
+
+* If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
 Example of a command request via [curl](https://curl.haxx.se):
 
@@ -105,12 +115,23 @@ Inherit from `BaseQueryController` and pass the `IQueryProcessor` to the base co
 The action methods from the base class will handle all queries:
 
 ```csharp
+/// <summary>
+/// Handle a query.
+/// </summary>
+/// <param name="queryName">The name of the query</param>
+/// <param name="json">The JSON representation of the query</param>
+/// <returns>The result + 200, 400 or 500</returns>
 [HttpPost]
 [Route("{queryName}")]
 public async Task<IHttpActionResult> HandlePost(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
 ```
 
 ```csharp
+/// <summary>
+/// Handle a query.
+/// </summary>
+/// <param name="queryName">The name of the query</param>
+/// <returns>The result + 200, 400 or 500</returns>
 [HttpGet]
 [Route("{queryName}")]
 public async Task<IHttpActionResult> HandleGet(string queryName)

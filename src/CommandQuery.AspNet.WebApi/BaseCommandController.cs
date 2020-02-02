@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using CommandQuery.AspNet.WebApi.Internal;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -37,22 +37,6 @@ namespace CommandQuery.AspNet.WebApi
         }
 
         /// <summary>
-        /// Gets help.
-        /// </summary>
-        /// <returns>Command help</returns>
-        [HttpGet]
-        [Route("")]
-        public IHttpActionResult Help()
-        {
-            var baseUrl = Request.RequestUri.ToString();
-            var commands = _commandProcessor.GetCommands();
-
-            var result = commands.Select(x => new { command = x.Name, curl = x.GetCurl(baseUrl) });
-
-            return Json(result);
-        }
-
-        /// <summary>
         /// Handle a command.
         /// </summary>
         /// <param name="commandName">The name of the command</param>
@@ -70,23 +54,11 @@ namespace CommandQuery.AspNet.WebApi
 
                 return Ok(result.Value);
             }
-            catch (CommandProcessorException exception)
-            {
-                _logger?.Error(Request, LogEvents.CommandProcessorException, exception, "Handle command failed");
-
-                return BadRequest(exception.Message);
-            }
-            catch (CommandValidationException exception)
-            {
-                _logger?.Error(Request, LogEvents.CommandValidationException, exception, "Handle command failed");
-
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.CommandException, exception, "Handle command failed");
+                _logger?.Error(Request, exception.GetCommandCategory(), exception, "Handle command failed: {0}, {1}", commandName, json.ToString(Formatting.None));
 
-                return InternalServerError(exception);
+                return Content(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
         }
     }

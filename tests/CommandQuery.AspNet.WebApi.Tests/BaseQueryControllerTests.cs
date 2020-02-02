@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.Http.Tracing;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
@@ -25,88 +26,113 @@ namespace CommandQuery.AspNet.WebApi.Tests
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
             };
+            Json = JObject.Parse("{}");
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Post()
         {
             QueryName = "FakeQuery";
-            Json = JObject.Parse("{}");
-
-            async Task should_invoke_the_query_processor()
-            {
-                await Subject.HandlePost(QueryName, Json);
-
-                FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(QueryName, Json));
-            }
+            FakeQueryProcessor.Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
 
             async Task should_return_the_result_from_the_query_processor()
             {
-                var expected = new object();
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, Json)).Returns(Task.FromResult(expected));
+                var expected = new FakeResult();
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandlePost(QueryName, Json) as OkNegotiatedContentResult<object>;
 
+                (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(200);
                 result.Content.Should().Be(expected);
             }
 
-            async Task should_handle_QueryValidationException()
+            async Task should_handle_QueryProcessorException()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, Json)).Throws(new QueryValidationException("invalid"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
 
-                var result = await Subject.HandlePost(QueryName, Json) as BadRequestErrorMessageResult;
+                var result = await Subject.HandlePost(QueryName, Json);
 
-                await result.ShouldBeErrorAsync("invalid");
+                await result.ShouldBeErrorAsync("fail", 400);
+            }
+
+            async Task should_handle_QueryException()
+            {
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+
+                var result = await Subject.HandlePost(QueryName, Json);
+
+                await result.ShouldBeErrorAsync("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, Json)).Throws(new Exception("fail"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
 
-                var result = await Subject.HandlePost(QueryName, Json) as ExceptionResult;
+                var result = await Subject.HandlePost(QueryName, Json);
 
-                await result.ShouldBeErrorAsync("fail");
+                await result.ShouldBeErrorAsync("fail", 500);
+            }
+
+            async Task should_log_errors()
+            {
+                var fakeTraceWriter = new Mock<ITraceWriter>();
+                var subject = new FakeQueryController(FakeQueryProcessor.Object, fakeTraceWriter.Object)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
+
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
+
+                await subject.HandlePost(QueryName, Json);
+
+                fakeTraceWriter.Verify(x => x.Trace(It.IsAny<HttpRequestMessage>(), "UnhandledQueryException", TraceLevel.Error, It.IsAny<Action<TraceRecord>>()));
             }
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
+            Subject.Request.RequestUri = new Uri("http://example.com?foo=bar");
             QueryName = "FakeQuery";
-
-            async Task should_invoke_the_query_processor()
-            {
-                await Subject.HandleGet(QueryName);
-
-                FakeQueryProcessor.Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>()));
-            }
+            FakeQueryProcessor.Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
 
             async Task should_return_the_result_from_the_query_processor()
             {
-                var expected = new object();
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Returns(Task.FromResult(expected));
+                var expected = new FakeResult();
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleGet(QueryName) as OkNegotiatedContentResult<object>;
 
+                (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(200);
                 result.Content.Should().Be(expected);
             }
 
-            async Task should_handle_QueryValidationException()
+            async Task should_handle_QueryProcessorException()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new QueryValidationException("invalid"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
 
-                var result = await Subject.HandleGet(QueryName) as BadRequestErrorMessageResult;
+                var result = await Subject.HandleGet(QueryName);
 
-                await result.ShouldBeErrorAsync("invalid");
+                await result.ShouldBeErrorAsync("fail", 400);
+            }
+
+            async Task should_handle_QueryException()
+            {
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+
+                var result = await Subject.HandleGet(QueryName);
+
+                await result.ShouldBeErrorAsync("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                FakeQueryProcessor.Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new Exception("fail"));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
 
-                var result = await Subject.HandleGet(QueryName) as ExceptionResult;
+                var result = await Subject.HandleGet(QueryName);
 
-                await result.ShouldBeErrorAsync("fail");
+                await result.ShouldBeErrorAsync("fail", 500);
             }
         }
 

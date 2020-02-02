@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <RootNamespace>CommandQuery</RootNamespace>
+    <Version>0.9.0</Version>
+    <Authors>Henrik Lau Eriksson</Authors>
+    <Description>Extensions for CommandQuery</Description>
+    <PackageId>CommandQuery.Extensions</PackageId>
+    <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
+  </ItemGroup>
+
+</Project>

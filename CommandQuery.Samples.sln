@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.Contracts", "samples\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj", "{FF932E21-17DE-4BC3-9E25-606502CAE58B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore", "samples\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{98D5C84A-C209-4533-8CF1-57A575EA70EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V2", "samples\CommandQuery.Sample.AspNetCore.V2\CommandQuery.Sample.AspNetCore.V2.csproj", "{98D5C84A-C209-4533-8CF1-57A575EA70EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.Tests", "samples\CommandQuery.Sample.AspNetCore.Tests\CommandQuery.Sample.AspNetCore.Tests.csproj", "{ECC4A711-80E3-47B9-9792-D4B63F06D1F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V2.Tests", "samples\CommandQuery.Sample.AspNetCore.V2.Tests\CommandQuery.Sample.AspNetCore.V2.Tests.csproj", "{ECC4A711-80E3-47B9-9792-D4B63F06D1F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AWSLambda", "samples\CommandQuery.Sample.AWSLambda\CommandQuery.Sample.AWSLambda.csproj", "{6AC1C95D-58A9-4D87-B303-EDF47BD35094}"
 EndProject
@@ -28,6 +28,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.WebApi", "samples\CommandQuery.Sample.AspNet.WebApi\CommandQuery.Sample.AspNet.WebApi.csproj", "{A567CCA0-6775-43B7-8BEA-241D09AD7D67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AspNet.WebApi.Tests", "samples\CommandQuery.Sample.AspNet.WebApi.Tests\CommandQuery.Sample.AspNet.WebApi.Tests.csproj", "{33887CED-6F05-450B-B793-8AD30A9C6BCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V3", "samples\CommandQuery.Sample.AspNetCore.V3\CommandQuery.Sample.AspNetCore.V3.csproj", "{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V3.Tests", "samples\CommandQuery.Sample.AspNetCore.V3.Tests\CommandQuery.Sample.AspNetCore.V3.Tests.csproj", "{73D683B9-3429-41A7-96D5-C72BA63B3D00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AzureFunctions.Vs3", "samples\CommandQuery.Sample.AzureFunctions.Vs3\CommandQuery.Sample.AzureFunctions.Vs3.csproj", "{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AzureFunctions.Vs3.Tests", "samples\CommandQuery.Sample.AzureFunctions.Vs3.Tests\CommandQuery.Sample.AzureFunctions.Vs3.Tests.csproj", "{C501E086-8F0B-4212-B9C3-AFBA870DF33A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +95,22 @@ Global
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33887CED-6F05-450B-B793-8AD30A9C6BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE17B08-1F7A-4E19-8E2A-047CF9E26E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73D683B9-3429-41A7-96D5-C72BA63B3D00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73D683B9-3429-41A7-96D5-C72BA63B3D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73D683B9-3429-41A7-96D5-C72BA63B3D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73D683B9-3429-41A7-96D5-C72BA63B3D00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F7DE946-CAD3-40A1-A9F3-086D2BA6F1BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

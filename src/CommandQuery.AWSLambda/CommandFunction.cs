@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 using Newtonsoft.Json;
 
 namespace CommandQuery.AWSLambda
@@ -50,23 +50,11 @@ namespace CommandQuery.AWSLambda
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
                 };
             }
-            catch (CommandProcessorException exception)
-            {
-                context.Logger.LogLine("Handle command failed: " + exception);
-
-                return exception.ToBadRequest();
-            }
-            catch (CommandValidationException exception)
-            {
-                context.Logger.LogLine("Handle command failed: " + exception);
-
-                return exception.ToBadRequest();
-            }
             catch (Exception exception)
             {
-                context.Logger.LogLine("Handle command failed: " + exception);
+                context.Logger.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
-                return exception.ToInternalServerError();
+                return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
             }
         }
     }

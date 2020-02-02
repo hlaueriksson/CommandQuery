@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.AWSLambda
 {
@@ -52,23 +51,12 @@ namespace CommandQuery.AWSLambda
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
                 };
             }
-            catch (QueryProcessorException exception)
-            {
-                context.Logger.LogLine("Handle query failed: " + exception);
-
-                return exception.ToBadRequest();
-            }
-            catch (QueryValidationException exception)
-            {
-                context.Logger.LogLine("Handle query failed: " + exception);
-
-                return exception.ToBadRequest();
-            }
             catch (Exception exception)
             {
-                context.Logger.LogLine("Handle query failed: " + exception);
+                var payload = request.HttpMethod == "GET" ? request.MultiValueQueryStringParameters.ToJson() : request.Body;
+                context.Logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
-                return exception.ToInternalServerError();
+                return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, IList<string>> query)

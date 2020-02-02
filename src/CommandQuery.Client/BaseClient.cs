@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using CommandQuery.Client.Internal;
 
 namespace CommandQuery.Client
 {
@@ -22,8 +23,6 @@ namespace CommandQuery.Client
         /// <param name="timeoutInSeconds">The timeout for requests.</param>
         protected BaseClient(string baseUrl, int timeoutInSeconds = 10)
         {
-            if (Client.BaseAddress != null) return;
-
             Client.BaseAddress = new Uri(baseUrl);
             Client.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
             Client.DefaultRequestHeaders.Accept.Clear();
@@ -49,7 +48,7 @@ namespace CommandQuery.Client
         protected T BaseGet<T>(object value)
             => Client.GetAsync(value.GetRequestUri())
                 .ConfigureAwait(false).GetAwaiter().GetResult()
-                .EnsureSuccessStatusCode()
+                .EnsureSuccess()
                 .Content.ReadAsAsync<T>()
                 .ConfigureAwait(false).GetAwaiter().GetResult();
 
@@ -62,7 +61,7 @@ namespace CommandQuery.Client
         protected async Task<T> BaseGetAsync<T>(object value)
         {
             var response = await Client.GetAsync(value.GetRequestUri());
-            response.EnsureSuccessStatusCode();
+            response.EnsureSuccess();
             return await response.Content.ReadAsAsync<T>();
         }
 
@@ -73,7 +72,7 @@ namespace CommandQuery.Client
         protected void BasePost(object value)
             => Client.PostAsJsonAsync(value.GetType().Name, value)
                 .ConfigureAwait(false).GetAwaiter().GetResult()
-                .EnsureSuccessStatusCode();
+                .EnsureSuccess();
 
         /// <summary>
         /// Post a payload.
@@ -82,7 +81,7 @@ namespace CommandQuery.Client
         protected async Task BasePostAsync(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetType().Name, value);
-            response.EnsureSuccessStatusCode();
+            response.EnsureSuccess();
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace CommandQuery.Client
         protected T BasePost<T>(object value)
             => Client.PostAsJsonAsync(value.GetType().Name, value)
                 .ConfigureAwait(false).GetAwaiter().GetResult()
-                .EnsureSuccessStatusCode()
+                .EnsureSuccess()
                 .Content.ReadAsAsync<T>()
                 .ConfigureAwait(false).GetAwaiter().GetResult();
 
@@ -107,7 +106,7 @@ namespace CommandQuery.Client
         protected async Task<T> BasePostAsync<T>(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetType().Name, value);
-            response.EnsureSuccessStatusCode();
+            response.EnsureSuccess();
             return await response.Content.ReadAsAsync<T>();
         }
     }

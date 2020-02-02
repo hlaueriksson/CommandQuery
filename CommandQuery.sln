@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AWSLambda.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AzureFunctions.Tests", "tests\CommandQuery.AzureFunctions.Tests\CommandQuery.AzureFunctions.Tests.csproj", "{BE082150-6F58-41C6-96F1-00F4FD827F4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Extensions", "src\CommandQuery.Extensions\CommandQuery.Extensions.csproj", "{C14B2EDE-E313-400E-A53C-96787CBBD1C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{BE082150-6F58-41C6-96F1-00F4FD827F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE082150-6F58-41C6-96F1-00F4FD827F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE082150-6F58-41C6-96F1-00F4FD827F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C14B2EDE-E313-400E-A53C-96787CBBD1C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C14B2EDE-E313-400E-A53C-96787CBBD1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C14B2EDE-E313-400E-A53C-96787CBBD1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C14B2EDE-E313-400E-A53C-96787CBBD1C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{FB355BA1-6923-4894-9BA2-B471A23EC3F5} = {4875335E-26C1-4D2A-80E9-4362C823DF3B}
 		{F81EEC3B-BB3D-456F-942B-6F610F977F53} = {4875335E-26C1-4D2A-80E9-4362C823DF3B}
 		{BE082150-6F58-41C6-96F1-00F4FD827F4A} = {4875335E-26C1-4D2A-80E9-4362C823DF3B}
+		{C14B2EDE-E313-400E-A53C-96787CBBD1C8} = {382E6C39-5EF6-453D-88DC-9079E57A240E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D9F3EA4-8F77-4A20-9943-50764DB157AF}

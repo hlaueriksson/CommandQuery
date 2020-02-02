@@ -1,37 +1,26 @@
 ﻿using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
-using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.AzureFunctions.Vs2
 {
-    public static class Query
+    public class Query
     {
-        private static readonly QueryFunction Func = new QueryFunction(
-            new[] { typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly }
-                .GetQueryProcessor(GetServiceCollection()));
+        private readonly IQueryFunction _queryFunction;
 
-        [FunctionName("Query")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, ILogger log, string queryName)
+        public Query(IQueryFunction queryFunction)
         {
-            return await Func.Handle(queryName, req, log);
+            _queryFunction = queryFunction;
         }
 
-        private static IServiceCollection GetServiceCollection()
+        [FunctionName("Query")]
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, ILogger log, string queryName)
         {
-            var services = new ServiceCollection();
-            // Add handler dependencies
-            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
-
-            return services;
+            return await _queryFunction.Handle(queryName, req, log);
         }
     }
 }

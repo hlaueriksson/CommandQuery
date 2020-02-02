@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandQuery.Abstractions" Version="0.9.0" />
+    <PackageReference Include="CommandQuery" Version="0.9.22" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,13 +1,13 @@
-﻿using CommandQuery.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using CommandQuery.AspNet.WebApi.Internal;
-using Newtonsoft.Json.Linq;
+using CommandQuery.Internal;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AspNet.WebApi
 {
@@ -40,22 +40,6 @@ namespace CommandQuery.AspNet.WebApi
         }
 
         /// <summary>
-        /// Gets help.
-        /// </summary>
-        /// <returns>Query help</returns>
-        [HttpGet]
-        [Route("")]
-        public IHttpActionResult Help()
-        {
-            var baseUrl = Request.RequestUri.ToString();
-            var queries = _queryProcessor.GetQueries();
-
-            var result = queries.Select(x => new { query = x.Name, curl = x.GetCurl(baseUrl) });
-
-            return Json(result);
-        }
-
-        /// <summary>
         /// Handle a query.
         /// </summary>
         /// <param name="queryName">The name of the query</param>
@@ -71,23 +55,11 @@ namespace CommandQuery.AspNet.WebApi
 
                 return Ok(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryProcessorException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
-            catch (QueryValidationException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryValidationException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
+                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {0}, {1}", queryName, json.ToString(Formatting.None));
 
-                return InternalServerError(exception);
+                return Content(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
         }
 
@@ -106,23 +78,12 @@ namespace CommandQuery.AspNet.WebApi
 
                 return Ok(result);
             }
-            catch (QueryProcessorException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryProcessorException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
-            catch (QueryValidationException exception)
-            {
-                _logger?.Error(Request, LogEvents.QueryValidationException, exception, "Handle query failed");
-
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
-                _logger?.Error(Request, LogEvents.QueryException, exception, "Handle query failed");
+                var payload = Request.GetQueryNameValuePairs().ToJson();
+                _logger?.Error(Request, exception.GetQueryCategory(), exception, "Handle query failed: {0}, {1}", queryName, payload);
 
-                return InternalServerError(exception);
+                return Content(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)

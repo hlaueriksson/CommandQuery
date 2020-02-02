@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CommandQuery.Exceptions;
+using CommandQuery.Internal;
 
 #if NET461
 using System.Net;
@@ -8,8 +8,7 @@ using System.Net.Http;
 using Microsoft.Azure.WebJobs.Host;
 #endif
 
-#if NETSTANDARD2_0
-using CommandQuery.Internal;
+#if NETSTANDARD2_0 || NETCOREAPP3_0
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -21,7 +20,35 @@ namespace CommandQuery.AzureFunctions
     /// <summary>
     /// Handles commands for the Azure function.
     /// </summary>
-    public class CommandFunction
+    public interface ICommandFunction
+    {
+#if NET461
+        /// <summary>
+        /// Handle a command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="req">A <see cref="HttpRequestMessage" /></param>
+        /// <param name="log">A <see cref="TraceWriter" /></param>
+        /// <returns>200, 400 or 500</returns>
+        Task<HttpResponseMessage> Handle(string commandName, HttpRequestMessage req, TraceWriter log);
+#endif
+
+#if NETSTANDARD2_0 || NETCOREAPP3_0
+        /// <summary>
+        /// Handle a command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="req">A <see cref="HttpRequest" /></param>
+        /// <param name="log">An <see cref="ILogger" /></param>
+        /// <returns>200, 400 or 500</returns>
+        Task<IActionResult> Handle(string commandName, HttpRequest req, ILogger log);
+#endif
+    }
+
+    /// <summary>
+    /// Handles commands for the Azure function.
+    /// </summary>
+    public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
 
@@ -54,28 +81,17 @@ namespace CommandQuery.AzureFunctions
 
                 return req.CreateResponse(HttpStatusCode.OK, result.Value);
             }
-            catch (CommandProcessorException exception)
-            {
-                log.Error("Handle command failed", exception);
-
-                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
-            catch (CommandValidationException exception)
-            {
-                log.Error("Handle command failed", exception);
-
-                return req.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
             catch (Exception exception)
             {
-                log.Error("Handle command failed", exception);
+                var payload = await req.Content.ReadAsStringAsync();
+                log.Error($"Handle command failed: {commandName}, {payload}", exception);
 
-                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message);
+                return req.CreateResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
             }
         }
 #endif
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_0
         /// <summary>
         /// Handle a command.
         /// </summary>
@@ -95,26 +111,12 @@ namespace CommandQuery.AzureFunctions
 
                 return new OkObjectResult(result.Value);
             }
-            catch (CommandProcessorException exception)
-            {
-                log.LogError(exception, "Handle command failed");
-
-                return new BadRequestObjectResult(exception.ToError());
-            }
-            catch (CommandValidationException exception)
-            {
-                log.LogError(exception, "Handle command failed");
-
-                return new BadRequestObjectResult(exception.ToError());
-            }
             catch (Exception exception)
             {
-                log.LogError(exception, "Handle command failed");
+                var payload = await req.ReadAsStringAsync();
+                log.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
 
-                return new ObjectResult(exception.ToError())
-                {
-                    StatusCode = 500
-                };
+                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
             }
         }
 #endif

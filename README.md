@@ -13,7 +13,7 @@
 
 ## Introduction
 
-Command Query Separation (CQS) for .NET Framework and .NET Standard
+Command Query Separation (CQS) for .NET Framework and .NET Core
 
 * Build services that separate the responsibility of commands and queries
 * Focus on implementing the handlers for commands and queries
@@ -43,8 +43,8 @@ In other words:
 * Queries
   * Reads and returns data
 
-:sparkles: The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
-`CommandQuery` has a more pragmatic take and now supports commands with result.
+The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
+`CommandQuery` has a more pragmatic take and supports commands with result.
 
 Inspired by:
 

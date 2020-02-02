@@ -2,6 +2,7 @@
 using CommandQuery.DependencyInjection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.DependencyInjection
@@ -18,8 +19,8 @@ namespace CommandQuery.Tests.DependencyInjection
                 var result = Assembly.GetCommandProcessor();
 
                 result.Should().NotBeNull();
-                result.GetCommands().Should().Contain(typeof(FakeCommand));
-                result.GetCommands().Should().Contain(typeof(FakeResultCommand));
+                result.GetCommandTypes().Should().Contain(typeof(FakeCommand));
+                result.GetCommandTypes().Should().Contain(typeof(FakeResultCommand));
             }
 
             void should_add_commands_from_Assemblies()
@@ -27,8 +28,15 @@ namespace CommandQuery.Tests.DependencyInjection
                 var result = new[] { Assembly }.GetCommandProcessor();
 
                 result.Should().NotBeNull();
-                result.GetCommands().Should().Contain(typeof(FakeCommand));
-                result.GetCommands().Should().Contain(typeof(FakeResultCommand));
+                result.GetCommandTypes().Should().Contain(typeof(FakeCommand));
+                result.GetCommandTypes().Should().Contain(typeof(FakeResultCommand));
+            }
+
+            void should_add_commands_to_the_given_ServiceCollection()
+            {
+                Assembly.GetCommandProcessor(new ServiceCollection()).Should().NotBeNull();
+                new[] { Assembly }.GetCommandProcessor(new ServiceCollection()).Should().NotBeNull();
+                new ServiceCollection().GetCommandProcessor(Assembly).Should().NotBeNull();
             }
         }
 

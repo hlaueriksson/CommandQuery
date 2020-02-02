@@ -1,8 +1,11 @@
 ﻿#if NETCOREAPP2_2
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
+using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
@@ -10,8 +13,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Moq;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests.V2
@@ -25,75 +28,75 @@ namespace CommandQuery.AzureFunctions.Tests.V2
             Use<Mock<IQueryProcessor>>();
             Logger = Use<ILogger>();
             QueryName = "FakeQuery";
+            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Post()
         {
-            Req = new DefaultHttpRequest(new DefaultHttpContext()) { Method = "POST" };
-
-            async Task should_invoke_the_query_processor()
+            Req = new DefaultHttpRequest(new DefaultHttpContext())
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<string>())).Returns(Task.FromResult(new object()));
+                Method = "POST",
+                Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"))
+            };
+
+            async Task should_return_the_result_from_the_query_processor()
+            {
+                var expected = new FakeResult();
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.Handle(QueryName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Should().NotBeNull();
+                result.Value.Should().Be(expected);
             }
 
-            async Task should_handle_QueryValidationException()
+            async Task should_handle_QueryProcessorException()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<string>())).Throws(new QueryValidationException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
 
-                var result = await Subject.Handle(QueryName, Req, Logger) as BadRequestObjectResult;
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
-                result.ShouldBeError("invalid");
+                result.ShouldBeError("fail", 400);
+            }
+
+            async Task should_handle_QueryException()
+            {
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+
+                var result = await Subject.Handle(QueryName, Req, Logger);
+
+                result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<string>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(QueryName, Req, Logger) as ObjectResult;
+                var result = await Subject.Handle(QueryName, Req, Logger);
 
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.ShouldBeError("fail", 500);
             }
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
-            Req = new DefaultHttpRequest(new DefaultHttpContext()) { Method = "GET" };
-
-            async Task should_invoke_the_query_processor()
+            Req = new DefaultHttpRequest(new DefaultHttpContext())
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Returns(Task.FromResult(new object()));
+                Method = "GET",
+                Query = new QueryCollection(new Dictionary<string, StringValues> { { "foo", new StringValues("bar") } })
+            };
+
+            async Task should_return_the_result_from_the_query_processor()
+            {
+                var expected = new FakeResult();
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.Handle(QueryName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Should().NotBeNull();
-            }
-
-            async Task should_handle_QueryValidationException()
-            {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new QueryValidationException("invalid"));
-
-                var result = await Subject.Handle(QueryName, Req, Logger) as BadRequestObjectResult;
-
-                result.ShouldBeError("invalid");
-            }
-
-            async Task should_handle_Exception()
-            {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new Exception("fail"));
-
-                var result = await Subject.Handle(QueryName, Req, Logger) as ObjectResult;
-
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.Value.Should().Be(expected);
             }
         }
 

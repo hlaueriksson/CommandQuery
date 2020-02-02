@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.AutoMoq;
@@ -27,38 +28,58 @@ namespace CommandQuery.AWSLambda.Tests
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
+            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Request.Body)).Returns(Task.FromResult(CommandResult.None));
+                var result = await Subject.Handle(CommandName, Request, Context.Object);
+
+                result.StatusCode.Should().Be(200);
+                result.Body.Should().BeNull();
+            }
+
+            async Task should_handle_CommandProcessorException()
+            {
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
 
                 var result = await Subject.Handle(CommandName, Request, Context.Object);
 
-                result.Body.Should().BeNull();
+                result.ShouldBeError("fail", 400);
+            }
+
+            async Task should_handle_CommandException()
+            {
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
+
+                var result = await Subject.Handle(CommandName, Request, Context.Object);
+
+                result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Request.Body)).Throws(new Exception("fail"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(CommandName, Request, Context.Object);
 
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.ShouldBeError("fail", 500);
             }
-        }    
-        
+        }
+
         [LoFu, Test]
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
+            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
-            async Task should_invoke_the_command_processor()
+            async Task should_return_the_result_from_the_command_processor()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithOrWithoutResultAsync(CommandName, Request.Body)).Returns(Task.FromResult(new CommandResult(new FakeResult())));
+                var expected = new FakeResult();
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.Handle(CommandName, Request, Context.Object);
 
+                result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeNull();
             }
         }

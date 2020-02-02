@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using CommandQuery.AzureFunctions;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -21,6 +24,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             [SetUp]
             public void SetUp()
             {
+                var serviceCollection = new ServiceCollection();
+                var mock = new Mock<IFunctionsHostBuilder>();
+                mock.Setup(x => x.Services).Returns(serviceCollection);
+                new Startup().Configure(mock.Object);
+                var serviceProvider = serviceCollection.BuildServiceProvider();
+
+                Subject = new Query(serviceProvider.GetService<IQueryFunction>());
                 Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
                 Log = new Mock<ILogger>().Object;
             }
@@ -28,7 +38,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             [Test]
             public async Task should_work()
             {
-                var result = await Query.Run(Req, Log, "BarQuery") as OkObjectResult;
+                var result = await Subject.Run(Req, Log, "BarQuery") as OkObjectResult;
                 var value = result.Value as Bar;
 
                 value.Id.Should().Be(1);
@@ -38,11 +48,12 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             [Test]
             public async Task should_handle_errors()
             {
-                var result = await Query.Run(Req, Log, "FailQuery") as BadRequestObjectResult;
+                var result = await Subject.Run(Req, Log, "FailQuery") as BadRequestObjectResult;
 
                 result.ShouldBeError("The query type 'FailQuery' could not be found");
             }
 
+            Query Subject;
             DefaultHttpRequest Req;
             ILogger Log;
         }
@@ -52,6 +63,13 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             [SetUp]
             public void SetUp()
             {
+                var serviceCollection = new ServiceCollection();
+                var mock = new Mock<IFunctionsHostBuilder>();
+                mock.Setup(x => x.Services).Returns(serviceCollection);
+                new Startup().Configure(mock.Object);
+                var serviceProvider = serviceCollection.BuildServiceProvider();
+
+                Subject = new Query(serviceProvider.GetService<IQueryFunction>());
                 Req = GetHttpRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
                 Log = new Mock<ILogger>().Object;
             }
@@ -59,7 +77,7 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             [Test]
             public async Task should_work()
             {
-                var result = await Query.Run(Req, Log, "BarQuery") as OkObjectResult;
+                var result = await Subject.Run(Req, Log, "BarQuery") as OkObjectResult;
                 var value = result.Value as Bar;
 
                 value.Id.Should().Be(1);
@@ -69,11 +87,12 @@ namespace CommandQuery.Sample.AzureFunctions.Vs2.Tests
             [Test]
             public async Task should_handle_errors()
             {
-                var result = await Query.Run(Req, Log, "FailQuery") as BadRequestObjectResult;
+                var result = await Subject.Run(Req, Log, "FailQuery") as BadRequestObjectResult;
 
                 result.ShouldBeError("The query type 'FailQuery' could not be found");
             }
 
+            Query Subject;
             DefaultHttpRequest Req;
             ILogger Log;
         }

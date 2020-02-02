@@ -40,13 +40,13 @@
 	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure the serverless template
 
-![New Project - AWS Serverless Application (.NET Core)](vs-new-project-aws-serverless-application.png)
+![New Project - AWS Serverless Application (.NET Core)](vs-new-project-aws-serverless-application-1.png)
 
-Choose the blueprint:
+Choose:
 
 * Empty Serverless Application
 
-![New AWS Serverless Application - Empty Serverless Application](vs-aws-serverless-application-empty.png)
+![New AWS Serverless Application - Empty Serverless Application](vs-new-project-aws-serverless-application-2.png)
 
 ## Commands
 
@@ -95,6 +95,10 @@ namespace CommandQuery.Sample.AWSLambda
 * The command itself is provided as JSON in the body.
 * If the command succeeds; the response is empty with the HTTP status code `200`.
 * If the command fails; the response is an error message with the HTTP status code `400` or `500`.
+
+Commands with result:
+
+* If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
 ## Queries
 

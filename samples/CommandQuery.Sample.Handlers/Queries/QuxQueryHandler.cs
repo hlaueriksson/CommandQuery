@@ -17,7 +17,7 @@ namespace CommandQuery.Sample.Handlers.Queries
         {
             var result = query.Ids.Select((x, index) => new Qux { Id = x, Value = _dateTime.Now.AddDays(index).ToString("F") }).ToArray();
 
-            return await Task.FromResult(result); // TODO: do some real query stuff
+            return await Task.FromResult(result);
         }
     }
 }

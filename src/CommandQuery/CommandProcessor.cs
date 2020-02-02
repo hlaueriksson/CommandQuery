@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Internal;
-using Newtonsoft.Json.Linq;
 
 namespace CommandQuery
 {
@@ -13,61 +12,11 @@ namespace CommandQuery
     public interface ICommandProcessor
     {
         /// <summary>
-        /// Process a command with or without result.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
-        Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, string json);
-
-        /// <summary>
-        /// Process a command with or without result.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
-        Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, JObject json);
-
-        /// <summary>
-        /// Process a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        Task ProcessAsync(string commandName, string json);
-
-        /// <summary>
-        /// Process a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        Task ProcessAsync(string commandName, JObject json);
-
-        /// <summary>
         /// Process a command.
         /// </summary>
         /// <param name="command">The command</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ProcessAsync(ICommand command);
-
-        /// <summary>
-        /// Process a command with result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result</typeparam>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command</returns>
-        Task<TResult> ProcessWithResultAsync<TResult>(string commandName, string json);
-
-        /// <summary>
-        /// Process a command with result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result</typeparam>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command</returns>
-        Task<TResult> ProcessWithResultAsync<TResult>(string commandName, JObject json);
 
         /// <summary>
         /// Process a command with result.
@@ -80,8 +29,15 @@ namespace CommandQuery
         /// <summary>
         /// Returns the types of commands that can be processed.
         /// </summary>
-        /// <returns>Supported commands</returns>
-        IEnumerable<Type> GetCommands();
+        /// <returns>Supported command types</returns>
+        IEnumerable<Type> GetCommandTypes();
+
+        /// <summary>
+        /// Returns the type of command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <returns>The command type</returns>
+        Type GetCommandType(string commandName);
     }
 
     /// <summary>
@@ -104,63 +60,6 @@ namespace CommandQuery
         }
 
         /// <summary>
-        /// Process a command with or without result.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
-        public async Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, string json)
-        {
-            return await ProcessWithOrWithoutResultAsync(commandName, JObject.Parse(json));
-        }
-
-        /// <summary>
-        /// Process a command with or without result.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/></returns>
-        public async Task<CommandResult> ProcessWithOrWithoutResultAsync(string commandName, JObject json)
-        {
-            var command = GetCommand(commandName, json);
-
-            if (command is ICommand commandWithoutResult)
-            {
-                await ProcessAsync(commandWithoutResult);
-
-                return CommandResult.None;
-            }
-
-            var result = await ProcessWithResultAsync((dynamic)command);
-
-            return new CommandResult(result);
-        }
-
-        /// <summary>
-        /// Process a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task ProcessAsync(string commandName, string json)
-        {
-            await ProcessAsync(commandName, JObject.Parse(json));
-        }
-
-        /// <summary>
-        /// Process a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task ProcessAsync(string commandName, JObject json)
-        {
-            var command = GetCommand(commandName, json);
-
-            await ProcessAsync((dynamic)command);
-        }
-
-        /// <summary>
         /// Process a command.
         /// </summary>
         /// <param name="command">The command</param>
@@ -169,37 +68,11 @@ namespace CommandQuery
         {
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
 
-            dynamic handler = _serviceProvider.GetService(handlerType);
+            dynamic handler = GetService(handlerType);
 
             if (handler == null) throw new CommandProcessorException($"The command handler for '{command}' could not be found");
 
             await handler.HandleAsync((dynamic)command);
-        }
-
-        /// <summary>
-        /// Process a command with result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result</typeparam>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command</returns>
-        public async Task<TResult> ProcessWithResultAsync<TResult>(string commandName, string json)
-        {
-            return await ProcessWithResultAsync<TResult>(commandName, JObject.Parse(json));
-        }
-
-        /// <summary>
-        /// Process a command with result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result</typeparam>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="json">The JSON representation of the command</param>
-        /// <returns>The result of the command</returns>
-        public async Task<TResult> ProcessWithResultAsync<TResult>(string commandName, JObject json)
-        {
-            var command = GetCommand(commandName, json);
-
-            return await ProcessWithResultAsync<TResult>((dynamic)command);
         }
 
         /// <summary>
@@ -212,7 +85,7 @@ namespace CommandQuery
         {
             var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResult));
 
-            dynamic handler = _serviceProvider.GetService(handlerType);
+            dynamic handler = GetService(handlerType);
 
             if (handler == null) throw new CommandProcessorException($"The command handler for '{command}' could not be found");
 
@@ -222,23 +95,32 @@ namespace CommandQuery
         /// <summary>
         /// Returns the types of commands that can be processed.
         /// </summary>
-        /// <returns>Supported commands</returns>
-        public IEnumerable<Type> GetCommands()
+        /// <returns>Supported command types</returns>
+        public IEnumerable<Type> GetCommandTypes()
         {
             return _typeCollection.GetTypes();
         }
 
-        private object GetCommand(string commandName, JObject json)
+        /// <summary>
+        /// Returns the type of command.
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <returns>The command type</returns>
+        public Type GetCommandType(string commandName)
         {
-            var commandType = _typeCollection.GetType(commandName);
+            return _typeCollection.GetType(commandName);
+        }
 
-            if (commandType == null) throw new CommandProcessorException($"The command type '{commandName}' could not be found");
-
-            var command = json.SafeToObject(commandType);
-
-            if (command == null) throw new CommandProcessorException("The json could not be converted to an object");
-
-            return command;
+        private object GetService(Type handlerType)
+        {
+            try
+            {
+                return _serviceProvider.GetSingleService(handlerType);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new CommandProcessorException($"Multiple command handlers for '{handlerType}' was found");
+            }
         }
     }
 }

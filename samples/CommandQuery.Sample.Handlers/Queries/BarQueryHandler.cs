@@ -16,7 +16,7 @@ namespace CommandQuery.Sample.Handlers.Queries
         {
             var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") };
 
-            return await Task.FromResult(result); // TODO: do some real query stuff
+            return await Task.FromResult(result);
         }
     }
 }

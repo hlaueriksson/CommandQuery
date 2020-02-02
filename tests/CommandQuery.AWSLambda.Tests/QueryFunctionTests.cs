@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using CommandQuery.Exceptions;
+using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
 using Moq;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests
@@ -21,6 +22,7 @@ namespace CommandQuery.AWSLambda.Tests
             Use<Mock<IQueryProcessor>>();
             Context = new Mock<ILambdaContext>();
             Context.SetupGet(x => x.Logger).Returns(new Mock<ILambdaLogger>().Object);
+            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
         }
 
         [LoFu, Test]
@@ -28,44 +30,59 @@ namespace CommandQuery.AWSLambda.Tests
         {
             Request = new APIGatewayProxyRequest { Body = "{}" };
 
-            async Task should_invoke_the_query_processor()
+            async Task should_return_the_result_from_the_query_processor()
             {
-                await Subject.Handle(QueryName, Request, Context.Object);
+                var expected = new FakeResult();
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).ReturnsAsync(expected);
 
-                The<Mock<IQueryProcessor>>().Verify(x => x.ProcessAsync<object>(QueryName, Request.Body));
+                var result = await Subject.Handle(QueryName, Request, Context.Object);
+
+                result.StatusCode.Should().Be(200);
+                result.Body.Should().NotBeEmpty();
+            }
+
+            async Task should_handle_QueryProcessorException()
+            {
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+
+                var result = await Subject.Handle(QueryName, Request, Context.Object);
+
+                result.ShouldBeError("fail", 400);
+            }
+
+            async Task should_handle_QueryException()
+            {
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+
+                var result = await Subject.Handle(QueryName, Request, Context.Object);
+
+                result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, Request.Body)).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
 
                 var result = await Subject.Handle(QueryName, Request, Context.Object);
 
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.ShouldBeError("fail", 500);
             }
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
-            Request = new APIGatewayProxyRequest { HttpMethod = "GET", MultiValueQueryStringParameters = new Dictionary<string, IList<string>>() };
+            Request = new APIGatewayProxyRequest { HttpMethod = "GET", MultiValueQueryStringParameters = new Dictionary<string, IList<string>> { { "foo", new List<string> { "bar" } } } };
 
-            async Task should_invoke_the_query_processor()
+            async Task should_return_the_result_from_the_query_processor()
             {
-                await Subject.Handle(QueryName, Request, Context.Object);
-
-                The<Mock<IQueryProcessor>>().Verify(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>()));
-            }
-
-            async Task should_handle_Exception()
-            {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync<object>(QueryName, It.IsAny<IDictionary<string, IEnumerable<string>>>())).Throws(new Exception("fail"));
+                var expected = new FakeResult();
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).ReturnsAsync(expected);
 
                 var result = await Subject.Handle(QueryName, Request, Context.Object);
 
-                result.StatusCode.Should().Be(500);
-                result.ShouldBeError("fail");
+                result.StatusCode.Should().Be(200);
+                result.Body.Should().NotBeEmpty();
             }
         }
 

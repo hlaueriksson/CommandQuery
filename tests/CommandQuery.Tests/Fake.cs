@@ -100,4 +100,50 @@ namespace CommandQuery.Tests
             return await Task.FromResult(result);
         }
     }
+
+    public class FakeMultiCommand1 : ICommand { }
+    public class FakeMultiCommand2 : ICommand { }
+    public class FakeMultiResultCommand1 : ICommand<FakeResult> { }
+    public class FakeMultiResultCommand2 : ICommand<FakeResult> { }
+    public class FakeMultiQuery1 : IQuery<FakeResult> { }
+    public class FakeMultiQuery2 : IQuery<FakeResult> { }
+    public class FakeMultiHandler :
+        ICommandHandler<FakeMultiCommand1>,
+        ICommandHandler<FakeMultiCommand2>,
+        ICommandHandler<FakeMultiResultCommand1, FakeResult>,
+        ICommandHandler<FakeMultiResultCommand2, FakeResult>,
+        IQueryHandler<FakeMultiQuery1, FakeResult>,
+        IQueryHandler<FakeMultiQuery2, FakeResult>
+    {
+
+        public Task HandleAsync(FakeMultiCommand1 command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task HandleAsync(FakeMultiCommand2 command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FakeResult> HandleAsync(FakeMultiResultCommand1 command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FakeResult> HandleAsync(FakeMultiResultCommand2 command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FakeResult> HandleAsync(FakeMultiQuery1 query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FakeResult> HandleAsync(FakeMultiQuery2 query)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

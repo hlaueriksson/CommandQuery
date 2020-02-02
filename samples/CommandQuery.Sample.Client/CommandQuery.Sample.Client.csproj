@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <IsPackable>false</IsPackable>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
@@ -10,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandQuery.Client" Version="0.9.0" />
+    <PackageReference Include="CommandQuery.Client" Version="0.9.21" />
   </ItemGroup>
 
   <ItemGroup>

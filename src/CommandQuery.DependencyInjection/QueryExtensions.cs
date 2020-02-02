@@ -15,7 +15,7 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="IQueryProcessor"/></returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly assembly)
         {
-            return GetQueryProcessor(new ServiceCollection(), assembly);
+            return new ServiceCollection().GetQueryProcessor(assembly);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="IQueryProcessor"/></returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies)
         {
-            return GetQueryProcessor(new ServiceCollection(), assemblies);
+            return new ServiceCollection().GetQueryProcessor(assemblies);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="IQueryProcessor"/></returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly assembly, IServiceCollection services)
         {
-            return GetQueryProcessor(services, assembly);
+            return services.GetQueryProcessor(assembly);
         }
 
         /// <summary>
@@ -47,10 +47,16 @@ namespace CommandQuery.DependencyInjection
         /// <returns>An <see cref="IQueryProcessor"/></returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies, IServiceCollection services)
         {
-            return GetQueryProcessor(services, assemblies);
+            return services.GetQueryProcessor(assemblies);
         }
 
-        private static IQueryProcessor GetQueryProcessor(IServiceCollection services, params Assembly[] assemblies)
+        /// <summary>
+        /// Initializes an <see cref="IQueryProcessor"/> from assemblies with queries and handlers.
+        /// </summary>
+        /// <param name="services">A service collection for query handlers</param>
+        /// <param name="assemblies">Assemblies with queries and handlers</param>
+        /// <returns></returns>
+        public static IQueryProcessor GetQueryProcessor(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddQueries(assemblies);
 

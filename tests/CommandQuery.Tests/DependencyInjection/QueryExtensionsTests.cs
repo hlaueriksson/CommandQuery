@@ -2,6 +2,7 @@
 using CommandQuery.DependencyInjection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.DependencyInjection
@@ -18,7 +19,7 @@ namespace CommandQuery.Tests.DependencyInjection
                 var result = Assembly.GetQueryProcessor();
 
                 result.Should().NotBeNull();
-                result.GetQueries().Should().Contain(typeof(FakeQuery));
+                result.GetQueryTypes().Should().Contain(typeof(FakeQuery));
             }
 
             void should_add_queries_from_Assemblies()
@@ -26,7 +27,14 @@ namespace CommandQuery.Tests.DependencyInjection
                 var result = new[] { Assembly }.GetQueryProcessor();
 
                 result.Should().NotBeNull();
-                result.GetQueries().Should().Contain(typeof(FakeQuery));
+                result.GetQueryTypes().Should().Contain(typeof(FakeQuery));
+            }
+
+            void should_add_queries_to_the_given_ServiceCollection()
+            {
+                Assembly.GetQueryProcessor(new ServiceCollection()).Should().NotBeNull();
+                new[] { Assembly }.GetQueryProcessor(new ServiceCollection()).Should().NotBeNull();
+                new ServiceCollection().GetQueryProcessor(Assembly).Should().NotBeNull();
             }
         }
 

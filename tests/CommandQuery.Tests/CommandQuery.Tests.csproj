@@ -1,24 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <NoWarn>1701;1702;CS1998;CS8321</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="LoFuUnit.AutoMoq" Version="1.0.1" />
-    <PackageReference Include="LoFuUnit.NUnit" Version="1.0.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="LoFuUnit.AutoMoq" Version="1.1.1" />
+    <PackageReference Include="LoFuUnit.NUnit" Version="1.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CommandQuery.Client\CommandQuery.Client.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.Extensions\CommandQuery.Extensions.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\samples\CommandQuery.Sample.Contracts\Commands\*.cs" LinkBase="Client\Contracts\Commands" />
+    <Compile Include="..\..\samples\CommandQuery.Sample.Contracts\Queries\*.cs" LinkBase="Client\Contracts\Queries" />
   </ItemGroup>
 
 </Project>
