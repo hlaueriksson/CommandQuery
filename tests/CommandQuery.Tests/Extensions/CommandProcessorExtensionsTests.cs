@@ -20,6 +20,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var expectedCommandType = typeof(FakeCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Returns(Task.CompletedTask);
 
                 await Subject.ProcessAsync(expectedCommandType.Name, "{}");
 
@@ -56,6 +57,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var expectedCommandType = typeof(FakeResultCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
+                FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(new FakeResult()));
 
                 await Subject.ProcessWithResultAsync<FakeResult>(expectedCommandType.Name, "{}");
 
@@ -92,6 +94,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var expectedCommandType = typeof(FakeCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Returns(Task.CompletedTask);
 
                 var result = await Subject.ProcessWithOrWithoutResultAsync(expectedCommandType.Name, "{}");
 
@@ -103,7 +106,7 @@ namespace CommandQuery.Tests.Extensions
                 var expectedResult = new FakeResult();
                 var expectedCommandType = typeof(FakeResultCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
-                FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).ReturnsAsync(expectedResult);
+                FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expectedResult));
 
                 var result = await Subject.ProcessWithOrWithoutResultAsync(expectedCommandType.Name, "{}");
 

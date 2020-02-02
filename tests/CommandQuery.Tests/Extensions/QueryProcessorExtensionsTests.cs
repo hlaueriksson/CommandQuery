@@ -23,6 +23,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var expectedQueryType = typeof(FakeQuery);
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(new FakeResult()));
 
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, "{}");
 
@@ -71,6 +72,7 @@ namespace CommandQuery.Tests.Extensions
             {
                 var expectedQueryType = typeof(FakeComplexQuery);
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeComplexQuery>())).Returns(Task.FromResult(Enumerable.Empty<FakeResult>()));
 
                 var query = new Dictionary<string, IEnumerable<string>>
                 {
