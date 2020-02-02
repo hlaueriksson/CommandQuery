@@ -6,10 +6,10 @@
 
 | NuGet            |       | [![CommandQuery][1]][2]                                       |
 | :--------------- | ----: | :------------------------------------------------------------ |
-| Package Manager  | `PM>` | `Install-Package CommandQuery -Version 0.9.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery --version 0.9.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery" Version="0.9.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery --version 0.9.0`                      |
+| Package Manager  | `PM>` | `Install-Package CommandQuery -Version 1.0.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery --version 1.0.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery" Version="1.0.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery --version 1.0.0`                      |
 
 [1]: https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery
 [2]: https://www.nuget.org/packages/CommandQuery

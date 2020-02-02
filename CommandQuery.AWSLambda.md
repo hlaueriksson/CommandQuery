@@ -9,10 +9,10 @@
 
 | NuGet            |       | [![CommandQuery.AWSLambda][1]][2]                                       |
 | :--------------- | ----: | :---------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.AWSLambda -Version 0.9.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.AWSLambda --version 0.9.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.AWSLambda" Version="0.9.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.AWSLambda --version 0.9.0`                      |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AWSLambda -Version 1.0.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AWSLambda --version 1.0.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AWSLambda" Version="1.0.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AWSLambda --version 1.0.0`                      |
 
 [1]: https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg?label=CommandQuery.AWSLambda
 [2]: https://www.nuget.org/packages/CommandQuery.AWSLambda

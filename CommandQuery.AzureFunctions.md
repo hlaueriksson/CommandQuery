@@ -9,10 +9,10 @@
 
 | NuGet            |       | [![CommandQuery.AzureFunctions][1]][2]                                       |
 | :--------------- | ----: | :--------------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.AzureFunctions -Version 0.9.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.AzureFunctions --version 0.9.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.AzureFunctions" Version="0.9.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.AzureFunctions --version 0.9.0`                      |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AzureFunctions -Version 1.0.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AzureFunctions --version 1.0.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AzureFunctions" Version="1.0.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AzureFunctions --version 1.0.0`                      |
 
 [1]: https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?label=CommandQuery.AzureFunctions
 [2]: https://www.nuget.org/packages/CommandQuery.AzureFunctions

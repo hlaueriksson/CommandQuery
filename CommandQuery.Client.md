@@ -6,10 +6,10 @@
 
 | NuGet            |       | [![CommandQuery.Client][1]][2]                                       |
 | :--------------- | ----: | :------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.Client -Version 0.9.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.Client --version 0.9.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.Client" Version="0.9.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.Client --version 0.9.0`                      |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.Client -Version 1.0.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.Client --version 1.0.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.Client" Version="1.0.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.Client --version 1.0.0`                      |
 
 [1]: https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client
 [2]: https://www.nuget.org/packages/CommandQuery.Client

@@ -9,10 +9,10 @@
 
 | NuGet            |       | [![CommandQuery.AspNetCore][1]][2]                                       |
 | :--------------- | ----: | :----------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNetCore -Version 0.9.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNetCore --version 0.9.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.AspNetCore" Version="0.9.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.AspNetCore --version 0.9.0`                      |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNetCore -Version 1.0.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNetCore --version 1.0.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AspNetCore" Version="1.0.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AspNetCore --version 1.0.0`                      |
 
 [1]: https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg?label=CommandQuery.AspNetCore
 [2]: https://www.nuget.org/packages/CommandQuery.AspNetCore

@@ -9,10 +9,10 @@
 
 | NuGet            |       | [![CommandQuery.AspNet.WebApi][1]][2]                                       |
 | :--------------- | ----: | :-------------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNet.WebApi -Version 0.9.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNet.WebApi --version 0.9.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.AspNet.WebApi" Version="0.9.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.AspNet.WebApi --version 0.9.0`                      |
+| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNet.WebApi -Version 1.0.0`                 |
+| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNet.WebApi --version 1.0.0`             |
+| PackageReference |       | `<PackageReference Include="CommandQuery.AspNet.WebApi" Version="1.0.0" />` |
+| Paket CLI        | `>`   | `paket add CommandQuery.AspNet.WebApi --version 1.0.0`                      |
 
 [1]: https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg?label=CommandQuery.AspNet.WebApi
 [2]: https://www.nuget.org/packages/CommandQuery.AspNet.WebApi
