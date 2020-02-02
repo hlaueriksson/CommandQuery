@@ -13,7 +13,7 @@ namespace CommandQuery.Tests.Client
         [SetUp]
         public void SetUp()
         {
-            Subject = new CommandClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/");
+            Subject = new CommandClient("https://commandquery-sample-azurefunctions-vs3.azurewebsites.net/api/command/");
         }
 
         [Test]
