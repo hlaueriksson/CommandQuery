@@ -1,0 +1,31 @@
+<Project>
+  <PropertyGroup>
+    <RunWithWarnings>true</RunWithWarnings>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <CodeAnalysisRuleSet>../../CommandQuery.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="../../stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.312">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers" Version="3.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.8.55">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
