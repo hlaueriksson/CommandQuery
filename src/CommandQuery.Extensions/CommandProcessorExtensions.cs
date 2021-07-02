@@ -119,14 +119,14 @@ namespace CommandQuery
         {
             var commandType = commandProcessor.GetCommandType(commandName);
 
-            if (commandType == null)
+            if (commandType is null)
             {
                 throw new CommandProcessorException($"The command type '{commandName}' could not be found");
             }
 
             var command = json.SafeToObject(commandType);
 
-            if (command == null)
+            if (command is null)
             {
                 throw new CommandProcessorException("The json could not be converted to an object");
             }

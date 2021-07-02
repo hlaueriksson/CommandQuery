@@ -9,7 +9,7 @@ namespace CommandQuery.Internal
     {
         public static object SafeToObject(this IDictionary<string, JToken> dictionary, Type type)
         {
-            if (dictionary == null)
+            if (dictionary is null)
             {
                 return null;
             }

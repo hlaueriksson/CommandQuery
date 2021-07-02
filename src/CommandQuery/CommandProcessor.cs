@@ -43,7 +43,7 @@ namespace CommandQuery
 
             dynamic handler = GetService(handlerType);
 
-            if (handler == null)
+            if (handler is null)
             {
                 throw new CommandProcessorException($"The command handler for '{command}' could not be found");
             }
@@ -70,7 +70,7 @@ namespace CommandQuery
 
             dynamic handler = GetService(handlerType);
 
-            if (handler == null)
+            if (handler is null)
             {
                 throw new CommandProcessorException($"The command handler for '{command}' could not be found");
             }

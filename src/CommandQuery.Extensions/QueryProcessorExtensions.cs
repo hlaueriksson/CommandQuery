@@ -49,14 +49,14 @@ namespace CommandQuery
 
             var queryType = queryProcessor.GetQueryType(queryName);
 
-            if (queryType == null)
+            if (queryType is null)
             {
                 throw new QueryProcessorException($"The query type '{queryName}' could not be found");
             }
 
             var query = json.SafeToObject(queryType);
 
-            if (query == null)
+            if (query is null)
             {
                 throw new QueryProcessorException("The json could not be converted to an object");
             }
@@ -81,14 +81,14 @@ namespace CommandQuery
 
             var queryType = queryProcessor.GetQueryType(queryName);
 
-            if (queryType == null)
+            if (queryType is null)
             {
                 throw new QueryProcessorException($"The query type '{queryName}' could not be found");
             }
 
             var query = GetQueryDictionary(dictionary, queryType).SafeToObject(queryType);
 
-            if (query == null)
+            if (query is null)
             {
                 throw new QueryProcessorException("The dictionary could not be converted to an object");
             }
@@ -98,7 +98,7 @@ namespace CommandQuery
 
         private static Dictionary<string, JToken> GetQueryDictionary(IDictionary<string, IEnumerable<string>> query, Type type)
         {
-            if (query == null)
+            if (query is null)
             {
                 return null;
             }

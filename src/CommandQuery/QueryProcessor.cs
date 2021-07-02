@@ -44,7 +44,7 @@ namespace CommandQuery
 
             dynamic handler = GetService(handlerType);
 
-            if (handler == null)
+            if (handler is null)
             {
                 throw new QueryProcessorException($"The query handler for '{query}' could not be found");
             }
