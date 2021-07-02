@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Commands;
@@ -14,29 +14,6 @@ namespace CommandQuery.Tests.Client
         public void SetUp()
         {
             Subject = new CommandClient("https://commandquery-sample-azurefunctions-vs3.azurewebsites.net/api/command/");
-        }
-
-        [Test]
-        public void when_Post()
-        {
-            Subject.Post(new FooCommand { Value = "sv-SE" });
-
-            Subject.Invoking(x => x.Post(new FooCommand()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.GetErrorCode().Should().Be(1337);
-
-            Subject.Invoking(x => x.Post(new FailCommand()))
-                .Should().Throw<CommandQueryException>();
-        }
-
-        [Test]
-        public void when_Post_with_result()
-        {
-            var result = Subject.Post(new BazCommand { Value = "sv-SE" });
-            result.Should().NotBeNull();
-
-            Subject.Invoking(x => x.Post(new FailResultCommand()))
-                .Should().Throw<CommandQueryException>();
         }
 
         [Test]
@@ -63,10 +40,10 @@ namespace CommandQuery.Tests.Client
         }
 
         [Test]
-        public void when_configuring_the_client()
+        public async Task when_configuring_the_client()
         {
             var client = new CommandClient("http://example.com", x => x.BaseAddress = new Uri("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/"));
-            client.Post(new FooCommand { Value = "sv-SE" });
+            await client.PostAsync(new FooCommand { Value = "sv-SE" });
         }
 
         CommandClient Subject;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -11,11 +11,6 @@ namespace CommandQuery.Client
     /// </summary>
     public abstract class BaseClient
     {
-        /// <summary>
-        /// Sends HTTP requests and receives HTTP responses.
-        /// </summary>
-        protected readonly HttpClient Client = new HttpClient();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseClient" /> class.
         /// </summary>
@@ -36,21 +31,18 @@ namespace CommandQuery.Client
         /// <param name="configAction">Configuration for the <see cref="HttpClient" />.</param>
         protected BaseClient(string baseUrl, Action<HttpClient> configAction) : this(baseUrl)
         {
+            if (configAction is null)
+            {
+                throw new ArgumentNullException(nameof(configAction));
+            }
+
             configAction(Client);
         }
 
         /// <summary>
-        /// Gets a result.
+        /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
-        /// <typeparam name="T">The type of result.</typeparam>
-        /// <param name="value">A payload.</param>
-        /// <returns>A result.</returns>
-        protected T BaseGet<T>(object value)
-            => Client.GetAsync(value.GetRequestUri())
-                .ConfigureAwait(false).GetAwaiter().GetResult()
-                .EnsureSuccess()
-                .Content.ReadAsAsync<T>()
-                .ConfigureAwait(false).GetAwaiter().GetResult();
+        protected HttpClient Client { get; } = new();
 
         /// <summary>
         /// Gets a result.
@@ -60,42 +52,23 @@ namespace CommandQuery.Client
         /// <returns>A result.</returns>
         protected async Task<T> BaseGetAsync<T>(object value)
         {
-            var response = await Client.GetAsync(value.GetRequestUri());
+#pragma warning disable CA2234 // Pass system uri objects instead of strings
+            var response = await Client.GetAsync(value.GetRequestUri()).ConfigureAwait(false);
+#pragma warning restore CA2234 // Pass system uri objects instead of strings
             response.EnsureSuccess();
-            return await response.Content.ReadAsAsync<T>();
+            return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
         }
 
         /// <summary>
         /// Post a payload.
         /// </summary>
         /// <param name="value">A payload.</param>
-        protected void BasePost(object value)
-            => Client.PostAsJsonAsync(value.GetType().Name, value)
-                .ConfigureAwait(false).GetAwaiter().GetResult()
-                .EnsureSuccess();
-
-        /// <summary>
-        /// Post a payload.
-        /// </summary>
-        /// <param name="value">A payload.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task BasePostAsync(object value)
         {
-            var response = await Client.PostAsJsonAsync(value.GetType().Name, value);
+            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
             response.EnsureSuccess();
         }
-
-        /// <summary>
-        /// Post a payload and returns a result.
-        /// </summary>
-        /// <typeparam name="T">The type of result.</typeparam>
-        /// <param name="value">A payload.</param>
-        /// <returns>A result.</returns>
-        protected T BasePost<T>(object value)
-            => Client.PostAsJsonAsync(value.GetType().Name, value)
-                .ConfigureAwait(false).GetAwaiter().GetResult()
-                .EnsureSuccess()
-                .Content.ReadAsAsync<T>()
-                .ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Post a payload and returns a result.
@@ -105,9 +78,9 @@ namespace CommandQuery.Client
         /// <returns>A result.</returns>
         protected async Task<T> BasePostAsync<T>(object value)
         {
-            var response = await Client.PostAsJsonAsync(value.GetType().Name, value);
+            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
             response.EnsureSuccess();
-            return await response.Content.ReadAsAsync<T>();
+            return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
         }
     }
 }
