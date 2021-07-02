@@ -8,8 +8,15 @@ namespace CommandQuery.Internal
     {
         public static object GetSingleService(this IServiceProvider provider, Type serviceType)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider));
-            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (serviceType == null)
+            {
+                throw new ArgumentNullException(nameof(serviceType));
+            }
 
             var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
             var services = (IEnumerable<object>)provider.GetService(enumerableType);
