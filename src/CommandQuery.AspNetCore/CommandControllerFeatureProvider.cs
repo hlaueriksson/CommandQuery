@@ -27,7 +27,7 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Populates the list of controller types in an MVC application with controllers for all commands found in the provided assemblies.
         /// </summary>
-        /// <param name="parts">The list of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/> instances in the application.
+        /// <param name="parts">The list of <see cref="ApplicationPart"/> instances in the application.
         /// </param>
         /// <param name="feature">The feature instance to populate.</param>
         /// <exception cref="ArgumentNullException"><paramref name="feature"/> is <see langword="null"/>.</exception>
