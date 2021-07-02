@@ -15,7 +15,7 @@ namespace CommandQuery.Client
         Task PostAsync(ICommand command);
 
         /// <summary>
-        /// Sends an <see cref="ICommand&lt;TResult&gt;" /> to the API with <c>POST</c>.
+        /// Sends an <see cref="ICommand{TResult}" /> to the API with <c>POST</c>.
         /// </summary>
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="command">The command.</param>

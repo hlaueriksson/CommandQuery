@@ -28,7 +28,7 @@ namespace CommandQuery.Client
         }
 
         /// <summary>
-        /// Sends an <see cref="IQuery&lt;TResult&gt;" /> to the API with <c>GET</c>.
+        /// Sends an <see cref="IQuery{TResult}" /> to the API with <c>GET</c>.
         /// </summary>
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="query">The query.</param>
@@ -36,7 +36,7 @@ namespace CommandQuery.Client
         public async Task<TResult> GetAsync<TResult>(IQuery<TResult> query) => await BaseGetAsync<TResult>(query).ConfigureAwait(false);
 
         /// <summary>
-        /// Sends an <see cref="IQuery&lt;TResult&gt;" /> to the API with <c>POST</c>.
+        /// Sends an <see cref="IQuery{TResult}" /> to the API with <c>POST</c>.
         /// </summary>
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="query">The query.</param>

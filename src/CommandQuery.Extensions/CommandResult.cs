@@ -13,7 +13,7 @@ namespace CommandQuery
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandResult" /> class that wraps a command result.
         /// </summary>
-        /// <param name="value">The result of an <see cref="ICommand&lt;TResult&gt;"/>.</param>
+        /// <param name="value">The result of an <see cref="ICommand{TResult}"/>.</param>
         public CommandResult(object value)
         {
             Value = value;
@@ -24,7 +24,7 @@ namespace CommandQuery
         }
 
         /// <summary>
-        /// The result of an <see cref="ICommand&lt;TResult&gt;"/>.
+        /// The result of an <see cref="ICommand{TResult}"/>.
         /// </summary>
         public object Value { get; }
     }

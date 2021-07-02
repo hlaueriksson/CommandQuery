@@ -15,7 +15,7 @@ namespace CommandQuery.AspNetCore
         private readonly ILogger<CommandWithResultController<TCommand, TResult>> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandWithResultController&lt;TCommand, TResult&gt;" /> class.
+        /// Initializes a new instance of the <see cref="CommandWithResultController{TCommand,TResult}" /> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor" />.</param>
         /// <param name="logger">An <see cref="ILogger" />.</param>
