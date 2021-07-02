@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,7 +9,10 @@ namespace CommandQuery.Internal
     {
         public static object SafeToObject(this IDictionary<string, JToken> dictionary, Type type)
         {
-            if (dictionary == null) return null;
+            if (dictionary == null)
+            {
+                return null;
+            }
 
             try
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,13 +40,13 @@ namespace CommandQuery.Tests.Extensions
                     .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
 
-            void should_throw_exception_if_the_json_is_invalid()
+            void should_throw_exception_if_the_json_is_null()
             {
                 var queryName = "FakeQuery";
 
                 Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (JObject)null)).Should()
-                    .Throw<QueryProcessorException>()
-                    .WithMessage("The json could not be converted to an object");
+                    .Throw<ArgumentNullException>()
+                    .WithMessage("Value cannot be null*json");
             }
 
             async Task should_create_the_query_from_a_dictionary()
