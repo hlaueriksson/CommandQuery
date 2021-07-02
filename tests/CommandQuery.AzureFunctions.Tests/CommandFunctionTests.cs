@@ -1,17 +1,20 @@
-﻿#if NET472
 using System;
-using System.Net.Http;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.AzureFunctions.Tests.V1
+namespace CommandQuery.AzureFunctions.Tests
 {
     public class CommandFunctionTests : LoFuTest<CommandFunction>
     {
@@ -20,9 +23,11 @@ namespace CommandQuery.AzureFunctions.Tests.V1
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
-            Req = new HttpRequestMessage { Method = HttpMethod.Post, Content = new StringContent("{}") };
-            Req.SetConfiguration(new HttpConfiguration());
-            Logger = new FakeTraceWriter();
+            Req = new DefaultHttpRequest(new DefaultHttpContext())
+            {
+                Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"))
+            };
+            Logger = Use<ILogger>();
         }
 
         [LoFu, Test]
@@ -33,11 +38,9 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
             async Task should_invoke_the_command_processor()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Returns(Task.CompletedTask);
-                var result = await Subject.Handle(CommandName, Req, Logger);
+                var result = await Subject.Handle(CommandName, Req, Logger) as OkResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Content.Should().BeNull();
             }
 
             async Task should_handle_CommandProcessorException()
@@ -46,7 +49,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
                 var result = await Subject.Handle(CommandName, Req, Logger);
 
-                await result.ShouldBeErrorAsync("fail", 400);
+                result.ShouldBeError("fail", 400);
             }
 
             async Task should_handle_CommandException()
@@ -55,7 +58,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
                 var result = await Subject.Handle(CommandName, Req, Logger);
 
-                await result.ShouldBeErrorAsync("invalid", 400);
+                result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
@@ -64,7 +67,7 @@ namespace CommandQuery.AzureFunctions.Tests.V1
 
                 var result = await Subject.Handle(CommandName, Req, Logger);
 
-                await result.ShouldBeErrorAsync("fail", 500);
+                result.ShouldBeError("fail", 500);
             }
         }
 
@@ -79,16 +82,15 @@ namespace CommandQuery.AzureFunctions.Tests.V1
                 var expected = new FakeResult();
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(CommandName, Req, Logger);
+                var result = await Subject.Handle(CommandName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Content.ReadAsAsync<FakeResult>().Should().NotBeNull();
+                result.Value.Should().Be(expected);
             }
         }
 
-        HttpRequestMessage Req;
-        FakeTraceWriter Logger;
+        DefaultHttpRequest Req;
+        ILogger Logger;
         string CommandName;
     }
 }
-#endif

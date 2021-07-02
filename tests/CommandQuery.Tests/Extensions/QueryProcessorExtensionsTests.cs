@@ -46,7 +46,7 @@ namespace CommandQuery.Tests.Extensions
 
                 Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (JObject)null)).Should()
                     .Throw<ArgumentNullException>()
-                    .WithMessage("Value cannot be null*json");
+                    .WithMessage("Value cannot be null*json*");
             }
 
             async Task should_create_the_query_from_a_dictionary()

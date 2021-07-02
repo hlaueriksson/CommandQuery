@@ -1,21 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Internal;
-
-#if NET461
-using System.Net;
-using System.Net.Http;
-using Microsoft.Azure.WebJobs.Host;
-#endif
-
-#if NETSTANDARD2_0 || NETCOREAPP3_0
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-#endif
 
 namespace CommandQuery.AzureFunctions
 {
@@ -24,18 +15,6 @@ namespace CommandQuery.AzureFunctions
     /// </summary>
     public interface IQueryFunction
     {
-#if NET461
-        /// <summary>
-        /// Handle a query.
-        /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <param name="req">A <see cref="HttpRequestMessage"/></param>
-        /// <param name="log">A <see cref="TraceWriter"/></param>
-        /// <returns>The result + 200, 400 or 500</returns>
-        Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log);
-#endif
-
-#if NETSTANDARD2_0 || NETCOREAPP3_0
         /// <summary>
         /// Handle a query.
         /// </summary>
@@ -44,7 +23,6 @@ namespace CommandQuery.AzureFunctions
         /// <param name="log">An <see cref="ILogger"/></param>
         /// <returns>The result + 200, 400 or 500</returns>
         Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log);
-#endif
     }
 
     /// <summary>
@@ -63,44 +41,6 @@ namespace CommandQuery.AzureFunctions
             _queryProcessor = queryProcessor;
         }
 
-#if NET461
-        /// <summary>
-        /// Handle a query.
-        /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <param name="req">A <see cref="HttpRequestMessage"/></param>
-        /// <param name="log">A <see cref="TraceWriter"/></param>
-        /// <returns>The result + 200, 400 or 500</returns>
-        public async Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log)
-        {
-            log.Info($"Handle {queryName}");
-
-            try
-            {
-                var result = req.Method == HttpMethod.Get
-                    ? await Handle(queryName, Dictionary(req.GetQueryNameValuePairs()))
-                    : await Handle(queryName, await req.Content.ReadAsStringAsync());
-
-                return req.CreateResponse(HttpStatusCode.OK, result);
-            }
-            catch (Exception exception)
-            {
-                var payload = req.Method == HttpMethod.Get ? req.GetQueryNameValuePairs().ToJson() : await req.Content.ReadAsStringAsync();
-                log.Error($"Handle query failed: {queryName}, {payload}", exception);
-
-                return req.CreateResponse(exception.IsHandled() ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError, exception.ToError());
-            }
-
-            Dictionary<string, IEnumerable<string>> Dictionary(IEnumerable<KeyValuePair<string, string>> query)
-            {
-                return query
-                    .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
-                    .ToDictionary(g => g.Key, g => g.Select(x => x.Value), StringComparer.OrdinalIgnoreCase);
-            }
-        }
-#endif
-
-#if NETSTANDARD2_0 || NETCOREAPP3_0
         /// <summary>
         /// Handle a query.
         /// </summary>
@@ -133,7 +73,6 @@ namespace CommandQuery.AzureFunctions
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
         }
-#endif
 
         private async Task<object> Handle(string queryName, string content)
         {

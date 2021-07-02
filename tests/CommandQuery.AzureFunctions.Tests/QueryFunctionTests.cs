@@ -1,4 +1,3 @@
-﻿#if NETCOREAPP2_2
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +16,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.AzureFunctions.Tests.V2
+namespace CommandQuery.AzureFunctions.Tests
 {
     public class QueryFunctionTests : LoFuTest<QueryFunction>
     {
@@ -105,4 +104,3 @@ namespace CommandQuery.AzureFunctions.Tests.V2
         string QueryName;
     }
 }
-#endif
