@@ -8,7 +8,8 @@ namespace CommandQuery.AspNetCore
 {
     [ApiController]
     [Route("api/command/[controller]")]
-    internal class CommandWithResultController<TCommand, TResult> : ControllerBase where TCommand : ICommand<TResult>
+    internal class CommandWithResultController<TCommand, TResult> : ControllerBase
+        where TCommand : ICommand<TResult>
     {
         private readonly ICommandProcessor _commandProcessor;
         private readonly ILogger<CommandWithResultController<TCommand, TResult>> _logger;
@@ -16,8 +17,8 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandWithResultController&lt;TCommand, TResult&gt;" /> class.
         /// </summary>
-        /// <param name="commandProcessor">An <see cref="ICommandProcessor" /></param>
-        /// <param name="logger">An <see cref="ILogger" /></param>
+        /// <param name="commandProcessor">An <see cref="ICommandProcessor" />.</param>
+        /// <param name="logger">An <see cref="ILogger" />.</param>
         public CommandWithResultController(ICommandProcessor commandProcessor, ILogger<CommandWithResultController<TCommand, TResult>> logger)
         {
             _commandProcessor = commandProcessor;
@@ -27,14 +28,14 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Handle a command.
         /// </summary>
-        /// <param name="command">The command</param>
-        /// <returns>The result + 200, 400 or 500</returns>
+        /// <param name="command">The command.</param>
+        /// <returns>The result + 200, 400 or 500.</returns>
         [HttpPost]
-        public async Task<IActionResult> Handle(TCommand command)
+        public async Task<IActionResult> HandleAsync(TCommand command)
         {
             try
             {
-                var result = await _commandProcessor.ProcessWithResultAsync(command);
+                var result = await _commandProcessor.ProcessWithResultAsync(command).ConfigureAwait(false);
 
                 return Ok(result);
             }

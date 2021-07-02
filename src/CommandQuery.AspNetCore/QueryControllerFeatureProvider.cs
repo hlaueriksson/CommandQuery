@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +18,7 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryControllerFeatureProvider" /> class.
         /// </summary>
-        /// <param name="assemblies">The assemblies with queries to create controllers for</param>
+        /// <param name="assemblies">The assemblies with queries to create controllers for.</param>
         public QueryControllerFeatureProvider(params Assembly[] assemblies)
         {
             _types = assemblies.GetTypesAssignableTo(typeof(IQuery<>)).ToArray();
@@ -32,6 +32,11 @@ namespace CommandQuery.AspNetCore
         /// <param name="feature">The feature instance to populate.</param>
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
+            if (feature is null)
+            {
+                throw new ArgumentNullException(nameof(feature));
+            }
+
             foreach (var queryType in _types)
             {
                 var controllerType = typeof(QueryController<,>).MakeGenericType(queryType, queryType.GetResultType(typeof(IQuery<>)));

@@ -27,7 +27,7 @@ namespace CommandQuery.AspNetCore.Tests
                 var expected = new FakeResult();
                 FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(new FakeResultCommand()) as OkObjectResult;
+                var result = await Subject.HandleAsync(new FakeResultCommand()) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);
@@ -37,7 +37,7 @@ namespace CommandQuery.AspNetCore.Tests
             {
                 FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Throws(new CommandProcessorException("fail"));
 
-                var result = await Subject.Handle(new FakeResultCommand());
+                var result = await Subject.HandleAsync(new FakeResultCommand());
 
                 result.ShouldBeError("fail", 400);
             }
@@ -46,7 +46,7 @@ namespace CommandQuery.AspNetCore.Tests
             {
                 FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Throws(new CommandException("invalid"));
 
-                var result = await Subject.Handle(new FakeResultCommand());
+                var result = await Subject.HandleAsync(new FakeResultCommand());
 
                 result.ShouldBeError("invalid", 400);
             }
@@ -55,7 +55,7 @@ namespace CommandQuery.AspNetCore.Tests
             {
                 FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(new FakeResultCommand());
+                var result = await Subject.HandleAsync(new FakeResultCommand());
 
                 result.ShouldBeError("fail", 500);
             }

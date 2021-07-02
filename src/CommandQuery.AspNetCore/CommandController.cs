@@ -8,7 +8,8 @@ namespace CommandQuery.AspNetCore
 {
     [ApiController]
     [Route("api/command/[controller]")]
-    internal class CommandController<TCommand> : ControllerBase where TCommand : ICommand
+    internal class CommandController<TCommand> : ControllerBase
+        where TCommand : ICommand
     {
         private readonly ICommandProcessor _commandProcessor;
         private readonly ILogger<CommandController<TCommand>> _logger;
@@ -16,8 +17,8 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandController&lt;TCommand&gt;" /> class.
         /// </summary>
-        /// <param name="commandProcessor">An <see cref="ICommandProcessor" /></param>
-        /// <param name="logger">An <see cref="ILogger" /></param>
+        /// <param name="commandProcessor">An <see cref="ICommandProcessor" />.</param>
+        /// <param name="logger">An <see cref="ILogger" />.</param>
         public CommandController(ICommandProcessor commandProcessor, ILogger<CommandController<TCommand>> logger)
         {
             _commandProcessor = commandProcessor;
@@ -27,14 +28,14 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Handle a command.
         /// </summary>
-        /// <param name="command">The command</param>
-        /// <returns>200, 400 or 500</returns>
+        /// <param name="command">The command.</param>
+        /// <returns>200, 400 or 500.</returns>
         [HttpPost]
-        public async Task<IActionResult> Handle(TCommand command)
+        public async Task<IActionResult> HandleAsync(TCommand command)
         {
             try
             {
-                await _commandProcessor.ProcessAsync(command);
+                await _commandProcessor.ProcessAsync(command).ConfigureAwait(false);
 
                 return Ok();
             }

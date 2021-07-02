@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using System;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace CommandQuery.AspNetCore
 {
@@ -10,19 +11,29 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Applies the naming convention of controllers for commands and queries.
         /// </summary>
-        /// <param name="model">The <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel" />.</param>
-        public void Apply(ControllerModel model)
+        /// <param name="controller">The <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel" />.</param>
+        public void Apply(ControllerModel controller)
         {
-            if (!model.ControllerType.IsGenericType) return;
+            if (controller is null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
 
-            var openControllerType = model.ControllerType.GetGenericTypeDefinition();
+            if (!controller.ControllerType.IsGenericType)
+            {
+                return;
+            }
+
+            var openControllerType = controller.ControllerType.GetGenericTypeDefinition();
 
             if (openControllerType != typeof(CommandController<>)
                 && openControllerType != typeof(CommandWithResultController<,>)
                 && openControllerType != typeof(QueryController<,>))
+            {
                 return;
+            }
 
-            model.ControllerName = model.ControllerType.GenericTypeArguments[0].Name;
+            controller.ControllerName = controller.ControllerType.GenericTypeArguments[0].Name;
         }
     }
 }

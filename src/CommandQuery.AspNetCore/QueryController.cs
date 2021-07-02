@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CommandQuery.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,8 @@ namespace CommandQuery.AspNetCore
     /// </summary>
     [ApiController]
     [Route("api/query/[controller]")]
-    internal class QueryController<TQuery, TResult> : ControllerBase where TQuery : IQuery<TResult>
+    internal class QueryController<TQuery, TResult> : ControllerBase
+        where TQuery : IQuery<TResult>
     {
         private readonly IQueryProcessor _queryProcessor;
         private readonly ILogger<QueryController<TQuery, TResult>> _logger;
@@ -19,8 +20,8 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryController&lt;TQuery, TResult&gt;" /> class.
         /// </summary>
-        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
-        /// <param name="logger">An <see cref="ILogger" /></param>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor" />.</param>
+        /// <param name="logger">An <see cref="ILogger" />.</param>
         public QueryController(IQueryProcessor queryProcessor, ILogger<QueryController<TQuery, TResult>> logger)
         {
             _queryProcessor = queryProcessor;
@@ -30,14 +31,14 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Handle a query.
         /// </summary>
-        /// <param name="query">The query</param>
-        /// <returns>The result + 200, 400 or 500</returns>
+        /// <param name="query">The query.</param>
+        /// <returns>The result + 200, 400 or 500.</returns>
         [HttpPost]
-        public async Task<IActionResult> HandlePost(TQuery query)
+        public async Task<IActionResult> HandlePostAsync(TQuery query)
         {
             try
             {
-                var result = await _queryProcessor.ProcessAsync(query);
+                var result = await _queryProcessor.ProcessAsync(query).ConfigureAwait(false);
 
                 return Ok(result);
             }
@@ -52,14 +53,14 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Handle a query.
         /// </summary>
-        /// <param name="query">The query</param>
-        /// <returns>The result + 200, 400 or 500</returns>
+        /// <param name="query">The query.</param>
+        /// <returns>The result + 200, 400 or 500.</returns>
         [HttpGet]
-        public async Task<IActionResult> HandleGet([FromQuery] TQuery query)
+        public async Task<IActionResult> HandleGetAsync([FromQuery] TQuery query)
         {
             try
             {
-                var result = await _queryProcessor.ProcessAsync(query);
+                var result = await _queryProcessor.ProcessAsync(query).ConfigureAwait(false);
 
                 return Ok(result);
             }
