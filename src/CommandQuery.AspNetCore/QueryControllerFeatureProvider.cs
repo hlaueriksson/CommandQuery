@@ -30,6 +30,7 @@ namespace CommandQuery.AspNetCore
         /// <param name="parts">The list of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/> instances in the application.
         /// </param>
         /// <param name="feature">The feature instance to populate.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="feature"/> is <see langword="null"/>.</exception>
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
             if (feature is null)

@@ -18,6 +18,8 @@ namespace CommandQuery
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
         /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
         public static async Task<CommandResult> ProcessWithOrWithoutResultAsync(this ICommandProcessor commandProcessor, string commandName, string json)
         {
             return await commandProcessor.ProcessWithOrWithoutResultAsync(commandName, JObject.Parse(json)).ConfigureAwait(false);
@@ -30,6 +32,8 @@ namespace CommandQuery
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
         /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
         public static async Task<CommandResult> ProcessWithOrWithoutResultAsync(this ICommandProcessor commandProcessor, string commandName, JObject json)
         {
             if (commandProcessor is null)
@@ -58,6 +62,8 @@ namespace CommandQuery
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
         public static async Task ProcessAsync(this ICommandProcessor commandProcessor, string commandName, string json)
         {
             await commandProcessor.ProcessAsync(commandName, JObject.Parse(json)).ConfigureAwait(false);
@@ -70,6 +76,8 @@ namespace CommandQuery
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
         public static async Task ProcessAsync(this ICommandProcessor commandProcessor, string commandName, JObject json)
         {
             if (commandProcessor is null)
@@ -90,6 +98,8 @@ namespace CommandQuery
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
         /// <returns>The result of the command.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
         public static async Task<TResult> ProcessWithResultAsync<TResult>(this ICommandProcessor commandProcessor, string commandName, string json)
         {
             return await commandProcessor.ProcessWithResultAsync<TResult>(commandName, JObject.Parse(json)).ConfigureAwait(false);
@@ -103,6 +113,8 @@ namespace CommandQuery
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
         /// <returns>The result of the command.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
         public static async Task<TResult> ProcessWithResultAsync<TResult>(this ICommandProcessor commandProcessor, string commandName, JObject json)
         {
             if (commandProcessor is null)

@@ -34,6 +34,7 @@ namespace CommandQuery.AWSLambda
         /// <param name="request">An <see cref="APIGatewayProxyRequest"/>.</param>
         /// <param name="context">An <see cref="ILambdaContext"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaContext context)
         {
             context?.Logger.LogLine($"Handle {queryName}");

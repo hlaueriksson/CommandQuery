@@ -22,6 +22,8 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query.</param>
         /// <param name="json">The JSON representation of the query.</param>
         /// <returns>The result of the query.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string json)
         {
             return await queryProcessor.ProcessAsync<TResult>(queryName, JObject.Parse(json)).ConfigureAwait(false);
@@ -35,6 +37,8 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query.</param>
         /// <param name="json">The JSON representation of the query.</param>
         /// <returns>The result of the query.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, JObject json)
         {
             if (queryProcessor is null)
@@ -72,6 +76,8 @@ namespace CommandQuery
         /// <param name="queryName">The name of the query.</param>
         /// <param name="dictionary">The key/value representation of the query.</param>
         /// <returns>The result of the query.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, IDictionary<string, IEnumerable<string>> dictionary)
         {
             if (queryProcessor is null)
