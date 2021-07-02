@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.DependencyInjection
@@ -11,8 +11,8 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Initializes an <see cref="IQueryProcessor"/> from an <see cref="Assembly"/> with queries and handlers.
         /// </summary>
-        /// <param name="assembly">An <see cref="Assembly"/> with queries and handlers</param>
-        /// <returns>An <see cref="IQueryProcessor"/></returns>
+        /// <param name="assembly">An <see cref="Assembly"/> with queries and handlers.</param>
+        /// <returns>An <see cref="IQueryProcessor"/>.</returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly assembly)
         {
             return new ServiceCollection().GetQueryProcessor(assembly);
@@ -21,8 +21,8 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Initializes an <see cref="IQueryProcessor"/> from assemblies with queries and handlers.
         /// </summary>
-        /// <param name="assemblies">Assemblies with queries and handlers</param>
-        /// <returns>An <see cref="IQueryProcessor"/></returns>
+        /// <param name="assemblies">Assemblies with queries and handlers.</param>
+        /// <returns>An <see cref="IQueryProcessor"/>.</returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies)
         {
             return new ServiceCollection().GetQueryProcessor(assemblies);
@@ -31,9 +31,9 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Initializes an <see cref="IQueryProcessor"/> from an <see cref="Assembly"/> with queries and handlers.
         /// </summary>
-        /// <param name="assembly">An <see cref="Assembly"/> with queries and handlers</param>
-        /// <param name="services">A service collection for query handlers</param>
-        /// <returns>An <see cref="IQueryProcessor"/></returns>
+        /// <param name="assembly">An <see cref="Assembly"/> with queries and handlers.</param>
+        /// <param name="services">A service collection for query handlers.</param>
+        /// <returns>An <see cref="IQueryProcessor"/>.</returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly assembly, IServiceCollection services)
         {
             return services.GetQueryProcessor(assembly);
@@ -42,9 +42,9 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Initializes an <see cref="IQueryProcessor"/> from assemblies with queries and handlers.
         /// </summary>
-        /// <param name="assemblies">Assemblies with queries and handlers</param>
-        /// <param name="services">A service collection for query handlers</param>
-        /// <returns>An <see cref="IQueryProcessor"/></returns>
+        /// <param name="assemblies">Assemblies with queries and handlers.</param>
+        /// <param name="services">A service collection for query handlers.</param>
+        /// <returns>An <see cref="IQueryProcessor"/>.</returns>
         public static IQueryProcessor GetQueryProcessor(this Assembly[] assemblies, IServiceCollection services)
         {
             return services.GetQueryProcessor(assemblies);
@@ -53,9 +53,9 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Initializes an <see cref="IQueryProcessor"/> from assemblies with queries and handlers.
         /// </summary>
-        /// <param name="services">A service collection for query handlers</param>
-        /// <param name="assemblies">Assemblies with queries and handlers</param>
-        /// <returns></returns>
+        /// <param name="services">A service collection for query handlers.</param>
+        /// <param name="assemblies">Assemblies with queries and handlers.</param>
+        /// <returns>An <see cref="IQueryProcessor"/>.</returns>
         public static IQueryProcessor GetQueryProcessor(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddQueries(assemblies);

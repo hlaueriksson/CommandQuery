@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using CommandQuery.Internal;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +13,9 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Adds command handlers to the <see cref="IServiceCollection"/>.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/></param>
-        /// <param name="assemblies">Assemblies with command handlers</param>
-        /// <returns>The <see cref="IServiceCollection"/></returns>
+        /// <param name="services">The <see cref="IServiceCollection"/>.</param>
+        /// <param name="assemblies">Assemblies with command handlers.</param>
+        /// <returns>The <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddCommands(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddTransient<ICommandProcessor, CommandProcessor>();
@@ -30,9 +30,9 @@ namespace CommandQuery.DependencyInjection
         /// <summary>
         /// Adds query handlers to the <see cref="IServiceCollection"/>.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/></param>
-        /// <param name="assemblies">Assemblies with query handlers</param>
-        /// <returns>The <see cref="IServiceCollection"/></returns>
+        /// <param name="services">The <see cref="IServiceCollection"/>.</param>
+        /// <param name="assemblies">Assemblies with query handlers.</param>
+        /// <returns>The <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddQueries(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddTransient<IQueryProcessor, QueryProcessor>();

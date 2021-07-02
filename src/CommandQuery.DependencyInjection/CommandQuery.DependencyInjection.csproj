@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
@@ -23,6 +23,8 @@
   <ItemGroup>
     <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
+
+  <Import Project="../../Analyzers.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
