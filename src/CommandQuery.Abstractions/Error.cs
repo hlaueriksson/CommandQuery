@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace CommandQuery
 {
     /// <summary>
-    /// Represents an error that occured during the processing of a command or query.
+    /// Represents an error that occurred during the processing of a command or query.
     /// </summary>
-    public class Error
+#pragma warning disable CA1716 // Identifiers should not match keywords
+    public class Error // TODO: IError?
+#pragma warning restore CA1716 // Identifiers should not match keywords
     {
         /// <summary>
         /// A message that describes the error.
