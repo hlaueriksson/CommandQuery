@@ -35,7 +35,7 @@ namespace CommandQuery.AWSLambda.Tests
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).ReturnsAsync(expected);
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Context.Object);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeEmpty();
@@ -45,7 +45,7 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Context.Object);
 
                 result.ShouldBeError("fail", 400);
             }
@@ -54,7 +54,7 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Context.Object);
 
                 result.ShouldBeError("invalid", 400);
             }
@@ -63,7 +63,7 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Context.Object);
 
                 result.ShouldBeError("fail", 500);
             }
@@ -79,7 +79,7 @@ namespace CommandQuery.AWSLambda.Tests
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).ReturnsAsync(expected);
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Context.Object);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeEmpty();

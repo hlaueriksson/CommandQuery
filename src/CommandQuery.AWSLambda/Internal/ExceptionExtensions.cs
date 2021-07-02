@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using Amazon.Lambda.APIGatewayEvents;
@@ -15,7 +15,7 @@ namespace CommandQuery.AWSLambda.Internal
             {
                 StatusCode = (int)HttpStatusCode.BadRequest,
                 Body = JsonConvert.SerializeObject(exception.ToError()),
-                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
             };
         }
 
@@ -25,7 +25,7 @@ namespace CommandQuery.AWSLambda.Internal
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
                 Body = JsonConvert.SerializeObject(exception.ToError()),
-                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
             };
         }
     }

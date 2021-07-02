@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,7 +21,7 @@ namespace CommandQuery.AWSLambda
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFunction" /> class.
         /// </summary>
-        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor" />.</param>
         public QueryFunction(IQueryProcessor queryProcessor)
         {
             _queryProcessor = queryProcessor;
@@ -30,31 +30,36 @@ namespace CommandQuery.AWSLambda
         /// <summary>
         /// Handle a query.
         /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <param name="request">An <see cref="APIGatewayProxyRequest" /></param>
-        /// <param name="context">An <see cref="ILambdaContext" /></param>
-        /// <returns>The result + 200, 400 or 500</returns>
-        public async Task<APIGatewayProxyResponse> Handle(string queryName, APIGatewayProxyRequest request, ILambdaContext context)
+        /// <param name="queryName">The name of the query.</param>
+        /// <param name="request">An <see cref="APIGatewayProxyRequest" />.</param>
+        /// <param name="context">An <see cref="ILambdaContext" />.</param>
+        /// <returns>The result + 200, 400 or 500.</returns>
+        public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogLine($"Handle {queryName}");
+            context?.Logger.LogLine($"Handle {queryName}");
+
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
 
             try
             {
                 var result = request.HttpMethod == "GET"
-                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.MultiValueQueryStringParameters))
-                    : await _queryProcessor.ProcessAsync<object>(queryName, request.Body);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.MultiValueQueryStringParameters)).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, request.Body).ConfigureAwait(false);
 
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.OK,
                     Body = JsonConvert.SerializeObject(result),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
                 };
             }
             catch (Exception exception)
             {
                 var payload = request.HttpMethod == "GET" ? request.MultiValueQueryStringParameters.ToJson() : request.Body;
-                context.Logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
+                context?.Logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
             }
