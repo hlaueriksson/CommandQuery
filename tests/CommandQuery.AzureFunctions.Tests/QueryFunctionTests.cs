@@ -44,7 +44,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(QueryName, Req, Logger) as OkObjectResult;
+                var result = await Subject.HandleAsync(QueryName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);
@@ -54,7 +54,7 @@ namespace CommandQuery.AzureFunctions.Tests
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
 
-                var result = await Subject.Handle(QueryName, Req, Logger);
+                var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
                 result.ShouldBeError("fail", 400);
             }
@@ -63,7 +63,7 @@ namespace CommandQuery.AzureFunctions.Tests
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
 
-                var result = await Subject.Handle(QueryName, Req, Logger);
+                var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
                 result.ShouldBeError("invalid", 400);
             }
@@ -72,7 +72,7 @@ namespace CommandQuery.AzureFunctions.Tests
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(QueryName, Req, Logger);
+                var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
                 result.ShouldBeError("fail", 500);
             }
@@ -92,7 +92,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(QueryName, Req, Logger) as OkObjectResult;
+                var result = await Subject.HandleAsync(QueryName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);

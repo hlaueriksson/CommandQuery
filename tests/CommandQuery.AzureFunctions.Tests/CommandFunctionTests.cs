@@ -38,7 +38,7 @@ namespace CommandQuery.AzureFunctions.Tests
 
             async Task should_invoke_the_command_processor()
             {
-                var result = await Subject.Handle(CommandName, Req, Logger) as OkResult;
+                var result = await Subject.HandleAsync(CommandName, Req, Logger) as OkResult;
 
                 result.StatusCode.Should().Be(200);
             }
@@ -47,7 +47,7 @@ namespace CommandQuery.AzureFunctions.Tests
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
 
-                var result = await Subject.Handle(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
                 result.ShouldBeError("fail", 400);
             }
@@ -56,7 +56,7 @@ namespace CommandQuery.AzureFunctions.Tests
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
 
-                var result = await Subject.Handle(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
                 result.ShouldBeError("invalid", 400);
             }
@@ -65,7 +65,7 @@ namespace CommandQuery.AzureFunctions.Tests
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
                 result.ShouldBeError("fail", 500);
             }
@@ -82,7 +82,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 var expected = new FakeResult();
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(CommandName, Req, Logger) as OkObjectResult;
+                var result = await Subject.HandleAsync(CommandName, Req, Logger) as OkObjectResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);
