@@ -18,10 +18,10 @@ namespace CommandQuery.AspNetCore
         private readonly ILogger<QueryController<TQuery, TResult>> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryController{TQuery,TResult}" /> class.
+        /// Initializes a new instance of the <see cref="QueryController{TQuery,TResult}"/> class.
         /// </summary>
-        /// <param name="queryProcessor">An <see cref="IQueryProcessor" />.</param>
-        /// <param name="logger">An <see cref="ILogger" />.</param>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
+        /// <param name="logger">An <see cref="ILogger"/>.</param>
         public QueryController(IQueryProcessor queryProcessor, ILogger<QueryController<TQuery, TResult>> logger)
         {
             _queryProcessor = queryProcessor;

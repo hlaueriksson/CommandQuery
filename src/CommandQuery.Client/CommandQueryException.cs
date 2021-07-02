@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace CommandQuery.Client
 {
     /// <summary>
-    /// Represents errors that occur when receiving HTTP responses in the <see cref="CommandClient" /> and <see cref="QueryClient" />.
+    /// Represents errors that occur when receiving HTTP responses in the <see cref="CommandClient"/> and <see cref="QueryClient"/>.
     /// </summary>
     [Serializable]
     public class CommandQueryException : Exception
@@ -34,7 +34,7 @@ namespace CommandQuery.Client
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandQueryException" /> class with a specified error message and <see cref="CommandQuery.Error" />.
+        /// Initializes a new instance of the <see cref="CommandQueryException"/> class with a specified error message and <see cref="CommandQuery.Error"/>.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="error">The error that occurred during the processing of a command or query.</param>

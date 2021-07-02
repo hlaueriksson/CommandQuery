@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace CommandQuery.Exceptions
 {
     /// <summary>
-    /// Represents errors that occur during command processing in the <see cref="CommandProcessor" />.
+    /// Represents errors that occur during command processing in the <see cref="CommandProcessor"/>.
     /// </summary>
     [Serializable]
     public sealed class CommandProcessorException : Exception

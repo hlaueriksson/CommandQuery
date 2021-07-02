@@ -15,7 +15,7 @@ namespace CommandQuery
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryProcessor" /> class.
+        /// Initializes a new instance of the <see cref="QueryProcessor"/> class.
         /// </summary>
         /// <param name="typeCollection">A collection of supported queries.</param>
         /// <param name="serviceProvider">A service provider with supported query handlers.</param>

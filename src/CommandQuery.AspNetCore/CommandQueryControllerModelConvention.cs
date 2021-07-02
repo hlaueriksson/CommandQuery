@@ -11,7 +11,7 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Applies the naming convention of controllers for commands and queries.
         /// </summary>
-        /// <param name="controller">The <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel" />.</param>
+        /// <param name="controller">The <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel"/>.</param>
         public void Apply(ControllerModel controller)
         {
             if (controller is null)

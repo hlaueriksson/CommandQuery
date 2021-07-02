@@ -11,7 +11,7 @@ namespace CommandQuery
         public static readonly CommandResult None = new();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandResult" /> class that wraps a command result.
+        /// Initializes a new instance of the <see cref="CommandResult"/> class that wraps a command result.
         /// </summary>
         /// <param name="value">The result of an <see cref="ICommand{TResult}"/>.</param>
         public CommandResult(object value)

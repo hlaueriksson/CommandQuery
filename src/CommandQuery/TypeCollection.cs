@@ -17,7 +17,7 @@ namespace CommandQuery
         private Dictionary<string, Type> _types;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeCollection" /> class.
+        /// Initializes a new instance of the <see cref="TypeCollection"/> class.
         /// </summary>
         /// <param name="baseType">The base type for commands or queries.</param>
         /// <param name="assemblies">The assemblies with commands or queries to support.</param>
@@ -28,7 +28,7 @@ namespace CommandQuery
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeCollection" /> class.
+        /// Initializes a new instance of the <see cref="TypeCollection"/> class.
         /// </summary>
         /// <param name="baseTypes">The base types for commands or queries.</param>
         /// <param name="assemblies">The assemblies with commands or queries to support.</param>

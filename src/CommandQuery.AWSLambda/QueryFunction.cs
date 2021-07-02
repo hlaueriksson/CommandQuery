@@ -19,9 +19,9 @@ namespace CommandQuery.AWSLambda
         private readonly IQueryProcessor _queryProcessor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryFunction" /> class.
+        /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
-        /// <param name="queryProcessor">An <see cref="IQueryProcessor" />.</param>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
         public QueryFunction(IQueryProcessor queryProcessor)
         {
             _queryProcessor = queryProcessor;
@@ -31,8 +31,8 @@ namespace CommandQuery.AWSLambda
         /// Handle a query.
         /// </summary>
         /// <param name="queryName">The name of the query.</param>
-        /// <param name="request">An <see cref="APIGatewayProxyRequest" />.</param>
-        /// <param name="context">An <see cref="ILambdaContext" />.</param>
+        /// <param name="request">An <see cref="APIGatewayProxyRequest"/>.</param>
+        /// <param name="context">An <see cref="ILambdaContext"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaContext context)
         {

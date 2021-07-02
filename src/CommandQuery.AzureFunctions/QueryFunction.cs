@@ -29,8 +29,8 @@ namespace CommandQuery.AzureFunctions
         /// Handle a query.
         /// </summary>
         /// <param name="queryName">The name of the query</param>
-        /// <param name="req">A <see cref="HttpRequestMessage" /></param>
-        /// <param name="log">A <see cref="TraceWriter" /></param>
+        /// <param name="req">A <see cref="HttpRequestMessage"/></param>
+        /// <param name="log">A <see cref="TraceWriter"/></param>
         /// <returns>The result + 200, 400 or 500</returns>
         Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log);
 #endif
@@ -40,8 +40,8 @@ namespace CommandQuery.AzureFunctions
         /// Handle a query.
         /// </summary>
         /// <param name="queryName">The name of the query</param>
-        /// <param name="req">A <see cref="HttpRequest" /></param>
-        /// <param name="log">An <see cref="ILogger" /></param>
+        /// <param name="req">A <see cref="HttpRequest"/></param>
+        /// <param name="log">An <see cref="ILogger"/></param>
         /// <returns>The result + 200, 400 or 500</returns>
         Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log);
 #endif
@@ -55,9 +55,9 @@ namespace CommandQuery.AzureFunctions
         private readonly IQueryProcessor _queryProcessor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryFunction" /> class.
+        /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
-        /// <param name="queryProcessor">An <see cref="IQueryProcessor" /></param>
+        /// <param name="queryProcessor">An <see cref="IQueryProcessor"/></param>
         public QueryFunction(IQueryProcessor queryProcessor)
         {
             _queryProcessor = queryProcessor;
@@ -68,8 +68,8 @@ namespace CommandQuery.AzureFunctions
         /// Handle a query.
         /// </summary>
         /// <param name="queryName">The name of the query</param>
-        /// <param name="req">A <see cref="HttpRequestMessage" /></param>
-        /// <param name="log">A <see cref="TraceWriter" /></param>
+        /// <param name="req">A <see cref="HttpRequestMessage"/></param>
+        /// <param name="log">A <see cref="TraceWriter"/></param>
         /// <returns>The result + 200, 400 or 500</returns>
         public async Task<HttpResponseMessage> Handle(string queryName, HttpRequestMessage req, TraceWriter log)
         {
@@ -105,8 +105,8 @@ namespace CommandQuery.AzureFunctions
         /// Handle a query.
         /// </summary>
         /// <param name="queryName">The name of the query</param>
-        /// <param name="req">A <see cref="HttpRequest" /></param>
-        /// <param name="log">An <see cref="ILogger" /></param>
+        /// <param name="req">A <see cref="HttpRequest"/></param>
+        /// <param name="log">An <see cref="ILogger"/></param>
         /// <returns>The result + 200, 400 or 500</returns>
         public async Task<IActionResult> Handle(string queryName, HttpRequest req, ILogger log)
         {

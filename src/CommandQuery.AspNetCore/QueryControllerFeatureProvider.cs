@@ -16,7 +16,7 @@ namespace CommandQuery.AspNetCore
         private readonly Type[] _types;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryControllerFeatureProvider" /> class.
+        /// Initializes a new instance of the <see cref="QueryControllerFeatureProvider"/> class.
         /// </summary>
         /// <param name="assemblies">The assemblies with queries to create controllers for.</param>
         public QueryControllerFeatureProvider(params Assembly[] assemblies)
@@ -27,7 +27,7 @@ namespace CommandQuery.AspNetCore
         /// <summary>
         /// Populates the list of controller types in an MVC application with controllers for all queries found in the provided assemblies.
         /// </summary>
-        /// <param name="parts">The list of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart" /> instances in the application.
+        /// <param name="parts">The list of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/> instances in the application.
         /// </param>
         /// <param name="feature">The feature instance to populate.</param>
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)

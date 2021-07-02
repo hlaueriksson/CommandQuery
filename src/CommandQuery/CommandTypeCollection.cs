@@ -10,7 +10,7 @@ namespace CommandQuery
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandTypeCollection" /> class.
+        /// Initializes a new instance of the <see cref="CommandTypeCollection"/> class.
         /// </summary>
         /// <param name="assemblies">The assemblies with commands to support.</param>
         public CommandTypeCollection(params Assembly[] assemblies) : base(new[] { typeof(ICommand), typeof(ICommand<>) }, assemblies)

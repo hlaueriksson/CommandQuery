@@ -12,7 +12,7 @@ namespace CommandQuery.Client
     public abstract class BaseClient
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseClient" /> class.
+        /// Initializes a new instance of the <see cref="BaseClient"/> class.
         /// </summary>
         /// <param name="baseUrl">The base URL to the API.</param>
         /// <param name="timeoutInSeconds">The timeout for requests.</param>
@@ -25,10 +25,10 @@ namespace CommandQuery.Client
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseClient" /> class.
+        /// Initializes a new instance of the <see cref="BaseClient"/> class.
         /// </summary>
         /// <param name="baseUrl">The base URL to the API.</param>
-        /// <param name="configAction">Configuration for the <see cref="HttpClient" />.</param>
+        /// <param name="configAction">Configuration for the <see cref="HttpClient"/>.</param>
         protected BaseClient(string baseUrl, Action<HttpClient> configAction) : this(baseUrl)
         {
             if (configAction is null)
