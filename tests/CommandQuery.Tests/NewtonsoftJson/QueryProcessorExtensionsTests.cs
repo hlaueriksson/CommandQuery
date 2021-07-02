@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
+using CommandQuery.NewtonsoftJson;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace CommandQuery.Tests.Extensions
+namespace CommandQuery.Tests.NewtonsoftJson
 {
     public class QueryProcessorExtensionsTests
     {

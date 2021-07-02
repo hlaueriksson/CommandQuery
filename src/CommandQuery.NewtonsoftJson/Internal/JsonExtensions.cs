@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace CommandQuery.Internal
+namespace CommandQuery.NewtonsoftJson.Internal
 {
     internal static class JsonExtensions
     {

@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AWSLambda.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.AzureFunctions.Tests", "tests\CommandQuery.AzureFunctions.Tests\CommandQuery.AzureFunctions.Tests.csproj", "{BE082150-6F58-41C6-96F1-00F4FD827F4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Extensions", "src\CommandQuery.Extensions\CommandQuery.Extensions.csproj", "{C14B2EDE-E313-400E-A53C-96787CBBD1C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.NewtonsoftJson", "src\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj", "{C14B2EDE-E313-400E-A53C-96787CBBD1C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

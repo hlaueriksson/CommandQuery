@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using CommandQuery.Internal;
+using CommandQuery.NewtonsoftJson.Internal;
 using Newtonsoft.Json.Linq;
 
-namespace CommandQuery
+namespace CommandQuery.NewtonsoftJson
 {
     /// <summary>
     /// Extensions methods for <see cref="ICommandProcessor"/>.

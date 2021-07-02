@@ -1,4 +1,4 @@
-namespace CommandQuery
+namespace CommandQuery.NewtonsoftJson
 {
     /// <summary>
     /// Wraps a command result.

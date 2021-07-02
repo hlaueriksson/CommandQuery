@@ -1,11 +1,11 @@
 ﻿using System;
-using CommandQuery.Internal;
+using CommandQuery.NewtonsoftJson.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace CommandQuery.Tests.Extensions.Internal
+namespace CommandQuery.Tests.NewtonsoftJson.Internal
 {
     public class JsonExtensionsTests
     {
