@@ -76,18 +76,18 @@ namespace CommandQuery.Internal
                 case QueryException queryException:
                     return queryException.ToError();
                 default:
-                    return new Error { Message = exception.Message };
+                    return new Error(exception.Message);
             }
         }
 
         public static Error ToError(this CommandException exception)
         {
-            return new Error { Message = exception.Message, Details = GetDetails(exception) };
+            return new(exception.Message, GetDetails(exception));
         }
 
         public static Error ToError(this QueryException exception)
         {
-            return new Error { Message = exception.Message, Details = GetDetails(exception) };
+            return new(exception.Message, GetDetails(exception));
         }
 
         private static Dictionary<string, object> GetDetails(Exception exception)
