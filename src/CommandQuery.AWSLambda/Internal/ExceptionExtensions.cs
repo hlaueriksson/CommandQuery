@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.Internal;
-using Newtonsoft.Json;
 
 namespace CommandQuery.AWSLambda.Internal
 {
@@ -14,7 +14,7 @@ namespace CommandQuery.AWSLambda.Internal
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.BadRequest,
-                Body = JsonConvert.SerializeObject(exception.ToError()),
+                Body = JsonSerializer.Serialize(exception.ToError()),
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
             };
         }
@@ -24,7 +24,7 @@ namespace CommandQuery.AWSLambda.Internal
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
-                Body = JsonConvert.SerializeObject(exception.ToError()),
+                Body = JsonSerializer.Serialize(exception.ToError()),
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
             };
         }

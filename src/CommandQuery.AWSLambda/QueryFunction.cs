@@ -8,7 +8,7 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Internal;
-using CommandQuery.NewtonsoftJson;
+using CommandQuery.SystemTextJson;
 
 namespace CommandQuery.AWSLambda
 {
