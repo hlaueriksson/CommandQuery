@@ -35,6 +35,6 @@ namespace CommandQuery
         /// </summary>
         /// <param name="commandName">The name of the command.</param>
         /// <returns>The command type.</returns>
-        Type GetCommandType(string commandName);
+        Type? GetCommandType(string commandName);
     }
 }

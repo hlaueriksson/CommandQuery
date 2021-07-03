@@ -12,6 +12,13 @@ namespace CommandQuery
         /// <summary>
         /// Initializes a new instance of the <see cref="Error"/> class.
         /// </summary>
+        public Error()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Error"/> class.
+        /// </summary>
         /// <param name="message">A message that describes the error.</param>
         public Error(string message)
         {
@@ -23,7 +30,7 @@ namespace CommandQuery
         /// </summary>
         /// <param name="message">A message that describes the error.</param>
         /// <param name="details">Details about the error.</param>
-        public Error(string message, Dictionary<string, object> details)
+        public Error(string message, Dictionary<string, object>? details)
         {
             Message = message;
             Details = details;
@@ -32,11 +39,11 @@ namespace CommandQuery
         /// <summary>
         /// A message that describes the error.
         /// </summary>
-        public string Message { get; }
+        public string? Message { get; set; }
 
         /// <summary>
         /// Details about the error.
         /// </summary>
-        public Dictionary<string, object>? Details { get; }
+        public Dictionary<string, object>? Details { get; set; }
     }
 }

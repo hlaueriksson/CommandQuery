@@ -28,6 +28,6 @@ namespace CommandQuery
         /// </summary>
         /// <param name="queryName">The name of the query.</param>
         /// <returns>The query type.</returns>
-        Type GetQueryType(string queryName);
+        Type? GetQueryType(string queryName);
     }
 }

@@ -90,7 +90,7 @@ namespace CommandQuery.Internal
             return new(exception.Message, GetDetails(exception));
         }
 
-        private static Dictionary<string, object> GetDetails(Exception exception)
+        private static Dictionary<string, object>? GetDetails(Exception exception)
         {
             var properties = exception.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.DeclaringType != typeof(Exception))

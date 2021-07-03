@@ -16,7 +16,7 @@ namespace CommandQuery
         /// <param name="key">The type key.</param>
         /// <returns>The type of command or query.</returns>
 #pragma warning disable CA1716 // Identifiers should not match keywords
-        Type GetType(string key);
+        Type? GetType(string key);
 #pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>

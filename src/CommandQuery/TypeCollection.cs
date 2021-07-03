@@ -14,7 +14,7 @@ namespace CommandQuery
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         private readonly Type[] _baseTypes;
-        private Dictionary<string, Type> _types;
+        private readonly Dictionary<string, Type> _types;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeCollection"/> class.
@@ -24,6 +24,7 @@ namespace CommandQuery
         protected TypeCollection(Type baseType, params Assembly[] assemblies)
         {
             _baseTypes = new[] { baseType };
+            _types = new Dictionary<string, Type>();
             LoadTypeCaches(assemblies);
         }
 
@@ -35,6 +36,7 @@ namespace CommandQuery
         protected TypeCollection(Type[] baseTypes, params Assembly[] assemblies)
         {
             _baseTypes = baseTypes;
+            _types = new Dictionary<string, Type>();
             LoadTypeCaches(assemblies);
         }
 
@@ -43,7 +45,7 @@ namespace CommandQuery
         /// </summary>
         /// <param name="key">The type key.</param>
         /// <returns>The type of command or query.</returns>
-        public Type GetType(string key)
+        public Type? GetType(string key)
         {
             return _types.ContainsKey(key) ? _types[key] : null;
         }
@@ -59,13 +61,9 @@ namespace CommandQuery
 
         private void LoadTypeCaches(params Assembly[] assemblies)
         {
-            _types = new Dictionary<string, Type>();
-
             foreach (var baseType in _baseTypes)
             {
-                var types = assemblies.SelectMany(assembly => assembly.GetTypesAssignableTo(baseType)).ToList();
-
-                foreach (var type in types)
+                foreach (var type in assemblies.SelectMany(assembly => assembly.GetTypesAssignableTo(baseType)).ToList())
                 {
                     _types.Add(type.Name, type);
                 }

@@ -6,7 +6,7 @@ namespace CommandQuery.Internal
 {
     internal static class ServiceProviderExtensions
     {
-        public static object GetSingleService(this IServiceProvider provider, Type serviceType)
+        public static object? GetSingleService(this IServiceProvider provider, Type serviceType)
         {
             if (provider is null)
             {
@@ -19,7 +19,7 @@ namespace CommandQuery.Internal
             }
 
             var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
-            var services = (IEnumerable<object>)provider.GetService(enumerableType);
+            var services = provider.GetService(enumerableType) as IEnumerable<object>;
 
             return services?.SingleOrDefault();
         }

@@ -41,7 +41,7 @@ namespace CommandQuery
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
 
-            dynamic handler = GetService(handlerType);
+            dynamic? handler = GetService(handlerType);
 
             if (handler is null)
             {
@@ -68,7 +68,7 @@ namespace CommandQuery
 
             var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResult));
 
-            dynamic handler = GetService(handlerType);
+            dynamic? handler = GetService(handlerType);
 
             if (handler is null)
             {
@@ -92,12 +92,12 @@ namespace CommandQuery
         /// </summary>
         /// <param name="commandName">The name of the command.</param>
         /// <returns>The command type.</returns>
-        public Type GetCommandType(string commandName)
+        public Type? GetCommandType(string commandName)
         {
             return _typeCollection.GetType(commandName);
         }
 
-        private object GetService(Type handlerType)
+        private object? GetService(Type handlerType)
         {
             try
             {
