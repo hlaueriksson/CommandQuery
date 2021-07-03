@@ -55,6 +55,6 @@ namespace CommandQuery.Client
         /// <summary>
         /// Represents an error that occurred during the processing of a command or query.
         /// </summary>
-        public Error Error { get; }
+        public Error? Error { get; }
     }
 }
