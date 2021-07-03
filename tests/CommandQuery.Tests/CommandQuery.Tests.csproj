@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\src\CommandQuery.Client\CommandQuery.Client.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj" />
+    <ProjectReference Include="..\..\src\CommandQuery.SystemTextJson\CommandQuery.SystemTextJson.csproj" />
     <ProjectReference Include="..\..\src\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>
 
