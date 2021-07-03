@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.NewtonsoftJson.Internal;
-using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.NewtonsoftJson
 {
@@ -25,21 +24,6 @@ namespace CommandQuery.NewtonsoftJson
         /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
         public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string json)
-        {
-            return await queryProcessor.ProcessAsync<TResult>(queryName, JObject.Parse(json)).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Process a query.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="queryProcessor">The query processor.</param>
-        /// <param name="queryName">The name of the query.</param>
-        /// <param name="json">The JSON representation of the query.</param>
-        /// <returns>The result of the query.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
-        /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
-        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, JObject json)
         {
             if (queryProcessor is null)
             {
@@ -102,7 +86,7 @@ namespace CommandQuery.NewtonsoftJson
             return await queryProcessor.ProcessAsync((dynamic)query);
         }
 
-        private static Dictionary<string, JToken>? GetQueryDictionary(IDictionary<string, IEnumerable<string>>? query, Type type)
+        private static Dictionary<string, object>? GetQueryDictionary(IDictionary<string, IEnumerable<string>>? query, Type type)
         {
             if (query is null)
             {
@@ -113,12 +97,12 @@ namespace CommandQuery.NewtonsoftJson
 
             return query.ToDictionary(g => g.Key, Token, StringComparer.OrdinalIgnoreCase);
 
-            JToken Token(KeyValuePair<string, IEnumerable<string>> kv)
+            object Token(KeyValuePair<string, IEnumerable<string>> kv)
             {
                 var property = properties.FirstOrDefault(x => string.Equals(x.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
                 var isEnumerable = property?.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property?.PropertyType);
 
-                return isEnumerable ? (JToken)new JArray(kv.Value) : kv.Value.FirstOrDefault();
+                return isEnumerable ? kv.Value : kv.Value.FirstOrDefault();
             }
         }
     }

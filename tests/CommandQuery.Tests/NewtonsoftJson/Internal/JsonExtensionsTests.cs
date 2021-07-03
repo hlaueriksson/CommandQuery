@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using CommandQuery.NewtonsoftJson.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.NewtonsoftJson.Internal
@@ -12,10 +11,9 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
         [LoFu, Test]
         public void SafeToObject()
         {
-            void should_return_an_object() => new JObject().SafeToObject(typeof(object)).Should().NotBeNull();
+            void should_return_an_object() => "{}".SafeToObject(typeof(object)).Should().NotBeNull();
 
-            void should_return_null_if_convertion_fails() =>
-                ((JObject)null).SafeToObject(typeof(object)).Should().BeNull();
+            void should_return_null_if_convertion_fails() => ((string)null).SafeToObject(typeof(object)).Should().BeNull();
         }
 
         [LoFu, Test]

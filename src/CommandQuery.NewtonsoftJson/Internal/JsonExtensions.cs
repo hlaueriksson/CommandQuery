@@ -1,16 +1,15 @@
 using System;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CommandQuery.NewtonsoftJson.Internal
 {
     internal static class JsonExtensions
     {
-        public static object? SafeToObject(this JObject json, Type type)
+        public static object? SafeToObject(this string json, Type type)
         {
             try
             {
-                return json.ToObject(type);
+                return JsonConvert.DeserializeObject(json, type);
             }
             catch
             {

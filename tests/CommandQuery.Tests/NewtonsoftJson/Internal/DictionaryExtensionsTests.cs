@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using CommandQuery.NewtonsoftJson.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.NewtonsoftJson.Internal
@@ -15,7 +14,7 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
         {
             void should_set_the_property_values()
             {
-                var subject = new Dictionary<string, JToken>
+                var subject = new Dictionary<string, object>
                 {
                     { "String", "Value" },
                     { "Int", "1" },
@@ -24,9 +23,9 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
                     { "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
                     { "NullableDouble", "2.1" },
                     { "UndefinedProperty", "should_not_be_used" },
-                    { "Array", new JArray("1", "2") },
-                    { "IEnumerable", new JArray("3", "4") },
-                    { "List", new JArray("5", "6") }
+                    { "Array", new[] { "1", "2" } },
+                    { "IEnumerable", new[] { "3", "4" } },
+                    { "List", new[] { "5", "6" } }
                 };
 
                 var result = subject.SafeToObject(typeof(FakeComplexQuery)) as FakeComplexQuery;
@@ -44,14 +43,14 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
 
             void should_return_null_if_dictionary_is_null()
             {
-                IDictionary<string, JToken> subject = null;
+                IDictionary<string, object> subject = null;
 
                 subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
             }
 
             void should_return_null_if_conversion_fails()
             {
-                var subject = new Dictionary<string, JToken>
+                var subject = new Dictionary<string, object>
                 {
                     { "Guid", "fail" }
                 };

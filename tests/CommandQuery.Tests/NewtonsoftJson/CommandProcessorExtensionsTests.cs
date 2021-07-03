@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.NewtonsoftJson;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Moq;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.NewtonsoftJson
@@ -31,9 +30,8 @@ namespace CommandQuery.Tests.NewtonsoftJson
             void should_throw_exception_if_the_command_type_is_not_found()
             {
                 var commandName = "NotFoundCommand";
-                var json = JObject.Parse("{}");
 
-                Subject.Awaiting(x => x.ProcessAsync(commandName, json)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(commandName, "{}")).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The command type 'NotFoundCommand' could not be found");
             }
@@ -42,7 +40,7 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var commandName = "FakeCommand";
 
-                Subject.Awaiting(x => x.ProcessAsync(commandName, (JObject)null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(commandName, null)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The json could not be converted to an object");
             }
@@ -68,9 +66,8 @@ namespace CommandQuery.Tests.NewtonsoftJson
             void should_throw_exception_if_the_command_type_is_not_found()
             {
                 var commandName = "NotFoundCommand";
-                var json = JObject.Parse("{}");
 
-                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(commandName, json)).Should()
+                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(commandName, "{}")).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The command type 'NotFoundCommand' could not be found");
             }
@@ -79,7 +76,7 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var commandName = "FakeResultCommand";
 
-                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(commandName, (JObject)null)).Should()
+                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(commandName, null)).Should()
                     .Throw<CommandProcessorException>()
                     .WithMessage("The json could not be converted to an object");
             }

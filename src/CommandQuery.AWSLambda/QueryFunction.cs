@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Internal;
 using CommandQuery.NewtonsoftJson;
-using CommandQuery.NewtonsoftJson.Internal;
-using Newtonsoft.Json;
 
 namespace CommandQuery.AWSLambda
 {
@@ -55,13 +54,13 @@ namespace CommandQuery.AWSLambda
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonConvert.SerializeObject(result),
+                    Body = JsonSerializer.Serialize(result),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
                 };
             }
             catch (Exception exception)
             {
-                var payload = request.HttpMethod == "GET" ? request.MultiValueQueryStringParameters.ToJson() : request.Body;
+                var payload = request.HttpMethod == "GET" ? JsonSerializer.Serialize(request.MultiValueQueryStringParameters) : request.Body;
                 context?.Logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();

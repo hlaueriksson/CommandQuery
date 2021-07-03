@@ -7,7 +7,6 @@ using CommandQuery.NewtonsoftJson;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Moq;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.NewtonsoftJson
@@ -34,9 +33,8 @@ namespace CommandQuery.Tests.NewtonsoftJson
             void should_throw_exception_if_the_query_type_is_not_found_for_the_json()
             {
                 var queryName = "NotFoundQuery";
-                var json = JObject.Parse("{}");
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, json)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, "{}")).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
@@ -45,7 +43,7 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (JObject)null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (string)null)).Should()
                     .Throw<ArgumentNullException>()
                     .WithMessage("Value cannot be null*json*");
             }

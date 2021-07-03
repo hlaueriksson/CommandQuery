@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
 using CommandQuery.Internal;
 using CommandQuery.NewtonsoftJson;
-using Newtonsoft.Json;
 
 namespace CommandQuery.AWSLambda
 {
@@ -56,7 +56,7 @@ namespace CommandQuery.AWSLambda
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonConvert.SerializeObject(result.Value),
+                    Body = JsonSerializer.Serialize(result.Value),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
                 };
             }
