@@ -26,6 +26,6 @@ namespace CommandQuery.NewtonsoftJson
         /// <summary>
         /// The result of an <see cref="ICommand{TResult}"/>.
         /// </summary>
-        public object Value { get; }
+        public object? Value { get; }
     }
 }

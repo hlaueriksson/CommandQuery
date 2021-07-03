@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -6,7 +6,7 @@ namespace CommandQuery.NewtonsoftJson.Internal
 {
     internal static class JsonExtensions
     {
-        public static object SafeToObject(this JObject json, Type type)
+        public static object? SafeToObject(this JObject json, Type type)
         {
             try
             {
@@ -18,7 +18,7 @@ namespace CommandQuery.NewtonsoftJson.Internal
             }
         }
 
-        public static string ToJson(this object payload)
+        public static string? ToJson(this object payload)
         {
             try
             {

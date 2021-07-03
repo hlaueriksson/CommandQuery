@@ -7,7 +7,7 @@ namespace CommandQuery.NewtonsoftJson.Internal
 {
     internal static class DictionaryExtensions
     {
-        public static object SafeToObject(this IDictionary<string, JToken> dictionary, Type type)
+        public static object? SafeToObject(this IDictionary<string, JToken>? dictionary, Type type)
         {
             if (dictionary is null)
             {

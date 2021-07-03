@@ -102,7 +102,7 @@ namespace CommandQuery.NewtonsoftJson
             return await queryProcessor.ProcessAsync((dynamic)query);
         }
 
-        private static Dictionary<string, JToken> GetQueryDictionary(IDictionary<string, IEnumerable<string>> query, Type type)
+        private static Dictionary<string, JToken>? GetQueryDictionary(IDictionary<string, IEnumerable<string>>? query, Type type)
         {
             if (query is null)
             {
