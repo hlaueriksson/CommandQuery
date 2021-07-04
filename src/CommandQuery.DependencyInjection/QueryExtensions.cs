@@ -60,7 +60,7 @@ namespace CommandQuery.DependencyInjection
         {
             services.AddQueries(assemblies);
 
-            return new QueryProcessor(new QueryTypeCollection(assemblies), services.BuildServiceProvider());
+            return new QueryProcessor(new QueryTypeProvider(assemblies), services.BuildServiceProvider());
         }
     }
 }

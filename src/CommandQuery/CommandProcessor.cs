@@ -11,17 +11,17 @@ namespace CommandQuery
     /// </summary>
     public class CommandProcessor : ICommandProcessor
     {
-        private readonly ITypeCollection _typeCollection;
+        private readonly ICommandTypeProvider _commandTypeProvider;
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandProcessor"/> class.
         /// </summary>
-        /// <param name="typeCollection">A collection of supported commands.</param>
+        /// <param name="commandTypeProvider">A provider of supported commands.</param>
         /// <param name="serviceProvider">A service provider with supported command handlers.</param>
-        public CommandProcessor(ICommandTypeCollection typeCollection, IServiceProvider serviceProvider)
+        public CommandProcessor(ICommandTypeProvider commandTypeProvider, IServiceProvider serviceProvider)
         {
-            _typeCollection = typeCollection;
+            _commandTypeProvider = commandTypeProvider;
             _serviceProvider = serviceProvider;
         }
 
@@ -84,7 +84,7 @@ namespace CommandQuery
         /// <returns>Supported command types.</returns>
         public IEnumerable<Type> GetCommandTypes()
         {
-            return _typeCollection.GetTypes();
+            return _commandTypeProvider.GetCommandTypes();
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace CommandQuery
         /// <returns>The command type.</returns>
         public Type? GetCommandType(string commandName)
         {
-            return _typeCollection.GetType(commandName);
+            return _commandTypeProvider.GetCommandType(commandName);
         }
 
         private object? GetService(Type handlerType)

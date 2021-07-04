@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
@@ -14,9 +14,9 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public async Task when_processing_the_query()
         {
-            FakeQueryTypeCollection = new Mock<IQueryTypeCollection>();
+            FakeQueryTypeProvider = new Mock<IQueryTypeProvider>();
             FakeServiceProvider = new Mock<IServiceProvider>();
-            Subject = new QueryProcessor(FakeQueryTypeCollection.Object, FakeServiceProvider.Object);
+            Subject = new QueryProcessor(FakeQueryTypeProvider.Object, FakeServiceProvider.Object);
 
             async Task should_invoke_the_correct_query_handler_and_return_a_result()
             {
@@ -58,22 +58,22 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public void when_get_query_types()
         {
-            FakeQueryTypeCollection = new Mock<IQueryTypeCollection>();
-            Subject = new QueryProcessor(FakeQueryTypeCollection.Object, null);
+            FakeQueryTypeProvider = new Mock<IQueryTypeProvider>();
+            Subject = new QueryProcessor(FakeQueryTypeProvider.Object, null);
 
             void should_get_all_types_from_the_cache()
             {
                 Subject.GetQueryTypes();
 
-                FakeQueryTypeCollection.Verify(x => x.GetTypes());
+                FakeQueryTypeProvider.Verify(x => x.GetQueryTypes());
             }
         }
 
         [LoFu, Test]
         public void when_get_query_type()
         {
-            FakeQueryTypeCollection = new Mock<IQueryTypeCollection>();
-            Subject = new QueryProcessor(FakeQueryTypeCollection.Object, null);
+            FakeQueryTypeProvider = new Mock<IQueryTypeProvider>();
+            Subject = new QueryProcessor(FakeQueryTypeProvider.Object, null);
 
             void should_get_the_type_from_the_cache()
             {
@@ -81,11 +81,11 @@ namespace CommandQuery.Tests
 
                 Subject.GetQueryType(queryName);
 
-                FakeQueryTypeCollection.Verify(x => x.GetType(queryName));
+                FakeQueryTypeProvider.Verify(x => x.GetQueryType(queryName));
             }
         }
 
-        Mock<IQueryTypeCollection> FakeQueryTypeCollection;
+        Mock<IQueryTypeProvider> FakeQueryTypeProvider;
         Mock<IServiceProvider> FakeServiceProvider;
         QueryProcessor Subject;
     }

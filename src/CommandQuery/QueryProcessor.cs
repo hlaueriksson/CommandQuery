@@ -11,17 +11,17 @@ namespace CommandQuery
     /// </summary>
     public class QueryProcessor : IQueryProcessor
     {
-        private readonly ITypeCollection _typeCollection;
+        private readonly IQueryTypeProvider _queryTypeProvider;
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryProcessor"/> class.
         /// </summary>
-        /// <param name="typeCollection">A collection of supported queries.</param>
+        /// <param name="queryTypeProvider">A provider of supported queries.</param>
         /// <param name="serviceProvider">A service provider with supported query handlers.</param>
-        public QueryProcessor(IQueryTypeCollection typeCollection, IServiceProvider serviceProvider)
+        public QueryProcessor(IQueryTypeProvider queryTypeProvider, IServiceProvider serviceProvider)
         {
-            _typeCollection = typeCollection;
+            _queryTypeProvider = queryTypeProvider;
             _serviceProvider = serviceProvider;
         }
 
@@ -58,7 +58,7 @@ namespace CommandQuery
         /// <returns>Supported query types.</returns>
         public IEnumerable<Type> GetQueryTypes()
         {
-            return _typeCollection.GetTypes();
+            return _queryTypeProvider.GetQueryTypes();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace CommandQuery
         /// <returns>The query type.</returns>
         public Type? GetQueryType(string queryName)
         {
-            return _typeCollection.GetType(queryName);
+            return _queryTypeProvider.GetQueryType(queryName);
         }
 
         private object? GetService(Type handlerType)

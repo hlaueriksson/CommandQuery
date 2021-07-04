@@ -7,21 +7,19 @@ using CommandQuery.Internal;
 namespace CommandQuery
 {
     /// <summary>
-    /// A collection of supported command or query types.
+    /// A provider of supported command or query types.
     /// </summary>
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public abstract class TypeCollection : ITypeCollection
-#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
+    public abstract class TypeProvider
     {
         private readonly Type[] _baseTypes;
         private readonly Dictionary<string, Type> _types;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeCollection"/> class.
+        /// Initializes a new instance of the <see cref="TypeProvider"/> class.
         /// </summary>
         /// <param name="baseType">The base type for commands or queries.</param>
         /// <param name="assemblies">The assemblies with commands or queries to support.</param>
-        protected TypeCollection(Type baseType, params Assembly[] assemblies)
+        protected TypeProvider(Type baseType, params Assembly[] assemblies)
         {
             _baseTypes = new[] { baseType };
             _types = new Dictionary<string, Type>();
@@ -29,11 +27,11 @@ namespace CommandQuery
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeCollection"/> class.
+        /// Initializes a new instance of the <see cref="TypeProvider"/> class.
         /// </summary>
         /// <param name="baseTypes">The base types for commands or queries.</param>
         /// <param name="assemblies">The assemblies with commands or queries to support.</param>
-        protected TypeCollection(Type[] baseTypes, params Assembly[] assemblies)
+        protected TypeProvider(Type[] baseTypes, params Assembly[] assemblies)
         {
             _baseTypes = baseTypes;
             _types = new Dictionary<string, Type>();
@@ -45,7 +43,7 @@ namespace CommandQuery
         /// </summary>
         /// <param name="key">The type key.</param>
         /// <returns>The type of command or query.</returns>
-        public Type? GetType(string key)
+        protected Type? GetType(string key)
         {
             return _types.ContainsKey(key) ? _types[key] : null;
         }
@@ -54,9 +52,9 @@ namespace CommandQuery
         /// Returns the types of supported commands or queries.
         /// </summary>
         /// <returns>Supported commands or queries.</returns>
-        public IEnumerable<Type> GetTypes()
+        protected IReadOnlyList<Type> GetTypes()
         {
-            return _types.Values;
+            return _types.Values.ToList().AsReadOnly();
         }
 
         private void LoadTypeCaches(params Assembly[] assemblies)

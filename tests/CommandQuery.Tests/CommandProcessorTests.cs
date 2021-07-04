@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
@@ -14,9 +14,9 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public async Task when_processing_the_command()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
             FakeServiceProvider = new Mock<IServiceProvider>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, FakeServiceProvider.Object);
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, FakeServiceProvider.Object);
 
             async Task should_invoke_the_correct_command_handler()
             {
@@ -56,9 +56,9 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public async Task when_processing_the_command_with_result()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
             FakeServiceProvider = new Mock<IServiceProvider>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, FakeServiceProvider.Object);
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, FakeServiceProvider.Object);
 
             async Task should_invoke_the_correct_command_handler_and_return_a_result()
             {
@@ -100,22 +100,22 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public void when_get_command_types()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, null);
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, null);
 
             void should_get_all_types_from_the_cache()
             {
                 Subject.GetCommandTypes();
 
-                FakeCommandTypeCollection.Verify(x => x.GetTypes());
+                FakeCommandTypeProvider.Verify(x => x.GetCommandTypes());
             }
         }
 
         [LoFu, Test]
         public void when_get_command_type()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, null);
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, null);
 
             void should_get_the_type_from_the_cache()
             {
@@ -123,11 +123,11 @@ namespace CommandQuery.Tests
 
                 Subject.GetCommandType(commandName);
 
-                FakeCommandTypeCollection.Verify(x => x.GetType(commandName));
+                FakeCommandTypeProvider.Verify(x => x.GetCommandType(commandName));
             }
         }
 
-        Mock<ICommandTypeCollection> FakeCommandTypeCollection;
+        Mock<ICommandTypeProvider> FakeCommandTypeProvider;
         Mock<IServiceProvider> FakeServiceProvider;
         CommandProcessor Subject;
     }
