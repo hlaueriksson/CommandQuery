@@ -22,7 +22,7 @@ namespace CommandQuery.Internal
             return type.IsClass && (baseType.IsAssignableFrom(type) || IsAssignableToGenericType(type, baseType));
         }
 
-        internal static Type GetResultType(this Type type, Type baseType)
+        internal static Type? GetResultType(this Type type, Type baseType)
         {
             return type.GetInterfaces()
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == baseType)

@@ -19,7 +19,7 @@ namespace CommandQuery.DependencyInjection
         public static IServiceCollection AddCommands(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddTransient<ICommandProcessor, CommandProcessor>();
-            services.AddTransient<ICommandTypeCollection>(provider => new CommandTypeCollection(assemblies));
+            services.AddTransient<ICommandTypeCollection>(_ => new CommandTypeCollection(assemblies));
 
             services.AddHandlers(typeof(ICommandHandler<>), assemblies);
             services.AddHandlers(typeof(ICommandHandler<,>), assemblies);
@@ -36,7 +36,7 @@ namespace CommandQuery.DependencyInjection
         public static IServiceCollection AddQueries(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddTransient<IQueryProcessor, QueryProcessor>();
-            services.AddTransient<IQueryTypeCollection>(provider => new QueryTypeCollection(assemblies));
+            services.AddTransient<IQueryTypeCollection>(_ => new QueryTypeCollection(assemblies));
 
             services.AddHandlers(typeof(IQueryHandler<,>), assemblies);
 

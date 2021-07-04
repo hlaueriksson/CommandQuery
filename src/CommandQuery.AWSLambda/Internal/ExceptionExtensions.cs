@@ -11,7 +11,7 @@ namespace CommandQuery.AWSLambda.Internal
     {
         public static APIGatewayProxyResponse ToBadRequest(this Exception exception)
         {
-            return new APIGatewayProxyResponse
+            return new()
             {
                 StatusCode = (int)HttpStatusCode.BadRequest,
                 Body = JsonSerializer.Serialize(exception.ToError()),
@@ -21,7 +21,7 @@ namespace CommandQuery.AWSLambda.Internal
 
         public static APIGatewayProxyResponse ToInternalServerError(this Exception exception)
         {
-            return new APIGatewayProxyResponse
+            return new()
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
                 Body = JsonSerializer.Serialize(exception.ToError()),

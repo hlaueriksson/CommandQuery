@@ -1,20 +1,20 @@
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CommandQuery.Client.Internal
 {
     internal static class HttpResponseMessageExtensions
     {
-        public static HttpResponseMessage EnsureSuccess(this HttpResponseMessage message)
+        public static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage message)
         {
-            if (!message.IsSuccessStatusCode)
+            if (message.IsSuccessStatusCode)
             {
-                var error = message.Content.ReadAsAsync<Error>()
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
-
-                throw new CommandQueryException(message.ToString(), error);
+                return message;
             }
 
-            return message;
+            var error = await message.Content.ReadAsAsync<Error>().ConfigureAwait(false);
+
+            throw new CommandQueryException(message.ToString(), error);
         }
     }
 }

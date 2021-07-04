@@ -21,9 +21,9 @@ namespace CommandQuery.Internal
         {
             switch (exception)
             {
-                case CommandProcessorException _:
+                case CommandProcessorException:
                     return 1001;
-                case CommandException _:
+                case CommandException:
                     return 1002;
                 default:
                     return 1003;
@@ -34,9 +34,9 @@ namespace CommandQuery.Internal
         {
             switch (exception)
             {
-                case QueryProcessorException _:
+                case QueryProcessorException:
                     return 2001;
-                case QueryException _:
+                case QueryException:
                     return 2002;
                 default:
                     return 2003;
@@ -47,8 +47,8 @@ namespace CommandQuery.Internal
         {
             switch (exception)
             {
-                case CommandProcessorException _:
-                case CommandException _:
+                case CommandProcessorException:
+                case CommandException:
                     return exception.GetType().Name;
                 default:
                     return "UnhandledCommandException";
@@ -59,8 +59,8 @@ namespace CommandQuery.Internal
         {
             switch (exception)
             {
-                case QueryProcessorException _:
-                case QueryException _:
+                case QueryProcessorException:
+                case QueryException:
                     return exception.GetType().Name;
                 default:
                     return "UnhandledQueryException";

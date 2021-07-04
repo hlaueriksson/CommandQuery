@@ -56,7 +56,7 @@ namespace CommandQuery.Client
 #pragma warning disable CA2234 // Pass system uri objects instead of strings
             var response = await Client.GetAsync(value.GetRequestUri()).ConfigureAwait(false);
 #pragma warning restore CA2234 // Pass system uri objects instead of strings
-            response.EnsureSuccess();
+            await response.EnsureSuccessAsync().ConfigureAwait(false);
             return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
         }
 
@@ -68,7 +68,7 @@ namespace CommandQuery.Client
         protected async Task BasePostAsync(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
-            response.EnsureSuccess();
+            await response.EnsureSuccessAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace CommandQuery.Client
         protected async Task<T> BasePostAsync<T>(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
-            response.EnsureSuccess();
+            await response.EnsureSuccessAsync().ConfigureAwait(false);
             return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
         }
     }

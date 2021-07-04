@@ -102,7 +102,7 @@ namespace CommandQuery.NewtonsoftJson
                 var property = properties.FirstOrDefault(x => string.Equals(x.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
                 var isEnumerable = property?.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property?.PropertyType);
 
-                return isEnumerable ? kv.Value : kv.Value.FirstOrDefault();
+                return (isEnumerable ? kv.Value : kv.Value.FirstOrDefault())!;
             }
         }
     }
