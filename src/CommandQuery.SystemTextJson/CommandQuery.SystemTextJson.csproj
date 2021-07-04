@@ -4,16 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>1.0.0</Version>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
-    <Description>Extensions for CommandQuery</Description>
+    <Description>System.Text.Json extensions for CommandQuery</Description>
     <PackageId>CommandQuery.SystemTextJson</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
