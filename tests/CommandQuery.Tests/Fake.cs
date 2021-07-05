@@ -146,4 +146,11 @@ namespace CommandQuery.Tests
             throw new NotImplementedException();
         }
     }
+
+    public class FakeError : IError
+    {
+        public string? Message { get; set; }
+
+        public Dictionary<string, object>? Details { get; set; }
+    }
 }

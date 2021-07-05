@@ -54,7 +54,7 @@ namespace CommandQuery.Tests.Client
 
     public static class FooCommandExceptionExtensions
     {
-        public static long? GetErrorCode(this Error error)
+        public static long? GetErrorCode(this IError error)
         {
             return error?.Details?["ErrorCode"] as long?;
         }

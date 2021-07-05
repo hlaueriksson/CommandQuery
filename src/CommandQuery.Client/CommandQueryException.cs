@@ -34,11 +34,11 @@ namespace CommandQuery.Client
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandQueryException"/> class with a specified error message and <see cref="CommandQuery.Error"/>.
+        /// Initializes a new instance of the <see cref="CommandQueryException"/> class with a specified error message and <see cref="IError"/>.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="error">The error that occurred during the processing of a command or query.</param>
-        public CommandQueryException(string message, Error error) : base(message)
+        public CommandQueryException(string message, IError error) : base(message)
         {
             Error = error;
         }
@@ -55,6 +55,6 @@ namespace CommandQuery.Client
         /// <summary>
         /// Represents an error that occurred during the processing of a command or query.
         /// </summary>
-        public Error? Error { get; }
+        public IError? Error { get; }
     }
 }

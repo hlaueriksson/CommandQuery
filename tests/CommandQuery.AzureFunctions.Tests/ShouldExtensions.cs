@@ -15,7 +15,7 @@ namespace CommandQuery.AzureFunctions.Tests
             result.Should().NotBeNull();
             result.StatusCode.Should().NotBe(200);
             if (statusCode.HasValue) result.StatusCode.Should().Be(statusCode);
-            var value = result.Value as Error;
+            var value = result.Value as IError;
             value.Should().NotBeNull();
             value.Message.Should().Be(message);
         }

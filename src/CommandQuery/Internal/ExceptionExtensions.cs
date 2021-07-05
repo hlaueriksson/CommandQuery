@@ -67,7 +67,7 @@ namespace CommandQuery.Internal
             }
         }
 
-        public static Error ToError(this Exception exception)
+        public static IError ToError(this Exception exception)
         {
             switch (exception)
             {
@@ -80,14 +80,14 @@ namespace CommandQuery.Internal
             }
         }
 
-        public static Error ToError(this CommandException exception)
+        public static IError ToError(this CommandException exception)
         {
-            return new(exception.Message, GetDetails(exception));
+            return new Error(exception.Message, GetDetails(exception));
         }
 
-        public static Error ToError(this QueryException exception)
+        public static IError ToError(this QueryException exception)
         {
-            return new(exception.Message, GetDetails(exception));
+            return new Error(exception.Message, GetDetails(exception));
         }
 
         private static Dictionary<string, object>? GetDetails(Exception exception)
