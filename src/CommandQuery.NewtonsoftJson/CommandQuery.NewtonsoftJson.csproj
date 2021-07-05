@@ -23,6 +23,11 @@
   <Import Project="../../Analyzers.props" />
 
   <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.Benchmark" />
+    <InternalsVisibleTo Include="CommandQuery.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
