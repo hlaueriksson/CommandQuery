@@ -11,9 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
 {
-    /// <summary>
-    /// Handles queries for the Azure function.
-    /// </summary>
+    /// <inheritdoc />
     public class QueryFunction : IQueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
@@ -27,13 +25,7 @@ namespace CommandQuery.AzureFunctions
             _queryProcessor = queryProcessor;
         }
 
-        /// <summary>
-        /// Handle a query.
-        /// </summary>
-        /// <param name="queryName">The name of the query.</param>
-        /// <param name="req">A <see cref="HttpRequest"/>.</param>
-        /// <param name="log">An <see cref="ILogger"/>.</param>
-        /// <returns>The result + 200, 400 or 500.</returns>
+        /// <inheritdoc />
         public async Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger log)
         {
             log.LogInformation($"Handle {queryName}");

@@ -51,6 +51,8 @@ namespace CommandQuery.Client
         /// <typeparam name="T">The type of result.</typeparam>
         /// <param name="value">A payload.</param>
         /// <returns>A result.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandQueryException">The <c>GET</c> request failed.</exception>
         protected async Task<T> BaseGetAsync<T>(object value)
         {
 #pragma warning disable CA2234 // Pass system uri objects instead of strings
@@ -65,6 +67,8 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="value">A payload.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task BasePostAsync(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
@@ -77,6 +81,8 @@ namespace CommandQuery.Client
         /// <typeparam name="T">The type of result.</typeparam>
         /// <param name="value">A payload.</param>
         /// <returns>A result.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task<T> BasePostAsync<T>(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);

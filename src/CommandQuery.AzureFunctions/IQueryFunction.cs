@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace CommandQuery.AzureFunctions
         /// <param name="req">A <see cref="HttpRequest"/>.</param>
         /// <param name="log">An <see cref="ILogger"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="req"/> is <see langword="null"/>.</exception>
         Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger log);
     }
 }

@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace CommandQuery.Client
 {
-    /// <summary>
-    /// Client for sending queries to CommandQuery APIs over <c>HTTP</c>.
-    /// </summary>
+    /// <inheritdoc cref="IQueryClient" />
     public class QueryClient : BaseClient, IQueryClient
     {
         /// <summary>
@@ -27,20 +25,10 @@ namespace CommandQuery.Client
         {
         }
 
-        /// <summary>
-        /// Sends an <see cref="IQuery{TResult}"/> to the API with <c>GET</c>.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="query">The query.</param>
-        /// <returns>A result.</returns>
+        /// <inheritdoc />
         public async Task<TResult> GetAsync<TResult>(IQuery<TResult> query) => await BaseGetAsync<TResult>(query).ConfigureAwait(false);
 
-        /// <summary>
-        /// Sends an <see cref="IQuery{TResult}"/> to the API with <c>POST</c>.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="query">The query.</param>
-        /// <returns>A result.</returns>
+        /// <inheritdoc />
         public async Task<TResult> PostAsync<TResult>(IQuery<TResult> query) => await BasePostAsync<TResult>(query).ConfigureAwait(false);
     }
 }

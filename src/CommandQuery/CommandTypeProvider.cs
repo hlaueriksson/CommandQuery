@@ -4,9 +4,7 @@ using System.Reflection;
 
 namespace CommandQuery
 {
-    /// <summary>
-    /// A provider of supported command types.
-    /// </summary>
+    /// <inheritdoc cref="ICommandTypeProvider" />
     public class CommandTypeProvider : TypeProvider, ICommandTypeProvider
     {
         /// <summary>

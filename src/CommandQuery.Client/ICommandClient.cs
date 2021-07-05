@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -12,6 +13,8 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="command">The command.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandQueryException">The <see cref="ICommand"/> failed.</exception>
         Task PostAsync(ICommand command);
 
         /// <summary>
@@ -20,6 +23,8 @@ namespace CommandQuery.Client
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="command">The command.</param>
         /// <returns>A result.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
+        /// <exception cref="CommandQueryException">The <see cref="ICommand{TResult}"/> failed.</exception>
         Task<TResult> PostAsync<TResult>(ICommand<TResult> command);
     }
 }

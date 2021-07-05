@@ -6,9 +6,7 @@ using CommandQuery.Internal;
 
 namespace CommandQuery
 {
-    /// <summary>
-    /// Process queries by invoking the corresponding handler.
-    /// </summary>
+    /// <inheritdoc />
     public class QueryProcessor : IQueryProcessor
     {
         private readonly IQueryTypeProvider _queryTypeProvider;
@@ -25,14 +23,7 @@ namespace CommandQuery
             _serviceProvider = serviceProvider;
         }
 
-        /// <summary>
-        /// Process a query.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="query">The query.</param>
-        /// <returns>The result of the query.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="query"/> is <see langword="null"/>.</exception>
-        /// <exception cref="QueryProcessorException">The query handler for <paramref name="query"/> could not be found.</exception>
+        /// <inheritdoc />
         public async Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query)
         {
             if (query is null)
@@ -52,23 +43,17 @@ namespace CommandQuery
             return await handler.HandleAsync((dynamic)query);
         }
 
-        /// <summary>
-        /// Returns the types of queries that can be processed.
-        /// </summary>
-        /// <returns>Supported query types.</returns>
-        public IEnumerable<Type> GetQueryTypes()
-        {
-            return _queryTypeProvider.GetQueryTypes();
-        }
 
-        /// <summary>
-        /// Returns the type of query.
-        /// </summary>
-        /// <param name="queryName">The name of the query.</param>
-        /// <returns>The query type.</returns>
+        /// <inheritdoc />
         public Type? GetQueryType(string queryName)
         {
             return _queryTypeProvider.GetQueryType(queryName);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Type> GetQueryTypes()
+        {
+            return _queryTypeProvider.GetQueryTypes();
         }
 
         private object? GetService(Type handlerType)

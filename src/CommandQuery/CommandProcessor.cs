@@ -6,9 +6,7 @@ using CommandQuery.Internal;
 
 namespace CommandQuery
 {
-    /// <summary>
-    /// Process commands by invoking the corresponding handler.
-    /// </summary>
+    /// <inheritdoc />
     public class CommandProcessor : ICommandProcessor
     {
         private readonly ICommandTypeProvider _commandTypeProvider;
@@ -25,13 +23,7 @@ namespace CommandQuery
             _serviceProvider = serviceProvider;
         }
 
-        /// <summary>
-        /// Process a command.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
-        /// <exception cref="CommandProcessorException">The command handler for <paramref name="command"/> could not be found.</exception>
+        /// <inheritdoc />
         public async Task ProcessAsync(ICommand command)
         {
             if (command is null)
@@ -51,14 +43,7 @@ namespace CommandQuery
             await handler.HandleAsync((dynamic)command);
         }
 
-        /// <summary>
-        /// Process a command with result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="command">The command.</param>
-        /// <returns>The result of the command.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
-        /// <exception cref="CommandProcessorException">The command handler for <paramref name="command"/> could not be found.</exception>
+        /// <inheritdoc />
         public async Task<TResult> ProcessWithResultAsync<TResult>(ICommand<TResult> command) // TODO: ProcessAsync?
         {
             if (command is null)
@@ -78,23 +63,16 @@ namespace CommandQuery
             return await handler.HandleAsync((dynamic)command);
         }
 
-        /// <summary>
-        /// Returns the types of commands that can be processed.
-        /// </summary>
-        /// <returns>Supported command types.</returns>
-        public IEnumerable<Type> GetCommandTypes()
-        {
-            return _commandTypeProvider.GetCommandTypes();
-        }
-
-        /// <summary>
-        /// Returns the type of command.
-        /// </summary>
-        /// <param name="commandName">The name of the command.</param>
-        /// <returns>The command type.</returns>
+        /// <inheritdoc />
         public Type? GetCommandType(string commandName)
         {
             return _commandTypeProvider.GetCommandType(commandName);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Type> GetCommandTypes()
+        {
+            return _commandTypeProvider.GetCommandTypes();
         }
 
         private object? GetService(Type handlerType)
