@@ -23,7 +23,7 @@ namespace CommandQuery.NewtonsoftJson
         /// <returns>The result of the query.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
-        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string json)
+        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string? json)
         {
             if (queryProcessor is null)
             {

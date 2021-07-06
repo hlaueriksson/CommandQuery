@@ -1,7 +1,8 @@
+#if NETCOREAPP3_1
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CommandQuery.AzureFunctions.Tests
+namespace CommandQuery.AzureFunctions.Tests.V3
 {
     public static class ShouldExtensions
     {
@@ -21,3 +22,4 @@ namespace CommandQuery.AzureFunctions.Tests
         }
     }
 }
+#endif

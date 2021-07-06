@@ -19,11 +19,16 @@ namespace CommandQuery.SystemTextJson
         /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
-        public static async Task<CommandResult> ProcessWithOrWithoutResultAsync(this ICommandProcessor commandProcessor, string commandName, string json)
+        public static async Task<CommandResult> ProcessWithOrWithoutResultAsync(this ICommandProcessor commandProcessor, string commandName, string? json)
         {
             if (commandProcessor is null)
             {
                 throw new ArgumentNullException(nameof(commandProcessor));
+            }
+
+            if (json is null)
+            {
+                throw new ArgumentNullException(nameof(json));
             }
 
             var command = commandProcessor.GetCommand(commandName, json);

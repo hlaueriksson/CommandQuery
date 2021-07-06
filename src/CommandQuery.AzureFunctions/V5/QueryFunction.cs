@@ -1,12 +1,12 @@
+#if NET5_0
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using CommandQuery.Internal;
 using CommandQuery.NewtonsoftJson;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
@@ -26,7 +26,7 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger log)
+        public async Task<HttpResponseData> HandleAsync(string queryName, HttpRequestData req, ILogger log)
         {
             log.LogInformation($"Handle {queryName}");
 
@@ -38,26 +38,32 @@ namespace CommandQuery.AzureFunctions
             try
             {
                 var result = req.Method == "GET"
-                    ? await HandleAsync(queryName, Dictionary(req.Query)).ConfigureAwait(false)
+                    ? await HandleAsync(queryName, Dictionary(req)).ConfigureAwait(false)
                     : await HandleAsync(queryName, await req.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
-                return new OkObjectResult(result);
+                var response = req.CreateResponse();
+                await response.WriteAsJsonAsync(result).ConfigureAwait(false);
+                return response;
             }
             catch (Exception exception)
             {
-                var payload = req.Method == "GET" ? (object)req.Query : await req.ReadAsStringAsync().ConfigureAwait(false);
+                var payload = req.Method == "GET" ? req.Url.ToString() : await req.ReadAsStringAsync().ConfigureAwait(false);
                 log.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, payload);
 
-                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
+                return exception.IsHandled()
+                    ? await req.BadRequestAsync(exception.ToError()).ConfigureAwait(false)
+                    : await req.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
             }
 
-            Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
+            Dictionary<string, IEnumerable<string>> Dictionary(HttpRequestData req)
             {
-                return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
+                var query = HttpUtility.ParseQueryString(req.Url.Query);
+
+                return query.AllKeys.ToDictionary<string?, string, IEnumerable<string>>(k => k!, k => query.GetValues(k)!);
             }
         }
 
-        private async Task<object> HandleAsync(string queryName, string content)
+        private async Task<object> HandleAsync(string queryName, string? content)
         {
             return await _queryProcessor.ProcessAsync<object>(queryName, content).ConfigureAwait(false);
         }
@@ -68,3 +74,4 @@ namespace CommandQuery.AzureFunctions
         }
     }
 }
+#endif

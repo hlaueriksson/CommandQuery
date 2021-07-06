@@ -1,10 +1,10 @@
+#if NET5_0
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using CommandQuery.Internal;
 using CommandQuery.NewtonsoftJson;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
@@ -24,9 +24,14 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger log)
+        public async Task<HttpResponseData> HandleAsync(string commandName, HttpRequestData req, ILogger log)
         {
             log.LogInformation($"Handle {commandName}");
+
+            if (req is null)
+            {
+                throw new ArgumentNullException(nameof(req));
+            }
 
             try
             {
@@ -34,18 +39,21 @@ namespace CommandQuery.AzureFunctions
 
                 if (result == CommandResult.None)
                 {
-                    return new OkResult();
+                    return req.CreateResponse(HttpStatusCode.OK);
                 }
 
-                return new OkObjectResult(result.Value);
+                return await req.OkAsync(result.Value).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 var payload = await req.ReadAsStringAsync().ConfigureAwait(false);
                 log.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
 
-                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
+                return exception.IsHandled()
+                    ? await req.BadRequestAsync(exception.ToError()).ConfigureAwait(false)
+                    : await req.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
             }
         }
     }
 }
+#endif
