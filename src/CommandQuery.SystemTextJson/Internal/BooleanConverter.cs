@@ -8,21 +8,19 @@ namespace CommandQuery.SystemTextJson
     {
         public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var value = reader.GetString();
-
-            if (value is null)
+            switch (reader.TokenType)
             {
-                return false;
-            }
-
-            if (value.ToLower().Equals("true", StringComparison.Ordinal))
-            {
-                return true;
-            }
-
-            if (value.ToLower().Equals("false", StringComparison.Ordinal))
-            {
-                return false;
+                case JsonTokenType.String:
+                    var stringValue = reader.GetString();
+                    if (bool.TryParse(stringValue, out bool value))
+                    {
+                        return value;
+                    }
+                    break;
+                case JsonTokenType.True:
+                    return true;
+                case JsonTokenType.False:
+                    return false;
             }
 
             throw new JsonException();
@@ -30,20 +28,7 @@ namespace CommandQuery.SystemTextJson
 
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
         {
-            if (writer is null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
-
-            switch (value)
-            {
-                case true:
-                    writer.WriteStringValue("true");
-                    break;
-                case false:
-                    writer.WriteStringValue("false");
-                    break;
-            }
+            writer.WriteBooleanValue(value);
         }
     }
 }

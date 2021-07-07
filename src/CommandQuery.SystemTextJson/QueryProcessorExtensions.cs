@@ -45,7 +45,7 @@ namespace CommandQuery.SystemTextJson
 
             if (query is null)
             {
-                throw new QueryProcessorException("The json could not be converted to an object");
+                throw new QueryProcessorException("The json string could not be deserialized to an object");
             }
 
             return await queryProcessor.ProcessAsync((dynamic)query);
@@ -79,7 +79,7 @@ namespace CommandQuery.SystemTextJson
 
             if (query is null)
             {
-                throw new QueryProcessorException("The dictionary could not be converted to an object");
+                throw new QueryProcessorException("The dictionary could not be deserialized to an object");
             }
 
             return await queryProcessor.ProcessAsync((dynamic)query);

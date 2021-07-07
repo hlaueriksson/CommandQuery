@@ -32,7 +32,7 @@ namespace CommandQuery.GoogleCloudFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
                 context.Response.StatusCode = StatusCodes.Status200OK;
 

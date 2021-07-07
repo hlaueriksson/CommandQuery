@@ -44,7 +44,7 @@ namespace CommandQuery.AWSLambda
 
             try
             {
-                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, request.Body).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, request.Body).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {
