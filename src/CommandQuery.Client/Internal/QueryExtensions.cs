@@ -48,7 +48,7 @@ namespace CommandQuery.Client
 
             return string.Join("&", result.ToArray());
 
-            string Parameter(PropertyInfo property, object value)
+            static string Parameter(PropertyInfo property, object value)
             {
                 return $"{property.Name}={System.Net.WebUtility.UrlEncode(value.ToString())}";
             }

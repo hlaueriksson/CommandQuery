@@ -51,7 +51,7 @@ namespace CommandQuery.AzureFunctions
                 return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
             }
 
-            Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
+            static Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
             {
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }

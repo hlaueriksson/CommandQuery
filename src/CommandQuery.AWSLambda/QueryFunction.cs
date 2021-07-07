@@ -64,7 +64,7 @@ namespace CommandQuery.AWSLambda
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
             }
 
-            Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, IList<string>> query)
+            static Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, IList<string>> query)
             {
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }

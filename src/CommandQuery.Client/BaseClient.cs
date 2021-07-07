@@ -54,9 +54,7 @@ namespace CommandQuery.Client
         /// <exception cref="CommandQueryException">The <c>GET</c> request failed.</exception>
         protected async Task<T> BaseGetAsync<T>(object value)
         {
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             var response = await Client.GetAsync(value.GetRequestUri()).ConfigureAwait(false);
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
             await response.EnsureSuccessAsync().ConfigureAwait(false);
             return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
         }

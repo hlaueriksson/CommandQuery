@@ -149,8 +149,8 @@ namespace CommandQuery.Tests
 
     public class FakeError : IError
     {
-        public string? Message { get; set; }
+        public string Message { get; set; }
 
-        public Dictionary<string, object>? Details { get; set; }
+        public Dictionary<string, object> Details { get; set; }
     }
 }

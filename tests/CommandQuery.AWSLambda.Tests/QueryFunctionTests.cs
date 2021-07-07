@@ -21,6 +21,7 @@ namespace CommandQuery.AWSLambda.Tests
             Clear();
             Use<Mock<IQueryProcessor>>();
             Logger = new Mock<ILambdaLogger>().Object;
+            QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
         }
 
@@ -87,6 +88,6 @@ namespace CommandQuery.AWSLambda.Tests
 
         APIGatewayProxyRequest Request;
         ILambdaLogger Logger;
-        string QueryName = "FakeQuery";
+        string QueryName;
     }
 }

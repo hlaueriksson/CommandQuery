@@ -54,7 +54,7 @@ namespace CommandQuery.GoogleCloudFunctions
                 await context.Response.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
             }
 
-            Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
+            static Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
             {
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }

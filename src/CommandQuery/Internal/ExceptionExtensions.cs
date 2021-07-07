@@ -19,15 +19,12 @@ namespace CommandQuery
 
         internal static IError ToError(this Exception exception)
         {
-            switch (exception)
+            return exception switch
             {
-                case CommandException commandException:
-                    return commandException.ToError();
-                case QueryException queryException:
-                    return queryException.ToError();
-                default:
-                    return new Error(exception.Message);
-            }
+                CommandException commandException => commandException.ToError(),
+                QueryException queryException => queryException.ToError(),
+                _ => new Error(exception.Message)
+            };
         }
 
         internal static IError ToError(this CommandException exception)
