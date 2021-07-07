@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace CommandQuery.Client.Internal
+namespace CommandQuery.Client
 {
     internal static class QueryExtensions
     {

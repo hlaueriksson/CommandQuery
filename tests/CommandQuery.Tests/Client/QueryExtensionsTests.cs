@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-using CommandQuery.Client.Internal;
+using CommandQuery.Client;
 using FluentAssertions;
 using NUnit.Framework;
 

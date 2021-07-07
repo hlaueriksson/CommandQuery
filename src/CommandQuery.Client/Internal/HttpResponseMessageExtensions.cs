@@ -1,11 +1,11 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CommandQuery.Client.Internal
+namespace CommandQuery.Client
 {
     internal static class HttpResponseMessageExtensions
     {
-        public static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage message)
+        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage message)
         {
             if (message.IsSuccessStatusCode)
             {
