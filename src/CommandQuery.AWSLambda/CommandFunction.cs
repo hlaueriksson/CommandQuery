@@ -32,12 +32,12 @@ namespace CommandQuery.AWSLambda
         /// </summary>
         /// <param name="commandName">The name of the command.</param>
         /// <param name="request">An <see cref="APIGatewayProxyRequest"/>.</param>
-        /// <param name="context">An <see cref="ILambdaContext"/>.</param>
+        /// <param name="logger">An <see cref="ILambdaLogger"/>.</param>
         /// <returns>200, 400 or 500.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaLogger? logger)
         {
-            context?.Logger.LogLine($"Handle {commandName}");
+            logger?.LogLine($"Handle {commandName}");
 
             if (request is null)
             {
@@ -62,7 +62,7 @@ namespace CommandQuery.AWSLambda
             }
             catch (Exception exception)
             {
-                context?.Logger.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
+                logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
             }

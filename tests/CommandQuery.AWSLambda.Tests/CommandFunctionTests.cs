@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -19,8 +19,7 @@ namespace CommandQuery.AWSLambda.Tests
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
-            Context = new Mock<ILambdaContext>();
-            Context.SetupGet(x => x.Logger).Returns(new Mock<ILambdaLogger>().Object);
+            Logger = new Mock<ILambdaLogger>().Object;
             Request = new APIGatewayProxyRequest { Body = "{}" };
         }
 
@@ -32,7 +31,7 @@ namespace CommandQuery.AWSLambda.Tests
 
             async Task should_invoke_the_command_processor()
             {
-                var result = await Subject.HandleAsync(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().BeNull();
@@ -42,7 +41,7 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
 
-                var result = await Subject.HandleAsync(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.ShouldBeError("fail", 400);
             }
@@ -51,7 +50,7 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
 
-                var result = await Subject.HandleAsync(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.ShouldBeError("invalid", 400);
             }
@@ -60,7 +59,7 @@ namespace CommandQuery.AWSLambda.Tests
             {
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
 
-                var result = await Subject.HandleAsync(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.ShouldBeError("fail", 500);
             }
@@ -77,7 +76,7 @@ namespace CommandQuery.AWSLambda.Tests
                 var expected = new FakeResult();
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeNull();
@@ -85,7 +84,7 @@ namespace CommandQuery.AWSLambda.Tests
         }
 
         APIGatewayProxyRequest Request;
-        Mock<ILambdaContext> Context;
+        ILambdaLogger Logger;
         string CommandName;
     }
 }

@@ -33,12 +33,12 @@ namespace CommandQuery.AWSLambda
         /// </summary>
         /// <param name="queryName">The name of the query.</param>
         /// <param name="request">An <see cref="APIGatewayProxyRequest"/>.</param>
-        /// <param name="context">An <see cref="ILambdaContext"/>.</param>
+        /// <param name="logger">An <see cref="ILambdaLogger"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaLogger? logger)
         {
-            context?.Logger.LogLine($"Handle {queryName}");
+            logger?.LogLine($"Handle {queryName}");
 
             if (request is null)
             {
@@ -61,7 +61,7 @@ namespace CommandQuery.AWSLambda
             catch (Exception exception)
             {
                 var payload = request.HttpMethod == "GET" ? JsonSerializer.Serialize(request.MultiValueQueryStringParameters) : request.Body;
-                context?.Logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
+                logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
             }
