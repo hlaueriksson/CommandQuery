@@ -15,9 +15,9 @@ namespace CommandQuery.GoogleCloudFunctions
         /// </summary>
         /// <param name="queryName">The name of the query.</param>
         /// <param name="context">A <see cref="HttpContext"/>.</param>
-        /// <param name="log">An <see cref="ILogger"/>.</param>
+        /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
-        Task HandleAsync(string queryName, HttpContext context, ILogger log);
+        Task HandleAsync(string queryName, HttpContext context, ILogger logger);
     }
 }

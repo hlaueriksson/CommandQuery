@@ -17,10 +17,10 @@ namespace CommandQuery.AzureFunctions
         /// </summary>
         /// <param name="queryName">The name of the query.</param>
         /// <param name="req">A <see cref="HttpRequest"/>.</param>
-        /// <param name="log">An <see cref="ILogger"/>.</param>
+        /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="req"/> is <see langword="null"/>.</exception>
-        Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger log);
+        Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger logger);
     }
 }
 #endif

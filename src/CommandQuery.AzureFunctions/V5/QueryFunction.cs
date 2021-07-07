@@ -26,9 +26,9 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<HttpResponseData> HandleAsync(string queryName, HttpRequestData req, ILogger log)
+        public async Task<HttpResponseData> HandleAsync(string queryName, HttpRequestData req, ILogger logger)
         {
-            log.LogInformation($"Handle {queryName}");
+            logger.LogInformation($"Handle {queryName}");
 
             if (req is null)
             {
@@ -48,7 +48,7 @@ namespace CommandQuery.AzureFunctions
             catch (Exception exception)
             {
                 var payload = req.Method == "GET" ? req.Url.ToString() : await req.ReadAsStringAsync().ConfigureAwait(false);
-                log.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, payload);
+                logger.LogError(exception.GetQueryEventId(), exception, "Handle query failed: {QueryName}, {Payload}", queryName, payload);
 
                 return exception.IsHandled()
                     ? await req.BadRequestAsync(exception.ToError()).ConfigureAwait(false)
