@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using CommandQuery.NewtonsoftJson;
+using Newtonsoft.Json;
 
 namespace CommandQuery.Benchmark
 {
@@ -27,7 +29,7 @@ namespace CommandQuery.Benchmark
                 List = new List<int> { 5, 6 }
             };
 
-            _newtonsoftJsonString = NewtonsoftJson.Internal.JsonExtensions.ToJson(_object);
+            _newtonsoftJsonString = JsonConvert.SerializeObject(_object);
             _systemTextJsonString = SystemTextJson.Internal.JsonExtensions.ToJson(_object);
 
             _dictionary = new Dictionary<string, object>
@@ -47,13 +49,10 @@ namespace CommandQuery.Benchmark
         // NewtonsoftJson
 
         [Benchmark]
-        public string NewtonsoftJson_JsonExtensions_ToJson() => NewtonsoftJson.Internal.JsonExtensions.ToJson(_object);
+        public object NewtonsoftJson_JsonExtensions_SafeToObject() => JsonExtensions.SafeToObject(_newtonsoftJsonString, typeof(FakeComplexObject));
 
         [Benchmark]
-        public object NewtonsoftJson_JsonExtensions_SafeToObject() => NewtonsoftJson.Internal.JsonExtensions.SafeToObject(_newtonsoftJsonString, typeof(FakeComplexObject));
-
-        [Benchmark]
-        public object NewtonsoftJson_DictionaryExtensions_SafeToObject() => NewtonsoftJson.Internal.DictionaryExtensions.SafeToObject(_dictionary, typeof(FakeComplexObject));
+        public object NewtonsoftJson_DictionaryExtensions_SafeToObject() => DictionaryExtensions.SafeToObject(_dictionary, typeof(FakeComplexObject));
 
         // SystemTextJson
 

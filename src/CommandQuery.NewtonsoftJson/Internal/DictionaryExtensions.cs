@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace CommandQuery.NewtonsoftJson.Internal
+namespace CommandQuery.NewtonsoftJson
 {
     internal static class DictionaryExtensions
     {
-        public static object? SafeToObject(this IDictionary<string, object>? dictionary, Type type)
+        internal static object? SafeToObject(this IDictionary<string, object>? dictionary, Type type)
         {
             if (dictionary is null)
             {

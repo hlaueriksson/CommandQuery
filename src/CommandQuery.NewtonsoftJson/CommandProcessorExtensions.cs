@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using CommandQuery.NewtonsoftJson.Internal;
 
 namespace CommandQuery.NewtonsoftJson
 {

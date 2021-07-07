@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CommandQuery.NewtonsoftJson.Internal;
+using CommandQuery.NewtonsoftJson;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
