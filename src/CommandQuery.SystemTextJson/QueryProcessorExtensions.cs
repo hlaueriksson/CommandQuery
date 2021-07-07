@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using CommandQuery.SystemTextJson.Internal;
 
 namespace CommandQuery.SystemTextJson
 {
