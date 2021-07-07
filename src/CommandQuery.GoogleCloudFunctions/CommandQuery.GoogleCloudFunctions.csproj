@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <Authors>Henrik Lau Eriksson</Authors>
+    <Description>Command Query Separation for Google Cloud Functions ⚡
+
+✔️ Provides generic function support for commands and queries with HTTP functions
+✔️ Enables APIs based on HTTP POST and GET
+📄 https://hlaueriksson.me/CommandQuery.GoogleCloudFunctions/
+    </Description>
+    <PackageId>CommandQuery.GoogleCloudFunctions</PackageId>
+    <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>CommandQuery.GoogleCloudFunctions.md</PackageReadmeFile>
+    <PackageTags>CommandQuery;Command;Query;CQS;google;cloud;functions</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\CommandQuery.GoogleCloudFunctions.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <Import Project="../../Analyzers.props" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.GoogleCloudFunctions.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Cloud.Functions.Framework" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommandQuery.SystemTextJson\CommandQuery.SystemTextJson.csproj" />
+    <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
+    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

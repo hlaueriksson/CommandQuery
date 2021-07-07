@@ -1,0 +1,62 @@
+using System;
+using System.Threading.Tasks;
+using CommandQuery.Internal;
+using CommandQuery.SystemTextJson;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+
+namespace CommandQuery.GoogleCloudFunctions
+{
+    /// <inheritdoc />
+    public class CommandFunction : ICommandFunction
+    {
+        private readonly ICommandProcessor _commandProcessor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandFunction"/> class.
+        /// </summary>
+        /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
+        public CommandFunction(ICommandProcessor commandProcessor)
+        {
+            _commandProcessor = commandProcessor;
+        }
+
+        /// <inheritdoc />
+        public async Task HandleAsync(string commandName, HttpContext context, ILogger log)
+        {
+            log.LogInformation($"Handle {commandName}");
+
+            if (context is null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            try
+            {
+                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+
+                context.Response.StatusCode = StatusCodes.Status200OK;
+
+                if (result == CommandResult.None)
+                {
+                    return;
+                }
+
+                await context.Response.OkAsync(result.Value).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                var payload = await context.Request.ReadAsStringAsync().ConfigureAwait(false);
+                log.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
+
+                if (exception.IsHandled())
+                {
+                    await context.Response.BadRequestAsync(exception.ToError()).ConfigureAwait(false);
+                    return;
+                }
+
+                await context.Response.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
+            }
+        }
+    }
+}
