@@ -12,7 +12,7 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
         {
             void should_return_an_object() => "{}".SafeToObject(typeof(object)).Should().NotBeNull();
 
-            void should_return_null_if_convertion_fails() => ((string)null).SafeToObject(typeof(object)).Should().BeNull();
+            void should_return_null_if_deserialization_fails() => ((string)null).SafeToObject(typeof(object)).Should().BeNull();
         }
     }
 }

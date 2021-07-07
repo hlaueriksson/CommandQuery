@@ -30,7 +30,7 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {
