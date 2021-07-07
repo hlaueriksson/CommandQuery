@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,11 +28,17 @@ namespace CommandQuery.Tests.Internal
             void should_return_the_service_when_only_one_service_is_found() =>
                 ServiceProvider.GetSingleService(typeof(ICommandHandler<FakeMultiCommand1>)).Should().BeOfType<FakeMultiHandler>();
 
-            void should_return_null_when_no_service_is_found() =>
+            void should_return_null_when_no_service_is_found()
+            {
                 ServiceProvider.GetSingleService(typeof(ICommandHandler<FakeMultiCommand2>)).Should().BeNull();
+                ServiceProvider.GetSingleService(typeof(int)).Should().BeNull();
+            }
 
             void should_throw_InvalidOperationException_when_multiple_services_are_found() =>
                 ServiceProvider.Invoking(x => x.GetSingleService(typeof(IQueryHandler<FakeMultiQuery1, FakeResult>))).Should().Throw<InvalidOperationException>();
+
+            void should_throw_NotSupportedException_when_service_type_is_open() =>
+                ServiceProvider.Invoking(x => x.GetSingleService(typeof(IEnumerable<>))).Should().Throw<NotSupportedException>();
         }
 
         IServiceProvider ServiceProvider;

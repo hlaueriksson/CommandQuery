@@ -25,6 +25,13 @@ namespace CommandQuery.Client
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandClient"/> class.
+        /// </summary>
+        /// <param name="client">A <see cref="HttpClient"/>.</param>
+        public CommandClient(HttpClient client) : base(client)
+        {
+        }
 
         /// <inheritdoc />
         public async Task PostAsync(ICommand command) => await BasePostAsync(command).ConfigureAwait(false);

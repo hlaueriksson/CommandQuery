@@ -6,12 +6,12 @@ using CommandQuery.Client;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CommandQuery.Tests.Client
+namespace CommandQuery.Tests.Client.Internal
 {
     public class QueryExtensionsTests
     {
         [Test]
-        public void when_converting_a_dictionary_to_object()
+        public void GetRequestUri()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
@@ -23,14 +23,15 @@ namespace CommandQuery.Tests.Client
                 DateTime = DateTime.Parse("2019-11-19 17:50:13"),
                 Guid = Guid.Parse("b665da2a-60fe-4f2b-baf1-9d766e2542d3"),
                 NullableDouble = 2.1,
-                Array = new []{ 1, 2 },
-                IEnumerable = new []{ 3, 4 },
+                Array = new[] { 1, 2 },
+                IEnumerable = new[] { 3, 4 },
                 List = new List<int> { 5, 6 }
             };
 
             var result = subject.GetRequestUri();
 
             result.Should()
+                .StartWith("FakeComplexQuery?").And
                 .Contain("String=String").And
                 .Contain("Int=1").And
                 .Contain("Bool=True").And
@@ -40,6 +41,18 @@ namespace CommandQuery.Tests.Client
                 .Contain("Array=1&Array=2").And
                 .Contain("IEnumerable=3&IEnumerable=4").And
                 .Contain("List=5&List=6");
+
+            Action act = () => ((object)null).GetRequestUri();
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void GetRequestSlug()
+        {
+            new FakeComplexQuery().GetRequestSlug().Should().Be("FakeComplexQuery");
+
+            Action act = () => ((object)null).GetRequestSlug();
+            act.Should().Throw<ArgumentNullException>();
         }
     }
 }

@@ -40,6 +40,15 @@ namespace CommandQuery.Client
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BaseClient"/> class.
+        /// </summary>
+        /// <param name="client">A <see cref="HttpClient"/>.</param>
+        protected BaseClient(HttpClient client)
+        {
+            Client = client;
+        }
+
+        /// <summary>
         /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
         protected HttpClient Client { get; } = new();

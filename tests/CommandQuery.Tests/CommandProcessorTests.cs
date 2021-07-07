@@ -30,6 +30,12 @@ namespace CommandQuery.Tests
                 command.Should().Be(expectedCommand);
             }
 
+            void should_throw_exception_if_the_command_is_null()
+            {
+                Subject.Awaiting(x => x.ProcessAsync(null)).Should()
+                    .Throw<ArgumentNullException>();
+            }
+
             void should_throw_exception_if_the_command_handler_is_not_found()
             {
                 var command = new Mock<ICommand>().Object;
@@ -72,6 +78,12 @@ namespace CommandQuery.Tests
 
                 command.Should().Be(expectedCommand);
                 result.Should().Be(expectedResult);
+            }
+
+            void should_throw_exception_if_the_command_is_null()
+            {
+                Subject.Awaiting(x => x.ProcessWithResultAsync<object>(null)).Should()
+                    .Throw<ArgumentNullException>();
             }
 
             void should_throw_exception_if_the_command_handler_is_not_found()

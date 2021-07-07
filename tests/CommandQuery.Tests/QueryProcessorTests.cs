@@ -32,6 +32,12 @@ namespace CommandQuery.Tests
                 result.Should().Be(expectedResult);
             }
 
+            void should_throw_exception_if_the_query_is_null()
+            {
+                Subject.Awaiting(x => x.ProcessAsync<object>(null)).Should()
+                    .Throw<ArgumentNullException>();
+            }
+
             void should_throw_exception_if_the_query_handler_is_not_found()
             {
                 var query = new Mock<IQuery<FakeResult>>().Object;
