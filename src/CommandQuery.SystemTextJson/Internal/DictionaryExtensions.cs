@@ -9,7 +9,7 @@ namespace CommandQuery.SystemTextJson
     {
         private static readonly JsonSerializerOptions _options = GetJsonSerializerOptions();
 
-        internal static object? SafeToObject(this IDictionary<string, object>? dictionary, Type type)
+        internal static object? SafeDeserialize(this IDictionary<string, object>? dictionary, Type type)
         {
             if (dictionary is null)
             {

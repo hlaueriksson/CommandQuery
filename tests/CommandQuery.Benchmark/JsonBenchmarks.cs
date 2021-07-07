@@ -48,18 +48,18 @@ namespace CommandQuery.Benchmark
         // NewtonsoftJson
 
         [Benchmark]
-        public object NewtonsoftJson_JsonExtensions_SafeToObject() => JsonExtensions.SafeToObject(_newtonsoftJsonString, typeof(FakeComplexObject));
+        public object NewtonsoftJson_JsonExtensions_SafeDeserialize() => JsonExtensions.SafeDeserialize(_newtonsoftJsonString, typeof(FakeComplexObject));
 
         [Benchmark]
-        public object NewtonsoftJson_DictionaryExtensions_SafeToObject() => DictionaryExtensions.SafeToObject(_dictionary, typeof(FakeComplexObject));
+        public object NewtonsoftJson_DictionaryExtensions_SafeDeserialize() => DictionaryExtensions.SafeDeserialize(_dictionary, typeof(FakeComplexObject));
 
         // SystemTextJson
 
         [Benchmark]
-        public object SystemTextJson_JsonExtensions_SafeToObject() => SystemTextJson.JsonExtensions.SafeToObject(_systemTextJsonString, typeof(FakeComplexObject));
+        public object SystemTextJson_JsonExtensions_SafeDeserialize() => SystemTextJson.JsonExtensions.SafeDeserialize(_systemTextJsonString, typeof(FakeComplexObject));
 
         [Benchmark]
-        public object SystemTextJson_DictionaryExtensions_SafeToObject() => SystemTextJson.DictionaryExtensions.SafeToObject(_dictionary, typeof(FakeComplexObject));
+        public object SystemTextJson_DictionaryExtensions_SafeDeserialize() => SystemTextJson.DictionaryExtensions.SafeDeserialize(_dictionary, typeof(FakeComplexObject));
     }
 
     public class FakeComplexObject

@@ -8,11 +8,11 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
     public class JsonExtensionsTests
     {
         [LoFu, Test]
-        public void SafeToObject()
+        public void SafeDeserialize()
         {
-            void should_return_an_object() => "{}".SafeToObject(typeof(object)).Should().NotBeNull();
+            void should_return_an_object() => "{}".SafeDeserialize(typeof(object)).Should().NotBeNull();
 
-            void should_return_null_if_deserialization_fails() => ((string)null).SafeToObject(typeof(object)).Should().BeNull();
+            void should_return_null_if_deserialization_fails() => ((string)null).SafeDeserialize(typeof(object)).Should().BeNull();
         }
     }
 }

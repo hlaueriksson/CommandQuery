@@ -41,7 +41,7 @@ namespace CommandQuery.NewtonsoftJson
                 throw new QueryProcessorException($"The query type '{queryName}' could not be found");
             }
 
-            var query = json.SafeToObject(queryType);
+            var query = json.SafeDeserialize(queryType);
 
             if (query is null)
             {
@@ -75,7 +75,7 @@ namespace CommandQuery.NewtonsoftJson
                 throw new QueryProcessorException($"The query type '{queryName}' could not be found");
             }
 
-            var query = GetQueryDictionary(dictionary, queryType).SafeToObject(queryType);
+            var query = GetQueryDictionary(dictionary, queryType).SafeDeserialize(queryType);
 
             if (query is null)
             {

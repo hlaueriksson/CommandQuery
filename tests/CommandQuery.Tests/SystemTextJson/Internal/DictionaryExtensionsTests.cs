@@ -10,7 +10,7 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
     public class DictionaryExtensionsTests
     {
         [LoFu, Test]
-        public void when_converting_a_dictionary_to_object()
+        public void SafeDeserialize()
         {
             void should_set_the_property_values()
             {
@@ -28,7 +28,7 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
                     { "List", new[] { "5", "6" } }
                 };
 
-                var result = subject.SafeToObject(typeof(FakeComplexQuery)) as FakeComplexQuery;
+                var result = subject.SafeDeserialize(typeof(FakeComplexQuery)) as FakeComplexQuery;
 
                 result.String.Should().Be("Value");
                 result.Int.Should().Be(1);
@@ -45,7 +45,7 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
             {
                 IDictionary<string, object> subject = null;
 
-                subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
+                subject.SafeDeserialize(typeof(FakeComplexQuery)).Should().BeNull();
             }
 
             void should_return_null_if_conversion_fails()
@@ -55,7 +55,7 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
                     { "Guid", "fail" }
                 };
 
-                subject.SafeToObject(typeof(FakeComplexQuery)).Should().BeNull();
+                subject.SafeDeserialize(typeof(FakeComplexQuery)).Should().BeNull();
             }
         }
     }

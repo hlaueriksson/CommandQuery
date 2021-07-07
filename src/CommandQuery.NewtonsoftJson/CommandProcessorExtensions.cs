@@ -37,7 +37,7 @@ namespace CommandQuery.NewtonsoftJson
                 throw new CommandProcessorException($"The command type '{commandName}' could not be found");
             }
 
-            var command = json.SafeToObject(commandType);
+            var command = json.SafeDeserialize(commandType);
 
             switch (command)
             {
