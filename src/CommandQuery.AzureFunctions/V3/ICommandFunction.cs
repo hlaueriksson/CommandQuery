@@ -20,7 +20,7 @@ namespace CommandQuery.AzureFunctions
         /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <returns>200, 400 or 500.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="req"/> is <see langword="null"/>.</exception>
-        Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger logger);
+        Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger? logger);
     }
 }
 #endif

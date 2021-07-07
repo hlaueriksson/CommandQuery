@@ -15,7 +15,7 @@ namespace CommandQuery.AspNetCore
         where TQuery : IQuery<TResult>
     {
         private readonly IQueryProcessor _queryProcessor;
-        private readonly ILogger<QueryController<TQuery, TResult>> _logger;
+        private readonly ILogger<QueryController<TQuery, TResult>>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryController{TQuery,TResult}"/> class.

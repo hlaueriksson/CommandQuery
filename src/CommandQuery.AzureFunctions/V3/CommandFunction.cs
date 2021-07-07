@@ -25,9 +25,9 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger logger)
+        public async Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger? logger)
         {
-            logger.LogInformation($"Handle {commandName}");
+            logger?.LogInformation($"Handle {commandName}");
 
             try
             {
@@ -43,7 +43,7 @@ namespace CommandQuery.AzureFunctions
             catch (Exception exception)
             {
                 var payload = await req.ReadAsStringAsync().ConfigureAwait(false);
-                logger.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
+                logger?.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
 
                 return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
             }

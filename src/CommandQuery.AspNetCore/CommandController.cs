@@ -12,7 +12,7 @@ namespace CommandQuery.AspNetCore
         where TCommand : ICommand
     {
         private readonly ICommandProcessor _commandProcessor;
-        private readonly ILogger<CommandController<TCommand>> _logger;
+        private readonly ILogger<CommandController<TCommand>>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandController{TCommand}"/> class.

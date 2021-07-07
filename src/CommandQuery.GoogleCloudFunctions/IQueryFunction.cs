@@ -18,6 +18,6 @@ namespace CommandQuery.GoogleCloudFunctions
         /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
-        Task HandleAsync(string queryName, HttpContext context, ILogger logger);
+        Task HandleAsync(string queryName, HttpContext context, ILogger? logger);
     }
 }
