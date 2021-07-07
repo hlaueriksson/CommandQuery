@@ -60,7 +60,7 @@ namespace CommandQuery.AWSLambda
             }
             catch (Exception exception)
             {
-                var payload = request.HttpMethod == "GET" ? JsonSerializer.Serialize(request.MultiValueQueryStringParameters) : request.Body;
+                var payload = request.HttpMethod == "GET" ? request.Path : request.Body;
                 logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();

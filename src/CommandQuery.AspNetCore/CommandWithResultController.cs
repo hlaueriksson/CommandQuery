@@ -12,7 +12,7 @@ namespace CommandQuery.AspNetCore
         where TCommand : ICommand<TResult>
     {
         private readonly ICommandProcessor _commandProcessor;
-        private readonly ILogger<CommandWithResultController<TCommand, TResult>> _logger;
+        private readonly ILogger? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandWithResultController{TCommand,TResult}"/> class.
@@ -33,6 +33,8 @@ namespace CommandQuery.AspNetCore
         [HttpPost]
         public async Task<IActionResult> HandleAsync(TCommand command)
         {
+            _logger?.LogInformation("Handle {@Command}", command);
+
             try
             {
                 var result = await _commandProcessor.ProcessWithResultAsync(command).ConfigureAwait(false);
@@ -41,7 +43,7 @@ namespace CommandQuery.AspNetCore
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {@Command}", command);
+                _logger?.LogError(exception, "Handle command failed: {@Command}", command);
 
                 return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }

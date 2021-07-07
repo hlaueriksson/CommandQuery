@@ -24,7 +24,7 @@ namespace CommandQuery.GoogleCloudFunctions
         /// <inheritdoc />
         public async Task HandleAsync(string commandName, HttpContext context, ILogger? logger)
         {
-            logger?.LogInformation($"Handle {commandName}");
+            logger?.LogInformation("Handle {Command}", commandName);
 
             if (context is null)
             {
@@ -47,7 +47,7 @@ namespace CommandQuery.GoogleCloudFunctions
             catch (Exception exception)
             {
                 var payload = await context.Request.ReadAsStringAsync().ConfigureAwait(false);
-                logger?.LogError(exception.GetCommandEventId(), exception, "Handle command failed: {CommandName}, {Payload}", commandName, payload);
+                logger?.LogError(exception, "Handle command failed: {Command}, {Payload}", commandName, payload);
 
                 if (exception.IsHandled())
                 {

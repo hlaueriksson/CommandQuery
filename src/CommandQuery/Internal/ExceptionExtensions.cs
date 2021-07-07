@@ -17,56 +17,6 @@ namespace CommandQuery.Internal
                 exception is QueryException;
         }
 
-        public static int GetCommandEventId(this Exception exception)
-        {
-            switch (exception)
-            {
-                case CommandProcessorException:
-                    return 1001;
-                case CommandException:
-                    return 1002;
-                default:
-                    return 1003;
-            }
-        }
-
-        public static int GetQueryEventId(this Exception exception)
-        {
-            switch (exception)
-            {
-                case QueryProcessorException:
-                    return 2001;
-                case QueryException:
-                    return 2002;
-                default:
-                    return 2003;
-            }
-        }
-
-        public static string GetCommandCategory(this Exception exception)
-        {
-            switch (exception)
-            {
-                case CommandProcessorException:
-                case CommandException:
-                    return exception.GetType().Name;
-                default:
-                    return "UnhandledCommandException";
-            }
-        }
-
-        public static string GetQueryCategory(this Exception exception)
-        {
-            switch (exception)
-            {
-                case QueryProcessorException:
-                case QueryException:
-                    return exception.GetType().Name;
-                default:
-                    return "UnhandledQueryException";
-            }
-        }
-
         public static IError ToError(this Exception exception)
         {
             switch (exception)
