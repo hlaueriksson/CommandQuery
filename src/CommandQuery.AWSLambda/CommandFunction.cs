@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda.Internal;
-using CommandQuery.Internal;
 using CommandQuery.SystemTextJson;
 
 namespace CommandQuery.AWSLambda

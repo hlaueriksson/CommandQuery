@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CommandQuery.Internal
+namespace CommandQuery
 {
     internal static class ServiceProviderExtensions
     {
-        public static object? GetSingleService(this IServiceProvider provider, Type serviceType)
+        internal static object? GetSingleService(this IServiceProvider provider, Type serviceType)
         {
             if (provider is null)
             {

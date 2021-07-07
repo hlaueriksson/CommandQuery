@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace CommandQuery.Internal
+namespace CommandQuery
 {
     internal static class ReflectionExtensions
     {

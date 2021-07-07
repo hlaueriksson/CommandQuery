@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using CommandQuery.Exceptions;
-using CommandQuery.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Newtonsoft.Json;

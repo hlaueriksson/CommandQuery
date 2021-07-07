@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 
-namespace CommandQuery.Internal
+namespace CommandQuery
 {
     internal class Error : IError
     {
-        public Error(string message)
+        internal Error(string message)
         {
             Message = message;
         }
 
-        public Error(string message, Dictionary<string, object>? details)
+        internal Error(string message, Dictionary<string, object>? details)
         {
             Message = message;
             Details = details;

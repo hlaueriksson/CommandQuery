@@ -1,5 +1,4 @@
 ﻿using System;
-using CommandQuery.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;

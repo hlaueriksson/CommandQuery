@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using CommandQuery.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.DependencyInjection

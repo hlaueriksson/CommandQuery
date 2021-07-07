@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
-using CommandQuery.Internal;
 
 namespace CommandQuery.AWSLambda.Internal
 {

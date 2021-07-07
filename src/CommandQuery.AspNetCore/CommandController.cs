@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using CommandQuery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

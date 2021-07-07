@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using CommandQuery.Exceptions;
 
-namespace CommandQuery.Internal
+namespace CommandQuery
 {
     internal static class ExceptionExtensions
     {
-        public static bool IsHandled(this Exception exception)
+        internal static bool IsHandled(this Exception exception)
         {
             return
                 exception is CommandProcessorException ||
@@ -17,7 +17,7 @@ namespace CommandQuery.Internal
                 exception is QueryException;
         }
 
-        public static IError ToError(this Exception exception)
+        internal static IError ToError(this Exception exception)
         {
             switch (exception)
             {
@@ -30,12 +30,12 @@ namespace CommandQuery.Internal
             }
         }
 
-        public static IError ToError(this CommandException exception)
+        internal static IError ToError(this CommandException exception)
         {
             return new Error(exception.Message, GetDetails(exception));
         }
 
-        public static IError ToError(this QueryException exception)
+        internal static IError ToError(this QueryException exception)
         {
             return new Error(exception.Message, GetDetails(exception));
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using CommandQuery.Internal;
 using CommandQuery.SystemTextJson;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
