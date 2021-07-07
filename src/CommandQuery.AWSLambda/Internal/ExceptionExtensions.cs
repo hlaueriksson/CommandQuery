@@ -4,11 +4,11 @@ using System.Net;
 using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 
-namespace CommandQuery.AWSLambda.Internal
+namespace CommandQuery.AWSLambda
 {
     internal static class ExceptionExtensions
     {
-        public static APIGatewayProxyResponse ToBadRequest(this Exception exception)
+        internal static APIGatewayProxyResponse ToBadRequest(this Exception exception)
         {
             return new()
             {
@@ -18,7 +18,7 @@ namespace CommandQuery.AWSLambda.Internal
             };
         }
 
-        public static APIGatewayProxyResponse ToInternalServerError(this Exception exception)
+        internal static APIGatewayProxyResponse ToInternalServerError(this Exception exception)
         {
             return new()
             {
