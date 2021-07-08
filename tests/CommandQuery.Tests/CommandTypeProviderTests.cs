@@ -1,4 +1,3 @@
-using System.Reflection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
@@ -10,7 +9,7 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public void GetCommandType()
         {
-            Subject = new CommandTypeProvider(typeof(FakeCommand).GetTypeInfo().Assembly);
+            Subject = new CommandTypeProvider(typeof(FakeCommand).Assembly);
 
             void should_return_the_type_of_command_if_the_command_name_is_found() => Subject.GetCommandType("FakeCommand").Should().NotBeNull();
 
@@ -20,7 +19,7 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public void GetCommandTypes()
         {
-            Subject = new CommandTypeProvider(typeof(FakeCommand).GetTypeInfo().Assembly);
+            Subject = new CommandTypeProvider(typeof(FakeCommand).Assembly);
 
             void should_return_the_types_of_commands_supported() => Subject.GetCommandTypes().Should().NotBeEmpty();
         }

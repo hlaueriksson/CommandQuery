@@ -13,7 +13,7 @@ namespace CommandQuery.Tests.DependencyInjection
         [LoFu, Test]
         public void when_AddCommands()
         {
-            Assembly = typeof(FakeCommandHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeCommandHandler).Assembly;
 
             void should_add_commands_from_Assemblies()
             {
@@ -50,7 +50,7 @@ namespace CommandQuery.Tests.DependencyInjection
         [LoFu, Test]
         public void when_AddQueries()
         {
-            Assembly = typeof(FakeQueryHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeQueryHandler).Assembly;
 
             void should_add_queries_from_Assemblies()
             {
