@@ -24,6 +24,14 @@ namespace CommandQuery.Tests.Exceptions
         }
 
         [Test]
+        public void CommandTypeException_should_be_Serializable()
+        {
+            new CommandTypeException().Should().BeBinarySerializable();
+            new CommandTypeException("fail").Should().BeBinarySerializable();
+            new CommandTypeException("fail", new Exception()).Should().BeBinarySerializable();
+        }
+
+        [Test]
         public void QueryException_should_be_Serializable()
         {
             new QueryException().Should().BeBinarySerializable();
@@ -37,6 +45,14 @@ namespace CommandQuery.Tests.Exceptions
             new QueryProcessorException().Should().BeBinarySerializable();
             new QueryProcessorException("fail").Should().BeBinarySerializable();
             new QueryProcessorException("fail", new Exception()).Should().BeBinarySerializable();
+        }
+
+        [Test]
+        public void QueryTypeException_should_be_Serializable()
+        {
+            new QueryTypeException().Should().BeBinarySerializable();
+            new QueryTypeException("fail").Should().BeBinarySerializable();
+            new QueryTypeException("fail", new Exception()).Should().BeBinarySerializable();
         }
     }
 }

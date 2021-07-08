@@ -1,3 +1,6 @@
+using System;
+using CommandQuery.Exceptions;
+using CommandQuery.Fail;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
@@ -6,6 +9,15 @@ namespace CommandQuery.Tests
 {
     public class CommandTypeProviderTests
     {
+        [Test]
+        public void Ctor()
+        {
+            Action act = () => new CommandTypeProvider(typeof(DupeCommand).Assembly);
+            act.Should()
+                .Throw<CommandTypeException>()
+                .WithMessage("Multiple commands with the same name was found*");
+        }
+
         [LoFu, Test]
         public void GetCommandType()
         {

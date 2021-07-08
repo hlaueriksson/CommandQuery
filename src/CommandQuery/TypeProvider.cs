@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CommandQuery.Exceptions;
 
 namespace CommandQuery
 {
@@ -12,18 +13,6 @@ namespace CommandQuery
     {
         private readonly Type[] _baseTypes;
         private readonly Dictionary<string, Type> _types;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeProvider"/> class.
-        /// </summary>
-        /// <param name="baseType">The base type for commands or queries.</param>
-        /// <param name="assemblies">The assemblies with commands or queries to support.</param>
-        protected TypeProvider(Type baseType, params Assembly[] assemblies)
-        {
-            _baseTypes = new[] { baseType };
-            _types = new Dictionary<string, Type>();
-            LoadTypeCaches(assemblies);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeProvider"/> class.
@@ -56,13 +45,28 @@ namespace CommandQuery
             return _types.Values.ToList().AsReadOnly();
         }
 
+        /// <summary>
+        /// Returns exception for when multiple types with the same <see cref="MemberInfo.Name"/> were found.
+        /// </summary>
+        /// <param name="first">The first type.</param>
+        /// <param name="second">The second type.</param>
+        /// <returns><see cref="CommandTypeException"/> or <see cref="QueryTypeException"/></returns>
+        protected abstract Exception GetTypeException(Type first, Type second);
+
         private void LoadTypeCaches(params Assembly[] assemblies)
         {
             foreach (var baseType in _baseTypes)
             {
                 foreach (var type in assemblies.SelectMany(assembly => assembly.GetTypesAssignableTo(baseType)).ToList())
                 {
-                    _types.Add(type.Name, type);
+                    var key = type.Name;
+
+                    if (_types.ContainsKey(key))
+                    {
+                        throw GetTypeException(_types[key], type);
+                    }
+
+                    _types.Add(key, type);
                 }
             }
         }
