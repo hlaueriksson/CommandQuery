@@ -98,7 +98,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             {
                 Req.Body.Position = 0;
                 var expected = new FakeResult();
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
                 result.Body.Position = 0;

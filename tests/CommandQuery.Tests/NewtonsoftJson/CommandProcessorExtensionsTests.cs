@@ -34,12 +34,12 @@ namespace CommandQuery.Tests.NewtonsoftJson
                 var expectedResult = new FakeResult();
                 var expectedCommandType = typeof(FakeResultCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
-                FakeCommandProcessor.Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expectedResult));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expectedResult));
 
                 var result = await Subject.ProcessAsync(expectedCommandType.Name, "{}");
 
                 result.Value.Should().Be(expectedResult);
-                FakeCommandProcessor.Verify(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>()));
+                FakeCommandProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeResultCommand>()));
             }
 
             void should_throw_exception_if_the_ICommandProcessor_is_null()

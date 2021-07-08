@@ -36,7 +36,7 @@ namespace CommandQuery.AspNetCore
 
             try
             {
-                var result = await _commandProcessor.ProcessWithResultAsync(command).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(command).ConfigureAwait(false);
 
                 return Ok(result);
             }

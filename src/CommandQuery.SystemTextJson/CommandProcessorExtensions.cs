@@ -47,7 +47,8 @@ namespace CommandQuery.SystemTextJson
                     await commandProcessor.ProcessAsync(commandWithoutResult).ConfigureAwait(false);
                     return CommandResult.None;
                 default:
-                    var result = await commandProcessor.ProcessWithResultAsync((dynamic)command);
+                    var commandWithResult = (dynamic)command;
+                    var result = await commandProcessor.ProcessAsync(commandWithResult).ConfigureAwait(false);
                     return new CommandResult(result);
             }
         }

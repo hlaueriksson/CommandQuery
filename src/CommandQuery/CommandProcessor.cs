@@ -43,7 +43,7 @@ namespace CommandQuery
         }
 
         /// <inheritdoc />
-        public async Task<TResult> ProcessWithResultAsync<TResult>(ICommand<TResult> command) // TODO: ProcessAsync?
+        public async Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command)
         {
             if (command is null)
             {

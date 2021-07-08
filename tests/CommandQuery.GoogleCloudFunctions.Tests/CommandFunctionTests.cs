@@ -88,7 +88,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
             {
                 Context.Response.Clear();
                 var expected = new FakeResult();
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
                 await Subject.HandleAsync(CommandName, Context, Logger);
 

@@ -87,7 +87,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
             async Task should_return_the_result_from_the_command_processor()
             {
                 var expected = new FakeResult();
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger) as OkObjectResult;
 

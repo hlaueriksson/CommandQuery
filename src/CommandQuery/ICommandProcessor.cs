@@ -27,7 +27,7 @@ namespace CommandQuery
         /// <returns>The result of the command.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandProcessorException">The command handler for <paramref name="command"/> could not be found.</exception>
-        Task<TResult> ProcessWithResultAsync<TResult>(ICommand<TResult> command);
+        Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command);
 
         /// <summary>
         /// Returns the type of command.
