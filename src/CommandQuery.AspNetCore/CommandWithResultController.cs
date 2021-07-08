@@ -7,18 +7,18 @@ namespace CommandQuery.AspNetCore
 {
     [ApiController]
     [Route("api/command/[controller]")]
-    internal class CommandWithResultController<TCommand, TResult> : ControllerBase
+    internal class CommandController<TCommand, TResult> : ControllerBase
         where TCommand : ICommand<TResult>
     {
         private readonly ICommandProcessor _commandProcessor;
         private readonly ILogger? _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandWithResultController{TCommand,TResult}"/> class.
+        /// Initializes a new instance of the <see cref="CommandController{TCommand,TResult}"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
         /// <param name="logger">An <see cref="ILogger"/>.</param>
-        public CommandWithResultController(ICommandProcessor commandProcessor, ILogger<CommandWithResultController<TCommand, TResult>> logger)
+        public CommandController(ICommandProcessor commandProcessor, ILogger<CommandController<TCommand, TResult>> logger)
         {
             _commandProcessor = commandProcessor;
             _logger = logger;

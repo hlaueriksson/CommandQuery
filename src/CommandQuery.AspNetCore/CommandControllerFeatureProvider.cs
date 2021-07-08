@@ -46,7 +46,7 @@ namespace CommandQuery.AspNetCore
 
             foreach (var commandType in _types.Where(x => x.IsAssignableTo(typeof(ICommand<>))))
             {
-                var controllerType = typeof(CommandWithResultController<,>).MakeGenericType(commandType, commandType.GetResultType(typeof(ICommand<>)));
+                var controllerType = typeof(CommandController<,>).MakeGenericType(commandType, commandType.GetResultType(typeof(ICommand<>)));
 
                 feature.Controllers.Add(controllerType.GetTypeInfo());
             }

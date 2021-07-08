@@ -18,16 +18,16 @@ namespace CommandQuery.AspNetCore.Tests
         {
             Subject = new CommandQueryControllerModelConvention();
 
-            void should_handle_CommandControllers()
+            void should_handle_CommandControllers_without_result()
             {
                 var result = new ControllerModel(typeof(CommandController<FakeCommand>).GetTypeInfo(), new List<object>());
                 Subject.Apply(result);
                 result.ControllerName.Should().Be("FakeCommand");
             }
 
-            void should_handle_CommandWithResultControllers()
+            void should_handle_CommandControllers_with_result()
             {
-                var result = new ControllerModel(typeof(CommandWithResultController<FakeResultCommand, FakeResult>).GetTypeInfo(), new List<object>());
+                var result = new ControllerModel(typeof(CommandController<FakeResultCommand, FakeResult>).GetTypeInfo(), new List<object>());
                 Subject.Apply(result);
                 result.ControllerName.Should().Be("FakeResultCommand");
             }

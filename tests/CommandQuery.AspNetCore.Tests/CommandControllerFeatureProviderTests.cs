@@ -18,11 +18,11 @@ namespace CommandQuery.AspNetCore.Tests
             Result = new ControllerFeature();
             Subject.PopulateFeature(null, Result);
 
-            void should_add_CommandControllers() =>
+            void should_add_CommandControllers_without_result() =>
                 Result.Controllers.Should().Contain(typeof(CommandController<FakeCommand>).GetTypeInfo());
 
-            void should_add_CommandWithResultControllers() =>
-                Result.Controllers.Should().Contain(typeof(CommandWithResultController<FakeResultCommand, FakeResult>).GetTypeInfo());
+            void should_add_CommandControllers_with_result() =>
+                Result.Controllers.Should().Contain(typeof(CommandController<FakeResultCommand, FakeResult>).GetTypeInfo());
 
             void should_throw_when_feature_is_null() =>
                 Subject.Invoking(x => x.PopulateFeature(null, null)).Should().Throw<ArgumentNullException>();

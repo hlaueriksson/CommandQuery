@@ -28,7 +28,7 @@ namespace CommandQuery.AspNetCore
             var openControllerType = controller.ControllerType.GetGenericTypeDefinition();
 
             if (openControllerType != typeof(CommandController<>)
-                && openControllerType != typeof(CommandWithResultController<,>)
+                && openControllerType != typeof(CommandController<,>)
                 && openControllerType != typeof(QueryController<,>))
             {
                 return;

@@ -10,13 +10,13 @@ using NUnit.Framework;
 
 namespace CommandQuery.AspNetCore.Tests
 {
-    public class CommandWithResultControllerTests
+    public class CommandControllerWithResultTests
     {
         [SetUp]
         public void SetUp()
         {
             FakeCommandProcessor = new Mock<ICommandProcessor>();
-            Subject = new CommandWithResultController<FakeResultCommand, FakeResult>(FakeCommandProcessor.Object, null);
+            Subject = new CommandController<FakeResultCommand, FakeResult>(FakeCommandProcessor.Object, null);
         }
 
         [LoFu, Test]
@@ -62,6 +62,6 @@ namespace CommandQuery.AspNetCore.Tests
         }
 
         Mock<ICommandProcessor> FakeCommandProcessor;
-        private CommandWithResultController<FakeResultCommand, FakeResult> Subject;
+        private CommandController<FakeResultCommand, FakeResult> Subject;
     }
 }

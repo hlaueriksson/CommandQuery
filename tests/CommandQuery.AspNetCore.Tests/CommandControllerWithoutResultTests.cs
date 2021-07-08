@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace CommandQuery.AspNetCore.Tests
 {
-    public class CommandControllerTests
+    public class CommandControllerWithoutResultTests
     {
         [SetUp]
         public void SetUp()
