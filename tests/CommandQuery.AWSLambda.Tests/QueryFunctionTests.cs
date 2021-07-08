@@ -41,6 +41,12 @@ namespace CommandQuery.AWSLambda.Tests
                 result.Body.Should().NotBeEmpty();
             }
 
+            async Task should_throw_when_request_is_null()
+            {
+                Subject.Awaiting(x => x.HandleAsync(QueryName, null, Logger))
+                    .Should().Throw<ArgumentNullException>();
+            }
+
             async Task should_handle_QueryProcessorException()
             {
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));

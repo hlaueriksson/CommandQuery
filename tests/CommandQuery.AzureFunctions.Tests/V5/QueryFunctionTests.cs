@@ -54,6 +54,12 @@ namespace CommandQuery.AzureFunctions.Tests.V5
                 result.Body.Length.Should().BeGreaterThan(0);
             }
 
+            async Task should_throw_when_request_is_null()
+            {
+                Subject.Awaiting(x => x.HandleAsync(QueryName, null, Logger))
+                    .Should().Throw<ArgumentNullException>();
+            }
+
             async Task should_handle_QueryProcessorException()
             {
                 Req.Body.Position = 0;

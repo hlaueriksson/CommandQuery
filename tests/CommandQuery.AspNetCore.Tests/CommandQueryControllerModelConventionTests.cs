@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using CommandQuery.Tests;
@@ -50,6 +51,11 @@ namespace CommandQuery.AspNetCore.Tests
                 var result = new ControllerModel(typeof(FakeController<>).GetTypeInfo(), new List<object>());
                 Subject.Apply(result);
                 result.ControllerName.Should().BeNull();
+            }
+
+            void should_throw_when_controller_is_null()
+            {
+                Subject.Invoking(x => x.Apply(null)).Should().Throw<ArgumentNullException>();
             }
         }
 

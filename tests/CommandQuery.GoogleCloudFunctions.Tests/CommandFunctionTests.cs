@@ -41,6 +41,12 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
                 Context.Response.StatusCode.Should().Be(200);
             }
 
+            async Task should_throw_when_request_is_null()
+            {
+                Subject.Awaiting(x => x.HandleAsync(CommandName, null, Logger))
+                    .Should().Throw<ArgumentNullException>();
+            }
+
             async Task should_handle_CommandProcessorException()
             {
                 Context.Response.Clear();
