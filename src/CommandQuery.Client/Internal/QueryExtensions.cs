@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 namespace CommandQuery.Client
@@ -36,7 +38,7 @@ namespace CommandQuery.Client
             {
                 var value = p.GetValue(query, null);
 
-                if (!(value is string) && value is IEnumerable enumerable)
+                if (value is IEnumerable enumerable and not string)
                 {
                     result.AddRange(from object v in enumerable select Parameter(p, v));
                 }
@@ -50,7 +52,17 @@ namespace CommandQuery.Client
 
             static string Parameter(PropertyInfo property, object value)
             {
-                return $"{property.Name}={System.Net.WebUtility.UrlEncode(value.ToString())}";
+                return value switch
+                {
+                    DateTime dateTime => NameValuePair(dateTime.ToString("O")),
+                    DateTimeOffset dateTimeOffset => NameValuePair(dateTimeOffset.ToString("O")),
+                    _ => NameValuePair(Convert.ToString(value, CultureInfo.InvariantCulture)!)
+                };
+
+                string NameValuePair(string value)
+                {
+                    return $"{property.Name}={WebUtility.UrlEncode(value)}";
+                }
             }
         }
     }

@@ -99,34 +99,17 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var expectedQueryType = typeof(FakeComplexQuery);
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
-                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeComplexQuery>())).Returns(Task.FromResult(Enumerable.Empty<FakeResult>()));
-
-                var query = new Dictionary<string, IEnumerable<string>>
-                {
-                    {"String", new[] {"Value"}},
-                    {"Int", new[] {"1"}},
-                    {"Bool", new[] {"true"}},
-                    {"DateTime", new[] {"2018-07-06"}},
-                    {"Guid", new[] {"3B10C34C-D423-4EC3-8811-DA2E0606E241"}},
-                    {"NullableDouble", new[] {"2.1"}},
-                    {"UndefinedProperty", new[] {"should_not_be_used"}},
-                    {"Array", new[] {"1", "2"}},
-                    {"IEnumerable", new[] {"3", "4"}},
-                    {"List", new[] {"5", "6"}}
-                };
+                FakeComplexQuery actual = null;
+                FakeQueryProcessor
+                    .Setup(x => x.ProcessAsync(It.IsAny<FakeComplexQuery>()))
+                    .Returns(Task.FromResult(Enumerable.Empty<FakeResult>()))
+                    .Callback<FakeComplexQuery>(y => actual = y);
+                
+                var query = TestData.FakeComplexQuery_As_Dictionary_Of_String_IEnumerable_String;
 
                 await Subject.ProcessAsync<IEnumerable<FakeResult>>(expectedQueryType.Name, query);
 
-                FakeQueryProcessor.Verify(x => x.ProcessAsync(It.Is<FakeComplexQuery>(y =>
-                    y.String == "Value" &&
-                    y.Int == 1 &&
-                    y.Bool &&
-                    y.DateTime == DateTime.Parse("2018-07-06") &&
-                    y.Guid == new Guid("3B10C34C-D423-4EC3-8811-DA2E0606E241") &&
-                    y.NullableDouble == 2.1 &&
-                    y.Array.SequenceEqual(new[] { 1, 2 }) &&
-                    y.IEnumerable.SequenceEqual(new[] { 3, 4 }) &&
-                    y.List.SequenceEqual(new[] { 5, 6 }))));
+                actual.Should().BeEquivalentTo(TestData.FakeComplexQuery);
             }
 
             void should_throw_exception_if_the_dictionary_is_invalid()

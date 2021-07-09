@@ -14,31 +14,11 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
         {
             void should_set_the_property_values()
             {
-                var subject = new Dictionary<string, object>
-                {
-                    { "String", "Value" },
-                    { "Int", "1" },
-                    { "Bool", "true" },
-                    { "DateTime", "2018-07-06" },
-                    { "Guid", "3B10C34C-D423-4EC3-8811-DA2E0606E241" },
-                    { "NullableDouble", "2.1" },
-                    { "UndefinedProperty", "should_not_be_used" },
-                    { "Array", new[] { "1", "2" } },
-                    { "IEnumerable", new[] { "3", "4" } },
-                    { "List", new[] { "5", "6" } }
-                };
+                var subject = TestData.FakeComplexQuery_As_Dictionary_Of_String_Object;
 
                 var result = subject.SafeDeserialize(typeof(FakeComplexQuery)) as FakeComplexQuery;
 
-                result.String.Should().Be("Value");
-                result.Int.Should().Be(1);
-                result.Bool.Should().Be(true);
-                result.DateTime.Should().Be(DateTime.Parse("2018-07-06"));
-                result.Guid.Should().Be(new Guid("3B10C34C-D423-4EC3-8811-DA2E0606E241"));
-                result.NullableDouble.Should().Be(2.1);
-                result.Array.Should().Equal(1, 2);
-                result.IEnumerable.Should().Equal(3, 4);
-                result.List.Should().Equal(5, 6);
+                result.Should().BeEquivalentTo(TestData.FakeComplexQuery);
             }
 
             void should_return_null_if_dictionary_is_null()
