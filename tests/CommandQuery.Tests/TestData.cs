@@ -109,12 +109,12 @@ namespace CommandQuery.Tests
         {
             DateTimeUnspecified = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Unspecified),
             DateTimeUtc = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Utc),
-            DateTimeLocal = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
+            //DateTimeLocal = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
             DateTimeArray = new[]
             {
                 new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Unspecified),
                 new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Utc),
-                new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
+                //new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
             }
         };
 
@@ -122,16 +122,16 @@ namespace CommandQuery.Tests
         {
             { "DateTimeUnspecified", "2021-07-10T09:48:41.0000000" },
             { "DateTimeUtc", "2021-07-10T09:48:41.0000000Z" },
-            { "DateTimeLocal", "2021-07-10T09:48:41.0000000+02:00" },
-            { "DateTimeArray", new[] { "2021-07-10T09:48:41.0000000", "2021-07-10T09:48:41.0000000Z", "2021-07-10T09:48:41.0000000+02:00" } },
+            //{ "DateTimeLocal", "2021-07-10T09:48:41.0000000+02:00" },
+            { "DateTimeArray", new[] { "2021-07-10T09:48:41.0000000", "2021-07-10T09:48:41.0000000Z", /*"2021-07-10T09:48:41.0000000+02:00"*/ } },
         };
 
         public static readonly Dictionary<string, IEnumerable<string>> FakeDateTimeQuery_As_Dictionary_Of_String_IEnumerable_String = new()
         {
             { "DateTimeUnspecified", new[] { "2021-07-10T09:48:41.0000000" } },
             { "DateTimeUtc", new[] { "2021-07-10T09:48:41.0000000Z" } },
-            { "DateTimeLocal", new[] { "2021-07-10T09:48:41.0000000+02:00" } },
-            { "DateTimeArray", new[] { "2021-07-10T09:48:41.0000000", "2021-07-10T09:48:41.0000000Z", "2021-07-10T09:48:41.0000000+02:00" } },
+            //{ "DateTimeLocal", new[] { "2021-07-10T09:48:41.0000000+02:00" } },
+            { "DateTimeArray", new[] { "2021-07-10T09:48:41.0000000", "2021-07-10T09:48:41.0000000Z", /*"2021-07-10T09:48:41.0000000+02:00"*/ } },
         };
 
         public static readonly FakeNestedQuery FakeNestedQuery = new()
