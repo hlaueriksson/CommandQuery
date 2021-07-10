@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
-    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

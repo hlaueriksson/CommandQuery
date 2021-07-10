@@ -41,7 +41,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
-    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>
