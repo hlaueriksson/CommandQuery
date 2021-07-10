@@ -32,5 +32,11 @@ namespace CommandQuery
         /// </summary>
         /// <returns>Supported query types.</returns>
         IReadOnlyList<Type> GetQueryTypes();
+
+        /// <summary>
+        /// Validate the query type and handler configuration and throw a <see cref="QueryTypeException"/> for any problems.
+        /// </summary>
+        /// <returns>The <see cref="IQueryProcessor"/>.</returns>
+        IQueryProcessor AssertConfigurationIsValid();
     }
 }

@@ -41,5 +41,11 @@ namespace CommandQuery
         /// </summary>
         /// <returns>Supported command types.</returns>
         IReadOnlyList<Type> GetCommandTypes();
+
+        /// <summary>
+        /// Validate the command type and handler configuration and throw a <see cref="CommandTypeException"/> for any problems.
+        /// </summary>
+        /// <returns>The <see cref="ICommandProcessor"/>.</returns>
+        ICommandProcessor AssertConfigurationIsValid();
     }
 }

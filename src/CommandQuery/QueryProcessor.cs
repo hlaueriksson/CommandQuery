@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -36,7 +37,7 @@ namespace CommandQuery
 
             if (handler is null)
             {
-                throw new QueryProcessorException($"The query handler for '{query}' could not be found");
+                throw new QueryProcessorException($"The query handler for '{query}' could not be found.");
             }
 
             return await handler.HandleAsync((dynamic)query);
@@ -55,15 +56,59 @@ namespace CommandQuery
             return _queryTypeProvider.GetQueryTypes();
         }
 
+        /// <inheritdoc />
+        public IQueryProcessor AssertConfigurationIsValid()
+        {
+            var errors = new List<string>();
+
+            foreach (var queryType in GetQueryTypes())
+            {
+                var handlerType = typeof(IQueryHandler<,>).MakeGenericType(queryType, queryType.GetResultType(typeof(IQuery<>)));
+
+                try
+                {
+                    if (GetService(handlerType) is null)
+                    {
+                        errors.Add($"The query handler for '{queryType.AssemblyQualifiedName}' is not registered.");
+                    }
+                }
+                catch (QueryProcessorException)
+                {
+                    errors.Add($"A single query handler for '{queryType.AssemblyQualifiedName}' could not be retrieved.");
+                }
+            }
+
+            foreach (var handlerType in _serviceProvider
+                .GetAllServiceTypes()
+                .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
+                .ToList())
+            {
+                var queryType = handlerType.GetGenericArguments()[0];
+                var supportedQueryType = _queryTypeProvider.GetQueryType(queryType.Name);
+
+                if (supportedQueryType is null || supportedQueryType != queryType)
+                {
+                    errors.Add($"The query '{queryType.AssemblyQualifiedName}' is not registered.");
+                }
+            }
+
+            if (errors.Any())
+            {
+                throw new QueryTypeException("The QueryProcessor configuration is not valid:" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+            }
+
+            return this;
+        }
+
         private object? GetService(Type handlerType)
         {
             try
             {
                 return _serviceProvider.GetSingleService(handlerType);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException exception)
             {
-                throw new QueryProcessorException($"Multiple query handlers for '{handlerType}' was found");
+                throw new QueryProcessorException($"A single query handler for '{handlerType}' could not be retrieved.", exception);
             }
         }
     }

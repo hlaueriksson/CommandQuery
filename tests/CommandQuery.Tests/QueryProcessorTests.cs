@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 
@@ -44,7 +46,7 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(query)).Should()
                     .Throw<QueryProcessorException>()
-                    .WithMessage($"The query handler for '{query}' could not be found");
+                    .WithMessage($"The query handler for '{query}' could not be found.");
             }
 
             void should_throw_exception_if_multiple_query_handlers_are_found()
@@ -57,7 +59,7 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(query)).Should()
                     .Throw<QueryProcessorException>()
-                    .WithMessage($"Multiple query handlers for '{handlerType}' was found");
+                    .WithMessage($"A single query handler for '{handlerType}' could not be retrieved.");
             }
         }
 
@@ -91,8 +93,28 @@ namespace CommandQuery.Tests
             }
         }
 
+        [Test]
+        public void AssertConfigurationIsValid()
+        {
+            var subject = typeof(FakeQueryHandler).Assembly.GetQueryProcessor();
+
+            subject.Invoking(x => x.AssertConfigurationIsValid())
+                .Should().Throw<QueryTypeException>()
+                .WithMessage("*The query handler for * is not registered.*")
+                .WithMessage("*A single query handler for * could not be retrieved.*")
+                .WithMessage("*The query * is not registered.*");
+
+            new QueryProcessor(new QueryTypeProvider(), new ServiceCollection().BuildServiceProvider())
+                .AssertConfigurationIsValid().Should().NotBeNull();
+        }
+
         Mock<IQueryTypeProvider> FakeQueryTypeProvider;
         Mock<IServiceProvider> FakeServiceProvider;
         QueryProcessor Subject;
+    }
+
+    public class DupeQueryHandler : IQueryHandler<Fail.DupeQuery, object>
+    {
+        public async Task<object> HandleAsync(Fail.DupeQuery query) => throw new NotImplementedException();
     }
 }

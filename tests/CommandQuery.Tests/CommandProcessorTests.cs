@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 
@@ -42,7 +44,7 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"The command handler for '{command}' could not be found");
+                    .WithMessage($"The command handler for '{command}' could not be found.");
             }
 
             void should_throw_exception_if_multiple_command_handlers_are_found()
@@ -55,7 +57,7 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"Multiple command handlers for '{handlerType}' was found");
+                    .WithMessage($"A single command handler for '{handlerType}' could not be retrieved.");
             }
         }
 
@@ -92,7 +94,7 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"The command handler for '{command}' could not be found");
+                    .WithMessage($"The command handler for '{command}' could not be found.");
             }
 
             void should_throw_exception_if_multiple_command_handlers_are_found()
@@ -105,7 +107,7 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"Multiple command handlers for '{handlerType}' was found");
+                    .WithMessage($"A single command handler for '{handlerType}' could not be retrieved.");
             }
         }
 
@@ -139,8 +141,28 @@ namespace CommandQuery.Tests
             }
         }
 
+        [Test]
+        public void AssertConfigurationIsValid()
+        {
+            var subject = typeof(FakeCommandHandler).Assembly.GetCommandProcessor();
+
+            subject.Invoking(x => x.AssertConfigurationIsValid())
+                .Should().Throw<CommandTypeException>()
+                .WithMessage("*The command handler for * is not registered.*")
+                .WithMessage("*A single command handler for * could not be retrieved.*")
+                .WithMessage("*The command * is not registered.*");
+
+            new CommandProcessor(new CommandTypeProvider(), new ServiceCollection().BuildServiceProvider())
+                .AssertConfigurationIsValid().Should().NotBeNull();
+        }
+
         Mock<ICommandTypeProvider> FakeCommandTypeProvider;
         Mock<IServiceProvider> FakeServiceProvider;
         CommandProcessor Subject;
+    }
+
+    public class DupeCommandHandler : ICommandHandler<Fail.DupeCommand>
+    {
+        public async Task HandleAsync(Fail.DupeCommand command) => throw new NotImplementedException();
     }
 }
