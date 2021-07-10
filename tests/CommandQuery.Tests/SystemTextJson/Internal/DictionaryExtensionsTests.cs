@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CommandQuery.SystemTextJson;
 using FluentAssertions;
 using LoFuUnit.NUnit;
@@ -14,9 +15,11 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
             void should_set_the_property_values()
             {
                 var subject = TestData.FakeComplexQuery_As_Dictionary_Of_String_Object;
-
                 var result = subject.SafeDeserialize(typeof(FakeComplexQuery)) as FakeComplexQuery;
+                result.Should().BeEquivalentTo(TestData.FakeComplexQuery);
 
+                subject = TestData.FakeComplexQuery_As_Dictionary_Of_String_Object.ToDictionary(x => x.Key.ToLower(), x => x.Value);
+                result = subject.SafeDeserialize(typeof(FakeComplexQuery)) as FakeComplexQuery;
                 result.Should().BeEquivalentTo(TestData.FakeComplexQuery);
             }
 
