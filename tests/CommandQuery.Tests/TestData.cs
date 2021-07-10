@@ -27,6 +27,7 @@ namespace CommandQuery.Tests
             UInt32 = 10,
             UInt64 = 11,
             Uri = new Uri("https://github.com/hlaueriksson/CommandQuery"),
+            //Version = Version.Parse("1.2.3.4"),
 
             Nullable = 12,
 
@@ -58,6 +59,7 @@ namespace CommandQuery.Tests
             { "UInt32", "10" },
             { "UInt64", "11" },
             { "Uri", "https://github.com/hlaueriksson/CommandQuery" },
+            //{ "Version", "1.2.3.4" },
 
             { "Nullable", "12" },
 
@@ -91,6 +93,7 @@ namespace CommandQuery.Tests
             { "UInt32", new[] { "10" } },
             { "UInt64", new[] { "11" } },
             { "Uri", new[] { "https://github.com/hlaueriksson/CommandQuery" } },
+            //{ "Version", new[] { "1.2.3.4" } },
 
             { "Nullable", new[] { "12" } },
 
@@ -100,6 +103,62 @@ namespace CommandQuery.Tests
             { "IReadOnlyList", new[] { "19", "20" } },
 
             { "UndefinedProperty", new[] { "should_not_be_used" } },
+        };
+
+        public static readonly FakeDateTimeQuery FakeDateTimeQuery = new()
+        {
+            DateTimeUnspecified = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Unspecified),
+            DateTimeUtc = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Utc),
+            DateTimeLocal = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
+            DateTimeArray = new[]
+            {
+                new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Unspecified),
+                new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Utc),
+                new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
+            }
+        };
+
+        public static readonly Dictionary<string, object> FakeDateTimeQuery_As_Dictionary_Of_String_Object = new()
+        {
+            { "DateTimeUnspecified", "2021-07-10T09:48:41.0000000" },
+            { "DateTimeUtc", "2021-07-10T09:48:41.0000000Z" },
+            { "DateTimeLocal", "2021-07-10T09:48:41.0000000+02:00" },
+            { "DateTimeArray", new[] { "2021-07-10T09:48:41.0000000", "2021-07-10T09:48:41.0000000Z", "2021-07-10T09:48:41.0000000+02:00" } },
+        };
+
+        public static readonly Dictionary<string, IEnumerable<string>> FakeDateTimeQuery_As_Dictionary_Of_String_IEnumerable_String = new()
+        {
+            { "DateTimeUnspecified", new[] { "2021-07-10T09:48:41.0000000" } },
+            { "DateTimeUtc", new[] { "2021-07-10T09:48:41.0000000Z" } },
+            { "DateTimeLocal", new[] { "2021-07-10T09:48:41.0000000+02:00" } },
+            { "DateTimeArray", new[] { "2021-07-10T09:48:41.0000000", "2021-07-10T09:48:41.0000000Z", "2021-07-10T09:48:41.0000000+02:00" } },
+        };
+
+        public static readonly FakeNestedQuery FakeNestedQuery = new()
+        {
+            Foo = "Bar",
+            Child = new FakeNestedChild
+            {
+                Foo = "Bar",
+                Child = new FakeNestedGrandchild
+                {
+                    Foo = "Bar"
+                }
+            }
+        };
+
+        public static readonly Dictionary<string, object> FakeNestedQuery_As_Dictionary_Of_String_Object = new()
+        {
+            { "Foo", "Bar" },
+            { "Child.Foo", "Bar" },
+            { "Child.Child.Foo", "Bar" },
+        };
+
+        public static readonly Dictionary<string, IEnumerable<string>> FakeNestedQuery_As_Dictionary_Of_String_IEnumerable_String = new()
+        {
+            { "Foo", new[] { "Bar" } },
+            { "Child.Foo", new[] { "Bar" } },
+            { "Child.Child.Foo", new[] { "Bar" } },
         };
     }
 }

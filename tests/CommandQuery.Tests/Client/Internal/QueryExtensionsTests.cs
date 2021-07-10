@@ -11,7 +11,6 @@ namespace CommandQuery.Tests.Client.Internal
         public void GetRequestUri()
         {
             var result = TestData.FakeComplexQuery.GetRequestUri();
-
             result.Should()
                 .StartWith("FakeComplexQuery?").And
 
@@ -42,6 +41,19 @@ namespace CommandQuery.Tests.Client.Internal
                 .Contain("IEnumerable=15&IEnumerable=16").And
                 .Contain("IList=17&IList=18").And
                 .Contain("IReadOnlyList=19&IReadOnlyList=20");
+
+            result = TestData.FakeDateTimeQuery.GetRequestUri();
+            result.Should()
+                .Contain("DateTimeUnspecified=2021-07-10T09%3A48%3A41.0000000").And
+                .Contain("DateTimeUtc=2021-07-10T09%3A48%3A41.0000000Z").And
+                .Contain("DateTimeLocal=2021-07-10T09%3A48%3A41.0000000%2B02%3A00").And
+                .Contain("DateTimeArray=2021-07-10T09%3A48%3A41.0000000&DateTimeArray=2021-07-10T09%3A48%3A41.0000000Z&DateTimeArray=2021-07-10T09%3A48%3A41.0000000%2B02%3A00");
+
+            result = TestData.FakeNestedQuery.GetRequestUri();
+            result.Should()
+                .Contain("Foo=Bar").And
+                .NotContain("Child.Foo=Bar").And
+                .NotContain("Child.Child.Foo=Bar");
 
             Action act = () => ((object)null).GetRequestUri();
             act.Should().Throw<ArgumentNullException>();

@@ -33,7 +33,7 @@ namespace CommandQuery.SystemTextJson
                 PropertyNameCaseInsensitive = true,
                 NumberHandling = JsonNumberHandling.AllowReadingFromString,
             };
-            result.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            result.Converters.Add(new JsonStringEnumConverter());
             result.Converters.Add(new BooleanConverter());
 
             return result;

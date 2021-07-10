@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CommandQuery.NewtonsoftJson;
 using FluentAssertions;
@@ -19,6 +18,24 @@ namespace CommandQuery.Tests.NewtonsoftJson.Internal
                 var result = subject.SafeDeserialize(typeof(FakeComplexQuery)) as FakeComplexQuery;
 
                 result.Should().BeEquivalentTo(TestData.FakeComplexQuery);
+            }
+
+            void should_set_the_property_values_of_DateTime_kinds()
+            {
+                var subject = TestData.FakeDateTimeQuery_As_Dictionary_Of_String_Object;
+
+                var result = subject.SafeDeserialize(typeof(FakeDateTimeQuery)) as FakeDateTimeQuery;
+
+                result.Should().BeEquivalentTo(TestData.FakeDateTimeQuery);
+            }
+
+            void should_not_set_the_property_values_of_nested_objects()
+            {
+                var subject = TestData.FakeNestedQuery_As_Dictionary_Of_String_Object;
+
+                var result = subject.SafeDeserialize(typeof(FakeNestedQuery)) as FakeNestedQuery;
+
+                result.Should().NotBeEquivalentTo(TestData.FakeNestedQuery);
             }
 
             void should_return_null_if_dictionary_is_null()

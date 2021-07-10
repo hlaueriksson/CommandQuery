@@ -71,6 +71,8 @@ namespace CommandQuery.Tests
         }
     }
 
+    // https://github.com/dotnet/runtime/tree/main/src/libraries/System.Text.Json/src/System/Text/Json/Serialization/Converters/Value
+    // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-supported-collection-types
     public class FakeComplexQuery : IQuery<IEnumerable<FakeResult>>
     {
         public bool Boolean { get; set; }
@@ -93,6 +95,7 @@ namespace CommandQuery.Tests
         public uint UInt32 { get; set; }
         public ulong UInt64 { get; set; }
         public Uri Uri { get; set; }
+        public Version Version { get; set; }
 
         public int? Nullable { get; set; }
 
@@ -117,6 +120,33 @@ namespace CommandQuery.Tests
 
             return await Task.FromResult(result);
         }
+    }
+
+    public class FakeDateTimeQuery : IQuery<FakeResult>
+    {
+        public DateTime DateTimeUnspecified { get; set; }
+        public DateTime DateTimeUtc { get; set; }
+        public DateTime DateTimeLocal { get; set; }
+        public DateTime[] DateTimeArray { get; set; }
+    }
+
+    public class FakeNestedQuery : IQuery<FakeResult>
+    {
+        public string Foo { get; set; }
+
+        public FakeNestedChild Child { get; set; }
+    }
+
+    public class FakeNestedChild
+    {
+        public string Foo { get; set; }
+
+        public FakeNestedGrandchild Child { get; set; }
+    }
+
+    public class FakeNestedGrandchild
+    {
+        public string Foo { get; set; }
     }
 
     public class FakeMultiCommand1 : ICommand { }

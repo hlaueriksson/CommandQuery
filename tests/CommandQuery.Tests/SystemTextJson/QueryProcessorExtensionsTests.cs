@@ -112,6 +112,40 @@ namespace CommandQuery.Tests.SystemTextJson
                 actual.Should().BeEquivalentTo(TestData.FakeComplexQuery);
             }
 
+            async Task should_create_a_query_with_DateTime_kinds_from_a_dictionary()
+            {
+                var expectedQueryType = typeof(FakeDateTimeQuery);
+                FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeDateTimeQuery actual = null;
+                FakeQueryProcessor
+                    .Setup(x => x.ProcessAsync(It.IsAny<FakeDateTimeQuery>()))
+                    .Returns(Task.FromResult(new FakeResult()))
+                    .Callback<FakeDateTimeQuery>(y => actual = y);
+
+                var query = TestData.FakeDateTimeQuery_As_Dictionary_Of_String_IEnumerable_String;
+
+                await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, query);
+
+                actual.Should().BeEquivalentTo(TestData.FakeDateTimeQuery);
+            }
+
+            async Task should_not_create_a_query_with_nested_objects_from_a_dictionary()
+            {
+                var expectedQueryType = typeof(FakeNestedQuery);
+                FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
+                FakeNestedQuery actual = null;
+                FakeQueryProcessor
+                    .Setup(x => x.ProcessAsync(It.IsAny<FakeNestedQuery>()))
+                    .Returns(Task.FromResult(new FakeResult()))
+                    .Callback<FakeNestedQuery>(y => actual = y);
+
+                var query = TestData.FakeNestedQuery_As_Dictionary_Of_String_IEnumerable_String;
+
+                await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, query);
+
+                actual.Should().NotBeEquivalentTo(TestData.FakeNestedQuery);
+            }
+
             void should_throw_exception_if_the_dictionary_is_invalid()
             {
                 var queryName = "FakeQuery";
