@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>CommandQuery.AWSLambda.md</PackageReadmeFile>
-    <PackageTags>CommandQuery;Command;Query;CQS;AWS;Lambda</PackageTags>
+    <PackageTags>CommandQuery;Command;Query;CQS;AWS;Amazon;Lambda</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

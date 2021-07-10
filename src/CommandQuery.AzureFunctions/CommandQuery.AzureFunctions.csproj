@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>CommandQuery.AzureFunctions.md</PackageReadmeFile>
-    <PackageTags>CommandQuery;Command;Query;CQS;azurefunctions</PackageTags>
+    <PackageTags>CommandQuery;Command;Query;CQS;Microsoft;Azure;AzureFunctions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

@@ -11,7 +11,7 @@
     <PackageId>CommandQuery.NewtonsoftJson</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageTags>CommandQuery;Command;Query;CQS;json</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

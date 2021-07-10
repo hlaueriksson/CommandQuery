@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>CommandQuery.Client.md</PackageReadmeFile>
-    <PackageTags>CommandQuery;Command;Query;CQS</PackageTags>
+    <PackageTags>CommandQuery;Command;Query;CQS;HttpClient</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
