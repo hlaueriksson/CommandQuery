@@ -39,7 +39,7 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="error">The error that occurred during the processing of a command or query.</param>
-        public CommandQueryException(string message, IError error) : base(message)
+        public CommandQueryException(string message, IError? error) : base(message)
         {
             Error = error;
         }

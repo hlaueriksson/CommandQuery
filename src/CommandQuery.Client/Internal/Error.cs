@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace CommandQuery.Client
 {
-    [JsonObject]
     [Serializable]
     internal class Error : IError
     {

@@ -34,9 +34,9 @@ namespace CommandQuery.Client
         }
 
         /// <inheritdoc />
-        public async Task<TResult> GetAsync<TResult>(IQuery<TResult> query) => await BaseGetAsync<TResult>(query).ConfigureAwait(false);
+        public async Task<TResult?> GetAsync<TResult>(IQuery<TResult> query) => await BaseGetAsync<TResult>(query).ConfigureAwait(false);
 
         /// <inheritdoc />
-        public async Task<TResult> PostAsync<TResult>(IQuery<TResult> query) => await BasePostAsync<TResult>(query).ConfigureAwait(false);
+        public async Task<TResult?> PostAsync<TResult>(IQuery<TResult> query) => await BasePostAsync<TResult>(query).ConfigureAwait(false);
     }
 }

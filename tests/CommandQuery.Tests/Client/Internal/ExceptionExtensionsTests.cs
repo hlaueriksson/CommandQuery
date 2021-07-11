@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.Client;
 using FluentAssertions;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client.Internal
@@ -22,7 +22,7 @@ namespace CommandQuery.Tests.Client.Internal
             var subject = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.BadRequest,
-                Content = new StringContent(JsonConvert.SerializeObject(error), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(error), Encoding.UTF8, "application/json")
             };
             subject.Invoking(x => x.EnsureSuccessAsync())
                 .Should().Throw<CommandQueryException>()

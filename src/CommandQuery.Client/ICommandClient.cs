@@ -25,6 +25,6 @@ namespace CommandQuery.Client
         /// <returns>A result.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <see cref="ICommand{TResult}"/> failed.</exception>
-        Task<TResult> PostAsync<TResult>(ICommand<TResult> command);
+        Task<TResult?> PostAsync<TResult>(ICommand<TResult> command);
     }
 }

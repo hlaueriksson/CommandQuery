@@ -37,6 +37,6 @@ namespace CommandQuery.Client
         public async Task PostAsync(ICommand command) => await BasePostAsync(command).ConfigureAwait(false);
 
         /// <inheritdoc />
-        public async Task<TResult> PostAsync<TResult>(ICommand<TResult> command) => await BasePostAsync<TResult>(command).ConfigureAwait(false);
+        public async Task<TResult?> PostAsync<TResult>(ICommand<TResult> command) => await BasePostAsync<TResult>(command).ConfigureAwait(false);
     }
 }

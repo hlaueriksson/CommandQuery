@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -61,11 +62,11 @@ namespace CommandQuery.Client
         /// <returns>A result.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <c>GET</c> request failed.</exception>
-        protected async Task<T> BaseGetAsync<T>(object value)
+        protected async Task<T?> BaseGetAsync<T>(object value)
         {
             var response = await Client.GetAsync(value.GetRequestUri()).ConfigureAwait(false);
             await response.EnsureSuccessAsync().ConfigureAwait(false);
-            return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -89,11 +90,11 @@ namespace CommandQuery.Client
         /// <returns>A result.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
-        protected async Task<T> BasePostAsync<T>(object value)
+        protected async Task<T?> BasePostAsync<T>(object value)
         {
             var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
             await response.EnsureSuccessAsync().ConfigureAwait(false);
-            return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);
         }
     }
 }
