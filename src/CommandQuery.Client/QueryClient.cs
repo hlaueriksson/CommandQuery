@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -36,9 +37,9 @@ namespace CommandQuery.Client
         }
 
         /// <inheritdoc />
-        public async Task<TResult?> GetAsync<TResult>(IQuery<TResult> query) => await BaseGetAsync<TResult>(query).ConfigureAwait(false);
+        public async Task<TResult?> GetAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default) => await BaseGetAsync<TResult>(query, cancellationToken).ConfigureAwait(false);
 
         /// <inheritdoc />
-        public async Task<TResult?> PostAsync<TResult>(IQuery<TResult> query) => await BasePostAsync<TResult>(query).ConfigureAwait(false);
+        public async Task<TResult?> PostAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default) => await BasePostAsync<TResult>(query, cancellationToken).ConfigureAwait(false);
     }
 }

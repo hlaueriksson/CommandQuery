@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -9,14 +10,14 @@ namespace CommandQuery.Client
     {
         private static readonly JsonSerializerOptions _options = GetJsonSerializerOptions();
 
-        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage message)
+        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage message, CancellationToken cancellationToken)
         {
             if (message.IsSuccessStatusCode)
             {
                 return message;
             }
 
-            var error = await message.Content.ReadFromJsonAsync<Error>(_options).ConfigureAwait(false);
+            var error = await message.Content.ReadFromJsonAsync<Error>(_options, cancellationToken).ConfigureAwait(false);
 
             throw new CommandQueryException(message.ToString(), error);
         }

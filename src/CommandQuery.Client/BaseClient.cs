@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -67,27 +68,29 @@ namespace CommandQuery.Client
         /// </summary>
         /// <typeparam name="T">The type of result.</typeparam>
         /// <param name="value">A payload.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A result.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <c>GET</c> request failed.</exception>
-        protected async Task<T?> BaseGetAsync<T>(object value)
+        protected async Task<T?> BaseGetAsync<T>(object value, CancellationToken cancellationToken)
         {
-            var response = await Client.GetAsync(value.GetRequestUri()).ConfigureAwait(false);
-            await response.EnsureSuccessAsync().ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync<T>(Options).ConfigureAwait(false);
+            var response = await Client.GetAsync(value.GetRequestUri(), cancellationToken).ConfigureAwait(false);
+            await response.EnsureSuccessAsync(cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>(Options, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Post a payload.
         /// </summary>
         /// <param name="value">A payload.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
-        protected async Task BasePostAsync(object value)
+        protected async Task BasePostAsync(object value, CancellationToken cancellationToken)
         {
-            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options).ConfigureAwait(false);
-            await response.EnsureSuccessAsync().ConfigureAwait(false);
+            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options, cancellationToken).ConfigureAwait(false);
+            await response.EnsureSuccessAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -95,14 +98,15 @@ namespace CommandQuery.Client
         /// </summary>
         /// <typeparam name="T">The type of result.</typeparam>
         /// <param name="value">A payload.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A result.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
-        protected async Task<T?> BasePostAsync<T>(object value)
+        protected async Task<T?> BasePostAsync<T>(object value, CancellationToken cancellationToken)
         {
-            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options).ConfigureAwait(false);
-            await response.EnsureSuccessAsync().ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync<T>(Options).ConfigureAwait(false);
+            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options, cancellationToken).ConfigureAwait(false);
+            await response.EnsureSuccessAsync(cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>(Options, cancellationToken).ConfigureAwait(false);
         }
     }
 }
