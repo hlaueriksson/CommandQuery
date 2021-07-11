@@ -48,7 +48,7 @@ namespace CommandQuery.Benchmark
         // NewtonsoftJson
 
         [Benchmark]
-        public object NewtonsoftJson_JsonExtensions_SafeDeserialize() => JsonExtensions.SafeDeserialize(_newtonsoftJsonString, typeof(FakeComplexObject));
+        public object NewtonsoftJson_JsonExtensions_SafeDeserialize() => JsonExtensions.SafeDeserialize(_newtonsoftJsonString, typeof(FakeComplexObject), null);
 
         [Benchmark]
         public object NewtonsoftJson_DictionaryExtensions_SafeDeserialize() => DictionaryExtensions.SafeDeserialize(_dictionary, typeof(FakeComplexObject));

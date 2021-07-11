@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
+using Newtonsoft.Json;
 
 namespace CommandQuery.NewtonsoftJson
 {
@@ -19,10 +20,11 @@ namespace CommandQuery.NewtonsoftJson
         /// <param name="queryProcessor">The query processor.</param>
         /// <param name="queryName">The name of the query.</param>
         /// <param name="json">The JSON representation of the query.</param>
+        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <paramref name="json"/>.</param>
         /// <returns>The result of the query.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
-        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string? json)
+        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string? json, JsonSerializerSettings? settings = null)
         {
             if (queryProcessor is null)
             {
@@ -41,7 +43,7 @@ namespace CommandQuery.NewtonsoftJson
                 throw new QueryProcessorException($"The query type '{queryName}' could not be found");
             }
 
-            var query = json.SafeDeserialize(queryType);
+            var query = json.SafeDeserialize(queryType, settings);
 
             if (query is null)
             {
