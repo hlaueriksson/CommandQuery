@@ -56,7 +56,7 @@ namespace CommandQuery.Benchmark
         // SystemTextJson
 
         [Benchmark]
-        public object SystemTextJson_JsonExtensions_SafeDeserialize() => SystemTextJson.JsonExtensions.SafeDeserialize(_systemTextJsonString, typeof(FakeComplexObject));
+        public object SystemTextJson_JsonExtensions_SafeDeserialize() => SystemTextJson.JsonExtensions.SafeDeserialize(_systemTextJsonString, typeof(FakeComplexObject), null);
 
         [Benchmark]
         public object SystemTextJson_DictionaryExtensions_SafeDeserialize() => SystemTextJson.DictionaryExtensions.SafeDeserialize(_dictionary, typeof(FakeComplexObject));

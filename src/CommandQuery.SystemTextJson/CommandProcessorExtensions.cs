@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -15,10 +16,11 @@ namespace CommandQuery.SystemTextJson
         /// <param name="commandProcessor">The command processor.</param>
         /// <param name="commandName">The name of the command.</param>
         /// <param name="json">The JSON representation of the command.</param>
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <paramref name="json"/>.</param>
         /// <returns>The result of the command wrapped in a <see cref="CommandResult"/>, or <see cref="CommandResult.None"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="commandProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandProcessorException">The process of the command failed.</exception>
-        public static async Task<CommandResult> ProcessAsync(this ICommandProcessor commandProcessor, string commandName, string? json)
+        public static async Task<CommandResult> ProcessAsync(this ICommandProcessor commandProcessor, string commandName, string? json, JsonSerializerOptions? options = null)
         {
             if (commandProcessor is null)
             {
@@ -37,7 +39,7 @@ namespace CommandQuery.SystemTextJson
                 throw new CommandProcessorException($"The command type '{commandName}' could not be found");
             }
 
-            var command = json.SafeDeserialize(commandType);
+            var command = json.SafeDeserialize(commandType, options);
 
             switch (command)
             {
