@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -19,6 +20,7 @@ namespace CommandQuery.AWSLambda.Tests
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
+            Use<JsonSerializerOptions>(null);
             Logger = new Mock<ILambdaLogger>().Object;
             Request = new APIGatewayProxyRequest { Body = "{}" };
         }

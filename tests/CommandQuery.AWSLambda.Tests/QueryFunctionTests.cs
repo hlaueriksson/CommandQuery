@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -20,6 +21,7 @@ namespace CommandQuery.AWSLambda.Tests
         {
             Clear();
             Use<Mock<IQueryProcessor>>();
+            Use<JsonSerializerOptions>(null);
             Logger = new Mock<ILambdaLogger>().Object;
             QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
