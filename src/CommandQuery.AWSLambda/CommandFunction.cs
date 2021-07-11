@@ -15,14 +15,17 @@ namespace CommandQuery.AWSLambda
     public class CommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
+        private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
-        public CommandFunction(ICommandProcessor commandProcessor)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="APIGatewayProxyRequest.Body"/> and serialization of <see cref="APIGatewayProxyResponse.Body"/>.</param>
+        public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerOptions? options = null)
         {
             _commandProcessor = commandProcessor;
+            _options = options;
         }
 
         /// <summary>
@@ -44,7 +47,7 @@ namespace CommandQuery.AWSLambda
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, request.Body).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, request.Body, _options).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {
@@ -54,7 +57,7 @@ namespace CommandQuery.AWSLambda
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonSerializer.Serialize(result.Value),
+                    Body = JsonSerializer.Serialize(result.Value, _options),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
                 };
             }

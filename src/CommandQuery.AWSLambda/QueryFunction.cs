@@ -16,14 +16,17 @@ namespace CommandQuery.AWSLambda
     public class QueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
+        private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
-        public QueryFunction(IQueryProcessor queryProcessor)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="APIGatewayProxyRequest.Body"/> and serialization of <see cref="APIGatewayProxyResponse.Body"/>.</param>
+        public QueryFunction(IQueryProcessor queryProcessor, JsonSerializerOptions? options = null)
         {
             _queryProcessor = queryProcessor;
+            _options = options;
         }
 
         /// <summary>
@@ -47,12 +50,12 @@ namespace CommandQuery.AWSLambda
             {
                 var result = request.HttpMethod == "GET"
                     ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.MultiValueQueryStringParameters)).ConfigureAwait(false)
-                    : await _queryProcessor.ProcessAsync<object>(queryName, request.Body).ConfigureAwait(false);
+                    : await _queryProcessor.ProcessAsync<object>(queryName, request.Body, _options).ConfigureAwait(false);
 
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonSerializer.Serialize(result),
+                    Body = JsonSerializer.Serialize(result, _options),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
                 };
             }
