@@ -47,7 +47,7 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/>.</param>
         /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during serialization and deserialization of JSON.</param>
-        protected BaseClient(HttpClient client, JsonSerializerOptions? options = null)
+        protected BaseClient(HttpClient client, JsonSerializerOptions? options)
         {
             Client = client;
             Options = options;

@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace CommandQuery.Client
 {
     // https://github.com/joseftw/JOS.SystemTextJsonDictionaryStringObjectJsonConverter
-    internal class DictionaryStringObjectConverter : JsonConverter<Dictionary<string, object>>
+    internal sealed class DictionaryStringObjectConverter : JsonConverter<Dictionary<string, object>>
     {
         public override Dictionary<string, object> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
