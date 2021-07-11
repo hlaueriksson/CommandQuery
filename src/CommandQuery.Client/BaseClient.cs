@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -44,15 +45,22 @@ namespace CommandQuery.Client
         /// Initializes a new instance of the <see cref="BaseClient"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/>.</param>
-        protected BaseClient(HttpClient client)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during serialization and deserialization of JSON.</param>
+        protected BaseClient(HttpClient client, JsonSerializerOptions? options = null)
         {
             Client = client;
+            Options = options;
         }
 
         /// <summary>
         /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
         protected HttpClient Client { get; } = new();
+
+        /// <summary>
+        /// Options to control the behavior during serialization and deserialization of JSON.
+        /// </summary>
+        protected JsonSerializerOptions? Options { get; }
 
         /// <summary>
         /// Gets a result.
@@ -66,7 +74,7 @@ namespace CommandQuery.Client
         {
             var response = await Client.GetAsync(value.GetRequestUri()).ConfigureAwait(false);
             await response.EnsureSuccessAsync().ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>(Options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -78,7 +86,7 @@ namespace CommandQuery.Client
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task BasePostAsync(object value)
         {
-            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
+            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options).ConfigureAwait(false);
             await response.EnsureSuccessAsync().ConfigureAwait(false);
         }
 
@@ -92,9 +100,9 @@ namespace CommandQuery.Client
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task<T?> BasePostAsync<T>(object value)
         {
-            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value).ConfigureAwait(false);
+            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options).ConfigureAwait(false);
             await response.EnsureSuccessAsync().ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>(Options).ConfigureAwait(false);
         }
     }
 }

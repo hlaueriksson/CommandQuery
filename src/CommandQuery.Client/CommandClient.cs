@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Client
@@ -29,7 +30,8 @@ namespace CommandQuery.Client
         /// Initializes a new instance of the <see cref="CommandClient"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/>.</param>
-        public CommandClient(HttpClient client) : base(client)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during serialization and deserialization of JSON.</param>
+        public CommandClient(HttpClient client, JsonSerializerOptions? options = null) : base(client, options)
         {
         }
 
