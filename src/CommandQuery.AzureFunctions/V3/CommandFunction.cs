@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AzureFunctions
 {
@@ -13,14 +14,17 @@ namespace CommandQuery.AzureFunctions
     public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
+        private readonly JsonSerializerSettings? _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
-        public CommandFunction(ICommandProcessor commandProcessor)
+        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/>.</param>
+        public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerSettings? settings = null)
         {
             _commandProcessor = commandProcessor;
+            _settings = settings;
         }
 
         /// <inheritdoc />
@@ -30,7 +34,7 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {

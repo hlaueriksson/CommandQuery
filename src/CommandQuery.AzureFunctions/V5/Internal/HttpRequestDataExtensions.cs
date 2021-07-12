@@ -1,4 +1,5 @@
 #if NET5_0
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -14,18 +15,18 @@ namespace CommandQuery.AzureFunctions
             return response;
         }
 
-        internal static async Task<HttpResponseData> BadRequestAsync(this HttpRequestData req, IError error)
+        internal static async Task<HttpResponseData> BadRequestAsync(this HttpRequestData req, Exception exception)
         {
             var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(error).ConfigureAwait(false);
+            await response.WriteAsJsonAsync(exception.ToError()).ConfigureAwait(false);
             response.StatusCode = HttpStatusCode.BadRequest;
             return response;
         }
 
-        internal static async Task<HttpResponseData> InternalServerErrorAsync(this HttpRequestData req, IError error)
+        internal static async Task<HttpResponseData> InternalServerErrorAsync(this HttpRequestData req, Exception exception)
         {
             var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(error).ConfigureAwait(false);
+            await response.WriteAsJsonAsync(exception.ToError()).ConfigureAwait(false);
             response.StatusCode = HttpStatusCode.InternalServerError;
             return response;
         }

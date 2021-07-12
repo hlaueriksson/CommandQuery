@@ -29,6 +29,10 @@
 
   <Import Project="../../Analyzers.props" />
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.AzureFunctions.Tests" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <!--<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.9" />-->
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="[3.0.0,3.1.0)" />

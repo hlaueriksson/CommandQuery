@@ -1,6 +1,7 @@
 #if NET5_0
 using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Core.Serialization;
 using CommandQuery.Exceptions;
@@ -24,6 +25,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
+            Use<JsonSerializerOptions>(null);
 
             var options = new Mock<IOptions<WorkerOptions>>();
             options.Setup(x => x.Value).Returns(new WorkerOptions { Serializer = new JsonObjectSerializer() });

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace CommandQuery.AzureFunctions
 {
@@ -15,14 +16,17 @@ namespace CommandQuery.AzureFunctions
     public class QueryFunction : IQueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
+        private readonly JsonSerializerSettings? _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
-        public QueryFunction(IQueryProcessor queryProcessor)
+        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/>.</param>
+        public QueryFunction(IQueryProcessor queryProcessor, JsonSerializerSettings? settings = null)
         {
             _queryProcessor = queryProcessor;
+            _settings = settings;
         }
 
         /// <inheritdoc />
@@ -38,8 +42,8 @@ namespace CommandQuery.AzureFunctions
             try
             {
                 var result = req.Method == "GET"
-                    ? await HandleAsync(queryName, Dictionary(req.Query)).ConfigureAwait(false)
-                    : await HandleAsync(queryName, await req.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Query)).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings).ConfigureAwait(false);
 
                 return new OkObjectResult(result);
             }
@@ -55,16 +59,6 @@ namespace CommandQuery.AzureFunctions
             {
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
-        }
-
-        private async Task<object> HandleAsync(string queryName, string content)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, content).ConfigureAwait(false);
-        }
-
-        private async Task<object> HandleAsync(string queryName, IDictionary<string, IEnumerable<string>> query)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, query).ConfigureAwait(false);
         }
     }
 }

@@ -1,6 +1,7 @@
 #if NET5_0
 using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Core.Serialization;
 using CommandQuery.Exceptions;
@@ -24,6 +25,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
         {
             Clear();
             Use<Mock<IQueryProcessor>>();
+            Use<JsonSerializerOptions>(null);
             Logger = Use<ILogger>();
             QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));

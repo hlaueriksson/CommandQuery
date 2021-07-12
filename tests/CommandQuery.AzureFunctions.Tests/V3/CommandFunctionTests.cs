@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests.V3
@@ -24,6 +25,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
+            Use<JsonSerializerSettings>(null);
             Req = new DefaultHttpRequest(new DefaultHttpContext())
             {
                 Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"))

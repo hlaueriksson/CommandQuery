@@ -1,6 +1,7 @@
 #if NET5_0
 using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.SystemTextJson;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -12,14 +13,17 @@ namespace CommandQuery.AzureFunctions
     public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
+        private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
-        public CommandFunction(ICommandProcessor commandProcessor)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequestData.Body"/>.</param>
+        public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerOptions? options = null)
         {
             _commandProcessor = commandProcessor;
+            _options = options;
         }
 
         /// <inheritdoc />
@@ -34,7 +38,7 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {
@@ -49,8 +53,8 @@ namespace CommandQuery.AzureFunctions
                 logger?.LogError(exception, "Handle command failed: {Command}, {Payload}", commandName, payload);
 
                 return exception.IsHandled()
-                    ? await req.BadRequestAsync(exception.ToError()).ConfigureAwait(false)
-                    : await req.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
+                    ? await req.BadRequestAsync(exception).ConfigureAwait(false)
+                    : await req.InternalServerErrorAsync(exception).ConfigureAwait(false);
             }
         }
     }

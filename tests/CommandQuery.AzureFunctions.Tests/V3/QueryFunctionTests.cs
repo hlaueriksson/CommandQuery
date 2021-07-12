@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests.V3
@@ -26,6 +27,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
         {
             Clear();
             Use<Mock<IQueryProcessor>>();
+            Use<JsonSerializerSettings>(null);
             Logger = Use<ILogger>();
             QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
