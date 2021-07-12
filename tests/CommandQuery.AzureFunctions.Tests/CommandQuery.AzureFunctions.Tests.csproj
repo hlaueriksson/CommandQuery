@@ -22,10 +22,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\CommandQuery.AzureFunctions\CommandQuery.AzureFunctions.csproj" />
   </ItemGroup>

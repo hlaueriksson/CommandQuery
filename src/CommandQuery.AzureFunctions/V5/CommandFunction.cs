@@ -2,7 +2,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using CommandQuery.NewtonsoftJson;
+using CommandQuery.SystemTextJson;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 

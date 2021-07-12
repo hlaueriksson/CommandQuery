@@ -39,7 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj" />
+    <ProjectReference Include="..\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+    <ProjectReference Include="..\CommandQuery.SystemTextJson\CommandQuery.SystemTextJson.csproj" Condition="'$(TargetFramework)' == 'net5.0'" />
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>
 
