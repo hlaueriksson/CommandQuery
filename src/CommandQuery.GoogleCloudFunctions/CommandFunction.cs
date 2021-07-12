@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.SystemTextJson;
 using Microsoft.AspNetCore.Http;
@@ -10,14 +11,17 @@ namespace CommandQuery.GoogleCloudFunctions
     public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
+        private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
-        public CommandFunction(ICommandProcessor commandProcessor)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/> and serialization of <see cref="HttpResponse.Body"/>.</param>
+        public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerOptions? options = null)
         {
             _commandProcessor = commandProcessor;
+            _options = options;
         }
 
         /// <inheritdoc />
@@ -32,7 +36,7 @@ namespace CommandQuery.GoogleCloudFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
 
                 context.Response.StatusCode = StatusCodes.Status200OK;
 
@@ -41,7 +45,7 @@ namespace CommandQuery.GoogleCloudFunctions
                     return;
                 }
 
-                await context.Response.OkAsync(result.Value).ConfigureAwait(false);
+                await context.Response.OkAsync(result.Value, _options).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -50,11 +54,11 @@ namespace CommandQuery.GoogleCloudFunctions
 
                 if (exception.IsHandled())
                 {
-                    await context.Response.BadRequestAsync(exception.ToError()).ConfigureAwait(false);
+                    await context.Response.BadRequestAsync(exception).ConfigureAwait(false);
                     return;
                 }
 
-                await context.Response.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
+                await context.Response.InternalServerErrorAsync(exception).ConfigureAwait(false);
             }
         }
     }

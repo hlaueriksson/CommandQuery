@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -31,25 +32,25 @@ namespace CommandQuery.GoogleCloudFunctions
             return result;
         }
 
-        internal static async Task OkAsync(this HttpResponse response, object? result)
+        internal static async Task OkAsync(this HttpResponse response, object? result, JsonSerializerOptions? options)
         {
             response.StatusCode = StatusCodes.Status200OK;
             response.ContentType = "text/json";
-            await JsonSerializer.SerializeAsync(response.Body, result).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(response.Body, result, options).ConfigureAwait(false);
         }
 
-        internal static async Task BadRequestAsync(this HttpResponse response, IError error)
+        internal static async Task BadRequestAsync(this HttpResponse response, Exception exception)
         {
             response.StatusCode = StatusCodes.Status400BadRequest;
             response.ContentType = "text/json";
-            await JsonSerializer.SerializeAsync(response.Body, error).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(response.Body, exception.ToError()).ConfigureAwait(false);
         }
 
-        internal static async Task InternalServerErrorAsync(this HttpResponse response, IError error)
+        internal static async Task InternalServerErrorAsync(this HttpResponse response, Exception exception)
         {
             response.StatusCode = StatusCodes.Status500InternalServerError;
             response.ContentType = "text/json";
-            await JsonSerializer.SerializeAsync(response.Body, error).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(response.Body, exception.ToError()).ConfigureAwait(false);
         }
     }
 }

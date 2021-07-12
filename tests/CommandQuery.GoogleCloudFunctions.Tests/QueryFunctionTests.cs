@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -23,6 +24,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
         {
             Clear();
             Use<Mock<IQueryProcessor>>();
+            Use<JsonSerializerOptions>(null);
             Logger = Use<ILogger>();
             QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));

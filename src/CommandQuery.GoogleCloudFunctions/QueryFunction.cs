@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.SystemTextJson;
 using Microsoft.AspNetCore.Http;
@@ -12,14 +13,17 @@ namespace CommandQuery.GoogleCloudFunctions
     public class QueryFunction : IQueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
+        private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
-        public QueryFunction(IQueryProcessor queryProcessor)
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/> and serialization of <see cref="HttpResponse.Body"/>.</param>
+        public QueryFunction(IQueryProcessor queryProcessor, JsonSerializerOptions? options = null)
         {
             _queryProcessor = queryProcessor;
+            _options = options;
         }
 
         /// <inheritdoc />
@@ -35,10 +39,10 @@ namespace CommandQuery.GoogleCloudFunctions
             try
             {
                 var result = context.Request.Method == "GET"
-                    ? await HandleAsync(queryName, Dictionary(context.Request.Query)).ConfigureAwait(false)
-                    : await HandleAsync(queryName, await context.Request.ReadAsStringAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(context.Request.Query)).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
 
-                await context.Response.OkAsync(result).ConfigureAwait(false);
+                await context.Response.OkAsync(result, _options).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -47,27 +51,17 @@ namespace CommandQuery.GoogleCloudFunctions
 
                 if (exception.IsHandled())
                 {
-                    await context.Response.BadRequestAsync(exception.ToError()).ConfigureAwait(false);
+                    await context.Response.BadRequestAsync(exception).ConfigureAwait(false);
                     return;
                 }
 
-                await context.Response.InternalServerErrorAsync(exception.ToError()).ConfigureAwait(false);
+                await context.Response.InternalServerErrorAsync(exception).ConfigureAwait(false);
             }
 
             static Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)
             {
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
-        }
-
-        private async Task<object> HandleAsync(string queryName, string content)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, content).ConfigureAwait(false);
-        }
-
-        private async Task<object> HandleAsync(string queryName, IDictionary<string, IEnumerable<string>> query)
-        {
-            return await _queryProcessor.ProcessAsync<object>(queryName, query).ConfigureAwait(false);
         }
     }
 }

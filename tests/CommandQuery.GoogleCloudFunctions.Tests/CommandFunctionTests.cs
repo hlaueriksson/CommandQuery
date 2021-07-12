@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -21,6 +22,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
+            Use<JsonSerializerOptions>(null);
             Context = new DefaultHttpContext();
             Context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"));
             Context.Response.Body = new MemoryStream();
