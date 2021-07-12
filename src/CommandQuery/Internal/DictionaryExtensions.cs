@@ -16,7 +16,36 @@ namespace CommandQuery
 
             var properties = type.GetProperties();
 
-            return query.ToDictionary(g => g.Key, Token, StringComparer.OrdinalIgnoreCase);
+            var result = query.ToDictionary(g => g.Key, Token, StringComparer.OrdinalIgnoreCase);
+
+            var nestedKeys = result.Keys.Where(x => x.Contains('.')).ToList();
+
+            foreach (var key in nestedKeys)
+            {
+                var path = key.Split('.');
+                var ancestorCount = key.Count(x => x == '.');
+
+                Dictionary<string, object> parent = result;
+
+                foreach (var ancestor in path.Take(ancestorCount))
+                {
+                    if (parent!.ContainsKey(ancestor))
+                    {
+                        parent = (Dictionary<string, object>)parent[ancestor];
+                    }
+                    else
+                    {
+                        var temp = new Dictionary<string, object>();
+                        parent.Add(ancestor, temp);
+                        parent = temp;
+                    }
+                }
+
+                parent.Add(path.Last(), result[key]);
+                result.Remove(key);
+            }
+
+            return result;
 
             object Token(KeyValuePair<string, IEnumerable<string>> kv)
             {

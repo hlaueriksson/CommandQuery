@@ -150,8 +150,16 @@ namespace CommandQuery.Tests
         public static readonly Dictionary<string, object> FakeNestedQuery_As_Dictionary_Of_String_Object = new()
         {
             { "Foo", "Bar" },
-            { "Child.Foo", "Bar" },
-            { "Child.Child.Foo", "Bar" },
+            { "Child", new Dictionary<string, object>
+                {
+                    { "Foo", "Bar" },
+                    { "Child", new Dictionary<string, object>
+                        {
+                            { "Foo", "Bar" }
+                        }
+                    }
+                }
+            }
         };
 
         public static readonly Dictionary<string, IEnumerable<string>> FakeNestedQuery_As_Dictionary_Of_String_IEnumerable_String = new()

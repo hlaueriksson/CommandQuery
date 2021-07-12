@@ -143,14 +143,14 @@ namespace CommandQuery.Tests.NewtonsoftJson
 
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, query);
 
-                actual.Should().NotBeEquivalentTo(TestData.FakeNestedQuery);
+                actual.Should().BeEquivalentTo(TestData.FakeNestedQuery);
             }
 
             void should_throw_exception_if_the_dictionary_is_invalid()
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (IDictionary<string, IEnumerable<string>>)null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, null)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The dictionary could not be deserialized to an object");
             }

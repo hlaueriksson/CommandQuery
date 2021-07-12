@@ -38,7 +38,7 @@ namespace CommandQuery.Tests.SystemTextJson.Internal
 
                 var result = subject.SafeDeserialize(typeof(FakeNestedQuery)) as FakeNestedQuery;
 
-                result.Should().NotBeEquivalentTo(TestData.FakeNestedQuery);
+                result.Should().BeEquivalentTo(TestData.FakeNestedQuery);
             }
 
             void should_return_null_if_dictionary_is_null()
