@@ -35,6 +35,8 @@
     <InternalsVisibleTo Include="CommandQuery.AWSLambda" />
     <InternalsVisibleTo Include="CommandQuery.AzureFunctions" />
     <InternalsVisibleTo Include="CommandQuery.GoogleCloudFunctions" />
+    <InternalsVisibleTo Include="CommandQuery.NewtonsoftJson" />
+    <InternalsVisibleTo Include="CommandQuery.SystemTextJson" />
     <InternalsVisibleTo Include="CommandQuery.Tests" />
   </ItemGroup>
 

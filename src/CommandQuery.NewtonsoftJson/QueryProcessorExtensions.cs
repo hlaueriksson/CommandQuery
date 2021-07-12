@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using Newtonsoft.Json;
@@ -77,7 +75,7 @@ namespace CommandQuery.NewtonsoftJson
                 throw new QueryProcessorException($"The query type '{queryName}' could not be found");
             }
 
-            var query = GetQueryDictionary(dictionary, queryType).SafeDeserialize(queryType);
+            var query = dictionary.GetQueryDictionary(queryType).SafeDeserialize(queryType);
 
             if (query is null)
             {
@@ -85,26 +83,6 @@ namespace CommandQuery.NewtonsoftJson
             }
 
             return await queryProcessor.ProcessAsync((dynamic)query);
-        }
-
-        private static Dictionary<string, object>? GetQueryDictionary(IDictionary<string, IEnumerable<string>>? query, Type type)
-        {
-            if (query is null)
-            {
-                return null;
-            }
-
-            var properties = type.GetProperties();
-
-            return query.ToDictionary(g => g.Key, Token, StringComparer.OrdinalIgnoreCase);
-
-            object Token(KeyValuePair<string, IEnumerable<string>> kv)
-            {
-                var property = properties.FirstOrDefault(x => string.Equals(x.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
-                var isEnumerable = property?.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property?.PropertyType);
-
-                return (isEnumerable ? kv.Value : kv.Value.FirstOrDefault())!;
-            }
         }
     }
 }
