@@ -49,14 +49,15 @@ namespace CommandQuery.Tests.Client.Internal
                 //.Contain("DateTimeLocal=2021-07-10T09%3A48%3A41.0000000%2B02%3A00").And
                 .Contain("DateTimeArray=2021-07-10T09%3A48%3A41.0000000&DateTimeArray=2021-07-10T09%3A48%3A41.0000000Z"/*&DateTimeArray=2021-07-10T09%3A48%3A41.0000000%2B02%3A00*/);
 
-            result = TestData.FakeNestedQuery.GetRequestUri();
-            result.Should()
-                .Contain("Foo=Bar").And
-                .NotContain("Child.Foo=Bar").And
-                .NotContain("Child.Child.Foo=Bar");
-
             Action act = () => ((object)null).GetRequestUri();
             act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void GetRequestUri_with_nested_query()
+        {
+            var result = TestData.FakeNestedQuery.GetRequestUri();
+            result.Should().Be("FakeNestedQuery?Foo=Bar&Child.Foo=Bar&Child.Child.Foo=Bar");
         }
 
         [Test]

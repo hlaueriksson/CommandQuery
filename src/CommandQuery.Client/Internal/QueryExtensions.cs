@@ -30,27 +30,38 @@ namespace CommandQuery.Client
             return query.GetType().Name;
         }
 
+        private static readonly Assembly _system = typeof(object).Assembly;
+
         private static string QueryString(this object query)
         {
             var result = new List<string>();
 
-            foreach (var p in query.GetType().GetProperties().Where(p => p.GetValue(query, null) != null))
-            {
-                var value = p.GetValue(query, null);
-
-                if (value is IEnumerable enumerable and not string)
-                {
-                    result.AddRange(from object v in enumerable select Parameter(p, v));
-                }
-                else
-                {
-                    result.Add(Parameter(p, value));
-                }
-            }
+            Parameters(query, string.Empty);
 
             return string.Join("&", result.ToArray());
 
-            static string Parameter(PropertyInfo property, object value)
+            void Parameters(object root, string prefix)
+            {
+                foreach (var p in root.GetType().GetProperties().Where(p => p.GetValue(root, null) != null))
+                {
+                    var value = p.GetValue(root, null);
+
+                    if (value.GetType().Assembly != _system)
+                    {
+                        Parameters(value, prefix + p.Name + ".");
+                    }
+                    else if (value is IEnumerable enumerable and not string)
+                    {
+                        result.AddRange(from object v in enumerable select Parameter(p, v, prefix));
+                    }
+                    else
+                    {
+                        result.Add(Parameter(p, value, prefix));
+                    }
+                }
+            }
+
+            static string Parameter(PropertyInfo property, object value, string prefix)
             {
                 return value switch
                 {
@@ -61,7 +72,7 @@ namespace CommandQuery.Client
 
                 string NameValuePair(string value)
                 {
-                    return $"{property.Name}={WebUtility.UrlEncode(value)}";
+                    return $"{prefix}{property.Name}={WebUtility.UrlEncode(value)}";
                 }
             }
         }
