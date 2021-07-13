@@ -84,7 +84,7 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="value">A payload.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task BasePostAsync(object value, CancellationToken cancellationToken)

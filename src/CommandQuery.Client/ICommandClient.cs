@@ -14,7 +14,7 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandQueryException">The <see cref="ICommand"/> failed.</exception>
         Task PostAsync(ICommand command, CancellationToken cancellationToken = default);

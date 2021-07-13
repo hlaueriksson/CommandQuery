@@ -30,7 +30,7 @@ namespace CommandQuery.AspNetCore
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>200, 400 or 500.</returns>
+        /// <returns>The result for status code <c>200</c>, or an error for status code <c>400</c> and <c>500</c>.</returns>
         [HttpPost]
         public async Task<IActionResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {

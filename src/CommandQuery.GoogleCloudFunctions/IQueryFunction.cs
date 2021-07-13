@@ -18,7 +18,7 @@ namespace CommandQuery.GoogleCloudFunctions
         /// <param name="context">A <see cref="HttpContext"/>.</param>
         /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>The result + 200, 400 or 500.</returns>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         Task HandleAsync(string queryName, HttpContext context, ILogger? logger, CancellationToken cancellationToken = default);
     }
