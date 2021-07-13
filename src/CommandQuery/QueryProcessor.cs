@@ -44,7 +44,6 @@ namespace CommandQuery
             return await handler.HandleAsync((dynamic)query, cancellationToken);
         }
 
-
         /// <inheritdoc />
         public Type? GetQueryType(string queryName)
         {

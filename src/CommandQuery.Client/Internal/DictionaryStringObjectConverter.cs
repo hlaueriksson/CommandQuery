@@ -55,40 +55,9 @@ namespace CommandQuery.Client
             writer.WriteEndObject();
         }
 
-        private object? ExtractValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        private static void HandleValue(Utf8JsonWriter writer, object value)
         {
-            switch (reader.TokenType)
-            {
-                case JsonTokenType.String:
-                    if (reader.TryGetDateTime(out var date))
-                    {
-                        return date;
-                    }
-                    return reader.GetString();
-                case JsonTokenType.False:
-                    return false;
-                case JsonTokenType.True:
-                    return true;
-                case JsonTokenType.Null:
-                    return null;
-                case JsonTokenType.Number:
-                    if (reader.TryGetInt64(out var result))
-                    {
-                        return result;
-                    }
-                    return reader.GetDecimal();
-                case JsonTokenType.StartObject:
-                    return Read(ref reader, null!, options);
-                case JsonTokenType.StartArray:
-                    var list = new List<object>();
-                    while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
-                    {
-                        list.Add(ExtractValue(ref reader, options)!);
-                    }
-                    return list;
-                default:
-                    throw new JsonException($"'{reader.TokenType}' is not supported");
-            }
+            HandleValue(writer, null!, value);
         }
 
         private static void HandleValue(Utf8JsonWriter writer, string key, object objectValue)
@@ -130,6 +99,7 @@ namespace CommandQuery.Client
                     {
                         HandleValue(writer, item.Key, item.Value);
                     }
+
                     writer.WriteEndObject();
                     break;
                 case object[] array:
@@ -138,6 +108,7 @@ namespace CommandQuery.Client
                     {
                         HandleValue(writer, item);
                     }
+
                     writer.WriteEndArray();
                     break;
                 default:
@@ -146,9 +117,43 @@ namespace CommandQuery.Client
             }
         }
 
-        private static void HandleValue(Utf8JsonWriter writer, object value)
+        private object? ExtractValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            HandleValue(writer, null!, value);
+            switch (reader.TokenType)
+            {
+                case JsonTokenType.String:
+                    if (reader.TryGetDateTime(out var date))
+                    {
+                        return date;
+                    }
+
+                    return reader.GetString();
+                case JsonTokenType.False:
+                    return false;
+                case JsonTokenType.True:
+                    return true;
+                case JsonTokenType.Null:
+                    return null;
+                case JsonTokenType.Number:
+                    if (reader.TryGetInt64(out var result))
+                    {
+                        return result;
+                    }
+
+                    return reader.GetDecimal();
+                case JsonTokenType.StartObject:
+                    return Read(ref reader, null!, options);
+                case JsonTokenType.StartArray:
+                    var list = new List<object>();
+                    while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+                    {
+                        list.Add(ExtractValue(ref reader, options)!);
+                    }
+
+                    return list;
+                default:
+                    throw new JsonException($"'{reader.TokenType}' is not supported");
+            }
         }
     }
 }

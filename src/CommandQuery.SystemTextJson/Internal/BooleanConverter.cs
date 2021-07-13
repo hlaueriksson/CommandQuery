@@ -16,6 +16,7 @@ namespace CommandQuery.SystemTextJson
                     {
                         return value;
                     }
+
                     break;
                 case JsonTokenType.True:
                     return true;

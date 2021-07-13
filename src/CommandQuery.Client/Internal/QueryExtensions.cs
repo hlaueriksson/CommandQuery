@@ -10,6 +10,8 @@ namespace CommandQuery.Client
 {
     internal static class QueryExtensions
     {
+        private static readonly Assembly _system = typeof(object).Assembly;
+
         internal static string GetRequestUri(this object query)
         {
             if (query is null)
@@ -29,8 +31,6 @@ namespace CommandQuery.Client
 
             return query.GetType().Name;
         }
-
-        private static readonly Assembly _system = typeof(object).Assembly;
 
         private static string QueryString(this object query)
         {
@@ -67,7 +67,7 @@ namespace CommandQuery.Client
                 {
                     DateTime dateTime => NameValuePair(dateTime.ToString("O")),
                     DateTimeOffset dateTimeOffset => NameValuePair(dateTimeOffset.ToString("O")),
-                    _ => NameValuePair(Convert.ToString(value, CultureInfo.InvariantCulture)!)
+                    _ => NameValuePair(Convert.ToString(value, CultureInfo.InvariantCulture)!),
                 };
 
                 string NameValuePair(string value)

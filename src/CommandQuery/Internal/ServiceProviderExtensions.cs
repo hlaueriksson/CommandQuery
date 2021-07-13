@@ -29,13 +29,19 @@ namespace CommandQuery
 
         internal static IEnumerable<Type> GetAllServiceTypes(this IServiceProvider provider)
         {
-            if (provider is not ServiceProvider serviceProvider) return Enumerable.Empty<Type>();
+            if (provider is not ServiceProvider serviceProvider)
+            {
+                return Enumerable.Empty<Type>();
+            }
 
             var engine = GetFieldValue(serviceProvider, "_engine");
             var callSiteFactory = GetPropertyValue(engine, "CallSiteFactory");
             var descriptorLookup = GetFieldValue(callSiteFactory, "_descriptorLookup");
 
-            if (descriptorLookup is not IDictionary dictionary) return Enumerable.Empty<Type>();
+            if (descriptorLookup is not IDictionary dictionary)
+            {
+                return Enumerable.Empty<Type>();
+            }
 
             return dictionary.Keys.Cast<Type>();
 

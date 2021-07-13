@@ -44,20 +44,6 @@ namespace CommandQuery.Client
             Error = error;
         }
 
-        /// <inheritdoc />
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info is null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            info.AddValue("Error", Error, typeof(Error));
-
-            base.GetObjectData(info, context);
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandQueryException"/> class.
         /// </summary>
@@ -72,5 +58,19 @@ namespace CommandQuery.Client
         /// Represents an error that occurred during the processing of a command or query.
         /// </summary>
         public IError? Error { get; set; }
+
+        /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            info.AddValue("Error", Error, typeof(Error));
+
+            base.GetObjectData(info, context);
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace CommandQuery
             {
                 CommandException commandException => commandException.ToError(),
                 QueryException queryException => queryException.ToError(),
-                _ => new Error(exception.Message)
+                _ => new Error(exception.Message),
             };
         }
 

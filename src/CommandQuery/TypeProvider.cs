@@ -50,7 +50,7 @@ namespace CommandQuery
         /// </summary>
         /// <param name="first">The first type.</param>
         /// <param name="second">The second type.</param>
-        /// <returns><see cref="CommandTypeException"/> or <see cref="QueryTypeException"/></returns>
+        /// <returns><see cref="CommandTypeException"/> or <see cref="QueryTypeException"/>.</returns>
         protected abstract Exception GetTypeException(Type first, Type second);
 
         private void LoadTypeCaches(params Assembly[] assemblies)

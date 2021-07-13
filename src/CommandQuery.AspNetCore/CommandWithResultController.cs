@@ -8,7 +8,9 @@ namespace CommandQuery.AspNetCore
 {
     [ApiController]
     [Route("api/command/[controller]")]
+#pragma warning disable SA1649 // File name should match first type name
     internal class CommandController<TCommand, TResult> : ControllerBase
+#pragma warning restore SA1649 // File name should match first type name
         where TCommand : ICommand<TResult>
     {
         private readonly ICommandProcessor _commandProcessor;
