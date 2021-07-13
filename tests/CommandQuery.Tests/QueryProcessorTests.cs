@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.DependencyInjection;
 using CommandQuery.Exceptions;
@@ -115,6 +116,6 @@ namespace CommandQuery.Tests
 
     public class DupeQueryHandler : IQueryHandler<Fail.DupeQuery, object>
     {
-        public async Task<object> HandleAsync(Fail.DupeQuery query) => throw new NotImplementedException();
+        public async Task<object> HandleAsync(Fail.DupeQuery query, CancellationToken cancellationToken) => throw new NotImplementedException();
     }
 }

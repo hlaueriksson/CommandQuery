@@ -41,7 +41,7 @@ namespace CommandQuery
                 throw new QueryProcessorException($"The query handler for '{query}' could not be found.");
             }
 
-            return await handler.HandleAsync((dynamic)query);
+            return await handler.HandleAsync((dynamic)query, cancellationToken);
         }
 
 

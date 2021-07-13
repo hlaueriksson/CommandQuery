@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommandQuery.Tests
@@ -17,7 +18,7 @@ namespace CommandQuery.Tests
             _callback = callback;
         }
 
-        public async Task HandleAsync(FakeCommand command)
+        public async Task HandleAsync(FakeCommand command, CancellationToken cancellationToken)
         {
             _callback(command);
 
@@ -38,7 +39,7 @@ namespace CommandQuery.Tests
             _callback = callback;
         }
 
-        public async Task<FakeResult> HandleAsync(FakeResultCommand resultCommand)
+        public async Task<FakeResult> HandleAsync(FakeResultCommand resultCommand, CancellationToken cancellationToken)
         {
             var result = _callback(resultCommand);
 
@@ -63,7 +64,7 @@ namespace CommandQuery.Tests
             _callback = callback;
         }
 
-        public async Task<FakeResult> HandleAsync(FakeQuery query)
+        public async Task<FakeResult> HandleAsync(FakeQuery query, CancellationToken cancellationToken)
         {
             var result = _callback(query);
 
@@ -114,7 +115,7 @@ namespace CommandQuery.Tests
             _callback = callback;
         }
 
-        public async Task<IEnumerable<FakeResult>> HandleAsync(FakeComplexQuery query)
+        public async Task<IEnumerable<FakeResult>> HandleAsync(FakeComplexQuery query, CancellationToken cancellationToken)
         {
             var result = _callback(query);
 
@@ -164,32 +165,32 @@ namespace CommandQuery.Tests
         IQueryHandler<FakeMultiQuery2, FakeResult>
     {
 
-        public Task HandleAsync(FakeMultiCommand1 command)
+        public Task HandleAsync(FakeMultiCommand1 command, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task HandleAsync(FakeMultiCommand2 command)
+        public Task HandleAsync(FakeMultiCommand2 command, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<FakeResult> HandleAsync(FakeMultiResultCommand1 command)
+        public Task<FakeResult> HandleAsync(FakeMultiResultCommand1 command, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<FakeResult> HandleAsync(FakeMultiResultCommand2 command)
+        public Task<FakeResult> HandleAsync(FakeMultiResultCommand2 command, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<FakeResult> HandleAsync(FakeMultiQuery1 query)
+        public Task<FakeResult> HandleAsync(FakeMultiQuery1 query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<FakeResult> HandleAsync(FakeMultiQuery2 query)
+        public Task<FakeResult> HandleAsync(FakeMultiQuery2 query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

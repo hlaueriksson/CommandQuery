@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommandQuery
@@ -13,8 +14,9 @@ namespace CommandQuery
         /// Handles a command.
         /// </summary>
         /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task HandleAsync(TCommand command);
+        Task HandleAsync(TCommand command, CancellationToken cancellationToken);
     }
 
     /// <summary>
@@ -29,7 +31,8 @@ namespace CommandQuery
         /// Handles a command.
         /// </summary>
         /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Result from the command.</returns>
-        Task<TResult> HandleAsync(TCommand command);
+        Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken);
     }
 }

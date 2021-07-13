@@ -41,7 +41,7 @@ namespace CommandQuery
                 throw new CommandProcessorException($"The command handler for '{command}' could not be found.");
             }
 
-            await handler.HandleAsync((dynamic)command);
+            await handler.HandleAsync((dynamic)command, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -61,7 +61,7 @@ namespace CommandQuery
                 throw new CommandProcessorException($"The command handler for '{command}' could not be found.");
             }
 
-            return await handler.HandleAsync((dynamic)command);
+            return await handler.HandleAsync((dynamic)command, cancellationToken);
         }
 
         /// <inheritdoc />
