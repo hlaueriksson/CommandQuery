@@ -20,7 +20,7 @@ namespace CommandQuery.AzureFunctions
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
-        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequestData.Body"/>.</param>
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequestData.Body"/> and serialization of <see cref="HttpResponseData.Body"/>.</param>
         public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerOptions? options = null)
         {
             _commandProcessor = commandProcessor;
@@ -46,7 +46,7 @@ namespace CommandQuery.AzureFunctions
                     return req.CreateResponse(HttpStatusCode.OK);
                 }
 
-                return await req.OkAsync(result.Value).ConfigureAwait(false);
+                return await req.OkAsync(result.Value, _options, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -54,8 +54,8 @@ namespace CommandQuery.AzureFunctions
                 logger?.LogError(exception, "Handle command failed: {Command}, {Payload}", commandName, payload);
 
                 return exception.IsHandled()
-                    ? await req.BadRequestAsync(exception).ConfigureAwait(false)
-                    : await req.InternalServerErrorAsync(exception).ConfigureAwait(false);
+                    ? await req.BadRequestAsync(exception, _options, cancellationToken).ConfigureAwait(false)
+                    : await req.InternalServerErrorAsync(exception, _options, cancellationToken).ConfigureAwait(false);
             }
         }
     }

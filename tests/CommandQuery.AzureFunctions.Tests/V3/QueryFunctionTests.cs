@@ -48,7 +48,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(QueryName, Req, Logger) as OkObjectResult;
+                var result = await Subject.HandleAsync(QueryName, Req, Logger) as JsonResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);
@@ -102,7 +102,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(QueryName, Req, Logger) as OkObjectResult;
+                var result = await Subject.HandleAsync(QueryName, Req, Logger) as JsonResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);

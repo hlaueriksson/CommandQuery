@@ -1,13 +1,11 @@
 #if NET5_0
-using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
-using Azure.Core.Serialization;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 
@@ -20,20 +18,14 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         [SetUp]
         public void SetUp()
         {
-            var options = new Mock<IOptions<WorkerOptions>>();
-            options.Setup(x => x.Value).Returns(new WorkerOptions { Serializer = new JsonObjectSerializer() });
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(x => x.GetService(typeof(IOptions<WorkerOptions>))).Returns(options.Object);
             var context = new Mock<FunctionContext>();
-            context.Setup(x => x.InstanceServices).Returns(serviceProvider.Object);
-
             Req = new FakeHttpRequestData(context.Object);
         }
 
         [Test]
         public async Task OkAsync()
         {
-            var response = await Req.OkAsync(new { Foo = "Bar" });
+            var response = await Req.OkAsync(new { Foo = "Bar" }, null, CancellationToken.None);
             response.StatusCode.Should().Be(200);
             response.Body.Position = 0;
             var result = await new StreamReader(response.Body).ReadToEndAsync();
@@ -44,7 +36,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         public async Task BadRequestAsync()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            var response = await Req.BadRequestAsync(exception);
+            var response = await Req.BadRequestAsync(exception, null, CancellationToken.None);
             response.StatusCode.Should().Be(400);
             response.Body.Position = 0;
             var result = await new StreamReader(response.Body).ReadToEndAsync();
@@ -55,7 +47,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         public async Task InternalServerErrorAsync()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            var response = await Req.InternalServerErrorAsync(exception);
+            var response = await Req.InternalServerErrorAsync(exception, null, CancellationToken.None);
             response.StatusCode.Should().Be(500);
             response.Body.Position = 0;
             var result = await new StreamReader(response.Body).ReadToEndAsync();

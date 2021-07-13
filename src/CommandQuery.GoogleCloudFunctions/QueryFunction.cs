@@ -43,7 +43,7 @@ namespace CommandQuery.GoogleCloudFunctions
                     ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(context.Request.Query), cancellationToken).ConfigureAwait(false)
                     : await _queryProcessor.ProcessAsync<object>(queryName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options, cancellationToken).ConfigureAwait(false);
 
-                await context.Response.OkAsync(result, _options).ConfigureAwait(false);
+                await context.Response.OkAsync(result, _options, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -52,11 +52,11 @@ namespace CommandQuery.GoogleCloudFunctions
 
                 if (exception.IsHandled())
                 {
-                    await context.Response.BadRequestAsync(exception).ConfigureAwait(false);
+                    await context.Response.BadRequestAsync(exception, _options, cancellationToken).ConfigureAwait(false);
                     return;
                 }
 
-                await context.Response.InternalServerErrorAsync(exception).ConfigureAwait(false);
+                await context.Response.InternalServerErrorAsync(exception, _options, cancellationToken).ConfigureAwait(false);
             }
 
             static Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)

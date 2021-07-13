@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
@@ -52,19 +51,14 @@ namespace CommandQuery.AWSLambda
                     ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.MultiValueQueryStringParameters)).ConfigureAwait(false)
                     : await _queryProcessor.ProcessAsync<object>(queryName, request.Body, _options).ConfigureAwait(false);
 
-                return new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonSerializer.Serialize(result, _options),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
-                };
+                return result.Ok(_options);
             }
             catch (Exception exception)
             {
                 var payload = request.HttpMethod == "GET" ? request.Path : request.Body;
                 logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
-                return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
+                return exception.IsHandled() ? exception.BadRequest(_options) : exception.InternalServerError(_options);
             }
 
             static Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, IList<string>> query)

@@ -21,7 +21,7 @@ namespace CommandQuery.AzureFunctions
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
-        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/>.</param>
+        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/> and serialization of <see cref="HttpResponse.Body"/>.</param>
         public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerSettings? settings = null)
         {
             _commandProcessor = commandProcessor;
@@ -42,14 +42,14 @@ namespace CommandQuery.AzureFunctions
                     return new OkResult();
                 }
 
-                return new OkObjectResult(result.Value);
+                return result.Value.Ok(_settings);
             }
             catch (Exception exception)
             {
                 var payload = await req.ReadAsStringAsync().ConfigureAwait(false);
                 logger?.LogError(exception, "Handle command failed: {Command}, {Payload}", commandName, payload);
 
-                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
+                return exception.IsHandled() ? exception.BadRequest(_settings) : exception.InternalServerError(_settings);
             }
         }
     }

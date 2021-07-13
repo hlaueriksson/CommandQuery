@@ -23,7 +23,7 @@ namespace CommandQuery.AzureFunctions
         /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
-        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/>.</param>
+        /// <param name="settings"><see cref="JsonSerializerSettings"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/> and serialization of <see cref="HttpResponse.Body"/>.</param>
         public QueryFunction(IQueryProcessor queryProcessor, JsonSerializerSettings? settings = null)
         {
             _queryProcessor = queryProcessor;
@@ -46,14 +46,14 @@ namespace CommandQuery.AzureFunctions
                     ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Query), cancellationToken).ConfigureAwait(false)
                     : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings, cancellationToken).ConfigureAwait(false);
 
-                return new OkObjectResult(result);
+                return result.Ok(_settings);
             }
             catch (Exception exception)
             {
                 var payload = req.Method == "GET" ? req.QueryString.Value : await req.ReadAsStringAsync().ConfigureAwait(false);
                 logger?.LogError(exception, "Handle query failed: {Query}, {Payload}", queryName, payload);
 
-                return exception.IsHandled() ? new BadRequestObjectResult(exception.ToError()) : new ObjectResult(exception.ToError()) { StatusCode = 500 };
+                return exception.IsHandled() ? exception.BadRequest(_settings) : exception.InternalServerError(_settings);
             }
 
             static Dictionary<string, IEnumerable<string>> Dictionary(IQueryCollection query)

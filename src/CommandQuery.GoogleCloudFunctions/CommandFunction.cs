@@ -46,7 +46,7 @@ namespace CommandQuery.GoogleCloudFunctions
                     return;
                 }
 
-                await context.Response.OkAsync(result.Value, _options).ConfigureAwait(false);
+                await context.Response.OkAsync(result.Value, _options, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -55,11 +55,11 @@ namespace CommandQuery.GoogleCloudFunctions
 
                 if (exception.IsHandled())
                 {
-                    await context.Response.BadRequestAsync(exception).ConfigureAwait(false);
+                    await context.Response.BadRequestAsync(exception, _options, cancellationToken).ConfigureAwait(false);
                     return;
                 }
 
-                await context.Response.InternalServerErrorAsync(exception).ConfigureAwait(false);
+                await context.Response.InternalServerErrorAsync(exception, _options, cancellationToken).ConfigureAwait(false);
             }
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -32,25 +33,25 @@ namespace CommandQuery.GoogleCloudFunctions
             return result;
         }
 
-        internal static async Task OkAsync(this HttpResponse response, object? result, JsonSerializerOptions? options)
+        internal static async Task OkAsync(this HttpResponse response, object? result, JsonSerializerOptions? options, CancellationToken cancellationToken)
         {
+            response.ContentType = "application/json; charset=utf-8";
             response.StatusCode = StatusCodes.Status200OK;
-            response.ContentType = "text/json";
-            await JsonSerializer.SerializeAsync(response.Body, result, options).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(response.Body, result, options, cancellationToken).ConfigureAwait(false);
         }
 
-        internal static async Task BadRequestAsync(this HttpResponse response, Exception exception)
+        internal static async Task BadRequestAsync(this HttpResponse response, Exception exception, JsonSerializerOptions? options, CancellationToken cancellationToken)
         {
+            response.ContentType = "application/json; charset=utf-8";
             response.StatusCode = StatusCodes.Status400BadRequest;
-            response.ContentType = "text/json";
-            await JsonSerializer.SerializeAsync(response.Body, exception.ToError()).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(response.Body, exception.ToError(), options, cancellationToken).ConfigureAwait(false);
         }
 
-        internal static async Task InternalServerErrorAsync(this HttpResponse response, Exception exception)
+        internal static async Task InternalServerErrorAsync(this HttpResponse response, Exception exception, JsonSerializerOptions? options, CancellationToken cancellationToken)
         {
+            response.ContentType = "application/json; charset=utf-8";
             response.StatusCode = StatusCodes.Status500InternalServerError;
-            response.ContentType = "text/json";
-            await JsonSerializer.SerializeAsync(response.Body, exception.ToError()).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(response.Body, exception.ToError(), options, cancellationToken).ConfigureAwait(false);
         }
     }
 }

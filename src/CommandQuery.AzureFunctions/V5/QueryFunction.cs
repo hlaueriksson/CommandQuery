@@ -22,7 +22,7 @@ namespace CommandQuery.AzureFunctions
         /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
-        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequestData.Body"/>.</param>
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequestData.Body"/> and serialization of <see cref="HttpResponseData.Body"/>.</param>
         public QueryFunction(IQueryProcessor queryProcessor, JsonSerializerOptions? options = null)
         {
             _queryProcessor = queryProcessor;
@@ -45,9 +45,7 @@ namespace CommandQuery.AzureFunctions
                     ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Url), cancellationToken).ConfigureAwait(false)
                     : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _options, cancellationToken).ConfigureAwait(false);
 
-                var response = req.CreateResponse();
-                await response.WriteAsJsonAsync(result, cancellationToken).ConfigureAwait(false);
-                return response;
+                return await req.OkAsync(result, _options, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -55,8 +53,8 @@ namespace CommandQuery.AzureFunctions
                 logger?.LogError(exception, "Handle query failed: {Query}, {Payload}", queryName, payload);
 
                 return exception.IsHandled()
-                    ? await req.BadRequestAsync(exception).ConfigureAwait(false)
-                    : await req.InternalServerErrorAsync(exception).ConfigureAwait(false);
+                    ? await req.BadRequestAsync(exception, _options, cancellationToken).ConfigureAwait(false)
+                    : await req.InternalServerErrorAsync(exception, _options, cancellationToken).ConfigureAwait(false);
             }
 
             Dictionary<string, IEnumerable<string>> Dictionary(Uri url)

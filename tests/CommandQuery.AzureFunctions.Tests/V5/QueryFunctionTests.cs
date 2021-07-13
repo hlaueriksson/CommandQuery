@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Core.Serialization;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
@@ -13,7 +12,6 @@ using LoFuUnit.NUnit;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 
@@ -31,12 +29,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
 
-            var options = new Mock<IOptions<WorkerOptions>>();
-            options.Setup(x => x.Value).Returns(new WorkerOptions { Serializer = new JsonObjectSerializer() });
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(x => x.GetService(typeof(IOptions<WorkerOptions>))).Returns(options.Object);
             Context = new Mock<FunctionContext>();
-            Context.Setup(x => x.InstanceServices).Returns(serviceProvider.Object);
         }
 
         [LoFu, Test]

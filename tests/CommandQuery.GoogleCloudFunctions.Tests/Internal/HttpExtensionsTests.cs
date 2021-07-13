@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using FluentAssertions;
@@ -33,7 +34,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests.Internal
         [Test]
         public async Task OkAsync()
         {
-            await Response.OkAsync(new { Foo = "Bar" }, null);
+            await Response.OkAsync(new { Foo = "Bar" }, null, CancellationToken.None);
             Response.StatusCode.Should().Be(200);
             Response.Body.Position = 0;
             var result = await new StreamReader(Response.Body).ReadToEndAsync();
@@ -44,7 +45,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests.Internal
         public async Task BadRequestAsync()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            await Response.BadRequestAsync(exception);
+            await Response.BadRequestAsync(exception, null, CancellationToken.None);
             Response.StatusCode.Should().Be(400);
             Response.Body.Position = 0;
             var result = await new StreamReader(Response.Body).ReadToEndAsync();
@@ -55,7 +56,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests.Internal
         public async Task InternalServerErrorAsync()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            await Response.InternalServerErrorAsync(exception);
+            await Response.InternalServerErrorAsync(exception, null, CancellationToken.None);
             Response.StatusCode.Should().Be(500);
             Response.Body.Position = 0;
             var result = await new StreamReader(Response.Body).ReadToEndAsync();

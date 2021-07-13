@@ -92,7 +92,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
                 var expected = new FakeResult();
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(CommandName, Req, Logger) as OkObjectResult;
+                var result = await Subject.HandleAsync(CommandName, Req, Logger) as JsonResult;
 
                 result.StatusCode.Should().Be(200);
                 result.Value.Should().Be(expected);

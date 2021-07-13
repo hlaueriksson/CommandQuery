@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -54,18 +53,13 @@ namespace CommandQuery.AWSLambda
                     return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.OK };
                 }
 
-                return new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonSerializer.Serialize(result.Value, _options),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
-                };
+                return result.Value.Ok(_options);
             }
             catch (Exception exception)
             {
                 logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
-                return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
+                return exception.IsHandled() ? exception.BadRequest(_options) : exception.InternalServerError(_options);
             }
         }
     }

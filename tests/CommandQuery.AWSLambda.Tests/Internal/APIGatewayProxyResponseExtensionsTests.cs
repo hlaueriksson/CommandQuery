@@ -4,22 +4,30 @@ using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests.Internal
 {
-    public class ExceptionExtensionsTests
+    public class APIGatewayProxyResponseExtensionsTests
     {
         [Test]
-        public void ToBadRequest()
+        public void Ok()
+        {
+            var result = new { Foo = "Bar" }.Ok(null);
+            result.StatusCode.Should().Be(200);
+            result.Body.Should().Be("{\"Foo\":\"Bar\"}");
+        }
+
+        [Test]
+        public void BadRequest()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            var result = exception.ToBadRequest();
+            var result = exception.BadRequest(null);
             result.StatusCode.Should().Be(400);
             result.Body.Should().Be("{\"Message\":\"fail\",\"Details\":{\"Foo\":\"Bar\"}}");
         }
 
         [Test]
-        public void ToInternalServerError()
+        public void InternalServerError()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            var result = exception.ToInternalServerError();
+            var result = exception.InternalServerError(null);
             result.StatusCode.Should().Be(500);
             result.Body.Should().Be("{\"Message\":\"fail\",\"Details\":{\"Foo\":\"Bar\"}}");
         }
