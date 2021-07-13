@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.SystemTextJson;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ namespace CommandQuery.GoogleCloudFunctions
         }
 
         /// <inheritdoc />
-        public async Task HandleAsync(string commandName, HttpContext context, ILogger? logger)
+        public async Task HandleAsync(string commandName, HttpContext context, ILogger? logger, CancellationToken cancellationToken = default)
         {
             logger?.LogInformation("Handle {Command}", commandName);
 
@@ -36,7 +37,7 @@ namespace CommandQuery.GoogleCloudFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options, cancellationToken).ConfigureAwait(false);
 
                 context.Response.StatusCode = StatusCodes.Status200OK;
 

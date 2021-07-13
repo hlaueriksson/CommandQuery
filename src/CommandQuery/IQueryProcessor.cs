@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -15,10 +16,11 @@ namespace CommandQuery
         /// </summary>
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="query">The query.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result of the query.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="query"/> is <see langword="null"/>.</exception>
         /// <exception cref="QueryProcessorException">The query handler for <paramref name="query"/> could not be found.</exception>
-        Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query);
+        Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns the type of query.

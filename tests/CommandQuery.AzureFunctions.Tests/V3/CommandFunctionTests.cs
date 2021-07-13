@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -54,7 +55,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
 
             async Task should_handle_CommandProcessorException()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandProcessorException("fail"));
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
@@ -63,7 +64,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
 
             async Task should_handle_CommandException()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandException("invalid"));
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
@@ -72,7 +73,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
 
             async Task should_handle_Exception()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
@@ -89,7 +90,7 @@ namespace CommandQuery.AzureFunctions.Tests.V3
             async Task should_return_the_result_from_the_command_processor()
             {
                 var expected = new FakeResult();
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger) as OkObjectResult;
 

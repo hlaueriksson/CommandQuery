@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.Serialization;
 using CommandQuery.Exceptions;
@@ -48,7 +49,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             {
                 Req.Body.Position = 0;
                 var expected = new FakeResult();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
@@ -65,7 +66,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             async Task should_handle_QueryProcessorException()
             {
                 Req.Body.Position = 0;
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new QueryProcessorException("fail"));
 
                 var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
@@ -75,7 +76,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             async Task should_handle_QueryException()
             {
                 Req.Body.Position = 0;
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new QueryException("invalid"));
 
                 var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
@@ -85,7 +86,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             async Task should_handle_Exception()
             {
                 Req.Body.Position = 0;
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
                 var result = await Subject.HandleAsync(QueryName, Req, Logger);
 
@@ -101,7 +102,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             async Task should_return_the_result_from_the_query_processor()
             {
                 var expected = new FakeResult();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
                 var result = await Subject.HandleAsync(QueryName, Req, Logger);
 

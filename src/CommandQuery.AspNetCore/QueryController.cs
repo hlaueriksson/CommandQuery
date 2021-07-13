@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,15 +32,16 @@ namespace CommandQuery.AspNetCore
         /// Handle a query.
         /// </summary>
         /// <param name="query">The query.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         [HttpPost]
-        public async Task<IActionResult> HandlePostAsync(TQuery query)
+        public async Task<IActionResult> HandlePostAsync(TQuery query, CancellationToken cancellationToken)
         {
             _logger?.LogInformation("Handle {@Query}", query);
 
             try
             {
-                var result = await _queryProcessor.ProcessAsync(query).ConfigureAwait(false);
+                var result = await _queryProcessor.ProcessAsync(query, cancellationToken).ConfigureAwait(false);
 
                 return Ok(result);
             }
@@ -55,15 +57,16 @@ namespace CommandQuery.AspNetCore
         /// Handle a query.
         /// </summary>
         /// <param name="query">The query.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         [HttpGet]
-        public async Task<IActionResult> HandleGetAsync([FromQuery] TQuery query)
+        public async Task<IActionResult> HandleGetAsync([FromQuery] TQuery query, CancellationToken cancellationToken)
         {
             _logger?.LogInformation("Handle {@Query}", query);
 
             try
             {
-                var result = await _queryProcessor.ProcessAsync(query).ConfigureAwait(false);
+                var result = await _queryProcessor.ProcessAsync(query, cancellationToken).ConfigureAwait(false);
 
                 return Ok(result);
             }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -19,10 +20,11 @@ namespace CommandQuery.SystemTextJson
         /// <param name="queryName">The name of the query.</param>
         /// <param name="json">The JSON representation of the query.</param>
         /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <paramref name="json"/>.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result of the query.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
-        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string? json, JsonSerializerOptions? options = null)
+        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, string? json, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
         {
             if (queryProcessor is null)
             {
@@ -48,7 +50,7 @@ namespace CommandQuery.SystemTextJson
                 throw new QueryProcessorException("The json string could not be deserialized to an object");
             }
 
-            return await queryProcessor.ProcessAsync((dynamic)query);
+            return await queryProcessor.ProcessAsync((dynamic)query, cancellationToken);
         }
 
         /// <summary>
@@ -58,10 +60,11 @@ namespace CommandQuery.SystemTextJson
         /// <param name="queryProcessor">The query processor.</param>
         /// <param name="queryName">The name of the query.</param>
         /// <param name="dictionary">The key/value representation of the query.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result of the query.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="queryProcessor"/> is <see langword="null"/>.</exception>
         /// <exception cref="QueryProcessorException">The process of the query failed.</exception>
-        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, IDictionary<string, IEnumerable<string>> dictionary)
+        public static async Task<TResult> ProcessAsync<TResult>(this IQueryProcessor queryProcessor, string queryName, IDictionary<string, IEnumerable<string>> dictionary, CancellationToken cancellationToken = default)
         {
             if (queryProcessor is null)
             {
@@ -82,7 +85,7 @@ namespace CommandQuery.SystemTextJson
                 throw new QueryProcessorException("The dictionary could not be deserialized to an object");
             }
 
-            return await queryProcessor.ProcessAsync((dynamic)query);
+            return await queryProcessor.ProcessAsync((dynamic)query, cancellationToken);
         }
     }
 }

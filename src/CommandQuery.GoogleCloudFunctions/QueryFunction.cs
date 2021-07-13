@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.SystemTextJson;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +28,7 @@ namespace CommandQuery.GoogleCloudFunctions
         }
 
         /// <inheritdoc />
-        public async Task HandleAsync(string queryName, HttpContext context, ILogger? logger)
+        public async Task HandleAsync(string queryName, HttpContext context, ILogger? logger, CancellationToken cancellationToken = default)
         {
             logger?.LogInformation("Handle {Query}", queryName);
 
@@ -39,8 +40,8 @@ namespace CommandQuery.GoogleCloudFunctions
             try
             {
                 var result = context.Request.Method == "GET"
-                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(context.Request.Query)).ConfigureAwait(false)
-                    : await _queryProcessor.ProcessAsync<object>(queryName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(context.Request.Query), cancellationToken).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, await context.Request.ReadAsStringAsync().ConfigureAwait(false), _options, cancellationToken).ConfigureAwait(false);
 
                 await context.Response.OkAsync(result, _options).ConfigureAwait(false);
             }

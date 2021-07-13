@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.NewtonsoftJson;
@@ -21,12 +22,12 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var expectedCommandType = typeof(FakeCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Returns(Task.CompletedTask);
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
                 var result = await Subject.ProcessAsync(expectedCommandType.Name, "{}");
 
                 result.Should().Be(CommandResult.None);
-                FakeCommandProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeCommand>()));
+                FakeCommandProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>()));
             }
 
             async Task should_invoke_the_correct_command_handler_for_commands_with_result()
@@ -34,12 +35,12 @@ namespace CommandQuery.Tests.NewtonsoftJson
                 var expectedResult = new FakeResult();
                 var expectedCommandType = typeof(FakeResultCommand);
                 FakeCommandProcessor.Setup(x => x.GetCommandType(expectedCommandType.Name)).Returns(expectedCommandType);
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expectedResult));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expectedResult));
 
                 var result = await Subject.ProcessAsync(expectedCommandType.Name, "{}");
 
                 result.Value.Should().Be(expectedResult);
-                FakeCommandProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeResultCommand>()));
+                FakeCommandProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>()));
             }
 
             void should_throw_exception_if_the_ICommandProcessor_is_null()

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.NewtonsoftJson;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger? logger)
+        public async Task<IActionResult> HandleAsync(string queryName, HttpRequest req, ILogger? logger, CancellationToken cancellationToken = default)
         {
             logger?.LogInformation("Handle {Query}", queryName);
 
@@ -42,8 +43,8 @@ namespace CommandQuery.AzureFunctions
             try
             {
                 var result = req.Method == "GET"
-                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Query)).ConfigureAwait(false)
-                    : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings).ConfigureAwait(false);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Query), cancellationToken).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings, cancellationToken).ConfigureAwait(false);
 
                 return new OkObjectResult(result);
             }

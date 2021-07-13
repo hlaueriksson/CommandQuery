@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -24,34 +25,34 @@ namespace CommandQuery.AspNetCore.Tests
         {
             async Task should_invoke_the_command_processor()
             {
-                var result = await Subject.HandleAsync(new FakeCommand()) as OkResult;
+                var result = await Subject.HandleAsync(new FakeCommand(), CancellationToken.None) as OkResult;
 
                 result.StatusCode.Should().Be(200);
             }
 
             async Task should_handle_CommandProcessorException()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandProcessorException("fail"));
 
-                var result = await Subject.HandleAsync(new FakeCommand());
+                var result = await Subject.HandleAsync(new FakeCommand(), CancellationToken.None);
 
                 result.ShouldBeError("fail", 400);
             }
 
             async Task should_handle_CommandException()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandException("invalid"));
 
-                var result = await Subject.HandleAsync(new FakeCommand());
+                var result = await Subject.HandleAsync(new FakeCommand(), CancellationToken.None);
 
                 result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
+                FakeCommandProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
-                var result = await Subject.HandleAsync(new FakeCommand());
+                var result = await Subject.HandleAsync(new FakeCommand(), CancellationToken.None);
 
                 result.ShouldBeError("fail", 500);
             }

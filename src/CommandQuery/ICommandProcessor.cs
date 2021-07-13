@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -14,20 +15,22 @@ namespace CommandQuery
         /// Process a command.
         /// </summary>
         /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandProcessorException">The command handler for <paramref name="command"/> could not be found.</exception>
-        Task ProcessAsync(ICommand command);
+        Task ProcessAsync(ICommand command, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Process a command with result.
         /// </summary>
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result of the command.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <see langword="null"/>.</exception>
         /// <exception cref="CommandProcessorException">The command handler for <paramref name="command"/> could not be found.</exception>
-        Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command);
+        Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns the type of command.

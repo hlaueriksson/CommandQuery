@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -24,7 +25,7 @@ namespace CommandQuery
         }
 
         /// <inheritdoc />
-        public async Task ProcessAsync(ICommand command)
+        public async Task ProcessAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             if (command is null)
             {
@@ -44,7 +45,7 @@ namespace CommandQuery
         }
 
         /// <inheritdoc />
-        public async Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command)
+        public async Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
         {
             if (command is null)
             {

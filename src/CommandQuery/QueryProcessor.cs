@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 
@@ -24,7 +25,7 @@ namespace CommandQuery
         }
 
         /// <inheritdoc />
-        public async Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query)
+        public async Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             if (query is null)
             {

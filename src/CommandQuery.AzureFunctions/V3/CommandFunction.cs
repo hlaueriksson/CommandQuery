@@ -1,5 +1,6 @@
 #if NETCOREAPP3_1
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.NewtonsoftJson;
 using Microsoft.AspNetCore.Http;
@@ -28,13 +29,13 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger? logger)
+        public async Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger? logger, CancellationToken cancellationToken = default)
         {
             logger?.LogInformation("Handle {Command}", commandName);
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false), _settings, cancellationToken).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
@@ -41,7 +42,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
             {
                 Context.Response.Clear();
                 var expected = new FakeResult();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
                 await Subject.HandleAsync(QueryName, Context, Logger);
 
@@ -58,7 +59,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
             async Task should_handle_QueryProcessorException()
             {
                 Context.Response.Clear();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new QueryProcessorException("fail"));
 
                 await Subject.HandleAsync(QueryName, Context, Logger);
 
@@ -68,7 +69,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
             async Task should_handle_QueryException()
             {
                 Context.Response.Clear();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new QueryException("invalid"));
 
                 await Subject.HandleAsync(QueryName, Context, Logger);
 
@@ -78,7 +79,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
             async Task should_handle_Exception()
             {
                 Context.Response.Clear();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
                 await Subject.HandleAsync(QueryName, Context, Logger);
 
@@ -98,7 +99,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
             {
                 Context.Response.Clear();
                 var expected = new FakeResult();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(expected));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
                 await Subject.HandleAsync(QueryName, Context, Logger);
 

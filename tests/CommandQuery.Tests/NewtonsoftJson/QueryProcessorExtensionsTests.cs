@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.NewtonsoftJson;
@@ -23,11 +24,11 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var expectedQueryType = typeof(FakeQuery);
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
-                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Returns(Task.FromResult(new FakeResult()));
+                FakeQueryProcessor.Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(new FakeResult()));
 
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, "{}");
 
-                FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>()));
+                FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>()));
             }
 
             void should_throw_exception_if_the_IQueryProcessor_is_null()
@@ -77,7 +78,7 @@ namespace CommandQuery.Tests.NewtonsoftJson
 
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, new Dictionary<string, IEnumerable<string>>());
 
-                FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>()));
+                FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>()));
             }
 
             async Task should_throw_exception_if_the_IQueryProcessor_is_null()
@@ -101,9 +102,9 @@ namespace CommandQuery.Tests.NewtonsoftJson
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
                 FakeComplexQuery actual = null;
                 FakeQueryProcessor
-                    .Setup(x => x.ProcessAsync(It.IsAny<FakeComplexQuery>()))
+                    .Setup(x => x.ProcessAsync(It.IsAny<FakeComplexQuery>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(Enumerable.Empty<FakeResult>()))
-                    .Callback<FakeComplexQuery>(y => actual = y);
+                    .Callback<FakeComplexQuery, CancellationToken>((query, _) => actual = query);
                 
                 var query = TestData.FakeComplexQuery_As_Dictionary_Of_String_IEnumerable_String;
 
@@ -118,10 +119,10 @@ namespace CommandQuery.Tests.NewtonsoftJson
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
                 FakeDateTimeQuery actual = null;
                 FakeQueryProcessor
-                    .Setup(x => x.ProcessAsync(It.IsAny<FakeDateTimeQuery>()))
+                    .Setup(x => x.ProcessAsync(It.IsAny<FakeDateTimeQuery>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(new FakeResult()))
-                    .Callback<FakeDateTimeQuery>(y => actual = y);
-                
+                    .Callback<FakeDateTimeQuery, CancellationToken>((query, _) => actual = query);
+
                 var query = TestData.FakeDateTimeQuery_As_Dictionary_Of_String_IEnumerable_String;
 
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, query);
@@ -135,10 +136,10 @@ namespace CommandQuery.Tests.NewtonsoftJson
                 FakeQueryProcessor.Setup(x => x.GetQueryType(expectedQueryType.Name)).Returns(expectedQueryType);
                 FakeNestedQuery actual = null;
                 FakeQueryProcessor
-                    .Setup(x => x.ProcessAsync(It.IsAny<FakeNestedQuery>()))
+                    .Setup(x => x.ProcessAsync(It.IsAny<FakeNestedQuery>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(new FakeResult()))
-                    .Callback<FakeNestedQuery>(y => actual = y);
-                
+                    .Callback<FakeNestedQuery, CancellationToken>((query, _) => actual = query);
+
                 var query = TestData.FakeNestedQuery_As_Dictionary_Of_String_IEnumerable_String;
 
                 await Subject.ProcessAsync<FakeResult>(expectedQueryType.Name, query);
@@ -150,7 +151,7 @@ namespace CommandQuery.Tests.NewtonsoftJson
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, null)).Should()
+                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, null, CancellationToken.None)).Should()
                     .Throw<QueryProcessorException>()
                     .WithMessage("The dictionary could not be deserialized to an object");
             }

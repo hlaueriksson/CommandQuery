@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,15 +29,16 @@ namespace CommandQuery.AspNetCore
         /// Handle a command.
         /// </summary>
         /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result + 200, 400 or 500.</returns>
         [HttpPost]
-        public async Task<IActionResult> HandleAsync(TCommand command)
+        public async Task<IActionResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             _logger?.LogInformation("Handle {@Command}", command);
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(command).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(command, cancellationToken).ConfigureAwait(false);
 
                 return Ok(result);
             }
