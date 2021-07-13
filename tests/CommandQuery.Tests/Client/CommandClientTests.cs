@@ -1,85 +1,78 @@
-﻿using System;
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
+using Moq;
+using Moq.Protected;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client
 {
-    [Explicit("Integration tests")]
     public class CommandClientTests
     {
         [SetUp]
         public void SetUp()
         {
-            Subject = new CommandClient("https://commandquery-sample-azurefunctions-vs3.azurewebsites.net/api/command/");
+            MockHandler = new Mock<HttpMessageHandler>();
+            var client = new HttpClient(MockHandler.Object) { BaseAddress = new Uri("https://localhost") };
+            Subject = new CommandClient(client);
         }
 
         [Test]
-        public void when_Post()
+        public void Ctor()
         {
-            Subject.Post(new FooCommand { Value = "sv-SE" });
+            new CommandClient("https://example.com", 20).Should().NotBeNull();
+            new CommandClient("https://example.com", x => x.Timeout = TimeSpan.FromSeconds(20)).Should().NotBeNull();
 
-            Subject.Invoking(x => x.Post(new FooCommand()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.GetErrorCode().Should().Be(1337);
-
-            Subject.Invoking(x => x.Post(new FailCommand()))
-                .Should().Throw<CommandQueryException>();
+            Action act = () => new CommandClient("https://example.com", null);
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void when_Post_with_result()
+        public async Task PostAsync()
         {
-            var result = Subject.Post(new BazCommand { Value = "sv-SE" });
-            result.Should().NotBeNull();
+            var command = new FooCommand { Value = "sv-SE" };
 
-            Subject.Invoking(x => x.Post(new FailResultCommand()))
-                .Should().Throw<CommandQueryException>();
+            var httpResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK
+            };
+
+            MockHandler.Protected().Setup<Task<HttpResponseMessage>>("SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(r => r.Method == HttpMethod.Post && r.RequestUri.ToString().Contains(command.GetType().Name)),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(httpResponse);
+
+            await Subject.PostAsync(command);
         }
 
         [Test]
-        public async Task when_PostAsync()
+        public async Task PostAsync_with_result()
         {
-            await Subject.PostAsync(new FooCommand { Value = "sv-SE" });
+            var expectation = new Baz { Success = true };
+            var command = new BazCommand { Value = "sv-SE" };
 
-            Subject.Awaiting(x => x.PostAsync(new FooCommand()))
-                .Should().Throw<CommandQueryException>()
-                .And.Error.GetErrorCode().Should().Be(1337);
+            var httpResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(JsonConvert.SerializeObject(expectation), Encoding.UTF8, "application/json")
+            };
 
-            Subject.Awaiting(x => x.PostAsync(new FailCommand()))
-                .Should().Throw<CommandQueryException>();
-        }
+            MockHandler.Protected().Setup<Task<HttpResponseMessage>>("SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(r => r.Method == HttpMethod.Post && r.RequestUri.ToString().Contains(command.GetType().Name)),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(httpResponse);
 
-        [Test]
-        public async Task when_PostAsync_with_result()
-        {
-            var result = await Subject.PostAsync(new BazCommand { Value = "sv-SE" });
-            result.Should().NotBeNull();
-
-            Subject.Awaiting(x => x.PostAsync(new FailResultCommand()))
-                .Should().Throw<CommandQueryException>();
-        }
-
-        [Test]
-        public void when_configuring_the_client()
-        {
-            var client = new CommandClient("http://example.com", x => x.BaseAddress = new Uri("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/"));
-            client.Post(new FooCommand { Value = "sv-SE" });
+            var result = await Subject.PostAsync(command);
+            result.Should().BeEquivalentTo(expectation);
         }
 
         CommandClient Subject;
-    }
-
-    public class FailCommand : ICommand { }
-    public class FailResultCommand : ICommand<object> { }
-
-    public static class FooCommandExceptionExtensions
-    {
-        public static long? GetErrorCode(this Error error)
-        {
-            return error?.Details?["ErrorCode"] as long?;
-        }
+        Mock<HttpMessageHandler> MockHandler;
     }
 }

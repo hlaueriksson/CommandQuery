@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CommandQuery.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ namespace CommandQuery.Tests.Internal
         [LoFu, Test]
         public void when_GetTypesAssignableTo()
         {
-            Assembly = typeof(FakeCommandHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeCommandHandler).Assembly;
 
             void should_return_handlers_from_Assemblies()
             {

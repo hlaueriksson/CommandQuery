@@ -6,7 +6,6 @@ build:
   project: CommandQuery.sln
   verbosity: minimal
 test_script:
-  - ps: "dotnet test .\\tests\\CommandQuery.AspNet.WebApi.Tests\\CommandQuery.AspNet.WebApi.Tests.csproj"
   - ps: "dotnet test .\\tests\\CommandQuery.AspNetCore.Tests\\CommandQuery.AspNetCore.Tests.csproj"
   - ps: "dotnet test .\\tests\\CommandQuery.AWSLambda.Tests\\CommandQuery.AWSLambda.Tests.csproj"
   - ps: "dotnet test .\\tests\\CommandQuery.AzureFunctions.Tests\\CommandQuery.AzureFunctions.Tests.csproj"

@@ -1,4 +1,4 @@
-﻿namespace CommandQuery
+namespace CommandQuery
 {
     /// <summary>
     /// Marker interface to represent a command.
@@ -10,7 +10,7 @@
     /// <summary>
     /// Marker interface to represent a command with result.
     /// </summary>
-    /// <typeparam name="TResult">Result type</typeparam>
+    /// <typeparam name="TResult">Result type.</typeparam>
     public interface ICommand<TResult>
     {
     }

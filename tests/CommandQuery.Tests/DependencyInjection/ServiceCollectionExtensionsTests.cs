@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using CommandQuery.DependencyInjection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
@@ -13,7 +13,7 @@ namespace CommandQuery.Tests.DependencyInjection
         [LoFu, Test]
         public void when_AddCommands()
         {
-            Assembly = typeof(FakeCommandHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeCommandHandler).Assembly;
 
             void should_add_commands_from_Assemblies()
             {
@@ -25,13 +25,13 @@ namespace CommandQuery.Tests.DependencyInjection
                 serviceCollectionMock.Verify(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICommandHandler<FakeResultCommand, FakeResult>) && y.ImplementationType == typeof(FakeResultCommandHandler))));
             }
 
-            void should_create_a_CommandTypeCollection()
+            void should_create_a_CommandTypeProvider()
             {
                 var serviceCollection = new ServiceCollection();
                 serviceCollection.AddCommands(Assembly);
                 var provider = serviceCollection.BuildServiceProvider();
 
-                provider.GetService(typeof(ICommandTypeCollection)).Should().NotBeNull();
+                provider.GetService(typeof(ICommandTypeProvider)).Should().NotBeNull();
             }
 
             void should_add_all_commands_from_handler()
@@ -50,7 +50,7 @@ namespace CommandQuery.Tests.DependencyInjection
         [LoFu, Test]
         public void when_AddQueries()
         {
-            Assembly = typeof(FakeQueryHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeQueryHandler).Assembly;
 
             void should_add_queries_from_Assemblies()
             {
@@ -61,13 +61,13 @@ namespace CommandQuery.Tests.DependencyInjection
                 serviceCollectionMock.Verify(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(IQueryHandler<FakeQuery, FakeResult>) && y.ImplementationType == typeof(FakeQueryHandler))));
             }
 
-            void should_create_a_QueryTypeCollection()
+            void should_create_a_QueryTypeProvider()
             {
                 var serviceCollection = new ServiceCollection();
                 serviceCollection.AddQueries(Assembly);
                 var provider = serviceCollection.BuildServiceProvider();
 
-                provider.GetService(typeof(IQueryTypeCollection)).Should().NotBeNull();
+                provider.GetService(typeof(IQueryTypeProvider)).Should().NotBeNull();
             }
 
             void should_add_all_queries_from_handler()

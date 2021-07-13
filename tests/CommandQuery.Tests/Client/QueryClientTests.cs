@@ -1,70 +1,81 @@
-﻿using System;
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
+using Moq;
+using Moq.Protected;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client
 {
-    [Explicit("Integration tests")]
     public class QueryClientTests
     {
         [SetUp]
         public void SetUp()
         {
-            Subject = new QueryClient("https://commandquery-sample-azurefunctions-vs3.azurewebsites.net/api/query/");
+            MockHandler = new Mock<HttpMessageHandler>();
+            var client = new HttpClient(MockHandler.Object) { BaseAddress = new Uri("https://localhost") };
+            Subject = new QueryClient(client);
         }
 
         [Test]
-        public void when_Post()
+        public void Ctor()
         {
-            var result = Subject.Post(new BarQuery { Id = 1 });
-            result.Should().NotBeNull();
+            new QueryClient("https://example.com", 20).Should().NotBeNull();
+            new QueryClient("https://example.com", x => x.Timeout = TimeSpan.FromSeconds(20)).Should().NotBeNull();
 
-            Subject.Invoking(x => x.Post(new FailQuery()))
-                .Should().Throw<CommandQueryException>();
+            Action act = () => new QueryClient("https://example.com", null);
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public async Task when_PostAsync()
+        public async Task PostAsync()
         {
-            var result = await Subject.PostAsync(new BarQuery { Id = 1 });
-            result.Should().NotBeNull();
+            var expectation = new Bar { Id = 1, Value = "Value" };
+            var query = new BarQuery { Id = 1 };
 
-            Subject.Awaiting(x => x.PostAsync(new FailQuery()))
-                .Should().Throw<CommandQueryException>();
+            var httpResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(JsonConvert.SerializeObject(expectation), Encoding.UTF8, "application/json")
+            };
+
+            MockHandler.Protected().Setup<Task<HttpResponseMessage>>("SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(r => r.Method == HttpMethod.Post && r.RequestUri.ToString().Contains(query.GetType().Name)),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(httpResponse);
+
+            var result = await Subject.PostAsync(query);
+            result.Should().BeEquivalentTo(expectation);
         }
 
         [Test]
-        public void when_Get()
+        public async Task GetAsync()
         {
-            var result = Subject.Get(new QuxQuery { Ids = new[] { Guid.NewGuid(), Guid.NewGuid() } });
-            result.Should().NotBeNull();
+            var expectation = new Bar { Id = 1, Value = "Value" };
+            var query = new BarQuery { Id = 1 };
 
-            Subject.Invoking(x => x.Get(new FailQuery()))
-                .Should().Throw<CommandQueryException>();
-        }
+            var httpResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(JsonConvert.SerializeObject(expectation), Encoding.UTF8, "application/json")
+            };
 
-        [Test]
-        public async Task when_GetAsync()
-        {
-            var result = await Subject.GetAsync(new QuxQuery { Ids = new[] { Guid.NewGuid(), Guid.NewGuid() } });
-            result.Should().NotBeNull();
+            MockHandler.Protected().Setup<Task<HttpResponseMessage>>("SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(r => r.Method == HttpMethod.Get && r.RequestUri.ToString().Contains(query.GetType().Name)),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(httpResponse);
 
-            Subject.Awaiting(x => x.GetAsync(new FailQuery()))
-                .Should().Throw<CommandQueryException>();
-        }
-
-        [Test]
-        public void when_configuring_the_client()
-        {
-            var client = new QueryClient("http://example.com", x => x.BaseAddress = new Uri("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/query/"));
-            client.Post(new BarQuery { Id = 1 });
+            var result = await Subject.GetAsync(query);
+            result.Should().BeEquivalentTo(expectation);
         }
 
         QueryClient Subject;
+        Mock<HttpMessageHandler> MockHandler;
     }
-
-    public class FailQuery : IQuery<object> { }
 }

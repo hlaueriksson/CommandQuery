@@ -1,15 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <Version>1.0.0</Version>
     <PackageReleaseNotes>
-☑️ Target netcoreapp3.1 and netcoreapp2.1
-☑️ Changed dependency from Microsoft.AspNetCore.Mvc to Microsoft.AspNetCore.Mvc.Core
-☑️ Controllers for commands and queries are now generated at runtime
-  ☑️ This is done via extended configuration in Startup.cs
-☑️ Removed the base classes BaseCommandController and BaseQueryController
-☑️ Improved logging
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for ASP.NET Core 🌐
@@ -21,15 +16,21 @@
     <PackageId>CommandQuery.AspNetCore</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>CommandQuery.AspNetCore.md</PackageReadmeFile>
     <PackageTags>CommandQuery;Command;Query;CQS;aspnetcore</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\CommandQuery.AspNetCore.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <Import Project="../../Analyzers.props" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.AspNetCore.Tests" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
-    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

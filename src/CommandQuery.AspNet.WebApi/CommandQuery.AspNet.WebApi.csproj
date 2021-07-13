@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -30,14 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandQuery" Version="1.0.0" />
+    <PackageReference Include="CommandQuery.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="CommandQuery.Extensions" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Extensions\CommandQuery.Extensions.csproj" />
-    <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
-    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

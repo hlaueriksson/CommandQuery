@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -19,8 +21,8 @@ namespace CommandQuery.AWSLambda.Tests
         {
             Clear();
             Use<Mock<ICommandProcessor>>();
-            Context = new Mock<ILambdaContext>();
-            Context.SetupGet(x => x.Logger).Returns(new Mock<ILambdaLogger>().Object);
+            Use<JsonSerializerOptions>(null);
+            Logger = new Mock<ILambdaLogger>().Object;
             Request = new APIGatewayProxyRequest { Body = "{}" };
         }
 
@@ -32,35 +34,41 @@ namespace CommandQuery.AWSLambda.Tests
 
             async Task should_invoke_the_command_processor()
             {
-                var result = await Subject.Handle(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().BeNull();
             }
 
+            async Task should_throw_when_request_is_null()
+            {
+                Subject.Awaiting(x => x.HandleAsync(CommandName, null, Logger))
+                    .Should().Throw<ArgumentNullException>();
+            }
+
             async Task should_handle_CommandProcessorException()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandProcessorException("fail"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandProcessorException("fail"));
 
-                var result = await Subject.Handle(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.ShouldBeError("fail", 400);
             }
 
             async Task should_handle_CommandException()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new CommandException("invalid"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandException("invalid"));
 
-                var result = await Subject.Handle(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>())).Throws(new Exception("fail"));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.ShouldBeError("fail", 500);
             }
@@ -75,9 +83,9 @@ namespace CommandQuery.AWSLambda.Tests
             async Task should_return_the_result_from_the_command_processor()
             {
                 var expected = new FakeResult();
-                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessWithResultAsync(It.IsAny<FakeResultCommand>())).Returns(Task.FromResult(expected));
+                The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.Handle(CommandName, Request, Context.Object);
+                var result = await Subject.HandleAsync(CommandName, Request, Logger);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeNull();
@@ -85,7 +93,7 @@ namespace CommandQuery.AWSLambda.Tests
         }
 
         APIGatewayProxyRequest Request;
-        Mock<ILambdaContext> Context;
+        ILambdaLogger Logger;
         string CommandName;
     }
 }

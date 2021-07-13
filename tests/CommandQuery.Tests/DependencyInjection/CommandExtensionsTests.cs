@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using CommandQuery.DependencyInjection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
@@ -12,7 +12,7 @@ namespace CommandQuery.Tests.DependencyInjection
         [LoFu, Test]
         public void when_GetCommandProcessor()
         {
-            Assembly = typeof(FakeCommandHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeCommandHandler).Assembly;
 
             void should_add_commands_from_Assembly()
             {
