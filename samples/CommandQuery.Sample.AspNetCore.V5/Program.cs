@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace CommandQuery.Sample.AspNetCore.V3
+namespace CommandQuery.Sample.AspNetCore.V5
 {
     public class Program
     {

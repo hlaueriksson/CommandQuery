@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
-namespace CommandQuery.Sample.AspNetCore.V3
+namespace CommandQuery.Sample.AspNetCore.V5
 {
     public class Startup
     {
@@ -42,10 +43,9 @@ namespace CommandQuery.Sample.AspNetCore.V3
             services.AddTransient<ICultureService, CultureService>();
 
             // Swagger
-            services.AddOpenApiDocument(settings =>
+            services.AddSwaggerGen(c =>
             {
-                settings.DocumentName = "v3";
-                settings.Title = "CommandQuery.Sample.AspNetCore.V3";
+                c.SwaggerDoc("v5", new OpenApiInfo { Title = "CommandQuery.Sample.AspNetCore.V5", Version = "v5" });
             });
         }
 
@@ -57,13 +57,8 @@ namespace CommandQuery.Sample.AspNetCore.V3
                 app.UseDeveloperExceptionPage();
 
                 // Swagger
-                app.UseOpenApi();
-                app.UseSwaggerUi3();
-                app.UseReDoc(settings =>
-                {
-                    settings.Path = "/redoc";
-                    settings.DocumentPath = "/swagger/v3/swagger.json";
-                });
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v5/swagger.json", "CommandQuery.Sample.AspNetCore.V5"));
             }
 
             app.UseHttpsRedirection();

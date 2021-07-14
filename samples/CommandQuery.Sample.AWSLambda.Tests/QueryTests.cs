@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -16,7 +16,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             public void SetUp()
             {
                 Subject = new Query();
-                Request = GetRequest("POST", content: "{ 'Id': 1 }");
+                Request = GetRequest("POST", content: "{ \"Id\": 1 }");
                 Context = new FakeLambdaContext();
             }
 

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
-using Newtonsoft.Json;
 
 namespace CommandQuery.Sample.AWSLambda.Tests
 {
@@ -22,7 +22,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
 
         public static T As<T>(this APIGatewayProxyResponse result)
         {
-            return JsonConvert.DeserializeObject<T>(result.Body);
+            return JsonSerializer.Deserialize<T>(result.Body);
         }
     }
 }

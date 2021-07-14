@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +15,15 @@ namespace CommandQuery.Sample.AspNetCore.V3.Tests
             [SetUp]
             public void SetUp()
             {
-                var factory = new WebApplicationFactory<Startup>();
-                Client = factory.CreateClient();
+                Factory = new WebApplicationFactory<Startup>();
+                Client = Factory.CreateClient();
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                Client.Dispose();
+                Factory.Dispose();
             }
 
             [Test]
@@ -39,6 +46,7 @@ namespace CommandQuery.Sample.AspNetCore.V3.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
+            WebApplicationFactory<Startup> Factory;
             HttpClient Client;
         }
     }

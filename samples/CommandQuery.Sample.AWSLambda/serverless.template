@@ -1,18 +1,20 @@
 {
-  "AWSTemplateFormatVersion" : "2010-09-09",
-  "Transform" : "AWS::Serverless-2016-10-31",
-  "Description" : "An AWS Serverless Application.",
-  "Resources" : {
-    "Command" : {
-      "Type" : "AWS::Serverless::Function",
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "An AWS Serverless Application.",
+  "Resources": {
+    "Command": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command::Handle",
-        "Runtime": "dotnetcore2.1",
+        "Runtime": "dotnetcore3.1",
         "CodeUri": "",
         "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
-        "Policies": [ "AWSLambdaBasicExecutionRole" ],
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
         "Events": {
           "PostResource": {
             "Type": "Api",
@@ -24,39 +26,43 @@
         }
       }
     },
-    "Query" : {
-      "Type" : "AWS::Serverless::Function",
+    "Query": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query::Handle",
-        "Runtime": "dotnetcore2.1",
+        "Runtime": "dotnetcore3.1",
         "CodeUri": "",
         "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
-        "Policies": [ "AWSLambdaBasicExecutionRole" ],
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
         "Events": {
           "GetResource": {
             "Type": "Api",
             "Properties": {
               "Path": "/query/{queryName}",
-			  "Method": "GET"
+              "Method": "GET"
             }
           },
           "PostResource": {
             "Type": "Api",
             "Properties": {
               "Path": "/query/{queryName}",
-			  "Method": "POST"
+              "Method": "POST"
             }
           }
         }
       }
     }
   },
-  "Outputs" : {
-    "ApiURL" : {
-        "Description" : "API endpoint URL for Prod environment",
-        "Value" : { "Fn::Sub" : "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/" }
+  "Outputs": {
+    "ApiURL": {
+      "Description": "API endpoint URL for Prod environment",
+      "Value": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+      }
     }
   }
 }

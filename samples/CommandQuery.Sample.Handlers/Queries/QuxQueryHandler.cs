@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Queries;
 
@@ -13,7 +14,7 @@ namespace CommandQuery.Sample.Handlers.Queries
             _dateTime = dateTime;
         }
 
-        public async Task<Qux[]> HandleAsync(QuxQuery query)
+        public async Task<Qux[]> HandleAsync(QuxQuery query, CancellationToken cancellationToken)
         {
             var result = query.Ids.Select((x, index) => new Qux { Id = x, Value = _dateTime.Now.AddDays(index).ToString("F") }).ToArray();
 

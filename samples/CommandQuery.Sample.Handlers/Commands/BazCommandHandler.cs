@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Commands;
 
@@ -12,7 +13,7 @@ namespace CommandQuery.Sample.Handlers.Commands
             _cultureService = cultureService;
         }
 
-        public async Task<Baz> HandleAsync(BazCommand command)
+        public async Task<Baz> HandleAsync(BazCommand command, CancellationToken cancellationToken)
         {
             var result = new Baz();
 
