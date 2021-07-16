@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace CommandQuery.Client
             Client.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Client.DefaultRequestHeaders.Add("User-Agent", $"CommandQuery.Client/{Assembly.GetExecutingAssembly().GetName().Version}");
         }
 
         /// <summary>
