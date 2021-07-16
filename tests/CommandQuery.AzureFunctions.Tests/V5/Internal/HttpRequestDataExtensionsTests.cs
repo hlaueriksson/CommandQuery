@@ -1,6 +1,5 @@
 #if NET5_0
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using FluentAssertions;
@@ -25,7 +24,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         [Test]
         public async Task OkAsync()
         {
-            var response = await Req.OkAsync(new { Foo = "Bar" }, null, CancellationToken.None);
+            var response = await Req.OkAsync(new { Foo = "Bar" }, null);
             response.StatusCode.Should().Be(200);
             response.Body.Position = 0;
             var result = await new StreamReader(response.Body).ReadToEndAsync();
@@ -36,7 +35,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         public async Task BadRequestAsync()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            var response = await Req.BadRequestAsync(exception, null, CancellationToken.None);
+            var response = await Req.BadRequestAsync(exception, null);
             response.StatusCode.Should().Be(400);
             response.Body.Position = 0;
             var result = await new StreamReader(response.Body).ReadToEndAsync();
@@ -47,7 +46,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         public async Task InternalServerErrorAsync()
         {
             var exception = new CustomCommandException("fail") { Foo = "Bar" };
-            var response = await Req.InternalServerErrorAsync(exception, null, CancellationToken.None);
+            var response = await Req.InternalServerErrorAsync(exception, null);
             response.StatusCode.Should().Be(500);
             response.Body.Position = 0;
             var result = await new StreamReader(response.Body).ReadToEndAsync();
