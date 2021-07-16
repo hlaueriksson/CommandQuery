@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,7 +92,7 @@ namespace CommandQuery.Client
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task BasePostAsync(object value, CancellationToken cancellationToken)
         {
-            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options, cancellationToken).ConfigureAwait(false);
+            var response = await PostAsJsonAsync(value.GetRequestSlug(), value, cancellationToken).ConfigureAwait(false);
             await response.EnsureSuccessAsync(cancellationToken).ConfigureAwait(false);
         }
 
@@ -106,9 +107,17 @@ namespace CommandQuery.Client
         /// <exception cref="CommandQueryException">The <c>POST</c> request failed.</exception>
         protected async Task<T?> BasePostAsync<T>(object value, CancellationToken cancellationToken)
         {
-            var response = await Client.PostAsJsonAsync(value.GetRequestSlug(), value, Options, cancellationToken).ConfigureAwait(false);
+            var response = await PostAsJsonAsync(value.GetRequestSlug(), value, cancellationToken).ConfigureAwait(false);
             await response.EnsureSuccessAsync(cancellationToken).ConfigureAwait(false);
             return await response.Content.ReadFromJsonAsync<T>(Options, cancellationToken).ConfigureAwait(false);
+        }
+
+        // Fix for Transfer-Encoding: chunked
+        private async Task<HttpResponseMessage> PostAsJsonAsync(string? requestUri, object value, CancellationToken cancellationToken)
+        {
+            using var content = new StringContent(JsonSerializer.Serialize(value, Options), Encoding.UTF8, "application/json");
+            await content.LoadIntoBufferAsync().ConfigureAwait(false);
+            return await Client.PostAsync(requestUri, content, cancellationToken).ConfigureAwait(false);
         }
     }
 }
