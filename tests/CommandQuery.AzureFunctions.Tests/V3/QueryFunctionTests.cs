@@ -48,10 +48,10 @@ namespace CommandQuery.AzureFunctions.Tests.V3
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(QueryName, Req, Logger) as JsonResult;
+                var result = await Subject.HandleAsync(QueryName, Req, Logger) as ContentResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Value.Should().Be(expected);
+                result.Content.Should().NotBeNull();
             }
 
             async Task should_throw_when_request_is_null()
@@ -102,10 +102,10 @@ namespace CommandQuery.AzureFunctions.Tests.V3
                 var expected = new FakeResult();
                 The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(QueryName, Req, Logger) as JsonResult;
+                var result = await Subject.HandleAsync(QueryName, Req, Logger) as ContentResult;
 
                 result.StatusCode.Should().Be(200);
-                result.Value.Should().Be(expected);
+                result.Content.Should().NotBeNull();
             }
         }
 
