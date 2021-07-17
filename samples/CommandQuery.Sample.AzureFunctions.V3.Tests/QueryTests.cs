@@ -14,7 +14,6 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.AzureFunctions.V3.Tests
@@ -33,7 +32,7 @@ namespace CommandQuery.Sample.AzureFunctions.V3.Tests
                 ServiceProvider = serviceCollection.BuildServiceProvider();
 
                 Subject = new Query(ServiceProvider.GetService<IQueryFunction>());
-                Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
+                Req = GetHttpRequest("POST", content: "{ \"Id\": 1 }");
                 Log = new Mock<ILogger>().Object;
             }
 
@@ -47,7 +46,7 @@ namespace CommandQuery.Sample.AzureFunctions.V3.Tests
             public async Task should_work()
             {
                 var result = await Subject.Run(Req, Log, CancellationToken.None, "BarQuery") as ContentResult;
-                var value = JsonConvert.DeserializeObject<Bar>(result.Content);
+                var value = result.As<Bar>();
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
@@ -87,7 +86,7 @@ namespace CommandQuery.Sample.AzureFunctions.V3.Tests
             public async Task should_work()
             {
                 var result = await Subject.Run(Req, Log, CancellationToken.None, "BarQuery") as ContentResult;
-                var value = JsonConvert.DeserializeObject<Bar>(result.Content);
+                var value = result.As<Bar>();
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();

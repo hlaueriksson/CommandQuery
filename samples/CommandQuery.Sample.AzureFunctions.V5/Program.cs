@@ -17,20 +17,7 @@ namespace CommandQuery.Sample.AzureFunctions.V5
         {
             var host = new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults()
-                .ConfigureServices(s =>
-                {
-                    //s.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-                    s.AddSingleton<ICommandFunction, CommandFunction>();
-                    s.AddSingleton<IQueryFunction, QueryFunction>();
-
-                    // Add commands and queries
-                    s.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-                    s.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
-
-                    // Add handler dependencies
-                    s.AddTransient<IDateTimeProxy, DateTimeProxy>();
-                    s.AddTransient<ICultureService, CultureService>();
-                })
+                .ConfigureServices(ConfigureServices)
                 .Build();
 
             // Validation
@@ -38,6 +25,20 @@ namespace CommandQuery.Sample.AzureFunctions.V5
             host.Services.GetService<IQueryProcessor>().AssertConfigurationIsValid();
 
             host.Run();
+        }
+
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            services
+                //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                .AddSingleton<ICommandFunction, CommandFunction>()
+                .AddSingleton<IQueryFunction, QueryFunction>()
+                // Add commands and queries
+                .AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
+                .AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
+                // Add handler dependencies
+                .AddTransient<IDateTimeProxy, DateTimeProxy>()
+                .AddTransient<ICultureService, CultureService>();
         }
     }
 }

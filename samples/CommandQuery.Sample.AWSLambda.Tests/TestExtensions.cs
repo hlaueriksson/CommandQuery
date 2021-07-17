@@ -4,7 +4,7 @@ using Amazon.Lambda.APIGatewayEvents;
 
 namespace CommandQuery.Sample.AWSLambda.Tests
 {
-    public static class SpecsExtensions
+    public static class TestExtensions
     {
         public static APIGatewayProxyRequest QueryName(this APIGatewayProxyRequest request, string queryName)
         {
