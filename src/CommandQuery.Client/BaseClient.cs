@@ -1,8 +1,6 @@
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -24,9 +22,7 @@ namespace CommandQuery.Client
         {
             Client.BaseAddress = new Uri(baseUrl);
             Client.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
-            Client.DefaultRequestHeaders.Accept.Clear();
-            Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            Client.DefaultRequestHeaders.Add("User-Agent", $"CommandQuery.Client/{Assembly.GetExecutingAssembly().GetName().Version}");
+            Client.SetDefaultRequestHeaders();
         }
 
         /// <summary>
@@ -53,6 +49,7 @@ namespace CommandQuery.Client
         protected BaseClient(HttpClient client, JsonSerializerOptions? options)
         {
             Client = client;
+            Client.SetDefaultRequestHeaders();
             Options = options;
         }
 
