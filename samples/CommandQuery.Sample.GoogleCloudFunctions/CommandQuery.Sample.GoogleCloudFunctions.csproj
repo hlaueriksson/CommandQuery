@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandQuery.GoogleCloudFunctions" Version="1.2.0" />
+    <PackageReference Include="CommandQuery.GoogleCloudFunctions" Version="1.20.0" />
     <PackageReference Include="Google.Cloud.Functions.Hosting" Version="1.0.0" />
     <None Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
