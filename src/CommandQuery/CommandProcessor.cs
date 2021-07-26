@@ -83,7 +83,7 @@ namespace CommandQuery
 
             foreach (var commandType in GetCommandTypes())
             {
-                var handlerType = commandType.IsAssignableTo(typeof(ICommand))
+                var handlerType = commandType.IsAssignableToType(typeof(ICommand))
                     ? typeof(ICommandHandler<>).MakeGenericType(commandType)
                     : typeof(ICommandHandler<,>).MakeGenericType(commandType, commandType.GetResultType(typeof(ICommand<>)));
 

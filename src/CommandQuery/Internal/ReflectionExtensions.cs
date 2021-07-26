@@ -14,10 +14,10 @@ namespace CommandQuery
 
         internal static IEnumerable<Type> GetTypesAssignableTo(this Assembly assembly, Type baseType)
         {
-            return assembly.ExportedTypes.Where(type => type.IsAssignableTo(baseType)).ToList();
+            return assembly.ExportedTypes.Where(type => type.IsAssignableToType(baseType)).ToList();
         }
 
-        internal static bool IsAssignableTo(this Type type, Type baseType)
+        internal static bool IsAssignableToType(this Type type, Type baseType)
         {
             return type.IsClass && (baseType.IsAssignableFrom(type) || IsAssignableToGenericType(type, baseType));
         }
@@ -30,7 +30,7 @@ namespace CommandQuery
                 .FirstOrDefault();
         }
 
-        internal static IEnumerable<Type> GetHandlerInterfaces(this Type type, Type genericType)
+        internal static IEnumerable<Type> GetHandlerInterfaceTypes(this Type type, Type genericType)
         {
             return type.GetInterfaces().Where(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType).ToList();
         }

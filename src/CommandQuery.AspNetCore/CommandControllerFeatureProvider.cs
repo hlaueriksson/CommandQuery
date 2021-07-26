@@ -37,16 +37,16 @@ namespace CommandQuery.AspNetCore
                 throw new ArgumentNullException(nameof(feature));
             }
 
-            foreach (var commandType in _types.Where(x => x.IsAssignableTo(typeof(ICommand))))
+            foreach (var commandType in _types.Where(x => x.IsAssignableToType(typeof(ICommand))))
             {
                 var controllerType = typeof(CommandController<>).MakeGenericType(commandType);
 
                 feature.Controllers.Add(controllerType.GetTypeInfo());
             }
 
-            foreach (var commandType in _types.Where(x => x.IsAssignableTo(typeof(ICommand<>))))
+            foreach (var commandType in _types.Where(x => x.IsAssignableToType(typeof(ICommand<>))))
             {
-                var controllerType = typeof(CommandController<,>).MakeGenericType(commandType, commandType.GetResultType(typeof(ICommand<>)));
+                var controllerType = typeof(CommandController<,>).MakeGenericType(commandType, commandType.GetResultType(typeof(ICommand<>))!);
 
                 feature.Controllers.Add(controllerType.GetTypeInfo());
             }
