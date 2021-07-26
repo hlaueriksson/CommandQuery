@@ -1,5 +1,4 @@
 using CommandQuery.AspNetCore;
-using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
@@ -26,17 +25,9 @@ namespace CommandQuery.Sample.AspNetCore.V5
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddControllers(options => options.Conventions.Add(new CommandQueryControllerModelConvention()))
-                .ConfigureApplicationPartManager(manager =>
-                {
-                    manager.FeatureProviders.Add(new CommandControllerFeatureProvider(typeof(FooCommand).Assembly));
-                    manager.FeatureProviders.Add(new QueryControllerFeatureProvider(typeof(BarQuery).Assembly));
-                });
-
             // Add commands and queries
-            services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-            services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
+            services.AddCommandControllers(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            services.AddQueryControllers(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             // Add handler dependencies
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();

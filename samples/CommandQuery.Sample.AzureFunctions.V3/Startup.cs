@@ -1,5 +1,4 @@
 using CommandQuery.AzureFunctions;
-using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.AzureFunctions.V3;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
@@ -20,12 +19,10 @@ namespace CommandQuery.Sample.AzureFunctions.V3
         public override void Configure(IFunctionsHostBuilder builder)
         {
             //builder.Services.AddSingleton(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-            builder.Services.AddSingleton<ICommandFunction, CommandFunction>();
-            builder.Services.AddSingleton<IQueryFunction, QueryFunction>();
 
             // Add commands and queries
-            builder.Services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-            builder.Services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
+            builder.Services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            builder.Services.AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
 
             // Add handler dependencies
             builder.Services.AddTransient<IDateTimeProxy, DateTimeProxy>();

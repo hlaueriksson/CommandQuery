@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CommandQuery.AzureFunctions;
-using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
@@ -31,11 +30,11 @@ namespace CommandQuery.Sample.AzureFunctions.V5
         {
             services
                 //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-                .AddSingleton<ICommandFunction, CommandFunction>()
-                .AddSingleton<IQueryFunction, QueryFunction>()
+
                 // Add commands and queries
-                .AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
-                .AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
+                .AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
+                .AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
+
                 // Add handler dependencies
                 .AddTransient<IDateTimeProxy, DateTimeProxy>()
                 .AddTransient<ICultureService, CultureService>();

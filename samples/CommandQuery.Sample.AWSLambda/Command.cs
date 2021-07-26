@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
-using CommandQuery.DependencyInjection;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
@@ -25,15 +24,15 @@ namespace CommandQuery.Sample.AWSLambda
         private static ICommandFunction GetCommandFunction()
         {
             var services = new ServiceCollection();
+            //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+            services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
             // Add handler dependencies
             services.AddTransient<ICultureService, CultureService>();
 
-            var commandProcessor = services.GetCommandProcessor(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+            var serviceProvider = services.BuildServiceProvider();
             // Validation
-            commandProcessor.AssertConfigurationIsValid();
-
-            //return new CommandFunction(commandProcessor, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-            return new CommandFunction(commandProcessor);
+            serviceProvider.GetService<ICommandProcessor>().AssertConfigurationIsValid();
+            return serviceProvider.GetService<ICommandFunction>();
         }
     }
 }

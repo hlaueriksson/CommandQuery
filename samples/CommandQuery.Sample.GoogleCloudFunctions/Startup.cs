@@ -1,5 +1,4 @@
 using System.Text.Json;
-using CommandQuery.DependencyInjection;
 using CommandQuery.GoogleCloudFunctions;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
@@ -18,11 +17,11 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
         public override void ConfigureServices(WebHostBuilderContext context, IServiceCollection services) =>
             services
                 //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web))
-                .AddSingleton<ICommandFunction, CommandFunction>()
-                .AddSingleton<IQueryFunction, QueryFunction>()
+
                 // Add commands and queries
-                .AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
-                .AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
+                .AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
+                .AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
+
                 // Add handler dependencies
                 .AddTransient<IDateTimeProxy, DateTimeProxy>()
                 .AddTransient<ICultureService, CultureService>();
