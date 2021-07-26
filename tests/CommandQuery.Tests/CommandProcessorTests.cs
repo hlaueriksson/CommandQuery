@@ -24,7 +24,7 @@ namespace CommandQuery.Tests
             async Task should_invoke_the_correct_command_handler()
             {
                 FakeCommand expectedCommand = null;
-                var fakeCommandHandler = new FakeCommandHandler(x => expectedCommand = x);
+                var fakeCommandHandler = new FakeCommandHandler { Callback = x => expectedCommand = x };
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<ICommandHandler<FakeCommand>>))).Returns(new[] { fakeCommandHandler });
 
                 var command = new FakeCommand();
@@ -73,7 +73,14 @@ namespace CommandQuery.Tests
             {
                 FakeResultCommand expectedCommand = null;
                 var expectedResult = new FakeResult();
-                var fakeCommandHandler = new FakeResultCommandHandler(x => { expectedCommand = x; return expectedResult; });
+                var fakeCommandHandler = new FakeResultCommandHandler
+                {
+                    Callback = x =>
+                    {
+                        expectedCommand = x;
+                        return expectedResult;
+                    }
+                };
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<ICommandHandler<FakeResultCommand, FakeResult>>))).Returns(new[] { fakeCommandHandler });
 
                 var command = new FakeResultCommand();
@@ -150,7 +157,7 @@ namespace CommandQuery.Tests
             subject.Invoking(x => x.AssertConfigurationIsValid())
                 .Should().Throw<CommandTypeException>()
                 .WithMessage("*The command handler for * is not registered.*")
-                .WithMessage("*A single command handler for * could not be retrieved.*")
+                //.WithMessage("*A single command handler for * could not be retrieved.*")
                 .WithMessage("*The command * is not registered.*");
 
             new CommandProcessor(new CommandTypeProvider(), new ServiceCollection().BuildServiceProvider())

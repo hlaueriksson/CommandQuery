@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace CommandQuery.DependencyInjection
 {
@@ -17,8 +18,8 @@ namespace CommandQuery.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddCommands(this IServiceCollection services, params Assembly[] assemblies)
         {
-            services.AddTransient<ICommandProcessor, CommandProcessor>();
-            services.AddTransient<ICommandTypeProvider>(_ => new CommandTypeProvider(assemblies));
+            services.AddSingleton<ICommandProcessor, CommandProcessor>();
+            services.AddSingleton<ICommandTypeProvider>(_ => new CommandTypeProvider(assemblies));
 
             services.AddHandlers(typeof(ICommandHandler<>), assemblies);
             services.AddHandlers(typeof(ICommandHandler<,>), assemblies);
@@ -34,8 +35,8 @@ namespace CommandQuery.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddQueries(this IServiceCollection services, params Assembly[] assemblies)
         {
-            services.AddTransient<IQueryProcessor, QueryProcessor>();
-            services.AddTransient<IQueryTypeProvider>(_ => new QueryTypeProvider(assemblies));
+            services.AddSingleton<IQueryProcessor, QueryProcessor>();
+            services.AddSingleton<IQueryTypeProvider>(_ => new QueryTypeProvider(assemblies));
 
             services.AddHandlers(typeof(IQueryHandler<,>), assemblies);
 
@@ -48,9 +49,9 @@ namespace CommandQuery.DependencyInjection
 
             foreach (var handler in handlers)
             {
-                foreach (var abstraction in handler.GetHandlerInterfaces(baseType))
+                foreach (var abstraction in handler.GetHandlerInterfaceTypes(baseType))
                 {
-                    services.AddTransient(abstraction, handler);
+                    services.TryAddTransient(abstraction, handler);
                 }
             }
         }

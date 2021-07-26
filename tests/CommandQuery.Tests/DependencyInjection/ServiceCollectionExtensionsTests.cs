@@ -3,7 +3,6 @@ using CommandQuery.DependencyInjection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.DependencyInjection
@@ -17,12 +16,12 @@ namespace CommandQuery.Tests.DependencyInjection
 
             void should_add_commands_from_Assemblies()
             {
-                var serviceCollectionMock = new Mock<IServiceCollection>();
+                var serviceCollection = new ServiceCollection();
+                serviceCollection.AddCommands(Assembly);
+                var provider = serviceCollection.BuildServiceProvider();
 
-                serviceCollectionMock.Object.AddCommands(Assembly);
-
-                serviceCollectionMock.Verify(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICommandHandler<FakeCommand>) && y.ImplementationType == typeof(FakeCommandHandler))));
-                serviceCollectionMock.Verify(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICommandHandler<FakeResultCommand, FakeResult>) && y.ImplementationType == typeof(FakeResultCommandHandler))));
+                provider.GetService<ICommandHandler<FakeCommand>>().Should().BeOfType<FakeCommandHandler>();
+                provider.GetService<ICommandHandler<FakeResultCommand, FakeResult>>().Should().BeOfType<FakeResultCommandHandler>();
             }
 
             void should_create_a_CommandTypeProvider()
@@ -54,11 +53,11 @@ namespace CommandQuery.Tests.DependencyInjection
 
             void should_add_queries_from_Assemblies()
             {
-                var serviceCollectionMock = new Mock<IServiceCollection>();
+                var serviceCollection = new ServiceCollection();
+                serviceCollection.AddQueries(Assembly);
+                var provider = serviceCollection.BuildServiceProvider();
 
-                serviceCollectionMock.Object.AddQueries(Assembly);
-
-                serviceCollectionMock.Verify(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(IQueryHandler<FakeQuery, FakeResult>) && y.ImplementationType == typeof(FakeQueryHandler))));
+                provider.GetService<IQueryHandler<FakeQuery, FakeResult>>().Should().BeOfType<FakeQueryHandler>();
             }
 
             void should_create_a_QueryTypeProvider()

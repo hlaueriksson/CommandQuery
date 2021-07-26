@@ -11,16 +11,11 @@ namespace CommandQuery.Tests
 
     public class FakeCommandHandler : ICommandHandler<FakeCommand>
     {
-        private readonly Action<FakeCommand> _callback;
-
-        public FakeCommandHandler(Action<FakeCommand> callback)
-        {
-            _callback = callback;
-        }
+        public Action<FakeCommand> Callback { get; set; }
 
         public async Task HandleAsync(FakeCommand command, CancellationToken cancellationToken)
         {
-            _callback(command);
+            Callback(command);
 
             await Task.CompletedTask;
         }
@@ -32,16 +27,11 @@ namespace CommandQuery.Tests
 
     public class FakeResultCommandHandler : ICommandHandler<FakeResultCommand, FakeResult>
     {
-        private readonly Func<FakeResultCommand, FakeResult> _callback;
+        public Func<FakeResultCommand, FakeResult> Callback { get; set; }
 
-        public FakeResultCommandHandler(Func<FakeResultCommand, FakeResult> callback)
+        public async Task<FakeResult> HandleAsync(FakeResultCommand command, CancellationToken cancellationToken)
         {
-            _callback = callback;
-        }
-
-        public async Task<FakeResult> HandleAsync(FakeResultCommand resultCommand, CancellationToken cancellationToken)
-        {
-            var result = _callback(resultCommand);
+            var result = Callback(command);
 
             return await Task.FromResult(result);
         }
@@ -57,16 +47,11 @@ namespace CommandQuery.Tests
 
     public class FakeQueryHandler : IQueryHandler<FakeQuery, FakeResult>
     {
-        private readonly Func<FakeQuery, FakeResult> _callback;
-
-        public FakeQueryHandler(Func<FakeQuery, FakeResult> callback)
-        {
-            _callback = callback;
-        }
+        public Func<FakeQuery, FakeResult> Callback { get; set; }
 
         public async Task<FakeResult> HandleAsync(FakeQuery query, CancellationToken cancellationToken)
         {
-            var result = _callback(query);
+            var result = Callback(query);
 
             return await Task.FromResult(result);
         }
@@ -108,18 +93,9 @@ namespace CommandQuery.Tests
 
     public class FakeComplexQueryHandler : IQueryHandler<FakeComplexQuery, IEnumerable<FakeResult>>
     {
-        private readonly Func<FakeComplexQuery, IEnumerable<FakeResult>> _callback;
-
-        public FakeComplexQueryHandler(Func<FakeComplexQuery, IEnumerable<FakeResult>> callback)
-        {
-            _callback = callback;
-        }
-
         public async Task<IEnumerable<FakeResult>> HandleAsync(FakeComplexQuery query, CancellationToken cancellationToken)
         {
-            var result = _callback(query);
-
-            return await Task.FromResult(result);
+            return await Task.FromResult(new []{ new FakeResult() });
         }
     }
 
