@@ -9,4 +9,5 @@ test_script:
   - ps: "dotnet test .\\tests\\CommandQuery.AspNetCore.Tests\\CommandQuery.AspNetCore.Tests.csproj"
   - ps: "dotnet test .\\tests\\CommandQuery.AWSLambda.Tests\\CommandQuery.AWSLambda.Tests.csproj"
   - ps: "dotnet test .\\tests\\CommandQuery.AzureFunctions.Tests\\CommandQuery.AzureFunctions.Tests.csproj"
+  - ps: "dotnet test .\\tests\\CommandQuery.GoogleCloudFunctions.Tests\\CommandQuery.GoogleCloudFunctions.Tests.csproj"
   - ps: "dotnet test .\\tests\\CommandQuery.Tests\\CommandQuery.Tests.csproj"
