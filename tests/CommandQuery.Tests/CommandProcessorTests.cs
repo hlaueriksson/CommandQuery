@@ -157,7 +157,7 @@ namespace CommandQuery.Tests
             subject.Invoking(x => x.AssertConfigurationIsValid())
                 .Should().Throw<CommandTypeException>()
                 .WithMessage("*The command handler for * is not registered.*")
-                //.WithMessage("*A single command handler for * could not be retrieved.*")
+                .WithMessage("*A single command handler for * could not be retrieved.*")
                 .WithMessage("*The command * is not registered.*");
 
             new CommandProcessor(new CommandTypeProvider(), new ServiceCollection().BuildServiceProvider())

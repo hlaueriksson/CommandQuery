@@ -10,11 +10,6 @@ namespace CommandQuery.Client
     {
         public override Dictionary<string, object> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType != JsonTokenType.StartObject)
-            {
-                throw new JsonException($"JsonTokenType was of type {reader.TokenType}, only objects are supported");
-            }
-
             var dictionary = new Dictionary<string, object>();
             while (reader.Read())
             {
@@ -23,21 +18,11 @@ namespace CommandQuery.Client
                     return dictionary;
                 }
 
-                if (reader.TokenType != JsonTokenType.PropertyName)
-                {
-                    throw new JsonException("JsonTokenType was not PropertyName");
-                }
-
                 var propertyName = reader.GetString();
-
-                if (string.IsNullOrWhiteSpace(propertyName))
-                {
-                    throw new JsonException("Failed to get property name");
-                }
 
                 reader.Read();
 
-                dictionary.Add(propertyName!, ExtractValue(ref reader, options)!);
+                dictionary.Add(propertyName!, ReadValue(ref reader, options)!);
             }
 
             return dictionary;
@@ -49,18 +34,13 @@ namespace CommandQuery.Client
 
             foreach (var key in value.Keys)
             {
-                HandleValue(writer, key, value[key]);
+                WriteValue(writer, key, value[key]);
             }
 
             writer.WriteEndObject();
         }
 
-        private static void HandleValue(Utf8JsonWriter writer, object value)
-        {
-            HandleValue(writer, null!, value);
-        }
-
-        private static void HandleValue(Utf8JsonWriter writer, string key, object objectValue)
+        private static void WriteValue(Utf8JsonWriter writer, string? key, object objectValue)
         {
             if (key != null)
             {
@@ -69,62 +49,34 @@ namespace CommandQuery.Client
 
             switch (objectValue)
             {
-                case string stringValue:
-                    writer.WriteStringValue(stringValue);
-                    break;
-                case DateTime dateTime:
-                    writer.WriteStringValue(dateTime);
-                    break;
-                case long longValue:
-                    writer.WriteNumberValue(longValue);
-                    break;
-                case int intValue:
-                    writer.WriteNumberValue(intValue);
-                    break;
-                case float floatValue:
-                    writer.WriteNumberValue(floatValue);
-                    break;
-                case double doubleValue:
-                    writer.WriteNumberValue(doubleValue);
-                    break;
-                case decimal decimalValue:
-                    writer.WriteNumberValue(decimalValue);
-                    break;
-                case bool boolValue:
-                    writer.WriteBooleanValue(boolValue);
-                    break;
                 case Dictionary<string, object> dict:
                     writer.WriteStartObject();
                     foreach (var item in dict)
                     {
-                        HandleValue(writer, item.Key, item.Value);
+                        WriteValue(writer, item.Key, item.Value);
                     }
 
                     writer.WriteEndObject();
                     break;
-                case object[] array:
-                    writer.WriteStartArray();
-                    foreach (var item in array)
-                    {
-                        HandleValue(writer, item);
-                    }
-
-                    writer.WriteEndArray();
-                    break;
                 default:
-                    writer.WriteNullValue();
+                    JsonSerializer.Serialize(writer, objectValue);
                     break;
             }
         }
 
-        private object? ExtractValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        private object? ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
                 case JsonTokenType.String:
-                    if (reader.TryGetDateTime(out var date))
+                    if (reader.TryGetDateTime(out var dateTime))
                     {
-                        return date;
+                        return dateTime;
+                    }
+
+                    if (reader.TryGetGuid(out var guid))
+                    {
+                        return guid;
                     }
 
                     return reader.GetString();
@@ -147,7 +99,7 @@ namespace CommandQuery.Client
                     var list = new List<object>();
                     while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
                     {
-                        list.Add(ExtractValue(ref reader, options)!);
+                        list.Add(ReadValue(ref reader, options)!);
                     }
 
                     return list;

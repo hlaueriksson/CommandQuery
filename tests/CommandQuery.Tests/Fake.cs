@@ -178,4 +178,36 @@ namespace CommandQuery.Tests
 
         public Dictionary<string, object> Details { get; set; }
     }
+
+    public class BrokenCommand : ICommand
+    {
+    }
+
+    public class BrokenCommandHandler : ICommandHandler<BrokenCommand>
+    {
+        public BrokenCommandHandler(object unknownDependency)
+        {
+        }
+
+        public async Task HandleAsync(BrokenCommand command, CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public class BrokenQuery : IQuery<object>
+    {
+    }
+
+    public class BrokenQueryHandler : IQueryHandler<BrokenQuery, object>
+    {
+        public BrokenQueryHandler(object unknownDependency)
+        {
+        }
+
+        public async Task<object> HandleAsync(BrokenQuery query, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(new object());
+        }
+    }
 }
