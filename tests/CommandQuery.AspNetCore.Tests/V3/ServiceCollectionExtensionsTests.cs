@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
-namespace CommandQuery.AspNetCore.Tests.VX
+namespace CommandQuery.AspNetCore.Tests.V3
 {
     public class ServiceCollectionExtensionsTests
     {
