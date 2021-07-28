@@ -1,4 +1,4 @@
-#if !NETSTANDARD
+#if NETCOREAPP3_1
 using System.Reflection;
 using CommandQuery.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
