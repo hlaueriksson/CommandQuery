@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using CommandQuery.DependencyInjection;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using LoFuUnit.NUnit;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 
@@ -14,14 +17,14 @@ namespace CommandQuery.Tests
         [LoFu, Test]
         public async Task when_processing_the_command()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
             FakeServiceProvider = new Mock<IServiceProvider>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, FakeServiceProvider.Object);
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, FakeServiceProvider.Object);
 
             async Task should_invoke_the_correct_command_handler()
             {
                 FakeCommand expectedCommand = null;
-                var fakeCommandHandler = new FakeCommandHandler(x => expectedCommand = x);
+                var fakeCommandHandler = new FakeCommandHandler { Callback = x => expectedCommand = x };
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<ICommandHandler<FakeCommand>>))).Returns(new[] { fakeCommandHandler });
 
                 var command = new FakeCommand();
@@ -30,13 +33,19 @@ namespace CommandQuery.Tests
                 command.Should().Be(expectedCommand);
             }
 
+            void should_throw_exception_if_the_command_is_null()
+            {
+                Subject.Awaiting(x => x.ProcessAsync(null)).Should()
+                    .Throw<ArgumentNullException>();
+            }
+
             void should_throw_exception_if_the_command_handler_is_not_found()
             {
                 var command = new Mock<ICommand>().Object;
 
                 Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"The command handler for '{command}' could not be found");
+                    .WithMessage($"The command handler for '{command}' could not be found.");
             }
 
             void should_throw_exception_if_multiple_command_handlers_are_found()
@@ -49,38 +58,51 @@ namespace CommandQuery.Tests
 
                 Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"Multiple command handlers for '{handlerType}' was found");
+                    .WithMessage($"A single command handler for '{handlerType}' could not be retrieved.");
             }
         }
 
         [LoFu, Test]
         public async Task when_processing_the_command_with_result()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
             FakeServiceProvider = new Mock<IServiceProvider>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, FakeServiceProvider.Object);
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, FakeServiceProvider.Object);
 
             async Task should_invoke_the_correct_command_handler_and_return_a_result()
             {
                 FakeResultCommand expectedCommand = null;
                 var expectedResult = new FakeResult();
-                var fakeCommandHandler = new FakeResultCommandHandler(x => { expectedCommand = x; return expectedResult; });
+                var fakeCommandHandler = new FakeResultCommandHandler
+                {
+                    Callback = x =>
+                    {
+                        expectedCommand = x;
+                        return expectedResult;
+                    }
+                };
                 FakeServiceProvider.Setup(x => x.GetService(typeof(IEnumerable<ICommandHandler<FakeResultCommand, FakeResult>>))).Returns(new[] { fakeCommandHandler });
 
                 var command = new FakeResultCommand();
-                var result = await Subject.ProcessWithResultAsync(command);
+                var result = await Subject.ProcessAsync(command);
 
                 command.Should().Be(expectedCommand);
                 result.Should().Be(expectedResult);
+            }
+
+            void should_throw_exception_if_the_command_is_null()
+            {
+                Subject.Awaiting(x => x.ProcessAsync<object>(null)).Should()
+                    .Throw<ArgumentNullException>();
             }
 
             void should_throw_exception_if_the_command_handler_is_not_found()
             {
                 var command = new Mock<ICommand<object>>().Object;
 
-                Subject.Awaiting(x => x.ProcessWithResultAsync(command)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"The command handler for '{command}' could not be found");
+                    .WithMessage($"The command handler for '{command}' could not be found.");
             }
 
             void should_throw_exception_if_multiple_command_handlers_are_found()
@@ -91,31 +113,31 @@ namespace CommandQuery.Tests
 
                 var command = new FakeMultiResultCommand1();
 
-                Subject.Awaiting(x => x.ProcessWithResultAsync(command)).Should()
+                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
                     .Throw<CommandProcessorException>()
-                    .WithMessage($"Multiple command handlers for '{handlerType}' was found");
+                    .WithMessage($"A single command handler for '{handlerType}' could not be retrieved.");
             }
         }
 
         [LoFu, Test]
         public void when_get_command_types()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, null);
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, null);
 
             void should_get_all_types_from_the_cache()
             {
                 Subject.GetCommandTypes();
 
-                FakeCommandTypeCollection.Verify(x => x.GetTypes());
+                FakeCommandTypeProvider.Verify(x => x.GetCommandTypes());
             }
         }
 
         [LoFu, Test]
         public void when_get_command_type()
         {
-            FakeCommandTypeCollection = new Mock<ICommandTypeCollection>();
-            Subject = new CommandProcessor(FakeCommandTypeCollection.Object, null);
+            FakeCommandTypeProvider = new Mock<ICommandTypeProvider>();
+            Subject = new CommandProcessor(FakeCommandTypeProvider.Object, null);
 
             void should_get_the_type_from_the_cache()
             {
@@ -123,12 +145,32 @@ namespace CommandQuery.Tests
 
                 Subject.GetCommandType(commandName);
 
-                FakeCommandTypeCollection.Verify(x => x.GetType(commandName));
+                FakeCommandTypeProvider.Verify(x => x.GetCommandType(commandName));
             }
         }
 
-        Mock<ICommandTypeCollection> FakeCommandTypeCollection;
+        [Test]
+        public void AssertConfigurationIsValid()
+        {
+            var subject = typeof(FakeCommandHandler).Assembly.GetCommandProcessor();
+
+            subject.Invoking(x => x.AssertConfigurationIsValid())
+                .Should().Throw<CommandTypeException>()
+                .WithMessage("*The command handler for * is not registered.*")
+                .WithMessage("*A single command handler for * could not be retrieved.*")
+                .WithMessage("*The command * is not registered.*");
+
+            new CommandProcessor(new CommandTypeProvider(), new ServiceCollection().BuildServiceProvider())
+                .AssertConfigurationIsValid().Should().NotBeNull();
+        }
+
+        Mock<ICommandTypeProvider> FakeCommandTypeProvider;
         Mock<IServiceProvider> FakeServiceProvider;
         CommandProcessor Subject;
+    }
+
+    public class DupeCommandHandler : ICommandHandler<Fail.DupeCommand>
+    {
+        public async Task HandleAsync(Fail.DupeCommand command, CancellationToken cancellationToken) => throw new NotImplementedException();
     }
 }

@@ -1,60 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using CommandQuery.AWSLambda.Internal;
-using CommandQuery.Internal;
-using Newtonsoft.Json;
+using CommandQuery.SystemTextJson;
 
 namespace CommandQuery.AWSLambda
 {
     /// <summary>
     /// Handles commands for the Lambda function.
     /// </summary>
-    public class CommandFunction
+    public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
+        private readonly JsonSerializerOptions? _options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandFunction" /> class.
+        /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
-        /// <param name="commandProcessor">An <see cref="ICommandProcessor" /></param>
-        public CommandFunction(ICommandProcessor commandProcessor)
+        /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
+        /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="APIGatewayProxyRequest.Body"/> and serialization of <see cref="APIGatewayProxyResponse.Body"/>.</param>
+        public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerOptions? options = null)
         {
             _commandProcessor = commandProcessor;
+            _options = options;
         }
 
-        /// <summary>
-        /// Handle a command.
-        /// </summary>
-        /// <param name="commandName">The name of the command</param>
-        /// <param name="request">An <see cref="APIGatewayProxyRequest" /></param>
-        /// <param name="context">An <see cref="ILambdaContext" /></param>
-        /// <returns>200, 400 or 500</returns>
-        public async Task<APIGatewayProxyResponse> Handle(string commandName, APIGatewayProxyRequest request, ILambdaContext context)
+        /// <inheritdoc />
+        public async Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaLogger? logger)
         {
-            context.Logger.LogLine($"Handle {commandName}");
+            logger?.LogLine($"Handle {commandName}");
+
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
 
             try
             {
-                var result = await _commandProcessor.ProcessWithOrWithoutResultAsync(commandName, request.Body);
+                var result = await _commandProcessor.ProcessAsync(commandName, request.Body, _options).ConfigureAwait(false);
 
-                if (result == CommandResult.None) return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.OK };
-
-                return new APIGatewayProxyResponse
+                if (result == CommandResult.None)
                 {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonConvert.SerializeObject(result.Value),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                };
+                    return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.OK };
+                }
+
+                return result.Value.Ok(_options);
             }
             catch (Exception exception)
             {
-                context.Logger.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
+                logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
-                return exception.IsHandled() ? exception.ToBadRequest() : exception.ToInternalServerError();
+                return exception.IsHandled() ? exception.BadRequest(_options) : exception.InternalServerError(_options);
             }
         }
     }

@@ -1,39 +1,79 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CommandQuery.Tests")]
-
-namespace CommandQuery.Client.Internal
+namespace CommandQuery.Client
 {
     internal static class QueryExtensions
     {
+        private static readonly Assembly _system = typeof(object).Assembly;
+
         internal static string GetRequestUri(this object query)
         {
+            if (query is null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
             return query.GetType().Name + "?" + query.QueryString();
+        }
+
+        internal static string GetRequestSlug(this object query)
+        {
+            if (query is null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            return query.GetType().Name;
         }
 
         private static string QueryString(this object query)
         {
             var result = new List<string>();
 
-            foreach (var p in query.GetType().GetProperties().Where(p => p.GetValue(query, null) != null))
-            {
-                var value = p.GetValue(query, null);
-
-                if (!(value is string) && value is IEnumerable enumerable)
-                    result.AddRange(from object v in enumerable select Parameter(p, v));
-                else
-                    result.Add(Parameter(p, value));
-            }
+            Parameters(query, string.Empty);
 
             return string.Join("&", result.ToArray());
 
-            string Parameter(PropertyInfo property, object value)
+            void Parameters(object root, string prefix)
             {
-                return $"{property.Name}={System.Net.WebUtility.UrlEncode(value.ToString())}";
+                foreach (var p in root.GetType().GetProperties().Where(p => p.GetValue(root, null) != null))
+                {
+                    var value = p.GetValue(root, null);
+
+                    if (value.GetType().Assembly != _system)
+                    {
+                        Parameters(value, prefix + p.Name + ".");
+                    }
+                    else if (value is IEnumerable enumerable and not string)
+                    {
+                        result.AddRange(from object v in enumerable select Parameter(p, v, prefix));
+                    }
+                    else
+                    {
+                        result.Add(Parameter(p, value, prefix));
+                    }
+                }
+            }
+
+            static string Parameter(PropertyInfo property, object value, string prefix)
+            {
+                return value switch
+                {
+                    DateTime dateTime => NameValuePair(dateTime.ToString("O")),
+                    DateTimeOffset dateTimeOffset => NameValuePair(dateTimeOffset.ToString("O")),
+                    _ => NameValuePair(Convert.ToString(value, CultureInfo.InvariantCulture)!),
+                };
+
+                string NameValuePair(string value)
+                {
+                    return $"{prefix}{property.Name}={WebUtility.UrlEncode(value)}";
+                }
             }
         }
     }

@@ -1,13 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
     <Version>1.0.0</Version>
     <PackageReleaseNotes>
-☑️ Target netcoreapp3.0
-☑️ Added ICommandFunction and IQueryFunction
-☑️ net461 returns Error when exception is thrown
-☑️ Improved logging
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for Azure Functions ⚡
@@ -19,33 +16,36 @@
     <PackageId>CommandQuery.AzureFunctions</PackageId>
     <PackageProjectUrl>https://github.com/hlaueriksson/CommandQuery</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>CommandQuery;Command;Query;CQS;azurefunctions</PackageTags>
+    <PackageReadmeFile>CommandQuery.AzureFunctions.md</PackageReadmeFile>
+    <PackageTags>CommandQuery;Command;Query;CQS;Microsoft;Azure;AzureFunctions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/hlaueriksson/CommandQuery.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\CommandQuery.AzureFunctions.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.2" />
+  <Import Project="../../Analyzers.props" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.AzureFunctions.Tests" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <!--<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.9" />-->
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="[3.0.0,3.1.0)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Extensions\CommandQuery.Extensions.csproj" />
+    <ProjectReference Include="..\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+    <ProjectReference Include="..\CommandQuery.SystemTextJson\CommandQuery.SystemTextJson.csproj" Condition="'$(TargetFramework)' == 'net5.0'" />
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
-    <ProjectReference Include="..\CommandQuery.DependencyInjection\CommandQuery.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

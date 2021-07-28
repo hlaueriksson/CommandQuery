@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Queries;
 
@@ -12,7 +13,7 @@ namespace CommandQuery.Sample.Handlers.Queries
             _dateTime = dateTime;
         }
 
-        public async Task<Bar> HandleAsync(BarQuery query)
+        public async Task<Bar> HandleAsync(BarQuery query, CancellationToken cancellationToken)
         {
             var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") };
 

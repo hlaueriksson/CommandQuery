@@ -1,102 +1,114 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.Exceptions;
-using CommandQuery.Internal;
 
 namespace CommandQuery
 {
-    /// <summary>
-    /// Process queries by invoking the corresponding handler.
-    /// </summary>
-    public interface IQueryProcessor
-    {
-        /// <summary>
-        /// Process a query.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result</typeparam>
-        /// <param name="query">The query</param>
-        /// <returns>The result of the query</returns>
-        Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query);
-
-        /// <summary>
-        /// Returns the types of queries that can be processed.
-        /// </summary>
-        /// <returns>Supported query types</returns>
-        IEnumerable<Type> GetQueryTypes();
-
-        /// <summary>
-        /// Returns the type of query.
-        /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <returns>The query type</returns>
-        Type GetQueryType(string queryName);
-    }
-
-    /// <summary>
-    /// Process queries by invoking the corresponding handler.
-    /// </summary>
+    /// <inheritdoc />
     public class QueryProcessor : IQueryProcessor
     {
-        private readonly ITypeCollection _typeCollection;
+        private readonly IQueryTypeProvider _queryTypeProvider;
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryProcessor" /> class.
+        /// Initializes a new instance of the <see cref="QueryProcessor"/> class.
         /// </summary>
-        /// <param name="typeCollection">A collection of supported queries</param>
-        /// <param name="serviceProvider">A service provider with supported query handlers</param>
-        public QueryProcessor(IQueryTypeCollection typeCollection, IServiceProvider serviceProvider)
+        /// <param name="queryTypeProvider">A provider of supported queries.</param>
+        /// <param name="serviceProvider">A service provider with supported query handlers.</param>
+        public QueryProcessor(IQueryTypeProvider queryTypeProvider, IServiceProvider serviceProvider)
         {
-            _typeCollection = typeCollection;
+            _queryTypeProvider = queryTypeProvider;
             _serviceProvider = serviceProvider;
         }
 
-        /// <summary>
-        /// Process a query.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result</typeparam>
-        /// <param name="query">The query</param>
-        /// <returns>The result of the query</returns>
-        public async Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query)
+        /// <inheritdoc />
+        public async Task<TResult> ProcessAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
+            if (query is null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
 
-            dynamic handler = GetService(handlerType);
+            dynamic? handler = GetService(handlerType);
 
-            if (handler == null) throw new QueryProcessorException($"The query handler for '{query}' could not be found");
+            if (handler is null)
+            {
+                throw new QueryProcessorException($"The query handler for '{query}' could not be found.");
+            }
 
-            return await handler.HandleAsync((dynamic)query);
+            return await handler.HandleAsync((dynamic)query, cancellationToken);
         }
 
-        /// <summary>
-        /// Returns the types of queries that can be processed.
-        /// </summary>
-        /// <returns>Supported query types</returns>
-        public IEnumerable<Type> GetQueryTypes()
+        /// <inheritdoc />
+        public Type? GetQueryType(string queryName)
         {
-            return _typeCollection.GetTypes();
+            return _queryTypeProvider.GetQueryType(queryName);
         }
 
-        /// <summary>
-        /// Returns the type of query.
-        /// </summary>
-        /// <param name="queryName">The name of the query</param>
-        /// <returns>The query type</returns>
-        public Type GetQueryType(string queryName)
+        /// <inheritdoc />
+        public IReadOnlyList<Type> GetQueryTypes()
         {
-            return _typeCollection.GetType(queryName);
+            return _queryTypeProvider.GetQueryTypes();
         }
 
-        private object GetService(Type handlerType)
+        /// <inheritdoc />
+        public IQueryProcessor AssertConfigurationIsValid()
+        {
+            var errors = new List<string>();
+
+            foreach (var queryType in GetQueryTypes())
+            {
+                var handlerType = typeof(IQueryHandler<,>).MakeGenericType(queryType, queryType.GetResultType(typeof(IQuery<>)));
+
+                try
+                {
+                    if (GetService(handlerType) is null)
+                    {
+                        errors.Add($"The query handler for '{queryType.AssemblyQualifiedName}' is not registered.");
+                    }
+                }
+                catch (QueryProcessorException)
+                {
+                    errors.Add($"A single query handler for '{queryType.AssemblyQualifiedName}' could not be retrieved.");
+                }
+            }
+
+            foreach (var handlerType in _serviceProvider
+                .GetAllServiceTypes()
+                .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
+                .ToList())
+            {
+                var queryType = handlerType.GetGenericArguments()[0];
+                var supportedQueryType = _queryTypeProvider.GetQueryType(queryType.Name);
+
+                if (supportedQueryType is null || supportedQueryType != queryType)
+                {
+                    errors.Add($"The query '{queryType.AssemblyQualifiedName}' is not registered.");
+                }
+            }
+
+            if (errors.Any())
+            {
+                throw new QueryTypeException("The QueryProcessor configuration is not valid:" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+            }
+
+            return this;
+        }
+
+        private object? GetService(Type handlerType)
         {
             try
             {
                 return _serviceProvider.GetSingleService(handlerType);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException exception)
             {
-                throw new QueryProcessorException($"Multiple query handlers for '{handlerType}' was found");
+                throw new QueryProcessorException($"A single query handler for '{handlerType}' could not be retrieved.", exception);
             }
         }
     }

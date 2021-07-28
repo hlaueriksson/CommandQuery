@@ -3,6 +3,7 @@
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <LangVersion>7.3</LangVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>
@@ -44,21 +45,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandQuery, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.1.0.0\lib\net461\CommandQuery.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandQuery.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.Abstractions.1.0.0\lib\net461\CommandQuery.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandQuery.AspNet.WebApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.AspNet.WebApi.1.0.0\lib\net461\CommandQuery.AspNet.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandQuery.DependencyInjection, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.DependencyInjection.1.0.0\lib\net461\CommandQuery.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandQuery.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandQuery.Extensions.1.0.0\lib\net461\CommandQuery.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -137,13 +123,18 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommandQuery.Sample.Contracts\CommandQuery.Sample.Contracts.csproj">
-      <Project>{eef4a80c-5624-414f-988c-b24f16ac7d41}</Project>
+      <Project>{9674aad1-1416-4bf0-93f0-8da5d5537c16}</Project>
       <Name>CommandQuery.Sample.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj">
-      <Project>{e6a0ee34-70dc-4541-8caf-06f910120155}</Project>
+      <Project>{8ca3d1a1-45a3-4440-8a1f-a3db8b90a4cf}</Project>
       <Name>CommandQuery.Sample.Handlers</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommandQuery.AspNet.WebApi">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using CommandQuery.Exceptions;
 
-namespace CommandQuery.Internal
+namespace CommandQuery
 {
     internal static class ExceptionExtensions
     {
-        public static bool IsHandled(this Exception exception)
+        internal static bool IsHandled(this Exception exception)
         {
             return
                 exception is CommandProcessorException ||
@@ -17,80 +17,27 @@ namespace CommandQuery.Internal
                 exception is QueryException;
         }
 
-        public static int GetCommandEventId(this Exception exception)
+        internal static IError ToError(this Exception exception)
         {
-            switch (exception)
+            return exception switch
             {
-                case CommandProcessorException _:
-                    return 1001;
-                case CommandException _:
-                    return 1002;
-                default:
-                    return 1003;
-            }
+                CommandException commandException => commandException.ToError(),
+                QueryException queryException => queryException.ToError(),
+                _ => new Error(exception.Message),
+            };
         }
 
-        public static int GetQueryEventId(this Exception exception)
+        internal static IError ToError(this CommandException exception)
         {
-            switch (exception)
-            {
-                case QueryProcessorException _:
-                    return 2001;
-                case QueryException _:
-                    return 2002;
-                default:
-                    return 2003;
-            }
+            return new Error(exception.Message, GetDetails(exception));
         }
 
-        public static string GetCommandCategory(this Exception exception)
+        internal static IError ToError(this QueryException exception)
         {
-            switch (exception)
-            {
-                case CommandProcessorException _:
-                case CommandException _:
-                    return exception.GetType().Name;
-                default:
-                    return "UnhandledCommandException";
-            }
+            return new Error(exception.Message, GetDetails(exception));
         }
 
-        public static string GetQueryCategory(this Exception exception)
-        {
-            switch (exception)
-            {
-                case QueryProcessorException _:
-                case QueryException _:
-                    return exception.GetType().Name;
-                default:
-                    return "UnhandledQueryException";
-            }
-        }
-
-        public static Error ToError(this Exception exception)
-        {
-            switch (exception)
-            {
-                case CommandException commandException:
-                    return commandException.ToError();
-                case QueryException queryException:
-                    return queryException.ToError();
-                default:
-                    return new Error { Message = exception.Message };
-            }
-        }
-
-        public static Error ToError(this CommandException exception)
-        {
-            return new Error { Message = exception.Message, Details = GetDetails(exception) };
-        }
-
-        public static Error ToError(this QueryException exception)
-        {
-            return new Error { Message = exception.Message, Details = GetDetails(exception) };
-        }
-
-        private static Dictionary<string, object> GetDetails(Exception exception)
+        private static Dictionary<string, object>? GetDetails(Exception exception)
         {
             var properties = exception.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.DeclaringType != typeof(Exception))

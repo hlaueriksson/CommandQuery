@@ -1,20 +1,59 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace CommandQuery.Internal
+namespace CommandQuery
 {
     internal static class ServiceProviderExtensions
     {
-        public static object GetSingleService(this IServiceProvider provider, Type serviceType)
+        internal static object? GetSingleService(this IServiceProvider provider, Type serviceType)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider));
-            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (serviceType is null)
+            {
+                throw new ArgumentNullException(nameof(serviceType));
+            }
 
             var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
-            var services = (IEnumerable<object>)provider.GetService(enumerableType);
+            var services = provider.GetService(enumerableType) as IEnumerable<object>;
 
             return services?.SingleOrDefault();
+        }
+
+        internal static IEnumerable<Type> GetAllServiceTypes(this IServiceProvider provider)
+        {
+            if (provider is not ServiceProvider serviceProvider)
+            {
+                return Enumerable.Empty<Type>();
+            }
+
+            var engine = GetFieldValue(serviceProvider, "_engine");
+            var callSiteFactory = GetPropertyValue(engine, "CallSiteFactory");
+            var descriptorLookup = GetFieldValue(callSiteFactory, "_descriptorLookup");
+
+            if (descriptorLookup is not IDictionary dictionary)
+            {
+                return Enumerable.Empty<Type>();
+            }
+
+            return dictionary.Keys.Cast<Type>();
+
+            static object? GetFieldValue(object? obj, string name)
+            {
+                return obj?.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
+            }
+
+            static object? GetPropertyValue(object? obj, string name)
+            {
+                return obj?.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj, null);
+            }
         }
     }
 }

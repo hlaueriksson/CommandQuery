@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -20,8 +22,9 @@ namespace CommandQuery.AWSLambda.Tests
         {
             Clear();
             Use<Mock<IQueryProcessor>>();
-            Context = new Mock<ILambdaContext>();
-            Context.SetupGet(x => x.Logger).Returns(new Mock<ILambdaLogger>().Object);
+            Use<JsonSerializerOptions>(null);
+            Logger = new Mock<ILambdaLogger>().Object;
+            QueryName = "FakeQuery";
             The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
         }
 
@@ -33,37 +36,43 @@ namespace CommandQuery.AWSLambda.Tests
             async Task should_return_the_result_from_the_query_processor()
             {
                 var expected = new FakeResult();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).ReturnsAsync(expected);
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Logger);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeEmpty();
             }
 
+            async Task should_throw_when_request_is_null()
+            {
+                Subject.Awaiting(x => x.HandleAsync(QueryName, null, Logger))
+                    .Should().Throw<ArgumentNullException>();
+            }
+
             async Task should_handle_QueryProcessorException()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryProcessorException("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new QueryProcessorException("fail"));
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Logger);
 
                 result.ShouldBeError("fail", 400);
             }
 
             async Task should_handle_QueryException()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new QueryException("invalid"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new QueryException("invalid"));
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Logger);
 
                 result.ShouldBeError("invalid", 400);
             }
 
             async Task should_handle_Exception()
             {
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).Throws(new Exception("fail"));
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Logger);
 
                 result.ShouldBeError("fail", 500);
             }
@@ -77,9 +86,9 @@ namespace CommandQuery.AWSLambda.Tests
             async Task should_return_the_result_from_the_query_processor()
             {
                 var expected = new FakeResult();
-                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>())).ReturnsAsync(expected);
+                The<Mock<IQueryProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
 
-                var result = await Subject.Handle(QueryName, Request, Context.Object);
+                var result = await Subject.HandleAsync(QueryName, Request, Logger);
 
                 result.StatusCode.Should().Be(200);
                 result.Body.Should().NotBeEmpty();
@@ -87,7 +96,7 @@ namespace CommandQuery.AWSLambda.Tests
         }
 
         APIGatewayProxyRequest Request;
-        Mock<ILambdaContext> Context;
-        string QueryName = "FakeQuery";
+        ILambdaLogger Logger;
+        string QueryName;
     }
 }

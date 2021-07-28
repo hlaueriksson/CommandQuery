@@ -1,20 +1,33 @@
-﻿using System.Net.Http;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace CommandQuery.Client.Internal
+namespace CommandQuery.Client
 {
     internal static class HttpResponseMessageExtensions
     {
-        public static HttpResponseMessage EnsureSuccess(this HttpResponseMessage message)
-        {
-            if (!message.IsSuccessStatusCode)
-            {
-                var error = message.Content.ReadAsAsync<Error>()
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
+        private static readonly JsonSerializerOptions _options = GetJsonSerializerOptions();
 
-                throw new CommandQueryException(message.ToString(), error);
+        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage message, CancellationToken cancellationToken)
+        {
+            if (message.IsSuccessStatusCode)
+            {
+                return message;
             }
 
-            return message;
+            var error = await message.Content.ReadFromJsonAsync<Error>(_options, cancellationToken).ConfigureAwait(false);
+
+            throw new CommandQueryException(message.ToString(), error);
+        }
+
+        private static JsonSerializerOptions GetJsonSerializerOptions()
+        {
+            var result = new JsonSerializerOptions();
+            result.Converters.Add(new DictionaryStringObjectConverter());
+
+            return result;
         }
     }
 }

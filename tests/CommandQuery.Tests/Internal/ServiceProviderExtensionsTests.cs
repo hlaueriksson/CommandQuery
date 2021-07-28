@@ -1,5 +1,6 @@
-﻿using System;
-using CommandQuery.Internal;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,11 +29,39 @@ namespace CommandQuery.Tests.Internal
             void should_return_the_service_when_only_one_service_is_found() =>
                 ServiceProvider.GetSingleService(typeof(ICommandHandler<FakeMultiCommand1>)).Should().BeOfType<FakeMultiHandler>();
 
-            void should_return_null_when_no_service_is_found() =>
+            void should_return_null_when_no_service_is_found()
+            {
                 ServiceProvider.GetSingleService(typeof(ICommandHandler<FakeMultiCommand2>)).Should().BeNull();
+                ServiceProvider.GetSingleService(typeof(int)).Should().BeNull();
+            }
 
             void should_throw_InvalidOperationException_when_multiple_services_are_found() =>
                 ServiceProvider.Invoking(x => x.GetSingleService(typeof(IQueryHandler<FakeMultiQuery1, FakeResult>))).Should().Throw<InvalidOperationException>();
+
+            void should_throw_NotSupportedException_when_service_type_is_open() =>
+                ServiceProvider.Invoking(x => x.GetSingleService(typeof(IEnumerable<>))).Should().Throw<NotSupportedException>();
+        }
+
+        [LoFu, Test]
+        public void when_GetAllServiceTypes()
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddTransient<ICommandHandler<FakeMultiCommand1>, FakeMultiHandler>();
+
+            ServiceProvider = serviceCollection.BuildServiceProvider();
+
+            void should_return_empty_enumeration_when_IServiceProvider_is_null() =>
+                ((IServiceProvider)null).GetAllServiceTypes().Should().BeEmpty();
+
+            void should_return_empty_enumeration_if_IServiceProvider_does_not_have_the_right_private_members()
+            {
+                var broken = new ServiceCollection().BuildServiceProvider();
+                broken.GetType().GetField("_engine", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(broken, null);
+                broken.GetAllServiceTypes().Should().BeEmpty();
+            }
+
+            void should_return_all_service_types() =>
+                ServiceProvider.GetAllServiceTypes().Should().Contain(typeof(ICommandHandler<FakeMultiCommand1>));
         }
 
         IServiceProvider ServiceProvider;

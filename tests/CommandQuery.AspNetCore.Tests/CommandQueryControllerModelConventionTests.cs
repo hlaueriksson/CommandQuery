@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using CommandQuery.Tests;
@@ -17,16 +18,16 @@ namespace CommandQuery.AspNetCore.Tests
         {
             Subject = new CommandQueryControllerModelConvention();
 
-            void should_handle_CommandControllers()
+            void should_handle_CommandControllers_without_result()
             {
                 var result = new ControllerModel(typeof(CommandController<FakeCommand>).GetTypeInfo(), new List<object>());
                 Subject.Apply(result);
                 result.ControllerName.Should().Be("FakeCommand");
             }
 
-            void should_handle_CommandWithResultControllers()
+            void should_handle_CommandControllers_with_result()
             {
-                var result = new ControllerModel(typeof(CommandWithResultController<FakeResultCommand, FakeResult>).GetTypeInfo(), new List<object>());
+                var result = new ControllerModel(typeof(CommandController<FakeResultCommand, FakeResult>).GetTypeInfo(), new List<object>());
                 Subject.Apply(result);
                 result.ControllerName.Should().Be("FakeResultCommand");
             }
@@ -50,6 +51,11 @@ namespace CommandQuery.AspNetCore.Tests
                 var result = new ControllerModel(typeof(FakeController<>).GetTypeInfo(), new List<object>());
                 Subject.Apply(result);
                 result.ControllerName.Should().BeNull();
+            }
+
+            void should_throw_when_controller_is_null()
+            {
+                Subject.Invoking(x => x.Apply(null)).Should().Throw<ArgumentNullException>();
             }
         }
 

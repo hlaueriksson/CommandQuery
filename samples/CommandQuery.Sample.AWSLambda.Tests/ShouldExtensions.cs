@@ -1,6 +1,7 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
+using System.Text.Json;
+using Amazon.Lambda.APIGatewayEvents;
+using CommandQuery.Sample.Contracts;
 using FluentAssertions;
-using Newtonsoft.Json;
 
 namespace CommandQuery.Sample.AWSLambda.Tests
 {
@@ -10,7 +11,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
         {
             result.Should().NotBeNull();
             result.StatusCode.Should().NotBe(200);
-            var value = JsonConvert.DeserializeObject<Error>(result.Body);
+            var value = JsonSerializer.Deserialize<Error>(result.Body);
             value.Should().NotBeNull();
             value.Message.Should().Be(message);
         }

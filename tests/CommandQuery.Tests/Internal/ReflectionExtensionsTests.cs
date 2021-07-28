@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CommandQuery.Internal;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ namespace CommandQuery.Tests.Internal
         [LoFu, Test]
         public void when_GetTypesAssignableTo()
         {
-            Assembly = typeof(FakeCommandHandler).GetTypeInfo().Assembly;
+            Assembly = typeof(FakeCommandHandler).Assembly;
 
             void should_return_handlers_from_Assemblies()
             {
@@ -31,13 +30,13 @@ namespace CommandQuery.Tests.Internal
         }
 
         [Test]
-        public void when_IsAssignableTo()
+        public void when_IsAssignableToType()
         {
-            typeof(FakeCommand).IsAssignableTo(typeof(ICommand)).Should().BeTrue();
-            typeof(FakeResultCommand).IsAssignableTo(typeof(ICommand<>)).Should().BeTrue();
-            typeof(FakeQuery).IsAssignableTo(typeof(IQuery<>)).Should().BeTrue();
+            typeof(FakeCommand).IsAssignableToType(typeof(ICommand)).Should().BeTrue();
+            typeof(FakeResultCommand).IsAssignableToType(typeof(ICommand<>)).Should().BeTrue();
+            typeof(FakeQuery).IsAssignableToType(typeof(IQuery<>)).Should().BeTrue();
 
-            typeof(FakeResult).IsAssignableTo(typeof(IEnumerable<>)).Should().BeFalse();
+            typeof(FakeResult).IsAssignableToType(typeof(IEnumerable<>)).Should().BeFalse();
         }
 
         [Test]
@@ -48,15 +47,15 @@ namespace CommandQuery.Tests.Internal
         }
 
         [Test]
-        public void when_GetHandlerInterfaces()
+        public void when_GetHandlerInterfaceTypes()
         {
-            typeof(FakeCommandHandler).GetHandlerInterfaces(typeof(ICommandHandler<>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeCommand>));
-            typeof(FakeResultCommandHandler).GetHandlerInterfaces(typeof(ICommandHandler<,>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeResultCommand, FakeResult>));
-            typeof(FakeQueryHandler).GetHandlerInterfaces(typeof(IQueryHandler<,>)).Should().BeEquivalentTo(typeof(IQueryHandler<FakeQuery, FakeResult>));
+            typeof(FakeCommandHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeCommand>));
+            typeof(FakeResultCommandHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<,>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeResultCommand, FakeResult>));
+            typeof(FakeQueryHandler).GetHandlerInterfaceTypes(typeof(IQueryHandler<,>)).Should().BeEquivalentTo(typeof(IQueryHandler<FakeQuery, FakeResult>));
 
-            typeof(FakeMultiHandler).GetHandlerInterfaces(typeof(ICommandHandler<>)).Count().Should().Be(2);
-            typeof(FakeMultiHandler).GetHandlerInterfaces(typeof(ICommandHandler<,>)).Count().Should().Be(2);
-            typeof(FakeMultiHandler).GetHandlerInterfaces(typeof(IQueryHandler<,>)).Count().Should().Be(2);
+            typeof(FakeMultiHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<>)).Count().Should().Be(2);
+            typeof(FakeMultiHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<,>)).Count().Should().Be(2);
+            typeof(FakeMultiHandler).GetHandlerInterfaceTypes(typeof(IQueryHandler<,>)).Count().Should().Be(2);
         }
 
         Assembly Assembly;
