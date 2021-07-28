@@ -1,51 +1,36 @@
-# CommandQuery.Client
+### CommandQuery.Client 🧰
+
+[![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
 > Clients for CommandQuery
 
-## Installation
+#### Commands
 
-| NuGet            |       | [![CommandQuery.Client][1]][2]                                       |
-| :--------------- | ----: | :------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.Client -Version 1.0.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.Client --version 1.0.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.Client" Version="1.0.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.Client --version 1.0.0`                      |
+Create a `CommandClient` and invoke `PostAsync`:
 
-[1]: https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client
-[2]: https://www.nuget.org/packages/CommandQuery.Client
+```cs
+var commandClient = new CommandClient("https://commandquery-sample-aspnetcore-v5.azurewebsites.net/api/command/");
 
-## Sample Code
-
-[`CommandQuery.Sample.Client`](/samples/CommandQuery.Sample.Client)
-
-## Commands
-
-Create a `CommandClient` and invoke `Post`:
-
-```csharp
-var commandClient = new CommandClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/command/");
-
-commandClient.Post(new FooCommand { Value = "sv-SE" });
 await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
 ```
 
 Commands with result:
 
-```csharp
-var result = commandClient.Post(new BazCommand { Value = "sv-SE" });
-result = await commandClient.PostAsync(new BazCommand { Value = "en-GB" });
+```cs
+var result = await commandClient.PostAsync(new BazCommand { Value = "en-GB" });
 ```
 
-## Queries
+#### Queries
 
-Create a `QueryClient` and invoke `Post` or `Get`:
+Create a `QueryClient` and invoke `PostAsync` or `GetAsync`:
 
-```csharp
-var queryClient = new QueryClient("https://commandquery-sample-azurefunctions-vs2.azurewebsites.net/api/query/");
+```cs
+var queryClient = new QueryClient("https://commandquery-sample-aspnetcore-v5.azurewebsites.net/api/query/");
 
-var result = queryClient.Post(new BarQuery { Id = 1 });
-result = await queryClient.PostAsync(new BarQuery { Id = 1 });
-
-result = queryClient.Get(new BarQuery { Id = 1 });
+var result = await queryClient.PostAsync(new BarQuery { Id = 1 });
 result = await queryClient.GetAsync(new BarQuery { Id = 1 });
 ```
+
+#### Samples
+
+* [CommandQuery.Sample.Client](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.Client)

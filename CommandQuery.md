@@ -1,34 +1,16 @@
-# CommandQuery
+### CommandQuery ⚙️
 
-> Command Query Separation for .NET Framework and .NET Standard ⚙️
+[![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
-## Installation
+> Command Query Separation for .NET
 
-| NuGet            |       | [![CommandQuery][1]][2]                                       |
-| :--------------- | ----: | :------------------------------------------------------------ |
-| Package Manager  | `PM>` | `Install-Package CommandQuery -Version 1.0.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery --version 1.0.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery" Version="1.0.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery --version 1.0.0`                      |
+#### Commands
 
-[1]: https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery
-[2]: https://www.nuget.org/packages/CommandQuery
+> Commands change the state of a system but _[traditionally]_ do not return a value. They write (create, update, delete) data.
 
-## Sample Code
+Commands implement the marker interface `ICommand` and command handlers implement `ICommandHandler<in TCommand>`.
 
-[`CommandQuery.Sample.Contracts`](/samples/CommandQuery.Sample.Contracts)
-
-[`CommandQuery.Sample.Handlers`](/samples/CommandQuery.Sample.Handlers)
-
-## Commands
-
-> Commands: Change the state of a system but do not return a value.
->
-> — <cite>[Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)</cite>
-
-Create a `Command` and `CommandHandler`:
-
-```csharp
+```cs
 public class FooCommand : ICommand
 {
     public string Value { get; set; }
@@ -43,7 +25,7 @@ public class FooCommandHandler : ICommandHandler<FooCommand>
         _cultureService = cultureService;
     }
 
-    public async Task HandleAsync(FooCommand command)
+    public async Task HandleAsync(FooCommand command, CancellationToken cancellationToken)
     {
         if (command.Value == null) throw new FooCommandException("Value cannot be null", 1337, "Try setting the value to 'en-US'");
 
@@ -54,16 +36,9 @@ public class FooCommandHandler : ICommandHandler<FooCommand>
 }
 ```
 
-Commands implements the marker interface `ICommand` and command handlers implements `ICommandHandler<in TCommand>`.
+Commands can also return a result.
 
-This example uses the dependency `ICultureService` to set the current culture to the given command value.
-
-The dogmatic approach to commands, that they *do not return a value*, can be inconvenient.
-`CommandQuery` has a more pragmatic take and also supports commands with result.
-
-Commands with result:
-
-```csharp
+```cs
 public class BazCommand : ICommand<Baz>
 {
     public string Value { get; set; }
@@ -83,7 +58,7 @@ public class BazCommandHandler : ICommandHandler<BazCommand, Baz>
         _cultureService = cultureService;
     }
 
-    public async Task<Baz> HandleAsync(BazCommand command)
+    public async Task<Baz> HandleAsync(BazCommand command, CancellationToken cancellationToken)
     {
         var result = new Baz();
 
@@ -103,27 +78,25 @@ public class BazCommandHandler : ICommandHandler<BazCommand, Baz>
 }
 ```
 
-Commands with result implements the marker interface `ICommand<TResult>` and command handlers implements `ICommandHandler<in TCommand, TResult>`.
+Commands with result implement the marker interface `ICommand<TResult>` and command handlers implement `ICommandHandler<in TCommand, TResult>`.
 
-## Queries
+#### Queries
 
-> Queries: Return a result and do not change the observable state of the system (are free of side effects).
->
-> — <cite>[Martin Fowler](http://martinfowler.com/bliki/CommandQuerySeparation.html)</cite>
+> Queries return a result and do not change the observable state of the system (are free of side effects). They read and return data.
 
-Create a `Query`, `QueryHandler` and `Result`:
+Queries implement the marker interface `IQuery<TResult>` and query handlers implement `IQueryHandler<in TQuery, TResult>`.
 
-```csharp
+```cs
+public class BarQuery : IQuery<Bar>
+{
+    public int Id { get; set; }
+}
+
 public class Bar
 {
     public int Id { get; set; }
 
     public string Value { get; set; }
-}
-
-public class BarQuery : IQuery<Bar>
-{
-    public int Id { get; set; }
 }
 
 public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
@@ -135,7 +108,7 @@ public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
         _dateTime = dateTime;
     }
 
-    public async Task<Bar> HandleAsync(BarQuery query)
+    public async Task<Bar> HandleAsync(BarQuery query, CancellationToken cancellationToken)
     {
         var result = new Bar { Id = query.Id, Value = _dateTime.Now.ToString("F") };
 
@@ -144,6 +117,7 @@ public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
 }
 ```
 
-Queries implements the marker interface `IQuery<TResult>` and query handlers implements `IQueryHandler<in TQuery, TResult>`.
+#### Samples
 
-This example uses the dependency `IDateTimeProxy` to return a result with the current time.
+* [CommandQuery.Sample.Contracts](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.Contracts)
+* [CommandQuery.Sample.Handlers](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.Handlers)

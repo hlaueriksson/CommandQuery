@@ -1,6 +1,6 @@
 # CommandQuery Sample Code
 
-This code has been written with *Visual Studio 2017* and *Visual Studio Code*.
+This code has been written with *Visual Studio 2019*.
 
 The unit tests are using [NUnit](https://github.com/nunit/nunit).
 
@@ -29,8 +29,10 @@ Postman collection:
 
 Sample code:
 
-* `CommandQuery.Sample.AspNetCore`
-* `CommandQuery.Sample.AspNetCore.Tests`
+* `CommandQuery.Sample.AspNetCore.V3`
+* `CommandQuery.Sample.AspNetCore.V3.Tests`
+* `CommandQuery.Sample.AspNetCore.V5`
+* `CommandQuery.Sample.AspNetCore.V5.Tests`
 
 Postman collection:
 
@@ -49,21 +51,26 @@ Postman collection:
 
 ## Azure Functions
 
-Functions can be created in both Visual Studio and Visual Studio Code, and run on both .NET Framework and .NET Core
-
 Sample code:
 
-* `CommandQuery.Sample.AzureFunctions.Vs1`
-    * Visual Studio with `v1` (.NET Framework) runtime
-* `CommandQuery.Sample.AzureFunctions.Vs1.Tests`
-* `CommandQuery.Sample.AzureFunctions.Vs2`
-    * Visual Studio with `v2` (.NET Core) runtime
-* `CommandQuery.Sample.AzureFunctions.Vs2.Tests`
-* `CommandQuery.Sample.AzureFunctions.VsCode1`
-    * Visual Studio Code with `~1` (.NET Framework) runtime
-* `CommandQuery.Sample.AzureFunctions.VsCode2`
-    * Visual Studio Code with `beta` (.NET Core) runtime
+* `CommandQuery.Sample.AzureFunctions.V3`
+* `CommandQuery.Sample.AzureFunctions.V3.Tests`
+* `CommandQuery.Sample.AzureFunctions.V5`
+* `CommandQuery.Sample.AzureFunctions.V5.Tests`
 
 Postman collection:
 
 * `CommandQuery.Sample.AzureFunctions.postman_collection.json`
+
+## Google Cloud Functions
+
+Sample code:
+
+* `CommandQuery.Sample.GoogleCloudFunctions`
+* `CommandQuery.Sample.GoogleCloudFunctions.Tests`
+
+## Client
+
+Sample code:
+
+* `CommandQuery.Sample.Client`

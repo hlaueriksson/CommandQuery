@@ -1,68 +1,47 @@
-# CommandQuery.AzureFunctions
+### CommandQuery.AzureFunctions ⚡
 
-> Command Query Separation for Azure Functions ⚡
+[![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
+
+> Command Query Separation for Azure Functions
 
 * Provides generic function support for commands and queries with *HTTPTriggers*
 * Enables APIs based on HTTP `POST` and `GET`
 
-## Installation
-
-| NuGet            |       | [![CommandQuery.AzureFunctions][1]][2]                                       |
-| :--------------- | ----: | :--------------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.AzureFunctions -Version 1.0.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.AzureFunctions --version 1.0.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.AzureFunctions" Version="1.0.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.AzureFunctions --version 1.0.0`                      |
-
-[1]: https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?label=CommandQuery.AzureFunctions
-[2]: https://www.nuget.org/packages/CommandQuery.AzureFunctions
-
-## Sample Code
-
-[`CommandQuery.Sample.AzureFunctions.Vs3`](/samples/CommandQuery.Sample.AzureFunctions.Vs3)
-
-[`CommandQuery.Sample.AzureFunctions.Vs3.Tests`](/samples/CommandQuery.Sample.AzureFunctions.Vs3.Tests)
-
-## Get Started
+#### Get Started
 
 0. Install **Azure Functions and Web Jobs Tools**
-    * [https://marketplace.visualstudio.com/items?itemName=VisualStudioWebandAzureTools.AzureFunctionsandWebJobsTools](https://marketplace.visualstudio.com/items?itemName=VisualStudioWebandAzureTools.AzureFunctionsandWebJobsTools)
+   * [https://marketplace.visualstudio.com/items?itemName=VisualStudioWebandAzureTools.AzureFunctionsandWebJobsTools](https://marketplace.visualstudio.com/items?itemName=VisualStudioWebandAzureTools.AzureFunctionsandWebJobsTools)
 1. Create a new **Azure Functions** project
-	* [Tutorial](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-your-first-function-visual-studio)
+   * [Tutorial](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-your-first-function-visual-studio)
 2. Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
-	* `PM>` `Install-Package CommandQuery.AzureFunctions`
+   * `PM>` `Install-Package CommandQuery.AzureFunctions`
 3. Create functions
-	* For example named `Command` and `Query`
+   * Preferably named `Command` and `Query`
 4. Create commands and command handlers
-	* Implement `ICommand` and `ICommandHandler<in TCommand>`
-	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
+   * Implement `ICommand` and `ICommandHandler<in TCommand>`
+   * Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
-	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
-6. Configure services in a `Startup` class
+   * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
+6. Configure services in `Program.cs`
 
 ![Add a new project - Azure Functions](vs-new-project-azure-functions-1.png)
 
 Choose:
 
-* Azure Functions v3 (.NET Core)
+* .NET 5 (Isolated)
 * Http trigger
 
 ![Create a new Azure Functions Application](vs-new-project-azure-functions-2.png)
 
-## Commands
+#### Commands
 
-Add a `Command` function:
-
-```csharp
+```cs
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 
-namespace CommandQuery.Sample.AzureFunctions.Vs3
+namespace CommandQuery.Sample.AzureFunctions.V5
 {
     public class Command
     {
@@ -73,10 +52,12 @@ namespace CommandQuery.Sample.AzureFunctions.Vs3
             _commandFunction = commandFunction;
         }
 
-        [FunctionName("Command")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req, ILogger log, string commandName)
+        [Function("Command")]
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestData req, FunctionContext executionContext, string commandName)
         {
-            return await _commandFunction.Handle(commandName, req, log);
+            var logger = executionContext.GetLogger("Command");
+
+            return await _commandFunction.HandleAsync(commandName, req, logger);
         }
     }
 }
@@ -92,24 +73,15 @@ Commands with result:
 
 * If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
-Example of a command request via [curl](https://curl.haxx.se):
+#### Queries
 
-`curl -X POST -d "{'Value':'sv-SE'}" http://localhost:7071/api/command/FooCommand --header "Content-Type:application/json"`
-
-## Queries
-
-Add a `Query` function:
-
-```csharp
+```cs
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 
-namespace CommandQuery.Sample.AzureFunctions.Vs3
+namespace CommandQuery.Sample.AzureFunctions.V5
 {
     public class Query
     {
@@ -120,158 +92,96 @@ namespace CommandQuery.Sample.AzureFunctions.Vs3
             _queryFunction = queryFunction;
         }
 
-        [FunctionName("Query")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req, ILogger log, string queryName)
+        [Function("Query")]
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequestData req, FunctionContext executionContext, string queryName)
         {
-            return await _queryFunction.Handle(queryName, req, log);
+            var logger = executionContext.GetLogger("Query");
+
+            return await _queryFunction.HandleAsync(queryName, req, logger);
         }
     }
 }
 ```
 
 * The function is requested via:
-    * HTTP `POST` with the Content-Type `application/json` in the header and the query itself as JSON in the body
-    * HTTP `GET` and the query itself as query string parameters in the URL
+  * HTTP `POST` with the Content-Type `application/json` in the header and the query itself as JSON in the body
+  * HTTP `GET` and the query itself as query string parameters in the URL
 * The name of the query is the slug of the URL.
 * If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the query fails; the response is an error message with the HTTP status code `400` or `500`.
 
-Example of query requests via [curl](https://curl.haxx.se):
+#### Configuration
 
-`curl -X POST -d "{'Id':1}" http://localhost:7071/api/query/BarQuery --header "Content-Type:application/json"`
+Configuration in `Program.cs`:
 
-`curl -X GET http://localhost:7071/api/query/BarQuery?Id=1`
-
-## Configuration
-
-Add a `Startup` class:
-
-```csharp
+```cs
+using System.Text.Json;
 using CommandQuery.AzureFunctions;
-using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.AzureFunctions.Vs3;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using CommandQuery.Sample.Handlers.Queries;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-[assembly: FunctionsStartup(typeof(Startup))]
-
-namespace CommandQuery.Sample.AzureFunctions.Vs3
+namespace CommandQuery.Sample.AzureFunctions.V5
 {
-    public class Startup : FunctionsStartup
+    public class Program
     {
-        public override void Configure(IFunctionsHostBuilder builder)
+        public static void Main()
         {
-            builder.Services.AddSingleton<ICommandFunction, CommandFunction>();
-            builder.Services.AddSingleton<IQueryFunction, QueryFunction>();
+            var host = new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults()
+                .ConfigureServices(ConfigureServices)
+                .Build();
 
-            // Add commands and queries
-            builder.Services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-            builder.Services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
+            // Validation
+            host.Services.GetService<ICommandProcessor>().AssertConfigurationIsValid();
+            host.Services.GetService<IQueryProcessor>().AssertConfigurationIsValid();
 
-            // Add handler dependencies
-            builder.Services.AddTransient<IDateTimeProxy, DateTimeProxy>();
-            builder.Services.AddTransient<ICultureService, CultureService>();
+            host.Run();
+        }
+
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            services
+                //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+                // Add commands and queries
+                .AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
+                .AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
+
+                // Add handler dependencies
+                .AddTransient<IDateTimeProxy, DateTimeProxy>()
+                .AddTransient<ICultureService, CultureService>();
         }
     }
 }
 ```
 
-Inherit from `FunctionsStartup` and override the `Configure` method.
-
-Add `CommandFunction` and `QueryFunction` to the IoC container.
-
-The extension methods `AddCommands` and `AddQueries` will add all command/query handlers in the given assemblies to the IoC container.
+The extension methods `AddCommandFunction` and `AddQueryFunction` will add functions and all command/query handlers in the given assemblies to the IoC container.
 You can pass in a `params` array of `Assembly` arguments if your handlers are located in different projects.
-If you only have one project you can use `typeof(Startup).Assembly` as a single argument.
+If you only have one project you can use `typeof(Program).Assembly` as a single argument.
 
-## Testing
+#### Testing
 
-Test commands:
-
-```csharp
+```cs
+using System;
 using System.IO;
-using System.Threading.Tasks;
-using CommandQuery.AzureFunctions;
-using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-
-namespace CommandQuery.Sample.AzureFunctions.Vs3.Tests
-{
-    public class CommandTests
-    {
-        public class when_using_the_real_function
-        {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                var mock = new Mock<IFunctionsHostBuilder>();
-                mock.Setup(x => x.Services).Returns(serviceCollection);
-                new Startup().Configure(mock.Object);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                Subject = new Command(serviceProvider.GetService<ICommandFunction>());
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var req = GetHttpRequest("{ 'Value': 'Foo' }");
-                var log = new Mock<ILogger>();
-
-                var result = await Subject.Run(req, log.Object, "FooCommand") as OkResult;
-
-                result.Should().NotBeNull();
-            }
-
-            DefaultHttpRequest GetHttpRequest(string content)
-            {
-                var httpContext = new DefaultHttpContext();
-                httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
-
-                return new DefaultHttpRequest(httpContext);
-            }
-
-            Command Subject;
-        }
-    }
-}
-```
-
-Test queries:
-
-```csharp
-using System.Collections.Generic;
-using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AzureFunctions.Vs3.Tests
+namespace CommandQuery.Sample.AzureFunctions.V5.Tests
 {
     public class QueryTests
     {
@@ -281,29 +191,41 @@ namespace CommandQuery.Sample.AzureFunctions.Vs3.Tests
             public void SetUp()
             {
                 var serviceCollection = new ServiceCollection();
-                var mock = new Mock<IFunctionsHostBuilder>();
-                mock.Setup(x => x.Services).Returns(serviceCollection);
-                new Startup().Configure(mock.Object);
+                serviceCollection.AddScoped<ILoggerFactory, LoggerFactory>();
+                Program.ConfigureServices(serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
+                var context = new Mock<FunctionContext>();
+                context.SetupProperty(c => c.InstanceServices, serviceProvider);
+                ExecutionContext = context.Object;
+
                 Subject = new Query(serviceProvider.GetService<IQueryFunction>());
-                Req = GetHttpRequest("POST", content: "{ 'Id': 1 }");
-                Log = new Mock<ILogger>().Object;
             }
 
             [Test]
             public async Task should_work()
             {
-                var result = await Subject.Run(Req, Log, "BarQuery") as OkObjectResult;
-                var value = result.Value as Bar;
+                var req = GetHttpRequestData(ExecutionContext, "POST", content: "{ \"Id\": 1 }");
+
+                var result = await Subject.Run(req, ExecutionContext, "BarQuery");
+                var value = await result.AsAsync<Bar>();
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
+            [Test]
+            public async Task should_handle_errors()
+            {
+                var req = GetHttpRequestData(ExecutionContext, "POST", content: "{ \"Id\": 1 }");
+
+                var result = await Subject.Run(req, ExecutionContext, "FailQuery");
+
+                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+            }
+
+            FunctionContext ExecutionContext;
             Query Subject;
-            DefaultHttpRequest Req;
-            ILogger Log;
         }
 
         public class when_using_the_real_function_via_Get
@@ -312,49 +234,77 @@ namespace CommandQuery.Sample.AzureFunctions.Vs3.Tests
             public void SetUp()
             {
                 var serviceCollection = new ServiceCollection();
-                var mock = new Mock<IFunctionsHostBuilder>();
-                mock.Setup(x => x.Services).Returns(serviceCollection);
-                new Startup().Configure(mock.Object);
+                serviceCollection.AddScoped<ILoggerFactory, LoggerFactory>();
+                Program.ConfigureServices(serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
+                var context = new Mock<FunctionContext>();
+                context.SetupProperty(c => c.InstanceServices, serviceProvider);
+                ExecutionContext = context.Object;
+
                 Subject = new Query(serviceProvider.GetService<IQueryFunction>());
-                Req = GetHttpRequest("GET", query: new Dictionary<string, string> { { "Id", "1" } });
-                Log = new Mock<ILogger>().Object;
             }
 
             [Test]
             public async Task should_work()
             {
-                var result = await Subject.Run(Req, Log, "BarQuery") as OkObjectResult;
-                var value = result.Value as Bar;
+                var req = GetHttpRequestData(ExecutionContext, "GET", url: "http://localhost?Id=1");
+
+                var result = await Subject.Run(req, ExecutionContext, "BarQuery");
+                var value = await result.AsAsync<Bar>();
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
+            [Test]
+            public async Task should_handle_errors()
+            {
+                var req = GetHttpRequestData(ExecutionContext, "GET", url: "http://localhost?Id=1");
+
+                var result = await Subject.Run(req, ExecutionContext, "FailQuery");
+
+                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+            }
+
+            FunctionContext ExecutionContext;
             Query Subject;
-            DefaultHttpRequest Req;
-            ILogger Log;
         }
 
-        static DefaultHttpRequest GetHttpRequest(string method, string content = null, Dictionary<string, string> query = null)
+        static HttpRequestData GetHttpRequestData(FunctionContext executionContext, string method, string content = null, string url = null)
         {
-            var httpContext = new DefaultHttpContext();
+            var request = new Mock<HttpRequestData>(executionContext);
+            request.Setup(r => r.Method).Returns(method);
 
             if (content != null)
             {
-                httpContext.Features.Get<IHttpRequestFeature>().Body = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+                var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
+                request.Setup(r => r.Body).Returns(stream);
             }
 
-            var request = new DefaultHttpRequest(httpContext) { Method = method };
-
-            if (query != null)
+            if (url != null)
             {
-                request.QueryString = new QueryString(QueryHelpers.AddQueryString("", query));
+                request.Setup(r => r.Url).Returns(new Uri(url));
             }
 
-            return request;
+            request.Setup(r => r.CreateResponse()).Returns(() =>
+            {
+                var response = new Mock<HttpResponseData>(executionContext);
+                response.SetupProperty(r => r.Headers, new HttpHeadersCollection());
+                response.SetupProperty(r => r.StatusCode);
+                response.SetupProperty(r => r.Body, new MemoryStream());
+                return response.Object;
+            });
+
+            return request.Object;
         }
     }
 }
 ```
+
+#### Samples
+
+* [CommandQuery.Sample.AzureFunctions.V3](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V3)
+* [CommandQuery.Sample.AzureFunctions.V3.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V3.Tests)
+* [CommandQuery.Sample.AzureFunctions.V5](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V5)
+* [CommandQuery.Sample.AzureFunctions.V5.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V5.Tests)
