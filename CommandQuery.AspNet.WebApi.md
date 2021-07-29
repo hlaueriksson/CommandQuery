@@ -1,48 +1,30 @@
-# CommandQuery.AspNet.WebApi
+### CommandQuery.AspNet.WebApi 🌐
 
-> Command Query Separation for ASP.NET Web API 2 🌐
+> Command Query Separation for ASP.NET Web API 2
 
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-## Installation
-
-| NuGet            |       | [![CommandQuery.AspNet.WebApi][1]][2]                                       |
-| :--------------- | ----: | :-------------------------------------------------------------------------- |
-| Package Manager  | `PM>` | `Install-Package CommandQuery.AspNet.WebApi -Version 1.0.0`                 |
-| .NET CLI         | `>`   | `dotnet add package CommandQuery.AspNet.WebApi --version 1.0.0`             |
-| PackageReference |       | `<PackageReference Include="CommandQuery.AspNet.WebApi" Version="1.0.0" />` |
-| Paket CLI        | `>`   | `paket add CommandQuery.AspNet.WebApi --version 1.0.0`                      |
-
-[1]: https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg?label=CommandQuery.AspNet.WebApi
-[2]: https://www.nuget.org/packages/CommandQuery.AspNet.WebApi
-
-## Sample Code
-
-[`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
-
-[`CommandQuery.Sample.AspNet.WebApi.Tests`](/samples/CommandQuery.Sample.AspNet.WebApi.Tests)
-
-## Get Started
+#### Get Started
 
 1. Create a new **ASP.NET Web API 2** project
-	* [Tutorial](https://docs.microsoft.com/en-us/aspnet/web-api/overview/getting-started-with-aspnet-web-api/tutorial-your-first-web-api)
+   * [Tutorial](https://docs.microsoft.com/en-us/aspnet/web-api/overview/getting-started-with-aspnet-web-api/tutorial-your-first-web-api)
 2. Install the `CommandQuery.AspNet.WebApi` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
-	* `PM>` `Install-Package CommandQuery.AspNet.WebApi`
+   * `PM>` `Install-Package CommandQuery.AspNet.WebApi`
 3. Create controllers
-	* Inherit from `BaseCommandController` and `BaseQueryController`
+   * Inherit from `BaseCommandController` and `BaseQueryController`
 4. Create commands and command handlers
-	* Implement `ICommand` and `ICommandHandler<in TCommand>`
-	* Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
+   * Implement `ICommand` and `ICommandHandler<in TCommand>`
+   * Or `ICommand<TResult>` and `ICommandHandler<in TCommand, TResult>`
 5. Create queries and query handlers
-	* Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
+   * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure dependency injection
 
-## Commands
+#### Commands
 
 Add a `CommandController`:
 
-```csharp
+```cs
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
@@ -63,7 +45,7 @@ Inherit from `BaseCommandController` and pass the `ICommandProcessor` to the bas
 
 The action method from the base class will handle all commands:
 
-```csharp
+```cs
 /// <summary>
 /// Handle a command.
 /// </summary>
@@ -85,15 +67,11 @@ Commands with result:
 
 * If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
-Example of a command request via [curl](https://curl.haxx.se):
-
-`curl -X POST -d "{'Value':'sv-SE'}" http://localhost:55359/api/command/FooCommand --header "Content-Type:application/json"`
-
-## Queries
+#### Queries
 
 Add a `QueryController`:
 
-```csharp
+```cs
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
@@ -114,7 +92,7 @@ Inherit from `BaseQueryController` and pass the `IQueryProcessor` to the base co
 
 The action methods from the base class will handle all queries:
 
-```csharp
+```cs
 /// <summary>
 /// Handle a query.
 /// </summary>
@@ -126,7 +104,7 @@ The action methods from the base class will handle all queries:
 public async Task<IHttpActionResult> HandlePost(string queryName, [FromBody] Newtonsoft.Json.Linq.JObject json)
 ```
 
-```csharp
+```cs
 /// <summary>
 /// Handle a query.
 /// </summary>
@@ -144,27 +122,17 @@ public async Task<IHttpActionResult> HandleGet(string queryName)
 * If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the query fails; the response is an error message with the HTTP status code `400` or `500`.
 
-Example of query requests via [curl](https://curl.haxx.se):
-
-`curl -X POST -d "{'Id':1}" http://localhost:55359/api/query/BarQuery --header "Content-Type:application/json"`
-
-`curl -X GET http://localhost:55359/api/query/BarQuery?Id=1`
-
-## Configuration
+#### Configuration
 
 Configuration in `App_Start/WebApiConfig.cs`
 
-```csharp
+```cs
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using CommandQuery.AspNet.WebApi;
 using CommandQuery.DependencyInjection;
-using CommandQuery.Sample.Contracts.Commands;
-using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Commands;
-using CommandQuery.Sample.Handlers.Queries;
+using CommandQuery.Sample.AspNet.WebApi.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AspNet.WebApi
@@ -176,8 +144,8 @@ namespace CommandQuery.Sample.AspNet.WebApi
             // IoC
             var services = new ServiceCollection();
 
-            services.AddCommands(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-            services.AddQueries(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
+            services.AddCommands(typeof(WebApiConfig).Assembly);
+            services.AddQueries(typeof(WebApiConfig).Assembly);
 
             services.AddTransient<ICultureService, CultureService>();
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
@@ -203,72 +171,26 @@ The extension methods `AddCommands` and `AddQueries` will add all command/query 
 You can pass in a `params` array of `Assembly` arguments if your handlers are located in different projects.
 If you only have one project you can use `typeof(WebApiConfig).Assembly` as a single argument.
 
-To enable logging, inject a `ITraceWriter` to the constructor of the controllers.
+To enable logging, inject an `ITraceWriter` to the constructor of the controllers.
 
 The `CommandQueryDependencyResolver` will manage the dependency injection when controllers are created.
 
 The `CommandQueryDirectRouteProvider` makes sure the routes from the base controllers are inherited.
 
-Consider to use only the `JsonMediaTypeFormatter`.
+Consider to clear the default formatters and only use the `JsonMediaTypeFormatter`.
 
-## Testing
+#### Testing
 
 You can [unit test](https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/unit-testing-controllers-in-web-api) your controllers and command/query handlers.
 
-Test commands:
-
-```csharp
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Results;
-using CommandQuery.Sample.AspNet.WebApi.Controllers;
-using FluentAssertions;
-using Newtonsoft.Json.Linq;
-using NUnit.Framework;
-
-namespace CommandQuery.Sample.AspNet.WebApi.Tests
-{
-    public class CommandControllerTests
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            var configuration = new HttpConfiguration();
-            WebApiConfig.Register(configuration);
-
-            var commandProcessor = configuration.DependencyResolver.GetService(typeof(ICommandProcessor)) as ICommandProcessor;
-
-            Subject = new CommandController(commandProcessor, null)
-            {
-                Request = new HttpRequestMessage(),
-                Configuration = configuration
-            };
-        }
-
-        [Test]
-        public async Task should_work()
-        {
-            var json = JObject.Parse("{ 'Value': 'Foo' }");
-            var result = await Subject.Handle("FooCommand", json) as OkResult;
-
-            result.Should().NotBeNull();
-        }
-
-        CommandController Subject;
-    }
-}
-```
-
-Test queries:
-
-```csharp
+```cs
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using CommandQuery.Sample.AspNet.WebApi.Contracts.Queries;
 using CommandQuery.Sample.AspNet.WebApi.Controllers;
-using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -277,34 +199,93 @@ namespace CommandQuery.Sample.AspNet.WebApi.Tests
 {
     public class QueryControllerTests
     {
-        [SetUp]
-        public void SetUp()
+        public class when_using_the_real_controller_via_Post
         {
-            var configuration = new HttpConfiguration();
-            WebApiConfig.Register(configuration);
-
-            var queryProcessor = configuration.DependencyResolver.GetService(typeof(IQueryProcessor)) as IQueryProcessor;
-
-            Subject = new QueryController(queryProcessor, null)
+            [SetUp]
+            public void SetUp()
             {
-                Request = new HttpRequestMessage(),
-                Configuration = configuration
-            };
+                var configuration = new HttpConfiguration();
+                WebApiConfig.Register(configuration);
+
+                var queryProcessor = configuration.DependencyResolver.GetService(typeof(IQueryProcessor)) as IQueryProcessor;
+
+                Subject = new QueryController(queryProcessor, null)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = configuration
+                };
+            }
+
+            [Test]
+            public async Task should_work()
+            {
+                var json = JObject.Parse("{ 'Id': 1 }");
+                var result = await (await Subject.HandlePost("BarQuery", json)).ExecuteAsync(CancellationToken.None);
+                var value = await result.Content.ReadAsAsync<Bar>();
+
+                result.EnsureSuccessStatusCode();
+                value.Id.Should().Be(1);
+                value.Value.Should().NotBeEmpty();
+            }
+
+            [Test]
+            public async Task should_handle_errors()
+            {
+                var json = JObject.Parse("{ 'Id': 1 }");
+                var result = await Subject.HandlePost("FailQuery", json);
+
+                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+            }
+
+            QueryController Subject;
         }
 
-        [Test]
-        public async Task should_work()
+        public class when_using_the_real_controller_via_Get
         {
-            var json = JObject.Parse("{ 'Id': 1 }");
-            var result = await (await Subject.HandlePost("BarQuery", json)).ExecuteAsync(CancellationToken.None);
-            var value = await result.Content.ReadAsAsync<Bar>();
+            [SetUp]
+            public void SetUp()
+            {
+                var configuration = new HttpConfiguration();
+                WebApiConfig.Register(configuration);
 
-            result.EnsureSuccessStatusCode();
-            value.Id.Should().Be(1);
-            value.Value.Should().NotBeEmpty();
+                var queryProcessor = configuration.DependencyResolver.GetService(typeof(IQueryProcessor)) as IQueryProcessor;
+
+                Subject = new QueryController(queryProcessor, null)
+                {
+                    Request = new HttpRequestMessage
+                    {
+                        RequestUri = new Uri("http://localhost/api/query/BarQuery?Id=1")
+                    },
+                    Configuration = configuration
+                };
+            }
+
+            [Test]
+            public async Task should_work()
+            {
+                var result = await (await Subject.HandleGet("BarQuery")).ExecuteAsync(CancellationToken.None);
+                var value = await result.Content.ReadAsAsync<Bar>();
+
+                result.EnsureSuccessStatusCode();
+                value.Id.Should().Be(1);
+                value.Value.Should().NotBeEmpty();
+            }
+
+            [Test]
+            public async Task should_handle_errors()
+            {
+                var result = await Subject.HandleGet("FailQuery");
+
+                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+            }
+
+            QueryController Subject;
         }
-
-        QueryController Subject;
     }
 }
 ```
+
+#### Samples
+
+* [`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
+* [`CommandQuery.Sample.AspNet.WebApi.Tests`](/samples/CommandQuery.Sample.AspNet.WebApi.Tests)
