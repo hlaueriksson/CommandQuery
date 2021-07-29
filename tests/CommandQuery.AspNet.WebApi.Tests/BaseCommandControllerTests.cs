@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +6,6 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using CommandQuery.Exceptions;
-using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Moq;

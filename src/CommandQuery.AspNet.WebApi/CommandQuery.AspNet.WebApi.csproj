@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.AspNet.WebApi.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommandQuery" Version="1.0.0" />
     <PackageReference Include="CommandQuery.DependencyInjection" Version="1.0.0" />
     <PackageReference Include="CommandQuery.Extensions" Version="1.0.0" />

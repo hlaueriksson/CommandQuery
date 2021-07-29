@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -6,10 +6,6 @@
     <IsTestProject>true</IsTestProject>
     <NoWarn>1701;1702;CS1998;CS8321</NoWarn>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\CommandQuery.Tests\Fake.cs" Link="Fake.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />

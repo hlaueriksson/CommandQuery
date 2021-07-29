@@ -1,4 +1,4 @@
-﻿using System.Web.Http;
+using System.Web.Http;
 
 namespace CommandQuery.Sample.AspNet.WebApi
 {
