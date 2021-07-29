@@ -17,11 +17,7 @@ namespace CommandQuery.Sample.Client
 
         public static async Task Main(string[] args)
         {
-            var baseUrl = args.Any() ? args.First() : "http://localhost:7071/api";
-
-            Console.WriteLine($"CommandQuery.Sample.Client: {baseUrl}");
-
-            ConfigureServices(baseUrl);
+            ConfigureServices(args.Any() ? args : new[] { "http://localhost:7071/api" });
 
             var commandClient = _serviceProvider.GetRequiredService<ICommandClient>();
             var queryClient = _serviceProvider.GetRequiredService<IQueryClient>();
@@ -35,21 +31,24 @@ namespace CommandQuery.Sample.Client
             await queryClient.GetAsync(new QuuxQuery { Id = 1, Corge = new Corge { DateTime = DateTime.UtcNow, Grault = new Grault { DayOfWeek = DayOfWeek.Monday } } }); // Query with nested property
         }
 
-        static void ConfigureServices(string baseUrl)
+        static void ConfigureServices(params string[] baseUrls)
         {
+            var commandUrl = baseUrls.Length == 1 ? $"{baseUrls.Single()}/command/" : baseUrls.First();
+            var queryUrl = baseUrls.Length == 1 ? $"{baseUrls.Single()}/query/" : baseUrls.Last();
+
             var services = new ServiceCollection();
             services.AddTransient<LoggingHandler>();
             //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
             services.AddHttpClient<ICommandClient, CommandClient>(x =>
                 {
-                    x.BaseAddress = new Uri($"{baseUrl}/command/");
+                    x.BaseAddress = new Uri(commandUrl);
                     x.Timeout = TimeSpan.FromSeconds(10);
                 })
                 .AddHttpMessageHandler<LoggingHandler>()
                 .AddPolicyHandler(GetRetryPolicy());
             services.AddHttpClient<IQueryClient, QueryClient>(x =>
                 {
-                    x.BaseAddress = new Uri($"{baseUrl}/query/");
+                    x.BaseAddress = new Uri(queryUrl);
                     x.Timeout = TimeSpan.FromSeconds(10);
                 })
                 .AddHttpMessageHandler<LoggingHandler>()
