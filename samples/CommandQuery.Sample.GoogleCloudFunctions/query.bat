@@ -1,1 +1,1 @@
-dotnet run --target CommandQuery.Sample.GoogleCloudFunctions.Command --port 7071
+dotnet run --target CommandQuery.Sample.GoogleCloudFunctions.Query --port 7071
