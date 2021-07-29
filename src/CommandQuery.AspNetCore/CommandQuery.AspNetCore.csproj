@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <PackageReleaseNotes>
 - Changed the target frameworks to netstandard2.0 and netcoreapp3.1 🎯
 - Added extension methods AddCommandControllers and AddQueryControllers on IServiceCollection
