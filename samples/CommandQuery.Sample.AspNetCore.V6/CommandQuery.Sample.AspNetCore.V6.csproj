@@ -17,4 +17,8 @@
     <ProjectReference Include="..\CommandQuery.Sample.Handlers\CommandQuery.Sample.Handlers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="CommandQuery.Sample.AspNetCore.V6.Tests" />
+  </ItemGroup>
+
 </Project>

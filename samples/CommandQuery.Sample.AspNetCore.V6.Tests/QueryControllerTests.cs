@@ -1,13 +1,11 @@
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNetCore.V5.Tests
+namespace CommandQuery.Sample.AspNetCore.V6.Tests
 {
     public class QueryControllerTests
     {
@@ -16,7 +14,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
             [SetUp]
             public void SetUp()
             {
-                Factory = new WebApplicationFactory<Startup>();
+                Factory = new WebApplicationFactory<Program>();
                 Client = Factory.CreateClient();
             }
 
@@ -51,7 +49,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Startup> Factory;
+            WebApplicationFactory<Program> Factory;
             HttpClient Client;
         }
 
@@ -60,7 +58,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
             [SetUp]
             public void SetUp()
             {
-                Factory = new WebApplicationFactory<Startup>();
+                Factory = new WebApplicationFactory<Program>();
                 Client = Factory.CreateClient();
             }
 
@@ -91,7 +89,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Startup> Factory;
+            WebApplicationFactory<Program> Factory;
             HttpClient Client;
         }
     }
