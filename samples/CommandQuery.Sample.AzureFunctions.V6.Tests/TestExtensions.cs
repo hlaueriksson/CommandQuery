@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace CommandQuery.Sample.AzureFunctions.V5.Tests
+namespace CommandQuery.Sample.AzureFunctions.V6.Tests
 {
     public static class TestExtensions
     {

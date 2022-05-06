@@ -21,11 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.V3.Tests", "samples\CommandQuery.Sample.AzureFunctions.V3.Tests\CommandQuery.Sample.AzureFunctions.V3.Tests.csproj", "{C501E086-8F0B-4212-B9C3-AFBA870DF33A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.V5", "samples\CommandQuery.Sample.AzureFunctions.V5\CommandQuery.Sample.AzureFunctions.V5.csproj", "{BCEA4784-B694-4985-9ADC-F4EE8F3F527D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.GoogleCloudFunctions", "samples\CommandQuery.Sample.GoogleCloudFunctions\CommandQuery.Sample.GoogleCloudFunctions.csproj", "{1DD7928F-24E7-4D21-BE69-39065CDAA5F7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.V5.Tests", "samples\CommandQuery.Sample.AzureFunctions.V5.Tests\CommandQuery.Sample.AzureFunctions.V5.Tests.csproj", "{DF82DBBC-D937-49A8-B452-F83525F6D8E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.GoogleCloudFunctions.Tests", "samples\CommandQuery.Sample.GoogleCloudFunctions.Tests\CommandQuery.Sample.GoogleCloudFunctions.Tests.csproj", "{20A4BF7B-F8B0-4CD6-BB63-F34338B95CD8}"
 EndProject
@@ -34,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V6.Tests", "samples\CommandQuery.Sample.AspNetCore.V6.Tests\CommandQuery.Sample.AspNetCore.V6.Tests.csproj", "{9499162C-FA52-4625-9628-B86952ED85C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandQuery.Sample.AzureFunctions.V6", "samples\CommandQuery.Sample.AzureFunctions.V6\CommandQuery.Sample.AzureFunctions.V6.csproj", "{06C6F925-BACD-4F1F-8905-7F787330E980}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.V6.Tests", "samples\CommandQuery.Sample.AzureFunctions.V6.Tests\CommandQuery.Sample.AzureFunctions.V6.Tests.csproj", "{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,18 +75,10 @@ Global
 		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C501E086-8F0B-4212-B9C3-AFBA870DF33A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCEA4784-B694-4985-9ADC-F4EE8F3F527D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCEA4784-B694-4985-9ADC-F4EE8F3F527D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCEA4784-B694-4985-9ADC-F4EE8F3F527D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCEA4784-B694-4985-9ADC-F4EE8F3F527D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DD7928F-24E7-4D21-BE69-39065CDAA5F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DD7928F-24E7-4D21-BE69-39065CDAA5F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DD7928F-24E7-4D21-BE69-39065CDAA5F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DD7928F-24E7-4D21-BE69-39065CDAA5F7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF82DBBC-D937-49A8-B452-F83525F6D8E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF82DBBC-D937-49A8-B452-F83525F6D8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF82DBBC-D937-49A8-B452-F83525F6D8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF82DBBC-D937-49A8-B452-F83525F6D8E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{20A4BF7B-F8B0-4CD6-BB63-F34338B95CD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20A4BF7B-F8B0-4CD6-BB63-F34338B95CD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20A4BF7B-F8B0-4CD6-BB63-F34338B95CD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -105,6 +95,10 @@ Global
 		{06C6F925-BACD-4F1F-8905-7F787330E980}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06C6F925-BACD-4F1F-8905-7F787330E980}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06C6F925-BACD-4F1F-8905-7F787330E980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AzureFunctions.V5.Tests
+namespace CommandQuery.Sample.AzureFunctions.V6.Tests
 {
     public class CommandTests
     {
@@ -28,7 +28,7 @@ namespace CommandQuery.Sample.AzureFunctions.V5.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Command(serviceProvider.GetService<ICommandFunction>());
+                Subject = new Command(serviceProvider.GetService<ICommandFunction>(), serviceProvider.GetService<ILoggerFactory>());
             }
 
             [Test]

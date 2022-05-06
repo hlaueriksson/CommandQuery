@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AzureFunctions.V5.Tests
+namespace CommandQuery.Sample.AzureFunctions.V6.Tests
 {
     public class QueryTests
     {
@@ -30,7 +30,7 @@ namespace CommandQuery.Sample.AzureFunctions.V5.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetService<IQueryFunction>());
+                Subject = new Query(serviceProvider.GetService<IQueryFunction>(), serviceProvider.GetService<ILoggerFactory>());
             }
 
             [Test]
@@ -73,7 +73,7 @@ namespace CommandQuery.Sample.AzureFunctions.V5.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetService<IQueryFunction>());
+                Subject = new Query(serviceProvider.GetService<IQueryFunction>(), serviceProvider.GetService<ILoggerFactory>());
             }
 
             [Test]
