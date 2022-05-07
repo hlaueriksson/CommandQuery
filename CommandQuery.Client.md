@@ -1,10 +1,10 @@
-### CommandQuery.Client 🧰
+# CommandQuery.Client 🧰
 
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
 > Clients for CommandQuery APIs
 
-#### Commands
+## Commands
 
 Create a `CommandClient` and invoke `PostAsync`:
 
@@ -20,7 +20,7 @@ Commands with result:
 var result = await commandClient.PostAsync(new BazCommand { Value = "en-GB" });
 ```
 
-#### Queries
+## Queries
 
 Create a `QueryClient` and invoke `PostAsync` or `GetAsync`:
 
@@ -31,6 +31,6 @@ var result = await queryClient.PostAsync(new BarQuery { Id = 1 });
 result = await queryClient.GetAsync(new BarQuery { Id = 1 });
 ```
 
-#### Samples
+## Samples
 
 * [CommandQuery.Sample.Client](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.Client)

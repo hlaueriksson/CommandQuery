@@ -1,4 +1,4 @@
-### CommandQuery.AspNetCore 🌐
+# CommandQuery.AspNetCore 🌐
 
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
@@ -7,10 +7,10 @@
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-#### Get Started
+## Get Started
 
 1. Create a new **ASP.NET Core** project
-   * [Tutorial](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-5.0&tabs=visual-studio)
+   * [Tutorial](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-6.0&tabs=visual-studio)
 2. Install the `CommandQuery.AspNetCore` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AspNetCore)
    * `PM>` `Install-Package CommandQuery.AspNetCore`
 3. Create commands and command handlers
@@ -20,89 +20,70 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 5. Configure services in `Startup.cs`
 
-#### Configuration
+![Add a new project - ASP.NET Core Web API](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aspnet-core-web-api.png)
 
-Configuration in `Startup.cs`:
+Choose:
+
+* .NET 6.0 (Long-term support)
+* Use controllers (uncheck to use minimal APIs)
+
+## Configuration
+
+Configuration in `Program.cs`:
 
 ```cs
+using CommandQuery;
 using CommandQuery.AspNetCore;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using CommandQuery.Sample.Handlers.Queries;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
-namespace CommandQuery.Sample.AspNetCore.V5
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Add commands and queries
+builder.Services.AddCommandControllers(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+builder.Services.AddQueryControllers(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
+
+// Add handler dependencies
+builder.Services.AddTransient<IDateTimeProxy, DateTimeProxy>();
+builder.Services.AddTransient<ICultureService, CultureService>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // Add commands and queries
-            services.AddCommandControllers(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-            services.AddQueryControllers(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
-
-            // Add handler dependencies
-            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
-            services.AddTransient<ICultureService, CultureService>();
-
-            // Swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v5", new OpenApiInfo { Title = "CommandQuery.Sample.AspNetCore.V5", Version = "v5" });
-            });
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-
-                // Swagger
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v5/swagger.json", "CommandQuery.Sample.AspNetCore.V5"));
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            // Validation
-            app.ApplicationServices.GetService<ICommandProcessor>().AssertConfigurationIsValid();
-            app.ApplicationServices.GetService<IQueryProcessor>().AssertConfigurationIsValid();
-        }
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+// Validation
+app.Services.GetService<ICommandProcessor>()!.AssertConfigurationIsValid();
+app.Services.GetService<IQueryProcessor>()!.AssertConfigurationIsValid();
+
+app.Run();
 ```
 
 The extension methods `AddCommandControllers` and `AddQueryControllers` will add controllers and all command/query handlers in the given assemblies to the IoC container.
 You can pass in a `params` array of `Assembly` arguments if your handlers are located in different projects.
 If you only have one project you can use `typeof(Startup).Assembly` as a single argument.
 
-#### Commands
+## Commands
 
 The action method from the generated controller will handle commands:
 
@@ -139,7 +120,7 @@ public async Task<IActionResult> HandleAsync(TCommand command, CancellationToken
 * If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the command fails; the response is an error message with the HTTP status code `400` or `500`.
 
-#### Queries
+## Queries
 
 The action methods from the generated controller will handle queries:
 
@@ -172,21 +153,19 @@ public async Task<IActionResult> HandleGetAsync([FromQuery] TQuery query, Cancel
 * If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the query fails; the response is an error message with the HTTP status code `400` or `500`.
 
-#### Testing
+## Testing
 
-You can [integration test](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0) your controllers and command/query handlers with the `Microsoft.AspNetCore.Mvc.Testing` package.
+You can [integration test](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-6.0) your controllers and command/query handlers with the `Microsoft.AspNetCore.Mvc.Testing` package.
 
 ```cs
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNetCore.V5.Tests
+namespace CommandQuery.Sample.AspNetCore.V6.Tests
 {
     public class QueryControllerTests
     {
@@ -195,7 +174,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
             [SetUp]
             public void SetUp()
             {
-                Factory = new WebApplicationFactory<Startup>();
+                Factory = new WebApplicationFactory<Program>();
                 Client = Factory.CreateClient();
             }
 
@@ -230,7 +209,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Startup> Factory;
+            WebApplicationFactory<Program> Factory;
             HttpClient Client;
         }
 
@@ -239,7 +218,7 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
             [SetUp]
             public void SetUp()
             {
-                Factory = new WebApplicationFactory<Startup>();
+                Factory = new WebApplicationFactory<Program>();
                 Client = Factory.CreateClient();
             }
 
@@ -270,16 +249,16 @@ namespace CommandQuery.Sample.AspNetCore.V5.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Startup> Factory;
+            WebApplicationFactory<Program> Factory;
             HttpClient Client;
         }
     }
 }
 ```
 
-#### Samples
+## Samples
 
 * [CommandQuery.Sample.AspNetCore.V3](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V3)
 * [CommandQuery.Sample.AspNetCore.V3.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V3.Tests)
-* [CommandQuery.Sample.AspNetCore.V5](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V5)
-* [CommandQuery.Sample.AspNetCore.V5.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V5.Tests)
+* [CommandQuery.Sample.AspNetCore.V6](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V6)
+* [CommandQuery.Sample.AspNetCore.V6.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V6.Tests)

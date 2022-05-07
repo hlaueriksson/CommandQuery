@@ -1,4 +1,4 @@
-### CommandQuery.GoogleCloudFunctions ⚡
+# CommandQuery.GoogleCloudFunctions ⚡
 
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
@@ -7,7 +7,7 @@
 * Provides generic function support for commands and queries with *HTTP functions*
 * Enables APIs based on HTTP `POST` and `GET`
 
-#### Get Started
+## Get Started
 
 0. Install **Google.Cloud.Functions.Templates**
    * [https://www.nuget.org/packages/Google.Cloud.Functions.Templates/](https://www.nuget.org/packages/Google.Cloud.Functions.Templates/)
@@ -24,7 +24,7 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure services in `Startup.cs`
 
-#### Commands
+## Commands
 
 ```cs
 using System.Threading.Tasks;
@@ -68,7 +68,7 @@ Commands with result:
 
 * If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
-#### Queries
+## Queries
 
 ```cs
 using System.Threading.Tasks;
@@ -109,7 +109,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
 * If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the query fails; the response is an error message with the HTTP status code `400` or `500`.
 
-#### Configuration
+## Configuration
 
 Configuration in `Startup.cs`:
 
@@ -156,7 +156,7 @@ The extension methods `AddCommandFunction` and `AddQueryFunction` will add funct
 You can pass in a `params` array of `Assembly` arguments if your handlers are located in different projects.
 If you only have one project you can use `typeof(Startup).Assembly` as a single argument.
 
-#### Testing
+## Testing
 
 ```cs
 using System.Collections.Generic;
@@ -273,7 +273,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
 }
 ```
 
-#### Samples
+## Samples
 
 * [CommandQuery.Sample.GoogleCloudFunctions](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.GoogleCloudFunctions)
 * [CommandQuery.Sample.GoogleCloudFunctions.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.GoogleCloudFunctions.Tests)

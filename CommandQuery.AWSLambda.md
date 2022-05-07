@@ -1,4 +1,4 @@
-### CommandQuery.AWSLambda ⚡
+# CommandQuery.AWSLambda ⚡
 
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
@@ -7,7 +7,7 @@
 * Provides generic function support for commands and queries with *Amazon API Gateway*
 * Enables APIs based on HTTP `POST` and `GET`
 
-#### Get Started
+## Get Started
 
 0. Install **AWS Toolkit for Visual Studio**
    * [https://aws.amazon.com/visualstudio/](https://aws.amazon.com/visualstudio/)
@@ -24,7 +24,7 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure the serverless template
 
-![New Project - AWS Serverless Application (.NET Core)](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-1.png)
+![New Project - AWS Serverless Application (.NET Core - C#)](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-1.png)
 
 Choose:
 
@@ -32,11 +32,9 @@ Choose:
 
 ![New AWS Serverless Application - Empty Serverless Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-2.png)
 
-#### Commands
+## Commands
 
 ```cs
-using System.Text.Json;
-using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
@@ -44,34 +42,31 @@ using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace CommandQuery.Sample.AWSLambda
+namespace CommandQuery.Sample.AWSLambda;
+
+public class Command
 {
-    public class Command
+    private readonly ICommandFunction _commandFunction;
+
+    public Command()
     {
-        private static readonly ICommandFunction _commandFunction = GetCommandFunction();
+        var services = new ServiceCollection();
+        //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+        // Add handler dependencies
+        services.AddTransient<ICultureService, CultureService>();
 
-        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            return await _commandFunction.HandleAsync(request.PathParameters["commandName"], request, context.Logger);
-        }
-
-        private static ICommandFunction GetCommandFunction()
-        {
-            var services = new ServiceCollection();
-            //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-            services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-            // Add handler dependencies
-            services.AddTransient<ICultureService, CultureService>();
-
-            var serviceProvider = services.BuildServiceProvider();
-            // Validation
-            serviceProvider.GetService<ICommandProcessor>().AssertConfigurationIsValid();
-            return serviceProvider.GetService<ICommandFunction>();
-        }
+        var serviceProvider = services.BuildServiceProvider();
+        serviceProvider.GetService<ICommandProcessor>().AssertConfigurationIsValid(); // Validation
+        _commandFunction = serviceProvider.GetService<ICommandFunction>();
     }
+
+    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
+        await _commandFunction.HandleAsync(request.PathParameters["commandName"], request, context.Logger);
 }
 ```
 
@@ -85,11 +80,9 @@ Commands with result:
 
 * If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
-#### Queries
+## Queries
 
 ```cs
-using System.Text.Json;
-using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
@@ -97,19 +90,15 @@ using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 namespace CommandQuery.Sample.AWSLambda
 {
     public class Query
     {
-        private static readonly IQueryFunction _queryFunction = GetQueryFunction();
+        private readonly IQueryFunction _queryFunction;
 
-        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            return await _queryFunction.HandleAsync(request.PathParameters["queryName"], request, context.Logger);
-        }
-
-        private static IQueryFunction GetQueryFunction()
+        public Query()
         {
             var services = new ServiceCollection();
             //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
@@ -118,10 +107,12 @@ namespace CommandQuery.Sample.AWSLambda
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
             var serviceProvider = services.BuildServiceProvider();
-            // Validation
-            serviceProvider.GetService<IQueryProcessor>().AssertConfigurationIsValid();
-            return serviceProvider.GetService<IQueryFunction>();
+            serviceProvider.GetService<IQueryProcessor>().AssertConfigurationIsValid(); // Validation
+            _queryFunction = serviceProvider.GetService<IQueryFunction>();
         }
+
+        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
+            await _queryFunction.HandleAsync(request.PathParameters["queryName"], request, context.Logger);
     }
 }
 ```
@@ -133,7 +124,7 @@ namespace CommandQuery.Sample.AWSLambda
 * If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the query fails; the response is an error message with the HTTP status code `400` or `500`.
 
-#### Configuration
+## Configuration
 
 Configuration in `serverless.template`:
 
@@ -147,7 +138,7 @@ Configuration in `serverless.template`:
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command::Handle",
-        "Runtime": "dotnetcore3.1",
+        "Runtime": "dotnet6",
         "CodeUri": "",
         "MemorySize": 256,
         "Timeout": 30,
@@ -170,7 +161,7 @@ Configuration in `serverless.template`:
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query::Handle",
-        "Runtime": "dotnetcore3.1",
+        "Runtime": "dotnet6",
         "CodeUri": "",
         "MemorySize": 256,
         "Timeout": 30,
@@ -208,13 +199,14 @@ Configuration in `serverless.template`:
 }
 ```
 
-#### Testing
+## Testing
 
 ```cs
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.TestUtilities;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
 using NUnit.Framework;
@@ -230,7 +222,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             {
                 Subject = new Query();
                 Request = GetRequest("POST", content: "{ \"Id\": 1 }");
-                Context = new FakeLambdaContext();
+                Context = new TestLambdaContext();
             }
 
             [Test]
@@ -263,7 +255,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             {
                 Subject = new Query();
                 Request = GetRequest("GET", query: new Dictionary<string, IList<string>> { { "Id", new List<string> { "1" } } });
-                Context = new FakeLambdaContext();
+                Context = new TestLambdaContext();
             }
 
             [Test]
@@ -304,7 +296,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
 }
 ```
 
-#### Samples
+## Samples
 
 * [CommandQuery.Sample.AWSLambda](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AWSLambda)
 * [CommandQuery.Sample.AWSLambda.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AWSLambda.Tests)

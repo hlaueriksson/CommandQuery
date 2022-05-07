@@ -1,10 +1,10 @@
-### CommandQuery ⚙️
+# CommandQuery ⚙️
 
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml) [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
 > Command Query Separation for .NET and C#
 
-#### Commands
+## Commands
 
 > Commands change the state of a system but _[traditionally]_ do not return a value. They write (create, update, delete) data.
 
@@ -80,7 +80,7 @@ public class BazCommandHandler : ICommandHandler<BazCommand, Baz>
 
 Commands with result implement the marker interface `ICommand<TResult>` and command handlers implement `ICommandHandler<in TCommand, TResult>`.
 
-#### Queries
+## Queries
 
 > Queries return a result and do not change the observable state of the system (are free of side effects). They read and return data.
 
@@ -117,7 +117,7 @@ public class BarQueryHandler : IQueryHandler<BarQuery, Bar>
 }
 ```
 
-#### Samples
+## Samples
 
 * [CommandQuery.Sample.Contracts](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.Contracts)
 * [CommandQuery.Sample.Handlers](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.Handlers)

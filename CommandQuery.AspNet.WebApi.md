@@ -1,11 +1,11 @@
-### CommandQuery.AspNet.WebApi 🌐
+# CommandQuery.AspNet.WebApi 🌐
 
 > Command Query Separation for ASP.NET Web API 2
 
 * Provides generic actions for handling the execution of commands and queries
 * Enables APIs based on HTTP `POST` and `GET`
 
-#### Get Started
+## Get Started
 
 1. Create a new **ASP.NET Web API 2** project
    * [Tutorial](https://docs.microsoft.com/en-us/aspnet/web-api/overview/getting-started-with-aspnet-web-api/tutorial-your-first-web-api)
@@ -20,7 +20,7 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure dependency injection
 
-#### Commands
+## Commands
 
 Add a `CommandController`:
 
@@ -67,7 +67,7 @@ Commands with result:
 
 * If the command succeeds; the response is the result as JSON with the HTTP status code `200`.
 
-#### Queries
+## Queries
 
 Add a `QueryController`:
 
@@ -122,7 +122,7 @@ public async Task<IHttpActionResult> HandleGet(string queryName)
 * If the query succeeds; the response is the result as JSON with the HTTP status code `200`.
 * If the query fails; the response is an error message with the HTTP status code `400` or `500`.
 
-#### Configuration
+## Configuration
 
 Configuration in `App_Start/WebApiConfig.cs`
 
@@ -179,7 +179,7 @@ The `CommandQueryDirectRouteProvider` makes sure the routes from the base contro
 
 Consider to clear the default formatters and only use the `JsonMediaTypeFormatter`.
 
-#### Testing
+## Testing
 
 You can [unit test](https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/unit-testing-controllers-in-web-api) your controllers and command/query handlers.
 
@@ -285,7 +285,7 @@ namespace CommandQuery.Sample.AspNet.WebApi.Tests
 }
 ```
 
-#### Samples
+## Samples
 
 * [`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
 * [`CommandQuery.Sample.AspNet.WebApi.Tests`](/samples/CommandQuery.Sample.AspNet.WebApi.Tests)
