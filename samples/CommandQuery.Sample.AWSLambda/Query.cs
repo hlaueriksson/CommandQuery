@@ -1,5 +1,3 @@
-using System.Text.Json;
-using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.AWSLambda;
@@ -7,19 +5,15 @@ using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 namespace CommandQuery.Sample.AWSLambda
 {
     public class Query
     {
-        private static readonly IQueryFunction _queryFunction = GetQueryFunction();
+        private readonly IQueryFunction _queryFunction;
 
-        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            return await _queryFunction.HandleAsync(request.PathParameters["queryName"], request, context.Logger);
-        }
-
-        private static IQueryFunction GetQueryFunction()
+        public Query()
         {
             var services = new ServiceCollection();
             //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
@@ -28,9 +22,11 @@ namespace CommandQuery.Sample.AWSLambda
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
             var serviceProvider = services.BuildServiceProvider();
-            // Validation
-            serviceProvider.GetService<IQueryProcessor>().AssertConfigurationIsValid();
-            return serviceProvider.GetService<IQueryFunction>();
+            serviceProvider.GetService<IQueryProcessor>().AssertConfigurationIsValid(); // Validation
+            _queryFunction = serviceProvider.GetService<IQueryFunction>();
         }
+
+        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
+            await _queryFunction.HandleAsync(request.PathParameters["queryName"], request, context.Logger);
     }
 }

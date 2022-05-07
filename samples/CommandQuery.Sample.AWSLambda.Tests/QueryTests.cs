@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.TestUtilities;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             {
                 Subject = new Query();
                 Request = GetRequest("POST", content: "{ \"Id\": 1 }");
-                Context = new FakeLambdaContext();
+                Context = new TestLambdaContext();
             }
 
             [Test]
@@ -50,7 +51,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             {
                 Subject = new Query();
                 Request = GetRequest("GET", query: new Dictionary<string, IList<string>> { { "Id", new List<string> { "1" } } });
-                Context = new FakeLambdaContext();
+                Context = new TestLambdaContext();
             }
 
             [Test]

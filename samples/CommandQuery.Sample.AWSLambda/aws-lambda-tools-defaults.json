@@ -9,7 +9,7 @@
     "profile"     : "default",
     "region"      : "eu-central-1",
     "configuration" : "Release",
-    "framework"     : "netcoreapp3.1",
+    "framework"     : "net6.0",
     "s3-prefix"     : "CommandQuery.Sample.AWSLambda/",
     "template"      : "serverless.template",
     "template-parameters" : "",
