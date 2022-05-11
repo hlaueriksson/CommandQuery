@@ -1,4 +1,4 @@
-#if NET5_0
+#if NET6_0
 using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.Tests;

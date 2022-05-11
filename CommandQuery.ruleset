@@ -27,6 +27,7 @@
     <Rule Id="CA1823" Action="Error" /><!-- avoid unused fields -->
     <Rule Id="CA1031" Action="None"/><!-- Use specific exceptions -->
     <Rule Id="CA1508" Action="None"/><!-- Avoid dead conditional code. This is a good report but there are many false positives reported. -->
+    <Rule Id="CA1848" Action="None"/><!-- Use the LoggerMessage delegates -->
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1003" Action="None" /><!-- Use EvenArgs... how about no? -->

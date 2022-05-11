@@ -1,4 +1,4 @@
-#if NET5_0
+#if NET6_0
 using System.Reflection;
 using CommandQuery.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
