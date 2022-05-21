@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>1701;1702;CS1998;CS8321</NoWarn>
+    <NoWarn>$(NoWarn);CS1998;CS8321;NU1603</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -31,7 +31,8 @@ namespace CommandQuery.Client
         /// <param name="baseUrl">The base URL to the API.</param>
         /// <param name="configAction">Configuration for the <see cref="HttpClient"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="configAction"/> is <see langword="null"/>.</exception>
-        protected BaseClient(string baseUrl, Action<HttpClient> configAction) : this(baseUrl)
+        protected BaseClient(string baseUrl, Action<HttpClient> configAction)
+            : this(baseUrl)
         {
             if (configAction is null)
             {

@@ -13,7 +13,8 @@ namespace CommandQuery
         /// </summary>
         /// <param name="assemblies">The assemblies with commands to support.</param>
         /// <exception cref="CommandTypeException">Multiple commands with the same name was found.</exception>
-        public CommandTypeProvider(params Assembly[] assemblies) : base(new[] { typeof(ICommand), typeof(ICommand<>) }, assemblies)
+        public CommandTypeProvider(params Assembly[] assemblies)
+            : base(new[] { typeof(ICommand), typeof(ICommand<>) }, assemblies)
         {
         }
 

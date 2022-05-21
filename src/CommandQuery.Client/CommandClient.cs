@@ -14,7 +14,8 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="baseUrl">The base URL to the API.</param>
         /// <param name="timeoutInSeconds">The timeout for requests.</param>
-        public CommandClient(string baseUrl, int timeoutInSeconds = 10) : base(baseUrl, timeoutInSeconds)
+        public CommandClient(string baseUrl, int timeoutInSeconds = 10)
+            : base(baseUrl, timeoutInSeconds)
         {
         }
 
@@ -23,7 +24,8 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="baseUrl">The base URL to the API.</param>
         /// <param name="configAction">Configuration for the <see cref="HttpClient"/>.</param>
-        public CommandClient(string baseUrl, Action<HttpClient> configAction) : base(baseUrl, configAction)
+        public CommandClient(string baseUrl, Action<HttpClient> configAction)
+            : base(baseUrl, configAction)
         {
         }
 
@@ -32,7 +34,8 @@ namespace CommandQuery.Client
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/>.</param>
         /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during serialization and deserialization of JSON.</param>
-        public CommandClient(HttpClient client, JsonSerializerOptions? options = null) : base(client, options)
+        public CommandClient(HttpClient client, JsonSerializerOptions? options = null)
+            : base(client, options)
         {
         }
 
