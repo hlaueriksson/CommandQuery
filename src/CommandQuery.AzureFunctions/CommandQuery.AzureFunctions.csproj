@@ -27,6 +27,7 @@
     <PackageTags>CommandQuery;Command;Query;CQS;Microsoft;Azure;AzureFunctions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateCompatibilitySuppressionFile>true</GenerateCompatibilitySuppressionFile>
   </PropertyGroup>
 
   <ItemGroup>
