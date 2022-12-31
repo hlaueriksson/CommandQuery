@@ -1,4 +1,5 @@
 #if NET6_0
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CommandQuery.Tests;
@@ -9,10 +10,10 @@ namespace CommandQuery.AzureFunctions.Tests.V5
 {
     public static class ShouldExtensions
     {
-        public static async Task ShouldBeErrorAsync(this HttpResponseData result, string message, int? statusCode = null)
+        public static async Task ShouldBeErrorAsync(this HttpResponseData result, string message, HttpStatusCode? statusCode = null)
         {
             result.Should().NotBeNull();
-            result.StatusCode.Should().NotBe(200);
+            result.StatusCode.Should().NotBe(HttpStatusCode.OK);
             if (statusCode.HasValue) result.StatusCode.Should().Be(statusCode);
             result.Body.Position = 0;
             var value = await JsonSerializer.DeserializeAsync<FakeError>(result.Body);

@@ -22,8 +22,8 @@ namespace CommandQuery.Tests.Client.Integration
             var result = await Subject.PostAsync(new BarQuery { Id = 1 });
             result.Should().NotBeNull();
 
-            Subject.Awaiting(x => x.PostAsync(new FailQuery()))
-                .Should().Throw<CommandQueryException>();
+            Func<Task> act = () => Subject.PostAsync(new FailQuery());
+            await act.Should().ThrowAsync<CommandQueryException>();
         }
 
         [Test]
@@ -32,8 +32,8 @@ namespace CommandQuery.Tests.Client.Integration
             var result = await Subject.GetAsync(new QuxQuery { Ids = new[] { Guid.NewGuid(), Guid.NewGuid() } });
             result.Should().NotBeNull();
 
-            Subject.Awaiting(x => x.GetAsync(new FailQuery()))
-                .Should().Throw<CommandQueryException>();
+            Func<Task> act = () => Subject.GetAsync(new FailQuery());
+            await act.Should().ThrowAsync<CommandQueryException>();
         }
 
         [Test]

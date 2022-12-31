@@ -43,36 +43,36 @@ namespace CommandQuery.Tests.NewtonsoftJson
                 FakeCommandProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>()));
             }
 
-            void should_throw_exception_if_the_ICommandProcessor_is_null()
+            async Task should_throw_exception_if_the_ICommandProcessor_is_null()
             {
-                Subject.Awaiting(x => ((ICommandProcessor)null).ProcessAsync("", "{}")).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => ((ICommandProcessor)null).ProcessAsync("", "{}");
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
-            void should_throw_exception_if_the_command_type_is_not_found()
+            async Task should_throw_exception_if_the_command_type_is_not_found()
             {
                 var commandName = "NotFoundCommand";
 
-                Subject.Awaiting(x => x.ProcessAsync(commandName, "{}")).Should()
-                    .Throw<CommandProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(commandName, "{}");
+                await act.Should().ThrowAsync<CommandProcessorException>()
                     .WithMessage("The command type 'NotFoundCommand' could not be found");
             }
 
-            void should_throw_exception_if_the_json_is_invalid()
+            async Task should_throw_exception_if_the_json_is_invalid()
             {
                 var commandName = "FakeCommand";
 
-                Subject.Awaiting(x => x.ProcessAsync(commandName, "<>")).Should()
-                    .Throw<CommandProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(commandName, "<>");
+                await act.Should().ThrowAsync<CommandProcessorException>()
                     .WithMessage("The json string could not be deserialized to an object");
             }
 
-            void should_throw_exception_if_the_json_is_null()
+            async Task should_throw_exception_if_the_json_is_null()
             {
                 var commandName = "FakeCommand";
 
-                Subject.Awaiting(x => x.ProcessAsync(commandName, null)).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.ProcessAsync(commandName, null);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
         }
 

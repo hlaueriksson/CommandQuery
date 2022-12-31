@@ -20,8 +20,11 @@ namespace CommandQuery.Tests.Internal
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            void should_throw_ArgumentNullException_when_IServiceProvider_is_null() =>
-                ((IServiceProvider)null).Invoking(x => x.GetSingleService(typeof(ICommandHandler<FakeMultiCommand1>))).Should().Throw<ArgumentNullException>();
+            void should_throw_ArgumentNullException_when_IServiceProvider_is_null()
+            {
+                Action act = () => ((IServiceProvider)null).GetSingleService(typeof(ICommandHandler<FakeMultiCommand1>));
+                act.Should().Throw<ArgumentNullException>();
+            }
 
             void should_throw_ArgumentNullException_when_the_service_type_is_null() =>
                 ServiceProvider.Invoking(x => x.GetSingleService(null)).Should().Throw<ArgumentNullException>();

@@ -49,9 +49,9 @@ namespace CommandQuery.Tests.Internal
         [Test]
         public void when_GetHandlerInterfaceTypes()
         {
-            typeof(FakeCommandHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeCommand>));
-            typeof(FakeResultCommandHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<,>)).Should().BeEquivalentTo(typeof(ICommandHandler<FakeResultCommand, FakeResult>));
-            typeof(FakeQueryHandler).GetHandlerInterfaceTypes(typeof(IQueryHandler<,>)).Should().BeEquivalentTo(typeof(IQueryHandler<FakeQuery, FakeResult>));
+            typeof(FakeCommandHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<>)).Should().AllBeEquivalentTo(typeof(ICommandHandler<FakeCommand>));
+            typeof(FakeResultCommandHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<,>)).Should().AllBeEquivalentTo(typeof(ICommandHandler<FakeResultCommand, FakeResult>));
+            typeof(FakeQueryHandler).GetHandlerInterfaceTypes(typeof(IQueryHandler<,>)).Should().AllBeEquivalentTo(typeof(IQueryHandler<FakeQuery, FakeResult>));
 
             typeof(FakeMultiHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<>)).Count().Should().Be(2);
             typeof(FakeMultiHandler).GetHandlerInterfaceTypes(typeof(ICommandHandler<,>)).Count().Should().Be(2);

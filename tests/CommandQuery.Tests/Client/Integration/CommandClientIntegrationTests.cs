@@ -21,12 +21,12 @@ namespace CommandQuery.Tests.Client.Integration
         {
             await Subject.PostAsync(new FooCommand { Value = "sv-SE" });
 
-            Subject.Awaiting(x => x.PostAsync(new FooCommand()))
-                .Should().Throw<CommandQueryException>()
+            Func<Task> act = () => Subject.PostAsync(new FooCommand());
+            (await act.Should().ThrowAsync<CommandQueryException>())
                 .And.Error.GetErrorCode().Should().Be(1337);
 
-            Subject.Awaiting(x => x.PostAsync(new FailCommand()))
-                .Should().Throw<CommandQueryException>();
+            act = () => Subject.PostAsync(new FailCommand());
+            await act.Should().ThrowAsync<CommandQueryException>();
         }
 
         [Test]
@@ -35,8 +35,8 @@ namespace CommandQuery.Tests.Client.Integration
             var result = await Subject.PostAsync(new BazCommand { Value = "sv-SE" });
             result.Should().NotBeNull();
 
-            Subject.Awaiting(x => x.PostAsync(new FailResultCommand()))
-                .Should().Throw<CommandQueryException>();
+            Func<Task> act = () => Subject.PostAsync(new FailResultCommand());
+            await act.Should().ThrowAsync<CommandQueryException>();
         }
 
         [Test]

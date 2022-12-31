@@ -38,7 +38,7 @@ namespace CommandQuery.Tests.Client.Internal
                     { "DateTimeOffset", DateTime.Parse("2021-07-09T20:39:07.8226113+02:00") },
                     { "Decimal", 2.1M },
                     { "Double", 3.1 },
-                    { "Enum", DayOfWeek.Friday },
+                    { "Enum", (int)DayOfWeek.Friday },
                     { "Guid", Guid.Parse("F8FE9091-DFFD-4E33-8017-221554FE242F") },
                     { "Int16", (short)4 },
                     { "Int32", 5 },

@@ -49,8 +49,8 @@ namespace CommandQuery.AzureFunctions.Tests.V3
 
             async Task should_throw_when_request_is_null()
             {
-                Subject.Awaiting(x => x.HandleAsync(CommandName, null, Logger))
-                    .Should().Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.HandleAsync(CommandName, null, Logger);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
             async Task should_handle_CommandProcessorException()

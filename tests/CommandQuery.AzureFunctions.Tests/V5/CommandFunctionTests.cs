@@ -1,5 +1,6 @@
 #if NET6_0
 using System;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -43,13 +44,13 @@ namespace CommandQuery.AzureFunctions.Tests.V5
             {
                 Req.Body.Position = 0;
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
-                result.StatusCode.Should().Be(200);
+                result.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
             async Task should_throw_when_request_is_null()
             {
-                Subject.Awaiting(x => x.HandleAsync(CommandName, null, Logger))
-                    .Should().Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.HandleAsync(CommandName, null, Logger);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
             async Task should_handle_CommandProcessorException()
@@ -59,7 +60,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
-                await result.ShouldBeErrorAsync("fail", 400);
+                await result.ShouldBeErrorAsync("fail", HttpStatusCode.BadRequest);
             }
 
             async Task should_handle_CommandException()
@@ -69,7 +70,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
-                await result.ShouldBeErrorAsync("invalid", 400);
+                await result.ShouldBeErrorAsync("invalid", HttpStatusCode.BadRequest);
             }
 
             async Task should_handle_Exception()
@@ -79,7 +80,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
 
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
 
-                await result.ShouldBeErrorAsync("fail", 500);
+                await result.ShouldBeErrorAsync("fail", HttpStatusCode.InternalServerError);
             }
         }
 
@@ -98,7 +99,7 @@ namespace CommandQuery.AzureFunctions.Tests.V5
                 var result = await Subject.HandleAsync(CommandName, Req, Logger);
                 result.Body.Position = 0;
 
-                result.StatusCode.Should().Be(200);
+                result.StatusCode.Should().Be(HttpStatusCode.OK);
                 result.Body.Length.Should().BeGreaterThan(0);
             }
         }
