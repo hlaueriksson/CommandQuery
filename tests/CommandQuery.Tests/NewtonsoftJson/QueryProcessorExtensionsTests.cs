@@ -105,7 +105,7 @@ namespace CommandQuery.Tests.NewtonsoftJson
                     .Setup(x => x.ProcessAsync(It.IsAny<FakeComplexQuery>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(Enumerable.Empty<FakeResult>()))
                     .Callback<FakeComplexQuery, CancellationToken>((query, _) => actual = query);
-                
+
                 var query = TestData.FakeComplexQuery_As_Dictionary_Of_String_IEnumerable_String;
 
                 await Subject.ProcessAsync<IEnumerable<FakeResult>>(expectedQueryType.Name, query);
