@@ -1,4 +1,3 @@
-#if NET6_0
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Security.Claims;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace CommandQuery.AzureFunctions.Tests.V5
+namespace CommandQuery.AzureFunctions.Tests
 {
     public class FakeHttpRequestData : HttpRequestData
     {
@@ -47,4 +46,3 @@ namespace CommandQuery.AzureFunctions.Tests.V5
         public override HttpCookies Cookies { get; }
     }
 }
-#endif

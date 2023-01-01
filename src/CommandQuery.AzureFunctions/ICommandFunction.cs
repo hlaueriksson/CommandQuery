@@ -1,9 +1,7 @@
-#if NETCOREAPP3_1
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.AzureFunctions
@@ -17,12 +15,11 @@ namespace CommandQuery.AzureFunctions
         /// Handle a command.
         /// </summary>
         /// <param name="commandName">The name of the command.</param>
-        /// <param name="req">A <see cref="HttpRequest"/>.</param>
+        /// <param name="req">A <see cref="HttpRequestData"/>.</param>
         /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The result for status code <c>200</c>, or an error for status code <c>400</c> and <c>500</c>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="req"/> is <see langword="null"/>.</exception>
-        Task<IActionResult> HandleAsync(string commandName, HttpRequest req, ILogger? logger, CancellationToken cancellationToken = default);
+        Task<HttpResponseData> HandleAsync(string commandName, HttpRequestData req, ILogger? logger, CancellationToken cancellationToken = default);
     }
 }
-#endif

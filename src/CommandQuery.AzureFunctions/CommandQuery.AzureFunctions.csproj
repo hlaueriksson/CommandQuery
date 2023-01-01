@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks><!--net5.0-->
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>2.0.0</Version>
     <PackageReleaseNotes>
 - Changed target frameworks to netcoreapp3.1 and net5.0 🎯
@@ -27,7 +27,6 @@
     <PackageTags>CommandQuery;Command;Query;CQS;Microsoft;Azure;AzureFunctions</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateCompatibilitySuppressionFile>true</GenerateCompatibilitySuppressionFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,18 +40,12 @@
     <InternalsVisibleTo Include="CommandQuery.AzureFunctions.Tests" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.1" />-->
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="[3.0.0,3.1.0)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.0.0" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.10.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.NewtonsoftJson\CommandQuery.NewtonsoftJson.csproj" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
-    <ProjectReference Include="..\CommandQuery.SystemTextJson\CommandQuery.SystemTextJson.csproj" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <ProjectReference Include="..\CommandQuery.SystemTextJson\CommandQuery.SystemTextJson.csproj" />
     <ProjectReference Include="..\CommandQuery\CommandQuery.csproj" />
   </ItemGroup>
 

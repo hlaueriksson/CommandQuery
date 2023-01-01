@@ -1,4 +1,3 @@
-#if NET6_0
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -6,7 +5,7 @@ using CommandQuery.Tests;
 using FluentAssertions;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace CommandQuery.AzureFunctions.Tests.V5
+namespace CommandQuery.AzureFunctions.Tests
 {
     public static class ShouldExtensions
     {
@@ -22,4 +21,3 @@ namespace CommandQuery.AzureFunctions.Tests.V5
         }
     }
 }
-#endif

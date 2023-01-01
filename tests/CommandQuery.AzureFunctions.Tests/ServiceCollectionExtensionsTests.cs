@@ -1,10 +1,9 @@
-#if NETCOREAPP3_1
 using CommandQuery.Tests;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace CommandQuery.AzureFunctions.Tests.V3
+namespace CommandQuery.AzureFunctions.Tests
 {
     public class ServiceCollectionExtensionsTests
     {
@@ -33,4 +32,3 @@ namespace CommandQuery.AzureFunctions.Tests.V3
         }
     }
 }
-#endif

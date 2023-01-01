@@ -1,4 +1,3 @@
-#if NET6_0
 using System.Reflection;
 using CommandQuery.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,4 +38,3 @@ namespace CommandQuery.AzureFunctions
         }
     }
 }
-#endif

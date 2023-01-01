@@ -1,4 +1,3 @@
-#if NET6_0
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.AzureFunctions.Tests.V5.Internal
+namespace CommandQuery.AzureFunctions.Tests.Internal
 {
     public class HttpRequestDataExtensionsTests
     {
@@ -64,4 +63,3 @@ namespace CommandQuery.AzureFunctions.Tests.V5.Internal
         }
     }
 }
-#endif

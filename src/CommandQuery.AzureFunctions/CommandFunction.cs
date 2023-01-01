@@ -1,7 +1,7 @@
-#if NET6_0
 using System;
 using System.Net;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using CommandQuery.SystemTextJson;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -27,7 +27,7 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<HttpResponseData> HandleAsync(string commandName, HttpRequestData req, ILogger? logger)
+        public async Task<HttpResponseData> HandleAsync(string commandName, HttpRequestData req, ILogger? logger, CancellationToken cancellationToken = default)
         {
             logger?.LogInformation("Handle {Command}", commandName);
 
@@ -38,7 +38,7 @@ namespace CommandQuery.AzureFunctions
 
             try
             {
-                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
+                var result = await _commandProcessor.ProcessAsync(commandName, await req.ReadAsStringAsync().ConfigureAwait(false), _options, cancellationToken).ConfigureAwait(false);
 
                 if (result == CommandResult.None)
                 {
@@ -59,4 +59,3 @@ namespace CommandQuery.AzureFunctions
         }
     }
 }
-#endif

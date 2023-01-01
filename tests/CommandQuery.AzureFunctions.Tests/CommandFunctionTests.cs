@@ -1,4 +1,3 @@
-#if NET6_0
 using System;
 using System.Net;
 using System.Text;
@@ -16,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.AzureFunctions.Tests.V5
+namespace CommandQuery.AzureFunctions.Tests
 {
     public class CommandFunctionTests : LoFuTest<CommandFunction>
     {
@@ -109,4 +108,3 @@ namespace CommandQuery.AzureFunctions.Tests.V5
         string CommandName;
     }
 }
-#endif

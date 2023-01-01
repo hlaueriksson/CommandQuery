@@ -1,4 +1,3 @@
-#if NET6_0
 using System;
 using System.Net;
 using System.Text.Json;
@@ -37,4 +36,3 @@ namespace CommandQuery.AzureFunctions
         }
     }
 }
-#endif

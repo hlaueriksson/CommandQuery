@@ -1,8 +1,8 @@
-#if NET6_0
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using CommandQuery.SystemTextJson;
@@ -29,7 +29,7 @@ namespace CommandQuery.AzureFunctions
         }
 
         /// <inheritdoc />
-        public async Task<HttpResponseData> HandleAsync(string queryName, HttpRequestData req, ILogger? logger)
+        public async Task<HttpResponseData> HandleAsync(string queryName, HttpRequestData req, ILogger? logger, CancellationToken cancellationToken = default)
         {
             logger?.LogInformation("Handle {Query}", queryName);
 
@@ -41,8 +41,8 @@ namespace CommandQuery.AzureFunctions
             try
             {
                 var result = req.Method == "GET"
-                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Url)).ConfigureAwait(false)
-                    : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _options).ConfigureAwait(false);
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(req.Url), cancellationToken).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, await req.ReadAsStringAsync().ConfigureAwait(false), _options, cancellationToken).ConfigureAwait(false);
 
                 return await req.OkAsync(result, _options).ConfigureAwait(false);
             }
@@ -65,4 +65,3 @@ namespace CommandQuery.AzureFunctions
         }
     }
 }
-#endif
