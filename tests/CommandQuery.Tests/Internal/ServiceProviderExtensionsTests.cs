@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Internal
@@ -58,8 +58,7 @@ namespace CommandQuery.Tests.Internal
 
             void should_return_empty_enumeration_if_IServiceProvider_does_not_have_the_right_private_members()
             {
-                var broken = new ServiceCollection().BuildServiceProvider();
-                broken.GetType().GetField("_engine", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(broken, null);
+                var broken = new Mock<IServiceProvider>().Object;
                 broken.GetAllServiceTypes().Should().BeEmpty();
             }
 

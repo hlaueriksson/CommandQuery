@@ -34,8 +34,7 @@ namespace CommandQuery
                 return Enumerable.Empty<Type>();
             }
 
-            var engine = GetFieldValue(serviceProvider, "_engine");
-            var callSiteFactory = GetPropertyValue(engine, "CallSiteFactory");
+            var callSiteFactory = GetPropertyValue(serviceProvider, "CallSiteFactory");
             var descriptorLookup = GetFieldValue(callSiteFactory, "_descriptorLookup");
 
             if (descriptorLookup is not IDictionary dictionary)
