@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
