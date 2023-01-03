@@ -12,7 +12,7 @@
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27">
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.33">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
