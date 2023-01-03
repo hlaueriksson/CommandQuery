@@ -6,7 +6,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
 {
     public static class TestExtensions
     {
-        public static async Task<T> AsAsync<T>(this HttpResponseData result)
+        public static async Task<T?> AsAsync<T>(this HttpResponseData result)
         {
             result.Body.Position = 0;
             return await JsonSerializer.DeserializeAsync<T>(result.Body);

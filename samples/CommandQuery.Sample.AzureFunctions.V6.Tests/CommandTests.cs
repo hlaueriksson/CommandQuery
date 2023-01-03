@@ -28,7 +28,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Command(serviceProvider.GetService<ICommandFunction>(), serviceProvider.GetService<ILoggerFactory>());
+                Subject = new Command(serviceProvider.GetService<ICommandFunction>()!, serviceProvider.GetService<ILoggerFactory>()!);
             }
 
             [Test]
@@ -69,8 +69,8 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 return request.Object;
             }
 
-            FunctionContext ExecutionContext;
-            Command Subject;
+            FunctionContext ExecutionContext = null!;
+            Command Subject = null!;
         }
     }
 }

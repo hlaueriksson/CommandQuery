@@ -49,8 +49,8 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Program> Factory;
-            HttpClient Client;
+            WebApplicationFactory<Program> Factory = null!;
+            HttpClient Client = null!;
         }
 
         public class when_using_the_real_controller_via_Get
@@ -89,8 +89,8 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Program> Factory;
-            HttpClient Client;
+            WebApplicationFactory<Program> Factory = null!;
+            HttpClient Client = null!;
         }
     }
 }

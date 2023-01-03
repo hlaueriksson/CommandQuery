@@ -15,7 +15,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             result.Body.Position = 0;
             var value = await JsonSerializer.DeserializeAsync<Error>(result.Body);
             value.Should().NotBeNull();
-            value.Message.Should().Be(message);
+            value!.Message.Should().Be(message);
         }
     }
 }

@@ -46,8 +46,8 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Program> Factory;
-            HttpClient Client;
+            WebApplicationFactory<Program> Factory = null!;
+            HttpClient Client = null!;
         }
     }
 }
