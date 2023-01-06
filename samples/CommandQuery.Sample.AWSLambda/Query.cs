@@ -1,11 +1,10 @@
-using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
 
 namespace CommandQuery.Sample.AWSLambda
 {

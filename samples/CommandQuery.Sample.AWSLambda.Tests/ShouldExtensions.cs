@@ -11,7 +11,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
         {
             result.Should().NotBeNull();
             result.StatusCode.Should().NotBe(200);
-            var value = JsonSerializer.Deserialize<Error>(result.Body);
+            var value = JsonSerializer.Deserialize<Error>(result.Body)!;
             value.Should().NotBeNull();
             value.Message.Should().Be(message);
         }

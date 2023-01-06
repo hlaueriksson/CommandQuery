@@ -95,7 +95,7 @@ namespace CommandQuery.Tests
     {
         public async Task<IEnumerable<FakeResult>> HandleAsync(FakeComplexQuery query, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(new []{ new FakeResult() });
+            return await Task.FromResult(new[] { new FakeResult() });
         }
     }
 

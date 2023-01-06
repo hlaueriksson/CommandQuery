@@ -32,7 +32,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
                 result.ShouldBeError("The command type 'FailCommand' could not be found");
             }
 
-            APIGatewayProxyRequest GetRequest(string content) => new APIGatewayProxyRequest { Body = content };
+            static APIGatewayProxyRequest GetRequest(string content) => new() { Body = content };
         }
     }
 }

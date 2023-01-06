@@ -17,7 +17,8 @@ namespace CommandQuery.Tests.Client.Internal
             client.DefaultRequestHeaders.Accept.Single().MediaType.Should().Be("application/json");
             client.DefaultRequestHeaders.UserAgent.Single().Product.Name.Should().StartWith("CommandQuery.Client");
 
-            ((HttpClient)null).Invoking(x => x.SetDefaultRequestHeaders()).Should().Throw<ArgumentNullException>();
+            Action act = () => ((HttpClient)null).SetDefaultRequestHeaders();
+            act.Should().Throw<ArgumentNullException>();
         }
     }
 }

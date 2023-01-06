@@ -6,6 +6,9 @@
     "Command": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
+        "Architectures": [
+          "x86_64"
+        ],
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command::Handle",
         "Runtime": "dotnet6",
         "CodeUri": "",
@@ -29,6 +32,9 @@
     "Query": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
+        "Architectures": [
+          "x86_64"
+        ],
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query::Handle",
         "Runtime": "dotnet6",
         "CodeUri": "",

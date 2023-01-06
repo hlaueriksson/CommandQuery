@@ -42,22 +42,22 @@ namespace CommandQuery.Tests
                 result.Should().Be(expectedResult);
             }
 
-            void should_throw_exception_if_the_query_is_null()
+            async Task should_throw_exception_if_the_query_is_null()
             {
-                Subject.Awaiting(x => x.ProcessAsync<object>(null)).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.ProcessAsync<object>(null);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
-            void should_throw_exception_if_the_query_handler_is_not_found()
+            async Task should_throw_exception_if_the_query_handler_is_not_found()
             {
                 var query = new Mock<IQuery<FakeResult>>().Object;
 
-                Subject.Awaiting(x => x.ProcessAsync(query)).Should()
-                    .Throw<QueryProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(query);
+                await act.Should().ThrowAsync<QueryProcessorException>()
                     .WithMessage($"The query handler for '{query}' could not be found.");
             }
 
-            void should_throw_exception_if_multiple_query_handlers_are_found()
+            async Task should_throw_exception_if_multiple_query_handlers_are_found()
             {
                 var handlerType = typeof(IQueryHandler<FakeMultiQuery1, FakeResult>);
                 var enumerableType = typeof(IEnumerable<IQueryHandler<FakeMultiQuery1, FakeResult>>);
@@ -65,8 +65,8 @@ namespace CommandQuery.Tests
 
                 var query = new FakeMultiQuery1();
 
-                Subject.Awaiting(x => x.ProcessAsync(query)).Should()
-                    .Throw<QueryProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(query);
+                await act.Should().ThrowAsync<QueryProcessorException>()
                     .WithMessage($"A single query handler for '{handlerType}' could not be retrieved.");
             }
         }

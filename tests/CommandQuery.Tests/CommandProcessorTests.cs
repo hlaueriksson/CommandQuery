@@ -33,22 +33,22 @@ namespace CommandQuery.Tests
                 command.Should().Be(expectedCommand);
             }
 
-            void should_throw_exception_if_the_command_is_null()
+            async Task should_throw_exception_if_the_command_is_null()
             {
-                Subject.Awaiting(x => x.ProcessAsync(null)).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.ProcessAsync(null);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
-            void should_throw_exception_if_the_command_handler_is_not_found()
+            async Task should_throw_exception_if_the_command_handler_is_not_found()
             {
                 var command = new Mock<ICommand>().Object;
 
-                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
-                    .Throw<CommandProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(command);
+                await act.Should().ThrowAsync<CommandProcessorException>()
                     .WithMessage($"The command handler for '{command}' could not be found.");
             }
 
-            void should_throw_exception_if_multiple_command_handlers_are_found()
+            async Task should_throw_exception_if_multiple_command_handlers_are_found()
             {
                 var handlerType = typeof(ICommandHandler<FakeMultiCommand1>);
                 var enumerableType = typeof(IEnumerable<ICommandHandler<FakeMultiCommand1>>);
@@ -56,8 +56,8 @@ namespace CommandQuery.Tests
 
                 var command = new FakeMultiCommand1();
 
-                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
-                    .Throw<CommandProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(command);
+                await act.Should().ThrowAsync<CommandProcessorException>()
                     .WithMessage($"A single command handler for '{handlerType}' could not be retrieved.");
             }
         }
@@ -90,22 +90,22 @@ namespace CommandQuery.Tests
                 result.Should().Be(expectedResult);
             }
 
-            void should_throw_exception_if_the_command_is_null()
+            async Task should_throw_exception_if_the_command_is_null()
             {
-                Subject.Awaiting(x => x.ProcessAsync<object>(null)).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.ProcessAsync<object>(null);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
-            void should_throw_exception_if_the_command_handler_is_not_found()
+            async Task should_throw_exception_if_the_command_handler_is_not_found()
             {
                 var command = new Mock<ICommand<object>>().Object;
 
-                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
-                    .Throw<CommandProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(command);
+                await act.Should().ThrowAsync<CommandProcessorException>()
                     .WithMessage($"The command handler for '{command}' could not be found.");
             }
 
-            void should_throw_exception_if_multiple_command_handlers_are_found()
+            async Task should_throw_exception_if_multiple_command_handlers_are_found()
             {
                 var handlerType = typeof(ICommandHandler<FakeMultiResultCommand1, FakeResult>);
                 var enumerableType = typeof(IEnumerable<ICommandHandler<FakeMultiResultCommand1, FakeResult>>);
@@ -113,8 +113,8 @@ namespace CommandQuery.Tests
 
                 var command = new FakeMultiResultCommand1();
 
-                Subject.Awaiting(x => x.ProcessAsync(command)).Should()
-                    .Throw<CommandProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync(command);
+                await act.Should().ThrowAsync<CommandProcessorException>()
                     .WithMessage($"A single command handler for '{handlerType}' could not be retrieved.");
             }
         }

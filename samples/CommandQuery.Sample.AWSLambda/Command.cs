@@ -1,11 +1,10 @@
-using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 

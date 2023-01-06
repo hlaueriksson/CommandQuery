@@ -20,10 +20,10 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             public void SetUp()
             {
                 var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null, serviceCollection);
+                new Startup().ConfigureServices(null!, serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Query(null, serviceProvider.GetService<IQueryFunction>());
+                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>());
             }
 
             [Test]
@@ -34,7 +34,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 await Subject.HandleAsync(context);
                 var value = await context.Response.AsAsync<Bar>();
 
-                value.Id.Should().Be(1);
+                value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
@@ -48,7 +48,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 await context.Response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
+            Query Subject = null!;
         }
 
         public class when_using_the_real_function_via_Get
@@ -57,10 +57,10 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             public void SetUp()
             {
                 var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null, serviceCollection);
+                new Startup().ConfigureServices(null!, serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Query(null, serviceProvider.GetService<IQueryFunction>());
+                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>());
             }
 
             [Test]
@@ -71,7 +71,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 await Subject.HandleAsync(context);
                 var value = await context.Response.AsAsync<Bar>();
 
-                value.Id.Should().Be(1);
+                value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
@@ -85,10 +85,10 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 await context.Response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
+            Query Subject = null!;
         }
 
-        static HttpContext GetHttpContext(string queryName, string method, string content = null, Dictionary<string, string> query = null)
+        static HttpContext GetHttpContext(string queryName, string method, string? content = null, Dictionary<string, string>? query = null)
         {
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString("/api/query/" + queryName);

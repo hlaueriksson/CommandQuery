@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 
 namespace CommandQuery.Tests.Internal
@@ -20,8 +20,11 @@ namespace CommandQuery.Tests.Internal
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            void should_throw_ArgumentNullException_when_IServiceProvider_is_null() =>
-                ((IServiceProvider)null).Invoking(x => x.GetSingleService(typeof(ICommandHandler<FakeMultiCommand1>))).Should().Throw<ArgumentNullException>();
+            void should_throw_ArgumentNullException_when_IServiceProvider_is_null()
+            {
+                Action act = () => ((IServiceProvider)null).GetSingleService(typeof(ICommandHandler<FakeMultiCommand1>));
+                act.Should().Throw<ArgumentNullException>();
+            }
 
             void should_throw_ArgumentNullException_when_the_service_type_is_null() =>
                 ServiceProvider.Invoking(x => x.GetSingleService(null)).Should().Throw<ArgumentNullException>();
@@ -55,8 +58,7 @@ namespace CommandQuery.Tests.Internal
 
             void should_return_empty_enumeration_if_IServiceProvider_does_not_have_the_right_private_members()
             {
-                var broken = new ServiceCollection().BuildServiceProvider();
-                broken.GetType().GetField("_engine", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(broken, null);
+                var broken = new Mock<IServiceProvider>().Object;
                 broken.GetAllServiceTypes().Should().BeEmpty();
             }
 

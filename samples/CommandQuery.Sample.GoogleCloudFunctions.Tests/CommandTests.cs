@@ -17,10 +17,10 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             public void SetUp()
             {
                 var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null, serviceCollection);
+                new Startup().ConfigureServices(null!, serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Command(null, serviceProvider.GetService<ICommandFunction>());
+                Subject = new Command(null!, serviceProvider.GetService<ICommandFunction>());
             }
 
             [Test]
@@ -53,7 +53,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 return context;
             }
 
-            Command Subject;
+            Command Subject = null!;
         }
     }
 }

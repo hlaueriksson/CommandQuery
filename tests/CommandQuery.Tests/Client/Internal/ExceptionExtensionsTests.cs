@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -25,8 +26,9 @@ namespace CommandQuery.Tests.Client.Internal
                 StatusCode = HttpStatusCode.BadRequest,
                 Content = new StringContent(JsonSerializer.Serialize(error), Encoding.UTF8, "application/json")
             };
-            subject.Invoking(x => x.EnsureSuccessAsync(CancellationToken.None))
-                .Should().Throw<CommandQueryException>()
+
+            Func<Task> act = () => subject.EnsureSuccessAsync(CancellationToken.None);
+            (await act.Should().ThrowAsync<CommandQueryException>())
                 .WithMessage("StatusCode: 400, ReasonPhrase: 'Bad Request'*")
                 .And.Error.Should().BeEquivalentTo(error);
         }

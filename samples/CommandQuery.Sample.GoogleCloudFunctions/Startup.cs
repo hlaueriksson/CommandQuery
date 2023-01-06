@@ -1,4 +1,3 @@
-using System.Text.Json;
 using CommandQuery.GoogleCloudFunctions;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;

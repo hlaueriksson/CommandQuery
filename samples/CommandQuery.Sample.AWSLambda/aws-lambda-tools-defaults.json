@@ -6,7 +6,7 @@
         "dotnet lambda help",
         "All the command line options for the Lambda command can be specified in this file."
     ],
-    "profile"     : "default",
+    "profile"     : "Henrik Lau Eriksson",
     "region"      : "eu-central-1",
     "configuration" : "Release",
     "framework"     : "net6.0",

@@ -11,6 +11,7 @@ using FluentAssertions;
 using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -52,8 +53,8 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
 
             async Task should_throw_when_request_is_null()
             {
-                Subject.Awaiting(x => x.HandleAsync(QueryName, null, Logger))
-                    .Should().Throw<ArgumentNullException>();
+                Func<Task> act = () => Subject.HandleAsync(QueryName, null, Logger);
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
             async Task should_handle_QueryProcessorException()

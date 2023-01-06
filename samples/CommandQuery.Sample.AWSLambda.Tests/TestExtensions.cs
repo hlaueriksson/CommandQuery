@@ -20,7 +20,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             return request;
         }
 
-        public static T As<T>(this APIGatewayProxyResponse result)
+        public static T? As<T>(this APIGatewayProxyResponse result)
         {
             return JsonSerializer.Deserialize<T>(result.Body);
         }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>2.0.0</Version>
     <PackageReleaseNotes>
 - Changed target framework to netcoreapp3.1 🎯
@@ -41,8 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.Core" Version="2.0.0" />
-    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.0.0" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
+    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>

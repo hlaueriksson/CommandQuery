@@ -25,7 +25,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             public async Task should_work()
             {
                 var result = await Subject.Handle(Request.QueryName("BarQuery"), Context);
-                var value = result.As<Bar>();
+                var value = result.As<Bar>()!;
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
@@ -39,9 +39,9 @@ namespace CommandQuery.Sample.AWSLambda.Tests
                 result.ShouldBeError("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
-            APIGatewayProxyRequest Request;
-            ILambdaContext Context;
+            Query Subject = null!;
+            APIGatewayProxyRequest Request = null!;
+            ILambdaContext Context = null!;
         }
 
         public class when_using_the_real_function_via_Get
@@ -58,7 +58,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             public async Task should_work()
             {
                 var result = await Subject.Handle(Request.QueryName("BarQuery"), Context);
-                var value = result.As<Bar>();
+                var value = result.As<Bar>()!;
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
@@ -72,12 +72,12 @@ namespace CommandQuery.Sample.AWSLambda.Tests
                 result.ShouldBeError("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
-            APIGatewayProxyRequest Request;
-            ILambdaContext Context;
+            Query Subject = null!;
+            APIGatewayProxyRequest Request = null!;
+            ILambdaContext Context = null!;
         }
 
-        static APIGatewayProxyRequest GetRequest(string method, string content = null, Dictionary<string, IList<string>> query = null)
+        static APIGatewayProxyRequest GetRequest(string method, string? content = null, Dictionary<string, IList<string>>? query = null)
         {
             var request = new APIGatewayProxyRequest
             {

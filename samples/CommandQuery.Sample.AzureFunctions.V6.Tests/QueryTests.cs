@@ -30,7 +30,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetService<IQueryFunction>(), serviceProvider.GetService<ILoggerFactory>());
+                Subject = new Query(serviceProvider.GetService<IQueryFunction>()!, serviceProvider.GetService<ILoggerFactory>()!);
             }
 
             [Test]
@@ -41,7 +41,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 var result = await Subject.Run(req, ExecutionContext, "BarQuery");
                 var value = await result.AsAsync<Bar>();
 
-                value.Id.Should().Be(1);
+                value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
@@ -55,8 +55,8 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            FunctionContext ExecutionContext;
-            Query Subject;
+            FunctionContext ExecutionContext = null!;
+            Query Subject = null!;
         }
 
         public class when_using_the_real_function_via_Get
@@ -73,7 +73,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetService<IQueryFunction>(), serviceProvider.GetService<ILoggerFactory>());
+                Subject = new Query(serviceProvider.GetService<IQueryFunction>()!, serviceProvider.GetService<ILoggerFactory>()!);
             }
 
             [Test]
@@ -84,7 +84,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 var result = await Subject.Run(req, ExecutionContext, "BarQuery");
                 var value = await result.AsAsync<Bar>();
 
-                value.Id.Should().Be(1);
+                value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
@@ -98,11 +98,11 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            FunctionContext ExecutionContext;
-            Query Subject;
+            FunctionContext ExecutionContext = null!;
+            Query Subject = null!;
         }
 
-        static HttpRequestData GetHttpRequestData(FunctionContext executionContext, string method, string content = null, string url = null)
+        static HttpRequestData GetHttpRequestData(FunctionContext executionContext, string method, string? content = null, string? url = null)
         {
             var request = new Mock<HttpRequestData>(executionContext);
             request.Setup(r => r.Method).Returns(method);

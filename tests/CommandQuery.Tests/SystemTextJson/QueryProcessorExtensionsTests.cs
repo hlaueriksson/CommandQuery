@@ -31,36 +31,36 @@ namespace CommandQuery.Tests.SystemTextJson
                 FakeQueryProcessor.Verify(x => x.ProcessAsync(It.IsAny<FakeQuery>(), It.IsAny<CancellationToken>()));
             }
 
-            void should_throw_exception_if_the_IQueryProcessor_is_null()
+            async Task should_throw_exception_if_the_IQueryProcessor_is_null()
             {
-                Subject.Awaiting(x => ((IQueryProcessor)null).ProcessAsync<object>("", "{}")).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => ((IQueryProcessor)null).ProcessAsync<object>("", "{}");
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
-            void should_throw_exception_if_the_query_type_is_not_found_for_the_json()
+            async Task should_throw_exception_if_the_query_type_is_not_found_for_the_json()
             {
                 var queryName = "NotFoundQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, "{}")).Should()
-                    .Throw<QueryProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync<object>(queryName, "{}");
+                await act.Should().ThrowAsync<QueryProcessorException>()
                     .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
 
-            void should_throw_exception_if_the_json_is_null()
+            async Task should_throw_exception_if_the_json_is_null()
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, (string)null)).Should()
-                    .Throw<ArgumentNullException>()
+                Func<Task> act = () => Subject.ProcessAsync<object>(queryName, (string)null);
+                await act.Should().ThrowAsync<ArgumentNullException>()
                     .WithMessage("Value cannot be null*json*");
             }
 
-            void should_throw_exception_if_the_json_is_invalid()
+            async Task should_throw_exception_if_the_json_is_invalid()
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, "<>")).Should()
-                    .Throw<QueryProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync<object>(queryName, "<>");
+                await act.Should().ThrowAsync<QueryProcessorException>()
                     .WithMessage("The json string could not be deserialized to an object");
             }
         }
@@ -83,16 +83,16 @@ namespace CommandQuery.Tests.SystemTextJson
 
             async Task should_throw_exception_if_the_IQueryProcessor_is_null()
             {
-                Subject.Awaiting(x => ((IQueryProcessor)null).ProcessAsync<object>("", new Dictionary<string, IEnumerable<string>>())).Should()
-                    .Throw<ArgumentNullException>();
+                Func<Task> act = () => ((IQueryProcessor)null).ProcessAsync<object>("", new Dictionary<string, IEnumerable<string>>());
+                await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
             async Task should_throw_exception_if_the_query_type_is_not_found_for_the_dictionary()
             {
                 var queryName = "NotFoundQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, new Dictionary<string, IEnumerable<string>>())).Should()
-                    .Throw<QueryProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync<object>(queryName, new Dictionary<string, IEnumerable<string>>());
+                await act.Should().ThrowAsync<QueryProcessorException>()
                     .WithMessage("The query type 'NotFoundQuery' could not be found");
             }
 
@@ -147,12 +147,12 @@ namespace CommandQuery.Tests.SystemTextJson
                 actual.Should().BeEquivalentTo(TestData.FakeNestedQuery);
             }
 
-            void should_throw_exception_if_the_dictionary_is_invalid()
+            async Task should_throw_exception_if_the_dictionary_is_invalid()
             {
                 var queryName = "FakeQuery";
 
-                Subject.Awaiting(x => x.ProcessAsync<object>(queryName, null, CancellationToken.None)).Should()
-                    .Throw<QueryProcessorException>()
+                Func<Task> act = () => Subject.ProcessAsync<object>(queryName, null, CancellationToken.None);
+                await act.Should().ThrowAsync<QueryProcessorException>()
                     .WithMessage("The dictionary could not be deserialized to an object");
             }
         }

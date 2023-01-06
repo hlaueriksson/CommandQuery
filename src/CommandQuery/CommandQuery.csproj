@@ -43,14 +43,13 @@
     <InternalsVisibleTo Include="CommandQuery.AWSLambda" />
     <InternalsVisibleTo Include="CommandQuery.AzureFunctions" />
     <InternalsVisibleTo Include="CommandQuery.GoogleCloudFunctions" />
-    <InternalsVisibleTo Include="CommandQuery.NewtonsoftJson" />
     <InternalsVisibleTo Include="CommandQuery.SystemTextJson" />
     <InternalsVisibleTo Include="CommandQuery.Tests" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.16" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
