@@ -18,6 +18,6 @@ namespace CommandQuery.Sample.AzureFunctions.V6
 
         [Function("Command")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestData req, FunctionContext executionContext, string commandName) =>
-            await _commandFunction.HandleAsync(commandName, req, _logger);
+            await _commandFunction.HandleAsync(commandName, req, _logger, executionContext.CancellationToken);
     }
 }
