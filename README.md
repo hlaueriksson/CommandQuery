@@ -85,10 +85,8 @@ The traditional approach that commands *do not return a value* is a bit inconven
 
 - 📃 README: [CommandQuery.AspNetCore.md](CommandQuery.AspNetCore.md)
 - 💁 Samples:
-  - [`CommandQuery.Sample.AspNetCore.V3`](/samples/CommandQuery.Sample.AspNetCore.V3)
-  - [`CommandQuery.Sample.AspNetCore.V3.Tests`](/samples/CommandQuery.Sample.AspNetCore.V3.Tests)
-  - [`CommandQuery.Sample.AspNetCore.V5`](/samples/CommandQuery.Sample.AspNetCore.V5)
-  - [`CommandQuery.Sample.AspNetCore.V5.Tests`](/samples/CommandQuery.Sample.AspNetCore.V5.Tests)
+  - [`CommandQuery.Sample.AspNetCore.V6`](/samples/CommandQuery.Sample.AspNetCore.V6)
+  - [`CommandQuery.Sample.AspNetCore.V6.Tests`](/samples/CommandQuery.Sample.AspNetCore.V6.Tests)
 
 ### `CommandQuery.AWSLambda` ⚡
 
@@ -109,10 +107,8 @@ The traditional approach that commands *do not return a value* is a bit inconven
 
 - 📃 README: [CommandQuery.AzureFunctions.md](CommandQuery.AzureFunctions.md)
 - 💁 Samples:
-  - [`CommandQuery.Sample.AzureFunctions.V3`](/samples/CommandQuery.Sample.AzureFunctions.V3)
-  - [`CommandQuery.Sample.AzureFunctions.V3.Tests`](/samples/CommandQuery.Sample.AzureFunctions.V3.Tests)
-  - [`CommandQuery.Sample.AzureFunctions.V5`](/samples/CommandQuery.Sample.AzureFunctions.V5)
-  - [`CommandQuery.Sample.AzureFunctions.V5.Tests`](/samples/CommandQuery.Sample.AzureFunctions.V5.Tests)
+  - [`CommandQuery.Sample.AzureFunctions.V6`](/samples/CommandQuery.Sample.AzureFunctions.V6)
+  - [`CommandQuery.Sample.AzureFunctions.V6.Tests`](/samples/CommandQuery.Sample.AzureFunctions.V6.Tests)
 
 ### `CommandQuery.GoogleCloudFunctions` ⚡
 
