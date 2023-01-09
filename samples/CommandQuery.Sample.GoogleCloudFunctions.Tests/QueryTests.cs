@@ -23,7 +23,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 new Startup().ConfigureServices(null!, serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>());
+                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>()!);
             }
 
             [Test]
@@ -60,7 +60,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 new Startup().ConfigureServices(null!, serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>());
+                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>()!);
             }
 
             [Test]

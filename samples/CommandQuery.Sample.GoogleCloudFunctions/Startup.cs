@@ -28,8 +28,8 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
         public override void Configure(WebHostBuilderContext context, IApplicationBuilder app)
         {
             // Validation
-            app.ApplicationServices.GetService<ICommandProcessor>().AssertConfigurationIsValid();
-            app.ApplicationServices.GetService<IQueryProcessor>().AssertConfigurationIsValid();
+            app.ApplicationServices.GetService<ICommandProcessor>()!.AssertConfigurationIsValid();
+            app.ApplicationServices.GetService<IQueryProcessor>()!.AssertConfigurationIsValid();
         }
     }
 }

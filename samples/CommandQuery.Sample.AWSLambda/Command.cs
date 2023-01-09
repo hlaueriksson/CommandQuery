@@ -23,8 +23,8 @@ public class Command
         services.AddTransient<ICultureService, CultureService>();
 
         var serviceProvider = services.BuildServiceProvider();
-        serviceProvider.GetService<ICommandProcessor>().AssertConfigurationIsValid(); // Validation
-        _commandFunction = serviceProvider.GetService<ICommandFunction>();
+        serviceProvider.GetService<ICommandProcessor>()!.AssertConfigurationIsValid(); // Validation
+        _commandFunction = serviceProvider.GetService<ICommandFunction>()!;
     }
 
     public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>

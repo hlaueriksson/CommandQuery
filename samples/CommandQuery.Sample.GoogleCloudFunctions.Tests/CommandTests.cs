@@ -20,7 +20,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
                 new Startup().ConfigureServices(null!, serviceCollection);
                 var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Command(null!, serviceProvider.GetService<ICommandFunction>());
+                Subject = new Command(null!, serviceProvider.GetService<ICommandFunction>()!);
             }
 
             [Test]

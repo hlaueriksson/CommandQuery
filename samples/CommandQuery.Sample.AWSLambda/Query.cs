@@ -21,8 +21,8 @@ namespace CommandQuery.Sample.AWSLambda
             services.AddTransient<IDateTimeProxy, DateTimeProxy>();
 
             var serviceProvider = services.BuildServiceProvider();
-            serviceProvider.GetService<IQueryProcessor>().AssertConfigurationIsValid(); // Validation
-            _queryFunction = serviceProvider.GetService<IQueryFunction>();
+            serviceProvider.GetService<IQueryProcessor>()!.AssertConfigurationIsValid(); // Validation
+            _queryFunction = serviceProvider.GetService<IQueryFunction>()!;
         }
 
         public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
