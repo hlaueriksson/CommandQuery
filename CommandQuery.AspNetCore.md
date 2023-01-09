@@ -20,7 +20,7 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 5. Configure services in `Startup.cs`
 
-![Add a new project - ASP.NET Core Web API](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aspnet-core-web-api.png)
+![Add a new project - ASP.NET Core Web API](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-aspnet-core-web-api.png)
 
 Choose:
 

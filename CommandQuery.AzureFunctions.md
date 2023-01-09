@@ -24,9 +24,9 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure services in `Program.cs`
 
-![Add a new project - Azure Functions](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-azure-functions-1.png)
+![Add a new project - Azure Functions](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-azure-functions-1.png)
 
-![Create a new Azure Functions Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-azure-functions-2.png)
+![Create a new Azure Functions Application](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-azure-functions-2.png)
 
 Choose:
 

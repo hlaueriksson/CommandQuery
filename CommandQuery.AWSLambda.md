@@ -24,9 +24,9 @@
    * Implement `IQuery<TResult>` and `IQueryHandler<in TQuery, TResult>`
 6. Configure the serverless template
 
-![New Project - AWS Serverless Application (.NET Core - C#)](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-1.png)
+![New Project - AWS Serverless Application (.NET Core - C#)](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-aws-serverless-application-1.png)
 
-![New AWS Serverless Application - Empty Serverless Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-2.png)
+![New AWS Serverless Application - Empty Serverless Application](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-aws-serverless-application-2.png)
 
 Choose:
 
