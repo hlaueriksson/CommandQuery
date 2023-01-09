@@ -26,23 +26,22 @@
 
 ![New Project - AWS Serverless Application (.NET Core - C#)](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-1.png)
 
+![New AWS Serverless Application - Empty Serverless Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-2.png)
+
 Choose:
 
 * Empty Serverless Application
 
-![New AWS Serverless Application - Empty Serverless Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-aws-serverless-application-2.png)
-
 ## Commands
 
 ```cs
-using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -83,14 +82,13 @@ Commands with result:
 ## Queries
 
 ```cs
-using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
 using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
 
 namespace CommandQuery.Sample.AWSLambda
 {
@@ -137,6 +135,9 @@ Configuration in `serverless.template`:
     "Command": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
+        "Architectures": [
+          "x86_64"
+        ],
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command::Handle",
         "Runtime": "dotnet6",
         "CodeUri": "",
@@ -160,6 +161,9 @@ Configuration in `serverless.template`:
     "Query": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
+        "Architectures": [
+          "x86_64"
+        ],
         "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query::Handle",
         "Runtime": "dotnet6",
         "CodeUri": "",

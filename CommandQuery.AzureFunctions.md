@@ -11,8 +11,8 @@
 
 0. Install **Azure development** workload in Visual Studio
    * [Prerequisites](https://docs.microsoft.com/en-us/azure/azure-functions/functions-develop-vs?tabs=in-process#prerequisites)
-1. Create a new **Azure Functions** project
-   * [Tutorial](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-your-first-function-visual-studio)
+1. Create a new **Azure Functions** (_isolated worker process_) project
+   * [Tutorial](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide)
 2. Install the `CommandQuery.AzureFunctions` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AzureFunctions/)
    * `PM>` `Install-Package CommandQuery.AzureFunctions`
 3. Create functions
@@ -26,17 +26,16 @@
 
 ![Add a new project - Azure Functions](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-azure-functions-1.png)
 
+![Create a new Azure Functions Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-azure-functions-2.png)
+
 Choose:
 
-* .NET 6 Isolated
+* .NET 6.0 Isolated (Long Term Support)
 * Http trigger
-
-![Create a new Azure Functions Application](https://github.com/hlaueriksson/CommandQuery/raw/master/vs-new-project-azure-functions-2.png)
 
 ## Commands
 
 ```cs
-using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -57,7 +56,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6
 
         [Function("Command")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestData req, FunctionContext executionContext, string commandName) =>
-            await _commandFunction.HandleAsync(commandName, req, _logger);
+            await _commandFunction.HandleAsync(commandName, req, _logger, executionContext.CancellationToken);
     }
 }
 ```
@@ -75,7 +74,6 @@ Commands with result:
 ## Queries
 
 ```cs
-using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -96,7 +94,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6
 
         [Function("Query")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequestData req, FunctionContext executionContext, string queryName) =>
-            await _queryFunction.HandleAsync(queryName, req, _logger);
+            await _queryFunction.HandleAsync(queryName, req, _logger, executionContext.CancellationToken);
     }
 }
 ```
@@ -113,7 +111,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6
 Configuration in `Program.cs`:
 
 ```cs
-using System.Text.Json;
+using CommandQuery;
 using CommandQuery.AzureFunctions;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;
@@ -123,37 +121,31 @@ using CommandQuery.Sample.Handlers.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace CommandQuery.Sample.AzureFunctions.V6
+var host = new HostBuilder()
+    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureServices(ConfigureServices)
+    .Build();
+
+// Validation
+host.Services.GetService<ICommandProcessor>()!.AssertConfigurationIsValid();
+host.Services.GetService<IQueryProcessor>()!.AssertConfigurationIsValid();
+
+host.Run();
+
+public static partial class Program
 {
-    public class Program
+    public static void ConfigureServices(IServiceCollection services)
     {
-        public static void Main()
-        {
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
-                .ConfigureServices(ConfigureServices)
-                .Build();
+        services
+            //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-            // Validation
-            host.Services.GetService<ICommandProcessor>().AssertConfigurationIsValid();
-            host.Services.GetService<IQueryProcessor>().AssertConfigurationIsValid();
+            // Add commands and queries
+            .AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
+            .AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
 
-            host.Run();
-        }
-
-        public static void ConfigureServices(IServiceCollection services)
-        {
-            services
-                //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-
-                // Add commands and queries
-                .AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly)
-                .AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly)
-
-                // Add handler dependencies
-                .AddTransient<IDateTimeProxy, DateTimeProxy>()
-                .AddTransient<ICultureService, CultureService>();
-        }
+            // Add handler dependencies
+            .AddTransient<IDateTimeProxy, DateTimeProxy>()
+            .AddTransient<ICultureService, CultureService>();
     }
 }
 ```
@@ -302,7 +294,5 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
 
 ## Samples
 
-* [CommandQuery.Sample.AzureFunctions.V3](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V3)
-* [CommandQuery.Sample.AzureFunctions.V3.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V3.Tests)
 * [CommandQuery.Sample.AzureFunctions.V6](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V6)
 * [CommandQuery.Sample.AzureFunctions.V6.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AzureFunctions.V6.Tests)

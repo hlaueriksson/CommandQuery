@@ -24,7 +24,7 @@
 
 Choose:
 
-* .NET 6.0 (Long-term support)
+* .NET 6.0 (Long Term Support)
 * Use controllers (uncheck to use minimal APIs)
 
 ## Configuration
@@ -258,7 +258,5 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
 
 ## Samples
 
-* [CommandQuery.Sample.AspNetCore.V3](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V3)
-* [CommandQuery.Sample.AspNetCore.V3.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V3.Tests)
 * [CommandQuery.Sample.AspNetCore.V6](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V6)
 * [CommandQuery.Sample.AspNetCore.V6.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V6.Tests)
