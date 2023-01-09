@@ -2,16 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <PackageReleaseNotes>
-- Changed target frameworks to netcoreapp3.1 and net5.0 🎯
-- netcoreapp3.1 uses Newtonsoft.Json 📜
-- net5.0 uses System.Text.Json 📜
-- Added JsonSerializerSettings/JsonSerializerOptions constructor parameter in CommandFunction and QueryFunction
-- Renamed method to HandleAsync in CommandFunction and QueryFunction 💥
-- Added CancellationToken parameter to HandleAsync method in netcoreapp3.1
-- Added extension methods AddCommandFunction and AddQueryFunction on IServiceCollection
-- Nested object graph queries via GET is now supported
+- Change TargetFramework to netstandard2.0
+- Drop support for in-process functions
+  - Only support isolated worker process functions
+- Bump Microsoft.Azure.Functions.Worker to 1.10.0
+- Add CancellationToken parameter to HandleAsync method in CommandFunction and QueryFunction
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for Azure Functions ⚡

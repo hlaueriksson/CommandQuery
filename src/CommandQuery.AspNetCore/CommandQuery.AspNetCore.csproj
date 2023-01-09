@@ -2,10 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <PackageReleaseNotes>
-- Changed the target frameworks to netstandard2.0 and netcoreapp3.1 🎯
-- Added extension methods AddCommandControllers and AddQueryControllers on IServiceCollection
+- Change TargetFramework to net6.0
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for ASP.NET Core 🌐

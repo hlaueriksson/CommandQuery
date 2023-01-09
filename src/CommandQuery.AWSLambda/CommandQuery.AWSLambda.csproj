@@ -2,16 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <PackageReleaseNotes>
-- Changed target framework to netcoreapp3.1 🎯
-- Now uses System.Text.Json, instead of Newtonsoft.Json 📜
-- Added the new abstractions ICommandFunction and IQueryFunction
-- Added JsonSerializerOptions constructor parameter in CommandFunction and QueryFunction
-- Renamed method to HandleAsync in CommandFunction and QueryFunction 💥
-- Changed the ILambdaContext parameter to ILambdaLogger in HandleAsync methods in CommandFunction and QueryFunction 💥
-- Added extension methods AddCommandFunction and AddQueryFunction on IServiceCollection
-- Nested object graph queries via GET is now supported
+- Change TargetFramework to netstandard2.0
+- Bump Amazon.Lambda.Core to 2.1.0
+- Bump Amazon.Lambda.APIGatewayEvents to 2.5.0
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for AWS Lambda ⚡
