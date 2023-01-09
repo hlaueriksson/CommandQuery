@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandlePost(QueryName, Json) as OkNegotiatedContentResult<object>;
 
-                (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(200);
+                (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(HttpStatusCode.OK);
                 result.Content.Should().Be(expected);
             }
 
@@ -51,7 +52,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandlePost(QueryName, Json);
 
-                await result.ShouldBeErrorAsync("fail", 400);
+                await result.ShouldBeErrorAsync("fail", HttpStatusCode.BadRequest);
             }
 
             async Task should_handle_QueryException()
@@ -60,7 +61,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandlePost(QueryName, Json);
 
-                await result.ShouldBeErrorAsync("invalid", 400);
+                await result.ShouldBeErrorAsync("invalid", HttpStatusCode.BadRequest);
             }
 
             async Task should_handle_Exception()
@@ -69,7 +70,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandlePost(QueryName, Json);
 
-                await result.ShouldBeErrorAsync("fail", 500);
+                await result.ShouldBeErrorAsync("fail", HttpStatusCode.InternalServerError);
             }
 
             async Task should_log_errors()
@@ -103,7 +104,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandleGet(QueryName) as OkNegotiatedContentResult<object>;
 
-                (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(200);
+                (await result.ExecuteAsync(CancellationToken.None)).StatusCode.Should().Be(HttpStatusCode.OK);
                 result.Content.Should().Be(expected);
             }
 
@@ -113,7 +114,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandleGet(QueryName);
 
-                await result.ShouldBeErrorAsync("fail", 400);
+                await result.ShouldBeErrorAsync("fail", HttpStatusCode.BadRequest);
             }
 
             async Task should_handle_QueryException()
@@ -122,7 +123,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandleGet(QueryName);
 
-                await result.ShouldBeErrorAsync("invalid", 400);
+                await result.ShouldBeErrorAsync("invalid", HttpStatusCode.BadRequest);
             }
 
             async Task should_handle_Exception()
@@ -131,7 +132,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 
                 var result = await Subject.HandleGet(QueryName);
 
-                await result.ShouldBeErrorAsync("fail", 500);
+                await result.ShouldBeErrorAsync("fail", HttpStatusCode.InternalServerError);
             }
         }
 

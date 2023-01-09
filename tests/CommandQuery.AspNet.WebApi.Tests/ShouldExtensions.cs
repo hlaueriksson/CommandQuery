@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ namespace CommandQuery.AspNet.WebApi.Tests
 {
     public static class ShouldExtensions
     {
-        public static async Task ShouldBeErrorAsync(this IHttpActionResult result, string message, int? statusCode = null)
+        public static async Task ShouldBeErrorAsync(this IHttpActionResult result, string message, HttpStatusCode? statusCode = null)
         {
             var response = await result.ExecuteAsync(CancellationToken.None);
             response.Should().NotBeNull();
