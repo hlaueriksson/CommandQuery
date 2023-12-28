@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace CommandQuery.Tests.Exceptions
 {
+    [Ignore("TODO: Deserialization risks in use of BinaryFormatter and related types")]
     public class ExceptionTests
     {
         [Test]
