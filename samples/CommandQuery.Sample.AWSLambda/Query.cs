@@ -1,10 +1,8 @@
+using Amazon.Lambda.Annotations.APIGateway;
+using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
-using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Queries;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AWSLambda
 {
@@ -12,20 +10,19 @@ namespace CommandQuery.Sample.AWSLambda
     {
         private readonly IQueryFunction _queryFunction;
 
-        public Query()
+        public Query(IQueryFunction queryFunction)
         {
-            var services = new ServiceCollection();
-            //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-            services.AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
-            // Add handler dependencies
-            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
-
-            var serviceProvider = services.BuildServiceProvider();
-            serviceProvider.GetService<IQueryProcessor>()!.AssertConfigurationIsValid(); // Validation
-            _queryFunction = serviceProvider.GetService<IQueryFunction>()!;
+            _queryFunction = queryFunction;
         }
 
-        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
-            await _queryFunction.HandleAsync(request.PathParameters["queryName"], request, context.Logger);
+        [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
+        [RestApi(LambdaHttpMethod.Get, "/query/{queryName}")]
+        public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
+            await _queryFunction.HandleAsync(queryName, request, context.Logger);
+
+        [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
+        [RestApi(LambdaHttpMethod.Post, "/query/{queryName}")]
+        public async Task<APIGatewayProxyResponse> Post(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
+            await _queryFunction.HandleAsync(queryName, request, context.Logger);
     }
 }

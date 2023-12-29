@@ -30,7 +30,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetService<IQueryFunction>()!, serviceProvider.GetService<ILoggerFactory>()!);
+                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>(), serviceProvider.GetRequiredService<ILoggerFactory>());
             }
 
             [Test]
@@ -73,7 +73,7 @@ namespace CommandQuery.Sample.AzureFunctions.V6.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetService<IQueryFunction>()!, serviceProvider.GetService<ILoggerFactory>()!);
+                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>(), serviceProvider.GetRequiredService<ILoggerFactory>());
             }
 
             [Test]

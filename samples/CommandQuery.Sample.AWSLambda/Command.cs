@@ -1,12 +1,8 @@
+using Amazon.Lambda.Annotations.APIGateway;
+using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
-using CommandQuery.Sample.Contracts.Commands;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Commands;
-using Microsoft.Extensions.DependencyInjection;
-
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace CommandQuery.Sample.AWSLambda;
 
@@ -14,19 +10,13 @@ public class Command
 {
     private readonly ICommandFunction _commandFunction;
 
-    public Command()
+    public Command(ICommandFunction commandFunction)
     {
-        var services = new ServiceCollection();
-        //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-        services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-        // Add handler dependencies
-        services.AddTransient<ICultureService, CultureService>();
-
-        var serviceProvider = services.BuildServiceProvider();
-        serviceProvider.GetService<ICommandProcessor>()!.AssertConfigurationIsValid(); // Validation
-        _commandFunction = serviceProvider.GetService<ICommandFunction>()!;
+        _commandFunction = commandFunction;
     }
 
-    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
-        await _commandFunction.HandleAsync(request.PathParameters["commandName"], request, context.Logger);
+    [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
+    [RestApi(LambdaHttpMethod.Post, "/command/{commandName}")]
+    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context, string commandName) =>
+        await _commandFunction.HandleAsync(commandName, request, context.Logger);
 }
