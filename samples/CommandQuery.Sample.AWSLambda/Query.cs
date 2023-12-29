@@ -1,5 +1,5 @@
-using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
+using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;

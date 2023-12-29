@@ -1,12 +1,12 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Core;
-using CommandQuery.Sample.Contracts.Commands;
-using CommandQuery.Sample.Handlers.Commands;
-using CommandQuery.Sample.Handlers;
-using Microsoft.Extensions.DependencyInjection;
-using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Handlers.Queries;
 using CommandQuery.AWSLambda;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
+using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
