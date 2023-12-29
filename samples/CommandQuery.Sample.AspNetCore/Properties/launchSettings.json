@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "CommandQuery.Sample.AspNetCore.V6": {
+    "CommandQuery.Sample.AspNetCore": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

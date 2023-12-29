@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "CommandQuery.Sample.AzureFunctions.V6": {
+    "CommandQuery.Sample.AzureFunctions": {
       "commandName": "Project",
       "commandLineArgs": "--port 7071",
       "launchBrowser": false

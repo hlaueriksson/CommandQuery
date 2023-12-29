@@ -5,7 +5,7 @@ using CommandQuery.Sample.Contracts;
 using FluentAssertions;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace CommandQuery.Sample.AzureFunctions.V6.Tests
+namespace CommandQuery.Sample.AzureFunctions.Tests
 {
     public static class ShouldExtensions
     {

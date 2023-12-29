@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="CommandQuery.Sample.AspNetCore.V6.Tests" />
+    <InternalsVisibleTo Include="CommandQuery.Sample.AspNetCore.Tests" />
   </ItemGroup>
 
 </Project>

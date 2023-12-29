@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNetCore.V6.Tests
+namespace CommandQuery.Sample.AspNetCore.Tests
 {
     public class QueryControllerTests
     {

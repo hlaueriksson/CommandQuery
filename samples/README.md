@@ -21,8 +21,8 @@ Sample code:
 
 Sample code:
 
-* `CommandQuery.Sample.AspNetCore.V6`
-* `CommandQuery.Sample.AspNetCore.V6.Tests`
+* `CommandQuery.Sample.AspNetCore`
+* `CommandQuery.Sample.AspNetCore.Tests`
 
 ## AWS Lambda
 
@@ -35,8 +35,8 @@ Sample code:
 
 Sample code:
 
-* `CommandQuery.Sample.AzureFunctions.V6`
-* `CommandQuery.Sample.AzureFunctions.V6.Tests`
+* `CommandQuery.Sample.AzureFunctions`
+* `CommandQuery.Sample.AzureFunctions.Tests`
 
 ## Google Cloud Functions
 

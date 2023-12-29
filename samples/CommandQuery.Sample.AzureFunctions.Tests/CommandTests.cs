@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AzureFunctions.V6.Tests
+namespace CommandQuery.Sample.AzureFunctions.Tests
 {
     public class CommandTests
     {

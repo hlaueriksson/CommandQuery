@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandQuery.Sample.AzureFunctions.V6\CommandQuery.Sample.AzureFunctions.V6.csproj" />
+    <ProjectReference Include="..\CommandQuery.Sample.AzureFunctions\CommandQuery.Sample.AzureFunctions.csproj" />
   </ItemGroup>
 
 </Project>

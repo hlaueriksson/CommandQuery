@@ -17,13 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.GoogleC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.GoogleCloudFunctions.Tests", "samples\CommandQuery.Sample.GoogleCloudFunctions.Tests\CommandQuery.Sample.GoogleCloudFunctions.Tests.csproj", "{20A4BF7B-F8B0-4CD6-BB63-F34338B95CD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V6", "samples\CommandQuery.Sample.AspNetCore.V6\CommandQuery.Sample.AspNetCore.V6.csproj", "{C2A0A496-2F46-451F-BFA1-ECDDF9EE4414}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore", "samples\CommandQuery.Sample.AspNetCore\CommandQuery.Sample.AspNetCore.csproj", "{C2A0A496-2F46-451F-BFA1-ECDDF9EE4414}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.V6.Tests", "samples\CommandQuery.Sample.AspNetCore.V6.Tests\CommandQuery.Sample.AspNetCore.V6.Tests.csproj", "{9499162C-FA52-4625-9628-B86952ED85C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AspNetCore.Tests", "samples\CommandQuery.Sample.AspNetCore.Tests\CommandQuery.Sample.AspNetCore.Tests.csproj", "{9499162C-FA52-4625-9628-B86952ED85C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.V6", "samples\CommandQuery.Sample.AzureFunctions.V6\CommandQuery.Sample.AzureFunctions.V6.csproj", "{06C6F925-BACD-4F1F-8905-7F787330E980}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions", "samples\CommandQuery.Sample.AzureFunctions\CommandQuery.Sample.AzureFunctions.csproj", "{06C6F925-BACD-4F1F-8905-7F787330E980}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.V6.Tests", "samples\CommandQuery.Sample.AzureFunctions.V6.Tests\CommandQuery.Sample.AzureFunctions.V6.Tests.csproj", "{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.Tests", "samples\CommandQuery.Sample.AzureFunctions.Tests\CommandQuery.Sample.AzureFunctions.Tests.csproj", "{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

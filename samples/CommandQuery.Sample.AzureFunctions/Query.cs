@@ -3,7 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace CommandQuery.Sample.AzureFunctions.V6
+namespace CommandQuery.Sample.AzureFunctions
 {
     public class Query
     {
