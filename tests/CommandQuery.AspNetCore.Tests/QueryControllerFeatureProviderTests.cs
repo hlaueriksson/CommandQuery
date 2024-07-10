@@ -1,6 +1,4 @@
-using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.NUnit;

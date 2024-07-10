@@ -1,4 +1,3 @@
-using System;
 using CommandQuery.Client;
 using FluentAssertions;
 using NUnit.Framework;

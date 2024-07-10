@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using CommandQuery.Tests;
 using FluentAssertions;

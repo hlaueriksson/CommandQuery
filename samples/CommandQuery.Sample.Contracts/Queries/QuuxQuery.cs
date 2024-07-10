@@ -1,5 +1,3 @@
-using System;
-
 namespace CommandQuery.Sample.Contracts.Queries
 {
     public class QuuxQuery : IQuery<Quux>

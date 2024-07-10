@@ -1,4 +1,3 @@
-using System;
 using CommandQuery.Exceptions;
 using CommandQuery.Fail;
 using FluentAssertions;

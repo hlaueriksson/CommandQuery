@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using CommandQuery.SystemTextJson;
 using FluentAssertions;
 using LoFuUnit.NUnit;

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;

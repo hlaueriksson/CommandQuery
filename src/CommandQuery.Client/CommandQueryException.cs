@@ -1,5 +1,3 @@
-using System;
-
 namespace CommandQuery.Client
 {
     /// <summary>

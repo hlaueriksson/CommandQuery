@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace CommandQuery.Tests
 {
     public static class TestData

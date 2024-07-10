@@ -1,6 +1,4 @@
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using CommandQuery.Tests;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;

@@ -1,9 +1,6 @@
-using System;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;

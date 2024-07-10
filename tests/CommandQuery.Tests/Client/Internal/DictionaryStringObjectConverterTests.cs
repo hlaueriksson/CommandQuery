@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using CommandQuery.Client;
 using FluentAssertions;
 using NUnit.Framework;

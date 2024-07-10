@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using LoFuUnit.NUnit;

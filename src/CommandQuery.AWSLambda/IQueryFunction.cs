@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 

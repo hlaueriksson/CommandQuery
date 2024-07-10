@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CommandQuery
 {
     internal class Error : IError

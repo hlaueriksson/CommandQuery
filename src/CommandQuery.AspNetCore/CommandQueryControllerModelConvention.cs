@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace CommandQuery.AspNetCore

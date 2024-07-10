@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Net.Http;
 using CommandQuery.Client;
 using FluentAssertions;
 using NUnit.Framework;
