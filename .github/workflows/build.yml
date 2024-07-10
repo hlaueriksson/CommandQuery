@@ -12,16 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - uses: actions/checkout@v4
+
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: |
-          6.0.x
-          8.0.x
+        dotnet-version: 8.0.x
+
     - name: Restore dependencies
       run: dotnet restore CommandQuery.sln
+
     - name: Build
       run: dotnet build CommandQuery.sln --no-restore
+
     - name: Test
       run: dotnet test CommandQuery.sln --no-build --verbosity normal

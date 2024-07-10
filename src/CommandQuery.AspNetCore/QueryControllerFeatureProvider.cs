@@ -32,10 +32,7 @@ namespace CommandQuery.AspNetCore
         /// <exception cref="ArgumentNullException"><paramref name="feature"/> is <see langword="null"/>.</exception>
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            if (feature is null)
-            {
-                throw new ArgumentNullException(nameof(feature));
-            }
+            ArgumentNullException.ThrowIfNull(feature);
 
             foreach (var queryType in _types)
             {

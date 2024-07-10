@@ -15,10 +15,7 @@ namespace CommandQuery.AspNetCore
         /// <exception cref="ArgumentNullException"><paramref name="controller"/> is <see langword="null"/>.</exception>
         public void Apply(ControllerModel controller)
         {
-            if (controller is null)
-            {
-                throw new ArgumentNullException(nameof(controller));
-            }
+            ArgumentNullException.ThrowIfNull(controller);
 
             if (!controller.ControllerType.IsGenericType)
             {
