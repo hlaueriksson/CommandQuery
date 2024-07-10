@@ -32,19 +32,14 @@ namespace CommandQuery
             }
 
             var callSiteFactory = GetPropertyValue(serviceProvider, "CallSiteFactory");
-            var descriptorLookup = GetFieldValue(callSiteFactory, "_descriptorLookup");
+            var descriptors = GetPropertyValue(callSiteFactory, "Descriptors");
 
-            if (descriptorLookup is not IDictionary dictionary)
+            if (descriptors is not ServiceDescriptor[] array)
             {
                 return Enumerable.Empty<Type>();
             }
 
-            return dictionary.Keys.Cast<Type>();
-
-            static object? GetFieldValue(object? obj, string name)
-            {
-                return obj?.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
-            }
+            return array.Select(x => x.ServiceType).ToList();
 
             static object? GetPropertyValue(object? obj, string name)
             {
