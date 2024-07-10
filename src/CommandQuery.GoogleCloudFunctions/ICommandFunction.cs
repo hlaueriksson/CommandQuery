@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.GoogleCloudFunctions
 {
@@ -13,10 +12,9 @@ namespace CommandQuery.GoogleCloudFunctions
         /// </summary>
         /// <param name="commandName">The name of the command.</param>
         /// <param name="context">A <see cref="HttpContext"/>.</param>
-        /// <param name="logger">An <see cref="ILogger"/>.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
-        Task HandleAsync(string commandName, HttpContext context, ILogger? logger, CancellationToken cancellationToken = default);
+        Task HandleAsync(string commandName, HttpContext context, CancellationToken cancellationToken = default);
     }
 }

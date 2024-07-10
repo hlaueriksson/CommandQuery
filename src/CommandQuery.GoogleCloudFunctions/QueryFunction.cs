@@ -9,23 +9,26 @@ namespace CommandQuery.GoogleCloudFunctions
     public class QueryFunction : IQueryFunction
     {
         private readonly IQueryProcessor _queryProcessor;
+        private readonly ILogger<QueryFunction> _logger;
         private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFunction"/> class.
         /// </summary>
         /// <param name="queryProcessor">An <see cref="IQueryProcessor"/>.</param>
+        /// <param name="logger">An <see cref="ILogger{T}"/>.</param>
         /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/> and serialization of <see cref="HttpResponse.Body"/>.</param>
-        public QueryFunction(IQueryProcessor queryProcessor, JsonSerializerOptions? options = null)
+        public QueryFunction(IQueryProcessor queryProcessor, ILogger<QueryFunction> logger, JsonSerializerOptions? options = null)
         {
             _queryProcessor = queryProcessor;
+            _logger = logger;
             _options = options;
         }
 
         /// <inheritdoc />
-        public async Task HandleAsync(string queryName, HttpContext context, ILogger? logger, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(string queryName, HttpContext context, CancellationToken cancellationToken = default)
         {
-            logger?.LogInformation("Handle {Query}", queryName);
+            _logger.LogInformation("Handle {Query}", queryName);
 
             if (context is null)
             {
@@ -43,7 +46,7 @@ namespace CommandQuery.GoogleCloudFunctions
             catch (Exception exception)
             {
                 var payload = context.Request.Method == "GET" ? context.Request.QueryString.Value : await context.Request.ReadAsStringAsync().ConfigureAwait(false);
-                logger?.LogError(exception, "Handle query failed: {Query}, {Payload}", queryName, payload);
+                _logger.LogError(exception, "Handle query failed: {Query}, {Payload}", queryName, payload);
 
                 if (exception.IsHandled())
                 {

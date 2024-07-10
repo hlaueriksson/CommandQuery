@@ -9,23 +9,26 @@ namespace CommandQuery.GoogleCloudFunctions
     public class CommandFunction : ICommandFunction
     {
         private readonly ICommandProcessor _commandProcessor;
+        private readonly ILogger<CommandFunction> _logger;
         private readonly JsonSerializerOptions? _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandFunction"/> class.
         /// </summary>
         /// <param name="commandProcessor">An <see cref="ICommandProcessor"/>.</param>
+        /// <param name="logger">An <see cref="ILogger{T}"/>.</param>
         /// <param name="options"><see cref="JsonSerializerOptions"/> to control the behavior during deserialization of <see cref="HttpRequest.Body"/> and serialization of <see cref="HttpResponse.Body"/>.</param>
-        public CommandFunction(ICommandProcessor commandProcessor, JsonSerializerOptions? options = null)
+        public CommandFunction(ICommandProcessor commandProcessor, ILogger<CommandFunction> logger, JsonSerializerOptions? options = null)
         {
             _commandProcessor = commandProcessor;
+            _logger = logger;
             _options = options;
         }
 
         /// <inheritdoc />
-        public async Task HandleAsync(string commandName, HttpContext context, ILogger? logger, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(string commandName, HttpContext context, CancellationToken cancellationToken = default)
         {
-            logger?.LogInformation("Handle {Command}", commandName);
+            _logger.LogInformation("Handle {Command}", commandName);
 
             if (context is null)
             {
@@ -48,7 +51,7 @@ namespace CommandQuery.GoogleCloudFunctions
             catch (Exception exception)
             {
                 var payload = await context.Request.ReadAsStringAsync().ConfigureAwait(false);
-                logger?.LogError(exception, "Handle command failed: {Command}, {Payload}", commandName, payload);
+                _logger.LogError(exception, "Handle command failed: {Command}, {Payload}", commandName, payload);
 
                 if (exception.IsHandled())
                 {
