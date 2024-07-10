@@ -8,7 +8,6 @@ using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -26,8 +25,6 @@ namespace CommandQuery.AzureFunctions.Tests
             var context = new Mock<FunctionContext>();
             Req = new FakeHttpRequestData(context.Object);
             await Req.Body.WriteAsync(Encoding.UTF8.GetBytes("{}"));
-
-            Logger = Use<ILogger>();
         }
 
         [LoFu, Test]
@@ -39,13 +36,13 @@ namespace CommandQuery.AzureFunctions.Tests
             async Task should_invoke_the_command_processor()
             {
                 Req.Body.Position = 0;
-                var result = await Subject.HandleAsync(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req);
                 result.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
             async Task should_throw_when_request_is_null()
             {
-                Func<Task> act = () => Subject.HandleAsync(CommandName, null, Logger);
+                Func<Task> act = () => Subject.HandleAsync(CommandName, (HttpRequestData)null);
                 await act.Should().ThrowAsync<ArgumentNullException>();
             }
 
@@ -54,7 +51,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 Req.Body.Position = 0;
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandProcessorException("fail"));
 
-                var result = await Subject.HandleAsync(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req);
 
                 await result.ShouldBeErrorAsync("fail", HttpStatusCode.BadRequest);
             }
@@ -64,7 +61,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 Req.Body.Position = 0;
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new CommandException("invalid"));
 
-                var result = await Subject.HandleAsync(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req);
 
                 await result.ShouldBeErrorAsync("invalid", HttpStatusCode.BadRequest);
             }
@@ -74,7 +71,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 Req.Body.Position = 0;
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeCommand>(), It.IsAny<CancellationToken>())).Throws(new Exception("fail"));
 
-                var result = await Subject.HandleAsync(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req);
 
                 await result.ShouldBeErrorAsync("fail", HttpStatusCode.InternalServerError);
             }
@@ -92,7 +89,7 @@ namespace CommandQuery.AzureFunctions.Tests
                 var expected = new FakeResult();
                 The<Mock<ICommandProcessor>>().Setup(x => x.ProcessAsync(It.IsAny<FakeResultCommand>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(expected));
 
-                var result = await Subject.HandleAsync(CommandName, Req, Logger);
+                var result = await Subject.HandleAsync(CommandName, Req);
                 result.Body.Position = 0;
 
                 result.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -101,7 +98,6 @@ namespace CommandQuery.AzureFunctions.Tests
         }
 
         HttpRequestData Req;
-        ILogger Logger;
         string CommandName;
     }
 }

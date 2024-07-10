@@ -13,6 +13,7 @@ namespace CommandQuery.AzureFunctions.Tests
             var assembly = typeof(FakeCommandHandler).Assembly;
             var serviceCollection = new ServiceCollection();
 
+            serviceCollection.AddLogging();
             serviceCollection.AddCommandFunction(assembly);
             var provider = serviceCollection.BuildServiceProvider();
 
@@ -25,6 +26,7 @@ namespace CommandQuery.AzureFunctions.Tests
             var assembly = typeof(FakeQueryHandler).Assembly;
             var serviceCollection = new ServiceCollection();
 
+            serviceCollection.AddLogging();
             serviceCollection.AddQueryFunction(assembly);
             var provider = serviceCollection.BuildServiceProvider();
 
