@@ -1,12 +1,10 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace CommandQuery.Exceptions
 {
     /// <summary>
     /// Represents errors that occur during initialization of a <see cref="QueryTypeProvider"/>.
     /// </summary>
-    [Serializable]
     public sealed class QueryTypeException : Exception
     {
         /// <summary>
@@ -30,11 +28,6 @@ namespace CommandQuery.Exceptions
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
         public QueryTypeException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        private QueryTypeException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }

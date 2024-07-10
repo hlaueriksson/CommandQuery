@@ -1,13 +1,10 @@
 using System;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 
 namespace CommandQuery.Client
 {
     /// <summary>
     /// Represents errors that occur when receiving HTTP responses in the <see cref="CommandClient"/> and <see cref="QueryClient"/>.
     /// </summary>
-    [Serializable]
     public class CommandQueryException : Exception
     {
         /// <summary>
@@ -48,33 +45,8 @@ namespace CommandQuery.Client
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandQueryException"/> class.
-        /// </summary>
-        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-        protected CommandQueryException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Error = info.GetValue("Error", typeof(Error)) as Error;
-        }
-
-        /// <summary>
         /// Represents an error that occurred during the processing of a command or query.
         /// </summary>
         public IError? Error { get; set; }
-
-        /// <inheritdoc />
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info is null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            info.AddValue("Error", Error, typeof(Error));
-
-            base.GetObjectData(info, context);
-        }
     }
 }

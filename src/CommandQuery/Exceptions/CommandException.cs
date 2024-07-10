@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace CommandQuery.Exceptions
 {
@@ -7,7 +6,6 @@ namespace CommandQuery.Exceptions
     /// Represents errors that occur during command processing in a command handler.
     /// Derive custom command exceptions from this class and add public properties to expose more error details.
     /// </summary>
-    [Serializable]
     public class CommandException : Exception
     {
         /// <summary>
@@ -31,14 +29,6 @@ namespace CommandQuery.Exceptions
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
         public CommandException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="CommandException"/> class with serialized data.</summary>
-        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-        protected CommandException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }
