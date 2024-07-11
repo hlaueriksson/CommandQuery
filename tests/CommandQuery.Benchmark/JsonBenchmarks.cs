@@ -43,10 +43,10 @@ namespace CommandQuery.Benchmark
         // SystemTextJson
 
         [Benchmark]
-        public object SystemTextJson_JsonExtensions_SafeDeserialize() => SystemTextJson.JsonExtensions.SafeDeserialize(_systemTextJsonString, typeof(FakeComplexObject), null);
+        public object SystemTextJson_string_SafeDeserialize() => SystemTextJson.JsonExtensions.SafeDeserialize(_systemTextJsonString, typeof(FakeComplexObject), null);
 
         [Benchmark]
-        public object SystemTextJson_DictionaryExtensions_SafeDeserialize() => SystemTextJson.DictionaryExtensions.SafeDeserialize(_dictionary, typeof(FakeComplexObject));
+        public object SystemTextJson_Dictionary_SafeDeserialize() => SystemTextJson.JsonExtensions.SafeDeserialize(_dictionary, typeof(FakeComplexObject));
     }
 
     public class FakeComplexObject
