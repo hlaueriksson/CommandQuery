@@ -16,5 +16,15 @@ namespace CommandQuery.AWSLambda.Tests
             value.Should().NotBeNull();
             value.Message.Should().Be(message);
         }
+
+        public static void ShouldBeError(this APIGatewayHttpApiV2ProxyResponse result, string message, int? statusCode = null)
+        {
+            result.Should().NotBeNull();
+            result.StatusCode.Should().NotBe(200);
+            if (statusCode.HasValue) result.StatusCode.Should().Be(statusCode);
+            var value = JsonSerializer.Deserialize<FakeError>(result.Body);
+            value.Should().NotBeNull();
+            value.Message.Should().Be(message);
+        }
     }
 }

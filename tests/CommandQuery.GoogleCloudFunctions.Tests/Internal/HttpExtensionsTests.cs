@@ -2,6 +2,7 @@ using System.Text;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Moq;
 using NUnit.Framework;
 
 namespace CommandQuery.GoogleCloudFunctions.Tests.Internal
@@ -26,6 +27,12 @@ namespace CommandQuery.GoogleCloudFunctions.Tests.Internal
         {
             var result = await Request.ReadAsStringAsync();
             result.Should().Be("{}");
+
+            Func<Task> act = () => ((HttpRequest)null).ReadAsStringAsync();
+            await act.Should().ThrowAsync<ArgumentNullException>();
+
+            result = await new Mock<HttpRequest>().Object.ReadAsStringAsync();
+            result.Should().BeNull();
         }
 
         [Test]
