@@ -7,6 +7,7 @@ namespace CommandQuery.Tests
             Boolean = true,
             Byte = 1,
             Char = 'C',
+            DateOnly = DateOnly.Parse("2021-07-09"),
             DateTime = DateTime.Parse("2021-07-09T18:37:53.2473503"),
             DateTimeOffset = DateTimeOffset.Parse("2021-07-09T20:39:07.8226113+02:00"),
             Decimal = 2.1M,
@@ -19,19 +20,22 @@ namespace CommandQuery.Tests
             SByte = 7,
             Single = 8.1f,
             String = "String",
-            //TimeSpan = TimeSpan.Parse("1:02:03:04"),
+            TimeOnly = TimeOnly.Parse("18:37:53.2473503"),
+            TimeSpan = TimeSpan.Parse("1.02:03:04"),
             UInt16 = 9,
             UInt32 = 10U,
             UInt64 = 11UL,
             Uri = new Uri("https://github.com/hlaueriksson/CommandQuery"),
-            //Version = Version.Parse("1.2.3.4"),
+            Version = Version.Parse("1.2.3.4"),
 
             Nullable = 12,
+            //Tuple = (13, 14),
 
-            Array = new[] { 13, 14 },
-            IEnumerable = new[] { 15, 16 },
-            IList = new[] { 17, 18 },
-            IReadOnlyList = new[] { 19, 20 },
+            Array = new[] { 15, 16 },
+            //IDictionary = new Dictionary<int, int>() { { 17, 18 } },
+            IEnumerable = new[] { 19, 20 },
+            IList = new[] { 21, 22 },
+            IReadOnlyList = new[] { 23, 24 },
         };
 
         public static readonly Dictionary<string, object> FakeComplexQuery_As_Dictionary_Of_String_Object = new()
@@ -39,6 +43,7 @@ namespace CommandQuery.Tests
             { "Boolean", "true" },
             { "Byte", "1" },
             { "Char", "C" },
+            { "DateOnly", "2021-07-09" },
             { "DateTime", "2021-07-09T18:37:53.2473503" },
             { "DateTimeOffset", "2021-07-09T20:39:07.8226113+02:00" },
             { "Decimal", "2.1" },
@@ -51,19 +56,22 @@ namespace CommandQuery.Tests
             { "SByte", "7" },
             { "Single", "8.1" },
             { "String", "String" },
-            //{ "TimeSpan", "1:02:03:04" },
+            { "TimeOnly", "18:37:53.2473503" },
+            { "TimeSpan", "1.02:03:04" },
             { "UInt16", "9" },
             { "UInt32", "10" },
             { "UInt64", "11" },
             { "Uri", "https://github.com/hlaueriksson/CommandQuery" },
-            //{ "Version", "1.2.3.4" },
+            { "Version", "1.2.3.4" },
 
             { "Nullable", "12" },
+            //{ "Tuple", (13, 14) },
 
-            { "Array", new[] { "13", "14" } },
-            { "IEnumerable", new[] { "15", "16" } },
-            { "IList", new[] { "17", "18" } },
-            { "IReadOnlyList", new[] { "19", "20" } },
+            { "Array", new[] { "15", "16" } },
+            //{ "IDictionary", new Dictionary<int, int> { { 17, 18 } } },
+            { "IEnumerable", new[] { "19", "20" } },
+            { "IList", new[] { "21", "22" } },
+            { "IReadOnlyList", new[] { "23", "24" } },
 
             { "UndefinedProperty", "should_not_be_used" },
         };
@@ -73,6 +81,7 @@ namespace CommandQuery.Tests
             { "Boolean", new[] { "true" } },
             { "Byte", new[] { "1" } },
             { "Char", new[] { "C" } },
+            { "DateOnly", new[] { "2021-07-09" } },
             { "DateTime", new[] { "2021-07-09T18:37:53.2473503" } },
             { "DateTimeOffset", new[] { "2021-07-09T20:39:07.8226113+02:00" } },
             { "Decimal", new[] { "2.1" } },
@@ -85,19 +94,22 @@ namespace CommandQuery.Tests
             { "SByte", new[] { "7" } },
             { "Single", new[] { "8.1" } },
             { "String", new[] { "String" } },
-            //{ "TimeSpan", new[] { "1:02:03:04,0000005" } },
+            { "TimeOnly", new[] { "18:37:53.2473503" } },
+            { "TimeSpan", new[] { "1.02:03:04" } },
             { "UInt16", new[] { "9" } },
             { "UInt32", new[] { "10" } },
             { "UInt64", new[] { "11" } },
             { "Uri", new[] { "https://github.com/hlaueriksson/CommandQuery" } },
-            //{ "Version", new[] { "1.2.3.4" } },
+            { "Version", new[] { "1.2.3.4" } },
 
             { "Nullable", new[] { "12" } },
+            //{ "Tuple", new[] { "13", "14" } },
 
-            { "Array", new[] { "13", "14" } },
-            { "IEnumerable", new[] { "15", "16" } },
-            { "IList", new[] { "17", "18" } },
-            { "IReadOnlyList", new[] { "19", "20" } },
+            { "Array", new[] { "15", "16" } },
+            //{ "IDictionary", new[] { "{\"17\": 18}" } },
+            { "IEnumerable", new[] { "19", "20" } },
+            { "IList", new[] { "21", "22" } },
+            { "IReadOnlyList", new[] { "23", "24" } },
 
             { "UndefinedProperty", new[] { "should_not_be_used" } },
         };
@@ -107,12 +119,12 @@ namespace CommandQuery.Tests
             DateTimeUnspecified = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Unspecified),
             DateTimeUtc = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Utc),
             //DateTimeLocal = new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
-            DateTimeArray = new[]
-            {
+            DateTimeArray =
+            [
                 new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Unspecified),
                 new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Utc),
                 //new DateTime(2021, 7, 10, 9, 48, 41, DateTimeKind.Local),
-            }
+            ]
         };
 
         public static readonly Dictionary<string, object> FakeDateTimeQuery_As_Dictionary_Of_String_Object = new()

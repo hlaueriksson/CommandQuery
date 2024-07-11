@@ -59,6 +59,7 @@ namespace CommandQuery.Tests
         public bool Boolean { get; set; }
         public byte Byte { get; set; }
         public char Char { get; set; }
+        public DateOnly DateOnly { get; set; }
         public DateTime DateTime { get; set; }
         public DateTimeOffset DateTimeOffset { get; set; }
         public decimal Decimal { get; set; }
@@ -71,6 +72,7 @@ namespace CommandQuery.Tests
         public sbyte SByte { get; set; }
         public float Single { get; set; }
         public string String { get; set; }
+        public TimeOnly TimeOnly { get; set; }
         public TimeSpan TimeSpan { get; set; }
         public ushort UInt16 { get; set; }
         public uint UInt32 { get; set; }
@@ -79,8 +81,10 @@ namespace CommandQuery.Tests
         public Version Version { get; set; }
 
         public int? Nullable { get; set; }
+        public (int, int) Tuple { get; set; }
 
         public int[] Array { get; set; }
+        public IDictionary<int, int> IDictionary { get; set; }
         public IEnumerable<int> IEnumerable { get; set; }
         public IList<int> IList { get; set; }
         public IReadOnlyList<int> IReadOnlyList { get; set; }
