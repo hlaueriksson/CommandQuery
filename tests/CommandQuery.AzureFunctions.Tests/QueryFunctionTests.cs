@@ -7,7 +7,6 @@ using FluentAssertions;
 using LoFuUnit.AutoMoq;
 using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Azure.Functions.Worker;

@@ -32,12 +32,9 @@ namespace CommandQuery.AzureFunctions
         /// <inheritdoc />
         public async Task<HttpResponseData> HandleAsync(string queryName, HttpRequestData req, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Handle {Query}", queryName);
+            ArgumentNullException.ThrowIfNull(req);
 
-            if (req is null)
-            {
-                throw new ArgumentNullException(nameof(req));
-            }
+            _logger.LogInformation("Handle {Query}", queryName);
 
             try
             {
@@ -68,12 +65,9 @@ namespace CommandQuery.AzureFunctions
         /// <inheritdoc />
         public async Task<IActionResult> HandleAsync(string queryName, HttpRequest req, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Handle {Query}", queryName);
+            ArgumentNullException.ThrowIfNull(req);
 
-            if (req is null)
-            {
-                throw new ArgumentNullException(nameof(req));
-            }
+            _logger.LogInformation("Handle {Query}", queryName);
 
             try
             {

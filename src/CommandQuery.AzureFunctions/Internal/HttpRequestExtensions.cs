@@ -7,10 +7,7 @@ namespace CommandQuery.AzureFunctions
     {
         internal static async Task<string?> ReadAsStringAsync(this HttpRequest req, Encoding? encoding = null)
         {
-            if (req is null)
-            {
-                throw new ArgumentNullException(nameof(req));
-            }
+            ArgumentNullException.ThrowIfNull(req);
 
             if (req.Body is null)
             {
