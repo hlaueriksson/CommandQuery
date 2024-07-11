@@ -40,19 +40,51 @@ namespace CommandQuery.AWSLambda
                     ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.MultiValueQueryStringParameters)).ConfigureAwait(false)
                     : await _queryProcessor.ProcessAsync<object>(queryName, request.Body, _options).ConfigureAwait(false);
 
-                return result.Ok(_options);
+                return request.Ok(result, _options);
             }
             catch (Exception exception)
             {
                 var payload = request.HttpMethod == "GET" ? request.Path : request.Body;
                 logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
-                return exception.IsHandled() ? exception.BadRequest(_options) : exception.InternalServerError(_options);
+                return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
             }
 
             static Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, IList<string>> query)
             {
                 return query.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string queryName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger? logger)
+        {
+            logger?.LogLine($"Handle {queryName}");
+
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            try
+            {
+                var result = request.RequestContext.Http.Method == "GET"
+                    ? await _queryProcessor.ProcessAsync<object>(queryName, Dictionary(request.QueryStringParameters)).ConfigureAwait(false)
+                    : await _queryProcessor.ProcessAsync<object>(queryName, request.Body, _options).ConfigureAwait(false);
+
+                return request.Ok(result, _options);
+            }
+            catch (Exception exception)
+            {
+                var payload = request.RequestContext.Http.Method == "GET" ? request.RequestContext.Http.Path : request.Body;
+                logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
+
+                return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
+            }
+
+            static Dictionary<string, IEnumerable<string>> Dictionary(IDictionary<string, string> query)
+            {
+                return query.ToDictionary(kv => kv.Key, kv => kv.Value.Split(',') as IEnumerable<string>, StringComparer.OrdinalIgnoreCase);
             }
         }
     }

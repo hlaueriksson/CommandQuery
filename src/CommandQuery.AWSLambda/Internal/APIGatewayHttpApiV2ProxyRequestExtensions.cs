@@ -4,9 +4,9 @@ using Amazon.Lambda.APIGatewayEvents;
 
 namespace CommandQuery.AWSLambda
 {
-    internal static class APIGatewayProxyResponseExtensions
+    internal static class APIGatewayHttpApiV2ProxyRequestExtensions
     {
-        internal static APIGatewayProxyResponse Ok(this object? result, JsonSerializerOptions? options)
+        internal static APIGatewayHttpApiV2ProxyResponse Ok(this APIGatewayHttpApiV2ProxyRequest request, object? result, JsonSerializerOptions? options = null)
         {
             return new()
             {
@@ -16,7 +16,7 @@ namespace CommandQuery.AWSLambda
             };
         }
 
-        internal static APIGatewayProxyResponse BadRequest(this Exception exception, JsonSerializerOptions? options)
+        internal static APIGatewayHttpApiV2ProxyResponse BadRequest(this APIGatewayHttpApiV2ProxyRequest request, Exception exception, JsonSerializerOptions? options = null)
         {
             return new()
             {
@@ -26,7 +26,7 @@ namespace CommandQuery.AWSLambda
             };
         }
 
-        internal static APIGatewayProxyResponse InternalServerError(this Exception exception, JsonSerializerOptions? options)
+        internal static APIGatewayHttpApiV2ProxyResponse InternalServerError(this APIGatewayHttpApiV2ProxyRequest request, Exception exception, JsonSerializerOptions? options = null)
         {
             return new()
             {

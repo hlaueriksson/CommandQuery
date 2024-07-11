@@ -39,7 +39,7 @@ namespace CommandQuery.AWSLambda.Tests
 
             async Task should_throw_when_request_is_null()
             {
-                Func<Task> act = () => Subject.HandleAsync(CommandName, null, Logger);
+                Func<Task> act = () => Subject.HandleAsync(CommandName, (APIGatewayProxyRequest)null, Logger);
                 await act.Should().ThrowAsync<ArgumentNullException>();
             }
 

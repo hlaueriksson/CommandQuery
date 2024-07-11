@@ -44,13 +44,42 @@ namespace CommandQuery.AWSLambda
                     return new APIGatewayProxyResponse { StatusCode = (int)HttpStatusCode.OK };
                 }
 
-                return result.Value.Ok(_options);
+                return request.Ok(result.Value, _options);
             }
             catch (Exception exception)
             {
                 logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
-                return exception.IsHandled() ? exception.BadRequest(_options) : exception.InternalServerError(_options);
+                return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string commandName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger? logger)
+        {
+            logger?.LogLine($"Handle {commandName}");
+
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            try
+            {
+                var result = await _commandProcessor.ProcessAsync(commandName, request.Body, _options).ConfigureAwait(false);
+
+                if (result == CommandResult.None)
+                {
+                    return new APIGatewayHttpApiV2ProxyResponse { StatusCode = (int)HttpStatusCode.OK };
+                }
+
+                return request.Ok(result.Value, _options);
+            }
+            catch (Exception exception)
+            {
+                logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
+
+                return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
             }
         }
     }
