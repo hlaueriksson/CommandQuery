@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.TestUtilities;
 using CommandQuery.AWSLambda;

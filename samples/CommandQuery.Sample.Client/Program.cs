@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Commands;
 using CommandQuery.Sample.Contracts.Queries;

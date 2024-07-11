@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts.Commands;
 
 namespace CommandQuery.Sample.Handlers.Commands

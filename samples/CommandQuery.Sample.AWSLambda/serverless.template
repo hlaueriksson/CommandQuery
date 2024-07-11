@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.0.0.0).",
+  "Description": "An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.5.0.0).",
   "Resources": {
     "CommandQuerySampleAWSLambdaCommandHandleGenerated": {
       "Type": "AWS::Serverless::Function",
@@ -9,10 +9,20 @@
         "Tool": "Amazon.Lambda.Annotations",
         "SyncedEvents": [
           "RootPost"
-        ]
+        ],
+        "SyncedEventProperties": {
+          "RootPost": [
+            "Path",
+            "Method"
+          ]
+        }
       },
       "Properties": {
-        "Runtime": "dotnet6",
+        "Architectures": [
+          "x86_64"
+        ],
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Handle_Generated::Handle",
+        "Runtime": "dotnet8",
         "CodeUri": ".",
         "MemorySize": 256,
         "Timeout": 30,
@@ -20,7 +30,6 @@
           "AWSLambdaBasicExecutionRole"
         ],
         "PackageType": "Zip",
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Handle_Generated::Handle",
         "Events": {
           "RootPost": {
             "Type": "Api",
@@ -38,10 +47,20 @@
         "Tool": "Amazon.Lambda.Annotations",
         "SyncedEvents": [
           "RootGet"
-        ]
+        ],
+        "SyncedEventProperties": {
+          "RootGet": [
+            "Path",
+            "Method"
+          ]
+        }
       },
       "Properties": {
-        "Runtime": "dotnet6",
+        "Architectures": [
+          "x86_64"
+        ],
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query_Get_Generated::Get",
+        "Runtime": "dotnet8",
         "CodeUri": ".",
         "MemorySize": 256,
         "Timeout": 30,
@@ -49,7 +68,6 @@
           "AWSLambdaBasicExecutionRole"
         ],
         "PackageType": "Zip",
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query_Get_Generated::Get",
         "Events": {
           "RootGet": {
             "Type": "Api",
@@ -67,10 +85,20 @@
         "Tool": "Amazon.Lambda.Annotations",
         "SyncedEvents": [
           "RootPost"
-        ]
+        ],
+        "SyncedEventProperties": {
+          "RootPost": [
+            "Path",
+            "Method"
+          ]
+        }
       },
       "Properties": {
-        "Runtime": "dotnet6",
+        "Architectures": [
+          "x86_64"
+        ],
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query_Post_Generated::Post",
+        "Runtime": "dotnet8",
         "CodeUri": ".",
         "MemorySize": 256,
         "Timeout": 30,
@@ -78,7 +106,6 @@
           "AWSLambdaBasicExecutionRole"
         ],
         "PackageType": "Zip",
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query_Post_Generated::Post",
         "Events": {
           "RootPost": {
             "Type": "Api",

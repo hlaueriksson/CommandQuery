@@ -1,6 +1,4 @@
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using FluentAssertions;
 using Microsoft.Azure.Functions.Worker;
@@ -28,7 +26,7 @@ namespace CommandQuery.Sample.AzureFunctions.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Command(serviceProvider.GetRequiredService<ICommandFunction>(), serviceProvider.GetRequiredService<ILoggerFactory>());
+                Subject = new Command(serviceProvider.GetRequiredService<ICommandFunction>());
             }
 
             [Test]

@@ -1,10 +1,8 @@
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using CommandQuery.GoogleCloudFunctions;
+using System.Net;
+using System.Net.Http.Json;
+using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
+using Google.Cloud.Functions.Testing;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
@@ -16,44 +14,33 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [SetUp]
             public void SetUp()
             {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null!, serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+                Server = new FunctionTestServer<Command>();
+                Client = Server.CreateClient();
+            }
 
-                Subject = new Command(null!, serviceProvider.GetService<ICommandFunction>()!);
+            [TearDown]
+            public void TearDown()
+            {
+                Client.Dispose();
+                Server.Dispose();
             }
 
             [Test]
             public async Task should_work()
             {
-                var context = GetHttpContext("FooCommand", "{ \"Value\": \"Foo\" }");
-
-                await Subject.HandleAsync(context);
-
-                context.Response.StatusCode.Should().Be(200);
+                var response = await Client.PostAsJsonAsync("/api/command/FooCommand", new FooCommand { Value = "Foo" });
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
             [Test]
             public async Task should_handle_errors()
             {
-                var context = GetHttpContext("FailCommand", "{ \"Value\": \"Foo\" }");
-
-                await Subject.HandleAsync(context);
-
-                await context.Response.ShouldBeErrorAsync("The command type 'FailCommand' could not be found");
+                var response = await Client.PostAsJsonAsync("/api/command/FailCommand", new FooCommand { Value = "Foo" });
+                await response.ShouldBeErrorAsync("The command type 'FailCommand' could not be found");
             }
 
-            HttpContext GetHttpContext(string commandName, string content)
-            {
-                var context = new DefaultHttpContext();
-                context.Request.Path = new PathString("/api/command/" + commandName);
-                context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(content));
-                context.Response.Body = new MemoryStream();
-
-                return context;
-            }
-
-            Command Subject = null!;
+            FunctionTestServer<Command> Server = null!;
+            HttpClient Client = null!;
         }
     }
 }

@@ -1,7 +1,4 @@
-using System;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using CommandQuery.AzureFunctions;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
@@ -30,7 +27,7 @@ namespace CommandQuery.Sample.AzureFunctions.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>(), serviceProvider.GetRequiredService<ILoggerFactory>());
+                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
             }
 
             [Test]
@@ -73,7 +70,7 @@ namespace CommandQuery.Sample.AzureFunctions.Tests
                 context.SetupProperty(c => c.InstanceServices, serviceProvider);
                 ExecutionContext = context.Object;
 
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>(), serviceProvider.GetRequiredService<ILoggerFactory>());
+                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
             }
 
             [Test]

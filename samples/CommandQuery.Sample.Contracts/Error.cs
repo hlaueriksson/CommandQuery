@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CommandQuery.Sample.Contracts
 {
     public class Error : IError

@@ -1,5 +1,5 @@
-using System.Text.Json;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http.Json;
 using CommandQuery.Sample.Contracts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -8,12 +8,11 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
 {
     public static class ShouldExtensions
     {
-        public static async Task ShouldBeErrorAsync(this HttpResponse result, string message)
+        public static async Task ShouldBeErrorAsync(this HttpResponseMessage result, string message)
         {
             result.Should().NotBeNull();
-            result.StatusCode.Should().NotBe(200);
-            result.Body.Position = 0;
-            var value = await JsonSerializer.DeserializeAsync<Error>(result.Body);
+            result.StatusCode.Should().NotBe(HttpStatusCode.OK);
+            var value = await result.Content.ReadFromJsonAsync<Error>();
             value.Should().NotBeNull();
             value!.Message.Should().Be(message);
         }

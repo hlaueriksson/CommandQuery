@@ -5,11 +5,12 @@ using CommandQuery.Sample.Contracts.Queries;
 using CommandQuery.Sample.Handlers;
 using CommandQuery.Sample.Handlers.Commands;
 using CommandQuery.Sample.Handlers.Queries;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureFunctionsWebApplication()
     .ConfigureServices(ConfigureServices)
     .Build();
 
@@ -23,6 +24,9 @@ public static partial class Program
 {
     public static void ConfigureServices(IServiceCollection services)
     {
+        services.AddApplicationInsightsTelemetryWorkerService();
+        services.ConfigureFunctionsApplicationInsights();
+
         services
             //.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
 

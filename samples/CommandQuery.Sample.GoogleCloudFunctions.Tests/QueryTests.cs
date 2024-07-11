@@ -1,13 +1,8 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using CommandQuery.GoogleCloudFunctions;
+using System.Net.Http.Json;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
+using Google.Cloud.Functions.Testing;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
@@ -19,21 +14,22 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [SetUp]
             public void SetUp()
             {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null!, serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+                Server = new FunctionTestServer<Query>();
+                Client = Server.CreateClient();
+            }
 
-                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>()!);
+            [TearDown]
+            public void TearDown()
+            {
+                Client.Dispose();
+                Server.Dispose();
             }
 
             [Test]
             public async Task should_work()
             {
-                var context = GetHttpContext("BarQuery", "POST", content: "{ \"Id\": 1 }");
-
-                await Subject.HandleAsync(context);
-                var value = await context.Response.AsAsync<Bar>();
-
+                var response = await Client.PostAsJsonAsync("/api/query/BarQuery", new BarQuery { Id = 1 });
+                var value = await response.Content.ReadFromJsonAsync<Bar>();
                 value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
@@ -41,14 +37,12 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [Test]
             public async Task should_handle_errors()
             {
-                var context = GetHttpContext("FailQuery", "POST", content: "{ \"Id\": 1 }");
-
-                await Subject.HandleAsync(context);
-
-                await context.Response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+                var response = await Client.PostAsJsonAsync("/api/query/FailQuery", new BarQuery { Id = 1 });
+                await response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject = null!;
+            FunctionTestServer<Query> Server = null!;
+            HttpClient Client = null!;
         }
 
         public class when_using_the_real_function_via_Get
@@ -56,21 +50,22 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [SetUp]
             public void SetUp()
             {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null!, serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+                Server = new FunctionTestServer<Query>();
+                Client = Server.CreateClient();
+            }
 
-                Subject = new Query(null!, serviceProvider.GetService<IQueryFunction>()!);
+            [TearDown]
+            public void TearDown()
+            {
+                Client.Dispose();
+                Server.Dispose();
             }
 
             [Test]
             public async Task should_work()
             {
-                var context = GetHttpContext("BarQuery", "GET", query: new Dictionary<string, string> { { "Id", "1" } });
-
-                await Subject.HandleAsync(context);
-                var value = await context.Response.AsAsync<Bar>();
-
+                var response = await Client.GetAsync("/api/query/BarQuery?Id=1");
+                var value = await response.Content.ReadFromJsonAsync<Bar>();
                 value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
@@ -78,35 +73,12 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [Test]
             public async Task should_handle_errors()
             {
-                var context = GetHttpContext("FailQuery", "GET", query: new Dictionary<string, string> { { "Id", "1" } });
-
-                await Subject.HandleAsync(context);
-
-                await context.Response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+                var response = await Client.GetAsync("/api/query/FailQuery?Id=1");
+                await response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject = null!;
-        }
-
-        static HttpContext GetHttpContext(string queryName, string method, string? content = null, Dictionary<string, string>? query = null)
-        {
-            var context = new DefaultHttpContext();
-            context.Request.Path = new PathString("/api/query/" + queryName);
-            context.Request.Method = method;
-
-            if (content != null)
-            {
-                context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(content));
-            }
-
-            if (query != null)
-            {
-                context.Request.QueryString = new QueryString(QueryHelpers.AddQueryString("", query));
-            }
-
-            context.Response.Body = new MemoryStream();
-
-            return context;
+            FunctionTestServer<Query> Server = null!;
+            HttpClient Client = null!;
         }
     }
 }

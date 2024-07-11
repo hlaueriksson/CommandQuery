@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 using CommandQuery.Sample.Contracts;
 using FluentAssertions;
 using Microsoft.Azure.Functions.Worker.Http;
