@@ -37,8 +37,7 @@ namespace CommandQuery
         private static Dictionary<string, object>? GetDetails(Exception exception)
         {
             var properties = exception.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.DeclaringType != typeof(Exception))
-                .Where(x => x.GetValue(exception) != null)
+                .Where(x => x.DeclaringType != typeof(Exception) && x.GetValue(exception) != null)
                 .ToList();
 
             return properties.Any() ? properties.ToDictionary(property => property.Name, property => property.GetValue(exception)) : null;

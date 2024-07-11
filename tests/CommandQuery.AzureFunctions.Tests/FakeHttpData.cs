@@ -15,7 +15,7 @@ namespace CommandQuery.AzureFunctions.Tests
 
         public override Stream Body { get; } = new MemoryStream();
 
-        public override HttpHeadersCollection Headers { get; } = new();
+        public override HttpHeadersCollection Headers { get; } = [];
 
         public override IReadOnlyCollection<IHttpCookie> Cookies { get; }
 
@@ -38,7 +38,7 @@ namespace CommandQuery.AzureFunctions.Tests
         }
 
         public override HttpStatusCode StatusCode { get; set; }
-        public override HttpHeadersCollection Headers { get; set; } = new();
+        public override HttpHeadersCollection Headers { get; set; } = [];
         public override Stream Body { get; set; } = new MemoryStream();
         public override HttpCookies Cookies { get; }
     }

@@ -19,7 +19,7 @@ namespace CommandQuery
         protected TypeProvider(Type[] baseTypes, params Assembly[] assemblies)
         {
             _baseTypes = baseTypes;
-            _types = new Dictionary<string, Type>();
+            _types = [];
             LoadTypeCaches(assemblies);
         }
 

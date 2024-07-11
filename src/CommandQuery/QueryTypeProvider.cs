@@ -12,7 +12,7 @@ namespace CommandQuery
         /// <param name="assemblies">The assemblies with queries to support.</param>
         /// <exception cref="QueryTypeException">Multiple queries with the same name was found.</exception>
         public QueryTypeProvider(params Assembly[] assemblies)
-            : base(new[] { typeof(IQuery<>) }, assemblies)
+            : base([typeof(IQuery<>)], assemblies)
         {
         }
 

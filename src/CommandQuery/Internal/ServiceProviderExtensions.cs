@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,7 +27,7 @@ namespace CommandQuery
         {
             if (provider is not ServiceProvider serviceProvider)
             {
-                return Enumerable.Empty<Type>();
+                return [];
             }
 
             var callSiteFactory = GetPropertyValue(serviceProvider, "CallSiteFactory");
@@ -36,7 +35,7 @@ namespace CommandQuery
 
             if (descriptors is not ServiceDescriptor[] array)
             {
-                return Enumerable.Empty<Type>();
+                return [];
             }
 
             return array.Select(x => x.ServiceType).ToList();

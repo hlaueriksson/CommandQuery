@@ -47,9 +47,9 @@ namespace CommandQuery.Tests.Internal
                 DateTime = DateTime.Parse("2018-07-06"),
                 Guid = Guid.Parse("3B10C34C-D423-4EC3-8811-DA2E0606E241"),
                 NullableDouble = 2.1,
-                Array = new[] { 1, 2 },
-                IEnumerable = new[] { 3, 4 },
-                List = new List<int> { 5, 6 },
+                Array = [1, 2],
+                IEnumerable = [3, 4],
+                List = [5, 6],
                 Enum = FakeEnum.Some
             };
 
@@ -85,9 +85,9 @@ namespace CommandQuery.Tests.Internal
                 DateTime = DateTime.Parse("2018-07-06"),
                 Guid = Guid.Parse("3B10C34C-D423-4EC3-8811-DA2E0606E241"),
                 NullableDouble = 2.1,
-                Array = new[] { 1, 2 },
-                IEnumerable = new[] { 3, 4 },
-                List = new List<int> { 5, 6 },
+                Array = [1, 2],
+                IEnumerable = [3, 4],
+                List = [5, 6],
                 Enum = FakeEnum.Some
             };
 

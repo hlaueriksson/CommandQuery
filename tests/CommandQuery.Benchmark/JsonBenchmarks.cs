@@ -19,9 +19,9 @@ namespace CommandQuery.Benchmark
                 DateTime = DateTime.Parse("2021-07-04 20:31:48"),
                 Guid = Guid.Parse("b665da2a-60fe-4f2b-baf1-9d766e2542d3"),
                 NullableDouble = 2.1,
-                Array = new[] { 1, 2 },
-                IEnumerable = new[] { 3, 4 },
-                List = new List<int> { 5, 6 }
+                Array = [1, 2],
+                IEnumerable = [3, 4],
+                List = [5, 6]
             };
 
             _systemTextJsonString = System.Text.Json.JsonSerializer.Serialize(_object);

@@ -35,7 +35,7 @@ namespace CommandQuery.Client
 
             Parameters(query, string.Empty);
 
-            return string.Join("&", result.ToArray());
+            return string.Join("&", [.. result]);
 
             void Parameters(object root, string prefix)
             {

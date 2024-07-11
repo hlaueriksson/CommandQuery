@@ -27,7 +27,7 @@ namespace CommandQuery.Tests.Client.Integration
         [Test]
         public async Task when_GetAsync()
         {
-            var result = await Subject.GetAsync(new QuxQuery { Ids = new[] { Guid.NewGuid(), Guid.NewGuid() } });
+            var result = await Subject.GetAsync(new QuxQuery { Ids = [Guid.NewGuid(), Guid.NewGuid()] });
             result.Should().NotBeNull();
 
             Func<Task> act = () => Subject.GetAsync(new FailQuery());

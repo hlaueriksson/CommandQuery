@@ -17,7 +17,7 @@ namespace CommandQuery.AzureFunctions
                 return null;
             }
 
-            using (var reader = new StreamReader(req.Body, bufferSize: 1024, detectEncodingFromByteOrderMarks: true, encoding: encoding ?? Encoding.UTF8, leaveOpen: true))
+            using (var reader = new StreamReader(req.Body, encoding: encoding ?? Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true))
             {
                 return await reader.ReadToEndAsync().ConfigureAwait(false);
             }

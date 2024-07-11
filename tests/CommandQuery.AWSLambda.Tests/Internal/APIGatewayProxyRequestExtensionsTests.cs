@@ -7,7 +7,7 @@ namespace CommandQuery.AWSLambda.Tests.Internal
 {
     public class APIGatewayProxyRequestExtensionsTests
     {
-        private readonly APIGatewayProxyRequest _request;
+        private readonly APIGatewayProxyRequest _request = null;
 
         [Test]
         public void Ok()

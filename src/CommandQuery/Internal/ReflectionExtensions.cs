@@ -36,7 +36,7 @@ namespace CommandQuery
         {
             return type.GetInterfaces().Any(it => it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
                    || (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericType)
-                   || (type.GetTypeInfo().BaseType != null && type.GetTypeInfo().BaseType.IsAssignableToGenericType(genericType));
+                   || (type.GetTypeInfo().BaseType?.IsAssignableToGenericType(genericType) == true);
         }
     }
 }
