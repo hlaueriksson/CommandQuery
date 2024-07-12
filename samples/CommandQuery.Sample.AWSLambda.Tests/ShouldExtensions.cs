@@ -11,9 +11,14 @@ namespace CommandQuery.Sample.AWSLambda.Tests
         {
             result.Should().NotBeNull();
             result.StatusCode.Should().NotBe(200);
-            var value = JsonSerializer.Deserialize<Error>(result.Body)!;
+            var value = result.Body<Error>()!;
             value.Should().NotBeNull();
             value.Message.Should().Be(message);
+        }
+
+        public static T? Body<T>(this APIGatewayProxyResponse result)
+        {
+            return JsonSerializer.Deserialize<T>(result.Body);
         }
     }
 }

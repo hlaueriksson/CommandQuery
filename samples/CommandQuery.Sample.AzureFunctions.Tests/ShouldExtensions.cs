@@ -1,21 +1,28 @@
-using System.Net;
-using System.Text.Json;
-using CommandQuery.Sample.Contracts;
 using FluentAssertions;
-using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CommandQuery.Sample.AzureFunctions.Tests
 {
     public static class ShouldExtensions
     {
-        public static async Task ShouldBeErrorAsync(this HttpResponseData result, string message)
+        public static void ShouldBeError(this IActionResult result, string message)
         {
             result.Should().NotBeNull();
-            result.StatusCode.Should().NotBe(HttpStatusCode.OK);
-            result.Body.Position = 0;
-            var value = await JsonSerializer.DeserializeAsync<Error>(result.Body);
+            result.As<IStatusCodeActionResult>().StatusCode.Should().NotBe(200);
+            var value = result.Value<IError>()!;
             value.Should().NotBeNull();
-            value!.Message.Should().Be(message);
+            value.Message.Should().Be(message);
+        }
+
+        public static T As<T>(this IActionResult result)
+        {
+            return (T)result;
+        }
+
+        public static T? Value<T>(this IActionResult result) where T : class
+        {
+            return result.As<ObjectResult>().Value as T;
         }
     }
 }

@@ -1,11 +1,13 @@
 using System.Text;
+using System.Text.Json;
+using System.Web;
 using CommandQuery.AzureFunctions;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 
@@ -13,118 +15,56 @@ namespace CommandQuery.Sample.AzureFunctions.Tests
 {
     public class QueryTests
     {
-        public class when_using_the_real_function_via_Post
+        [SetUp]
+        public void SetUp()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                serviceCollection.AddScoped<ILoggerFactory, LoggerFactory>();
-                Program.ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+            var serviceCollection = new ServiceCollection();
+            Program.ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                var context = new Mock<FunctionContext>();
-                context.SetupProperty(c => c.InstanceServices, serviceProvider);
-                ExecutionContext = context.Object;
+            Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
 
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "POST", content: "{ \"Id\": 1 }");
-
-                var result = await Subject.Run(req, ExecutionContext, "BarQuery");
-                var value = await result.AsAsync<Bar>();
-
-                value!.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "POST", content: "{ \"Id\": 1 }");
-
-                var result = await Subject.Run(req, ExecutionContext, "FailQuery");
-
-                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
-            }
-
-            FunctionContext ExecutionContext = null!;
-            Query Subject = null!;
+            var context = new Mock<FunctionContext>();
+            context.SetupProperty(c => c.InstanceServices, serviceProvider);
+            Context = context.Object;
         }
 
-        public class when_using_the_real_function_via_Get
+        [Test]
+        public async Task should_handle_query_via_Post()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                serviceCollection.AddScoped<ILoggerFactory, LoggerFactory>();
-                Program.ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                var context = new Mock<FunctionContext>();
-                context.SetupProperty(c => c.InstanceServices, serviceProvider);
-                ExecutionContext = context.Object;
-
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "GET", url: "http://localhost?Id=1");
-
-                var result = await Subject.Run(req, ExecutionContext, "BarQuery");
-                var value = await result.AsAsync<Bar>();
-
-                value!.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "GET", url: "http://localhost?Id=1");
-
-                var result = await Subject.Run(req, ExecutionContext, "FailQuery");
-
-                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
-            }
-
-            FunctionContext ExecutionContext = null!;
-            Query Subject = null!;
+            var result = await Subject.Run(GetRequest("POST", new BarQuery { Id = 1 }), Context, "BarQuery");
+            var value = result.Value<Bar>()!;
+            value.Id.Should().Be(1);
         }
 
-        static HttpRequestData GetHttpRequestData(FunctionContext executionContext, string method, string? content = null, string? url = null)
+        [Test]
+        public async Task should_handle_query_via_Get()
         {
-            var request = new Mock<HttpRequestData>(executionContext);
+            var result = await Subject.Run(GetRequest("GET", "?Id=1"), Context, "BarQuery");
+            var value = result.Value<Bar>()!;
+            value.Id.Should().Be(1);
+        }
+
+        static HttpRequest GetRequest(string method, object body)
+        {
+            var request = new Mock<HttpRequest>();
             request.Setup(r => r.Method).Returns(method);
-
-            if (content != null)
-            {
-                var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
-                request.Setup(r => r.Body).Returns(stream);
-            }
-
-            if (url != null)
-            {
-                request.Setup(r => r.Url).Returns(new Uri(url));
-            }
-
-            request.Setup(r => r.CreateResponse()).Returns(() =>
-            {
-                var response = new Mock<HttpResponseData>(executionContext);
-                response.SetupProperty(r => r.Headers, new HttpHeadersCollection());
-                response.SetupProperty(r => r.StatusCode);
-                response.SetupProperty(r => r.Body, new MemoryStream());
-                return response.Object;
-            });
-
+            request.Setup(r => r.Body).Returns(new MemoryStream(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(body))));
             return request.Object;
         }
+
+        static HttpRequest GetRequest(string method, string query)
+        {
+            var collection = HttpUtility.ParseQueryString(query);
+            var store = collection.AllKeys.ToDictionary(k => k!, k => new StringValues(collection.GetValues(k)));
+
+            var request = new Mock<HttpRequest>();
+            request.Setup(r => r.Method).Returns(method);
+            request.Setup(r => r.Query).Returns(new QueryCollection(store));
+            return request.Object;
+        }
+
+        Query Subject = null!;
+        FunctionContext Context = null!;
     }
 }

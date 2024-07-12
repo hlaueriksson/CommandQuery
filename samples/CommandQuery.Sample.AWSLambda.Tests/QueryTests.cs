@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Web;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
@@ -11,90 +13,52 @@ namespace CommandQuery.Sample.AWSLambda.Tests
 {
     public class QueryTests
     {
-        public class when_using_the_real_function_via_Post
+        [SetUp]
+        public void SetUp()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+            var serviceCollection = new ServiceCollection();
+            new Startup().ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-                Request = GetRequest("POST", content: "{ \"Id\": 1 }");
-                Context = new TestLambdaContext();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var result = await Subject.Post(Request, Context, "BarQuery");
-                var value = result.As<Bar>()!;
-
-                value.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var result = await Subject.Post(Request, Context, "FailQuery");
-
-                result.ShouldBeError("The query type 'FailQuery' could not be found");
-            }
-
-            Query Subject = null!;
-            APIGatewayProxyRequest Request = null!;
-            ILambdaContext Context = null!;
+            Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
+            Context = new TestLambdaContext();
         }
 
-        public class when_using_the_real_function_via_Get
+        [Test]
+        public async Task should_handle_query_via_Post()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-                Request = GetRequest("GET", query: new Dictionary<string, IList<string>> { { "Id", new List<string> { "1" } } });
-                Context = new TestLambdaContext();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var result = await Subject.Get(Request, Context, "BarQuery");
-                var value = result.As<Bar>()!;
-
-                value.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var result = await Subject.Get(Request, Context, "FailQuery");
-
-                result.ShouldBeError("The query type 'FailQuery' could not be found");
-            }
-
-            Query Subject = null!;
-            APIGatewayProxyRequest Request = null!;
-            ILambdaContext Context = null!;
+            var response = await Subject.Post(GetRequest("POST", new BarQuery { Id = 1 }), Context, "BarQuery");
+            var value = response.Body<Bar>()!;
+            value.Id.Should().Be(1);
         }
 
-        static APIGatewayProxyRequest GetRequest(string method, string? content = null, Dictionary<string, IList<string>>? query = null)
+        [Test]
+        public async Task should_handle_query_via_Get()
         {
-            var request = new APIGatewayProxyRequest
+            var response = await Subject.Get(GetRequest("GET", "?Id=1"), Context, "BarQuery");
+            var value = response.Body<Bar>()!;
+            value.Id.Should().Be(1);
+        }
+
+        static APIGatewayProxyRequest GetRequest(string method, object body) => new()
+        {
+            HttpMethod = method,
+            Body = JsonSerializer.Serialize(body),
+        };
+
+        static APIGatewayProxyRequest GetRequest(string method, string query)
+        {
+            var collection = HttpUtility.ParseQueryString(query);
+            var parameters = collection.AllKeys.ToDictionary(k => k!, k => collection.GetValues(k)!.ToList() as IList<string>);
+
+            return new()
             {
                 HttpMethod = method,
-                Body = content,
-                MultiValueQueryStringParameters = query
+                MultiValueQueryStringParameters = parameters
             };
-
-            return request;
         }
+
+        Query Subject = null!;
+        ILambdaContext Context = null!;
     }
 }

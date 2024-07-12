@@ -11,8 +11,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
         public async Task HandleAsync(HttpContext context)
         {
             var queryName = context.Request.Path.Value!.Substring("/api/query/".Length);
-
-            await queryFunction.HandleAsync(queryName, context, null, context.RequestAborted);
+            await queryFunction.HandleAsync(queryName, context, context.RequestAborted);
         }
     }
 }
