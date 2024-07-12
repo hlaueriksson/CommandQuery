@@ -8,8 +8,8 @@ namespace CommandQuery.Sample.AWSLambda;
 
 public class Command(ICommandFunction commandFunction)
 {
-    [LambdaFunction]
+    [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
     [RestApi(LambdaHttpMethod.Post, "/command/{commandName}")]
-    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context, string commandName) =>
+    public async Task<APIGatewayProxyResponse> Post(APIGatewayProxyRequest request, ILambdaContext context, string commandName) =>
         await commandFunction.HandleAsync(commandName, request, context.Logger);
 }

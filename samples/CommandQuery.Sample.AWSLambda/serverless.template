@@ -3,7 +3,7 @@
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.5.0.0).",
   "Resources": {
-    "CommandQuerySampleAWSLambdaCommandHandleGenerated": {
+    "CommandQuerySampleAWSLambdaCommandPostGenerated": {
       "Type": "AWS::Serverless::Function",
       "Metadata": {
         "Tool": "Amazon.Lambda.Annotations",
@@ -21,7 +21,7 @@
         "Architectures": [
           "x86_64"
         ],
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Handle_Generated::Handle",
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Post_Generated::Post",
         "Runtime": "dotnet8",
         "CodeUri": ".",
         "MemorySize": 256,

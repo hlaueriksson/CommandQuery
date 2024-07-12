@@ -27,7 +27,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
                 var request = GetRequest("{ 'Value': 'Foo' }");
                 var context = new TestLambdaContext();
 
-                var result = await Subject.Handle(request, context, "FooCommand");
+                var result = await Subject.Post(request, context, "FooCommand");
 
                 result.Should().NotBeNull();
             }
@@ -38,7 +38,7 @@ namespace CommandQuery.Sample.AWSLambda.Tests
                 var request = GetRequest("{ 'Value': 'Foo' }");
                 var context = new TestLambdaContext();
 
-                var result = await Subject.Handle(request, context, "FailCommand");
+                var result = await Subject.Post(request, context, "FailCommand");
 
                 result.ShouldBeError("The command type 'FailCommand' could not be found");
             }
