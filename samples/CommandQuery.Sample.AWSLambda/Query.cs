@@ -6,23 +6,16 @@ using CommandQuery.AWSLambda;
 
 namespace CommandQuery.Sample.AWSLambda
 {
-    public class Query
+    public class Query(IQueryFunction queryFunction)
     {
-        private readonly IQueryFunction _queryFunction;
-
-        public Query(IQueryFunction queryFunction)
-        {
-            _queryFunction = queryFunction;
-        }
-
-        [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
+        [LambdaFunction]
         [RestApi(LambdaHttpMethod.Get, "/query/{queryName}")]
         public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
-            await _queryFunction.HandleAsync(queryName, request, context.Logger);
+            await queryFunction.HandleAsync(queryName, request, context.Logger);
 
-        [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
+        [LambdaFunction]
         [RestApi(LambdaHttpMethod.Post, "/query/{queryName}")]
         public async Task<APIGatewayProxyResponse> Post(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
-            await _queryFunction.HandleAsync(queryName, request, context.Logger);
+            await queryFunction.HandleAsync(queryName, request, context.Logger);
     }
 }

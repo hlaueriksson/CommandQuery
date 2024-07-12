@@ -6,17 +6,10 @@ using CommandQuery.AWSLambda;
 
 namespace CommandQuery.Sample.AWSLambda;
 
-public class Command
+public class Command(ICommandFunction commandFunction)
 {
-    private readonly ICommandFunction _commandFunction;
-
-    public Command(ICommandFunction commandFunction)
-    {
-        _commandFunction = commandFunction;
-    }
-
-    [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
+    [LambdaFunction]
     [RestApi(LambdaHttpMethod.Post, "/command/{commandName}")]
     public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context, string commandName) =>
-        await _commandFunction.HandleAsync(commandName, request, context.Logger);
+        await commandFunction.HandleAsync(commandName, request, context.Logger);
 }
