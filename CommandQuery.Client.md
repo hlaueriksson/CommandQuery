@@ -9,7 +9,7 @@
 Create a `CommandClient` and invoke `PostAsync`:
 
 ```cs
-var commandClient = new CommandClient("https://commandquerysampleaspnetcorev6.azurewebsites.net/api/command/");
+var commandClient = new CommandClient("https://commandquerysampleaspnetcore.azurewebsites.net/api/command/");
 
 await commandClient.PostAsync(new FooCommand { Value = "en-GB" });
 ```
@@ -25,7 +25,7 @@ var result = await commandClient.PostAsync(new BazCommand { Value = "en-GB" });
 Create a `QueryClient` and invoke `PostAsync` or `GetAsync`:
 
 ```cs
-var queryClient = new QueryClient("https://commandquerysampleaspnetcorev6.azurewebsites.net/api/query/");
+var queryClient = new QueryClient("https://commandquerysampleaspnetcore.azurewebsites.net/api/query/");
 
 var result = await queryClient.PostAsync(new BarQuery { Id = 1 });
 result = await queryClient.GetAsync(new BarQuery { Id = 1 });

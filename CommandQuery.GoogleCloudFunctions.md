@@ -27,32 +27,21 @@
 ## Commands
 
 ```cs
-using System.Threading.Tasks;
 using CommandQuery.GoogleCloudFunctions;
 using Google.Cloud.Functions.Framework;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.GoogleCloudFunctions
 {
     [FunctionsStartup(typeof(Startup))]
-    public class Command : IHttpFunction
+    public class Command(ICommandFunction commandFunction) : IHttpFunction
     {
-        private readonly ILogger _logger;
-        private readonly ICommandFunction _commandFunction;
-
-        public Command(ILogger<Command> logger, ICommandFunction commandFunction)
-        {
-            _logger = logger;
-            _commandFunction = commandFunction;
-        }
-
         public async Task HandleAsync(HttpContext context)
         {
-            var commandName = context.Request.Path.Value.Substring("/api/command/".Length);
+            var commandName = context.Request.Path.Value!.Substring("/api/command/".Length);
 
-            await _commandFunction.HandleAsync(commandName, context, _logger, context.RequestAborted);
+            await commandFunction.HandleAsync(commandName, context, null, context.RequestAborted);
         }
     }
 }
@@ -71,32 +60,21 @@ Commands with result:
 ## Queries
 
 ```cs
-using System.Threading.Tasks;
 using CommandQuery.GoogleCloudFunctions;
 using Google.Cloud.Functions.Framework;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace CommandQuery.Sample.GoogleCloudFunctions
 {
     [FunctionsStartup(typeof(Startup))]
-    public class Query : IHttpFunction
+    public class Query(IQueryFunction queryFunction) : IHttpFunction
     {
-        private readonly ILogger _logger;
-        private readonly IQueryFunction _queryFunction;
-
-        public Query(ILogger<Query> logger, IQueryFunction queryFunction)
-        {
-            _logger = logger;
-            _queryFunction = queryFunction;
-        }
-
         public async Task HandleAsync(HttpContext context)
         {
-            var queryName = context.Request.Path.Value.Substring("/api/query/".Length);
+            var queryName = context.Request.Path.Value!.Substring("/api/query/".Length);
 
-            await _queryFunction.HandleAsync(queryName, context, _logger, context.RequestAborted);
+            await queryFunction.HandleAsync(queryName, context, null, context.RequestAborted);
         }
     }
 }
@@ -144,8 +122,8 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
         public override void Configure(WebHostBuilderContext context, IApplicationBuilder app)
         {
             // Validation
-            app.ApplicationServices.GetService<ICommandProcessor>().AssertConfigurationIsValid();
-            app.ApplicationServices.GetService<IQueryProcessor>().AssertConfigurationIsValid();
+            app.ApplicationServices.GetService<ICommandProcessor>()!.AssertConfigurationIsValid();
+            app.ApplicationServices.GetService<IQueryProcessor>()!.AssertConfigurationIsValid();
         }
     }
 }
@@ -157,17 +135,14 @@ If you only have one project you can use `typeof(Startup).Assembly` as a single 
 
 ## Testing
 
+You can [integration test](https://github.com/GoogleCloudPlatform/functions-framework-dotnet/blob/main/docs/testing.md) your functions with the [Google.Cloud.Functions.Testing](https://www.nuget.org/packages/Google.Cloud.Functions.Testing) package.
+
 ```cs
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using CommandQuery.GoogleCloudFunctions;
+using System.Net.Http.Json;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
+using Google.Cloud.Functions.Testing;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
@@ -179,36 +154,35 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [SetUp]
             public void SetUp()
             {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null, serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+                Server = new FunctionTestServer<Query>();
+                Client = Server.CreateClient();
+            }
 
-                Subject = new Query(null, serviceProvider.GetService<IQueryFunction>());
+            [TearDown]
+            public void TearDown()
+            {
+                Client.Dispose();
+                Server.Dispose();
             }
 
             [Test]
             public async Task should_work()
             {
-                var context = GetHttpContext("BarQuery", "POST", content: "{ \"Id\": 1 }");
-
-                await Subject.HandleAsync(context);
-                var value = await context.Response.AsAsync<Bar>();
-
-                value.Id.Should().Be(1);
+                var response = await Client.PostAsJsonAsync("/api/query/BarQuery", new BarQuery { Id = 1 });
+                var value = await response.Content.ReadFromJsonAsync<Bar>();
+                value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
             [Test]
             public async Task should_handle_errors()
             {
-                var context = GetHttpContext("FailQuery", "POST", content: "{ \"Id\": 1 }");
-
-                await Subject.HandleAsync(context);
-
-                await context.Response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+                var response = await Client.PostAsJsonAsync("/api/query/FailQuery", new BarQuery { Id = 1 });
+                await response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
+            FunctionTestServer<Query> Server = null!;
+            HttpClient Client = null!;
         }
 
         public class when_using_the_real_function_via_Get
@@ -216,57 +190,35 @@ namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
             [SetUp]
             public void SetUp()
             {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(null, serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+                Server = new FunctionTestServer<Query>();
+                Client = Server.CreateClient();
+            }
 
-                Subject = new Query(null, serviceProvider.GetService<IQueryFunction>());
+            [TearDown]
+            public void TearDown()
+            {
+                Client.Dispose();
+                Server.Dispose();
             }
 
             [Test]
             public async Task should_work()
             {
-                var context = GetHttpContext("BarQuery", "GET", query: new Dictionary<string, string> { { "Id", "1" } });
-
-                await Subject.HandleAsync(context);
-                var value = await context.Response.AsAsync<Bar>();
-
-                value.Id.Should().Be(1);
+                var response = await Client.GetAsync("/api/query/BarQuery?Id=1");
+                var value = await response.Content.ReadFromJsonAsync<Bar>();
+                value!.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
             }
 
             [Test]
             public async Task should_handle_errors()
             {
-                var context = GetHttpContext("FailQuery", "GET", query: new Dictionary<string, string> { { "Id", "1" } });
-
-                await Subject.HandleAsync(context);
-
-                await context.Response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
+                var response = await Client.GetAsync("/api/query/FailQuery?Id=1");
+                await response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
-        }
-
-        static HttpContext GetHttpContext(string queryName, string method, string content = null, Dictionary<string, string> query = null)
-        {
-            var context = new DefaultHttpContext();
-            context.Request.Path = new PathString("/api/query/" + queryName);
-            context.Request.Method = method;
-
-            if (content != null)
-            {
-                context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(content));
-            }
-
-            if (query != null)
-            {
-                context.Request.QueryString = new QueryString(QueryHelpers.AddQueryString("", query));
-            }
-
-            context.Response.Body = new MemoryStream();
-
-            return context;
+            FunctionTestServer<Query> Server = null!;
+            HttpClient Client = null!;
         }
     }
 }

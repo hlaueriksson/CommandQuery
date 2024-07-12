@@ -10,7 +10,7 @@
 ## Get Started
 
 1. Create a new **ASP.NET Core** project
-   * [Tutorial](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-6.0&tabs=visual-studio)
+   * [Tutorial](https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio)
 2. Install the `CommandQuery.AspNetCore` package from [NuGet](https://www.nuget.org/packages/CommandQuery.AspNetCore)
    * `PM>` `Install-Package CommandQuery.AspNetCore`
 3. Create commands and command handlers
@@ -24,8 +24,8 @@
 
 Choose:
 
-* .NET 6.0 (Long Term Support)
-* Use controllers (uncheck to use minimal APIs)
+* .NET 8.0 (Long Term Support)
+* Use controllers
 
 ## Configuration
 
@@ -165,7 +165,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
-namespace CommandQuery.Sample.AspNetCore.V6.Tests
+namespace CommandQuery.Sample.AspNetCore.Tests
 {
     public class QueryControllerTests
     {
@@ -209,8 +209,8 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Program> Factory;
-            HttpClient Client;
+            WebApplicationFactory<Program> Factory = null!;
+            HttpClient Client = null!;
         }
 
         public class when_using_the_real_controller_via_Get
@@ -249,8 +249,8 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
                 (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
             }
 
-            WebApplicationFactory<Program> Factory;
-            HttpClient Client;
+            WebApplicationFactory<Program> Factory = null!;
+            HttpClient Client = null!;
         }
     }
 }
@@ -258,5 +258,5 @@ namespace CommandQuery.Sample.AspNetCore.V6.Tests
 
 ## Samples
 
-* [CommandQuery.Sample.AspNetCore.V6](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V6)
-* [CommandQuery.Sample.AspNetCore.V6.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.V6.Tests)
+* [CommandQuery.Sample.AspNetCore](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore)
+* [CommandQuery.Sample.AspNetCore.Tests](https://github.com/hlaueriksson/CommandQuery/tree/master/samples/CommandQuery.Sample.AspNetCore.Tests)

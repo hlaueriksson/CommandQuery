@@ -146,47 +146,27 @@ The traditional approach that commands *do not return a value* is a bit inconven
 
 ## Upgrading
 
-> ⬆️ Upgrading from version `1.0.0` to `2.0.0`
-
-Upgrade command/query handlers:
-
-- Upgrade the project target framework from ~~`net461`~~ to `netstandard2.0` or greater
-- Add a `CancellationToken` parameter to the `HandleAsync` methods in classes that implement `ICommandHandler<TCommand>`, `ICommandHandler<TCommand, TResult>` and `IQueryHandler<TQuery, TResult>`
-
-Upgrade AspNet.WebApi:
-
-- Migrate from `CommandQuery.AspNet.WebApi` to `CommandQuery.AspNetCore`
+> ⬆️ Upgrading from version `3.0.0` to `4.0.0`
 
 Upgrade AspNetCore:
 
-- Consider to upgrade the project target framework to `netcoreapp3.1` or `net5.0`
-- Consider to use the extension methods `AddCommandControllers` and `AddQueryControllers` in `Startup.cs`
+- Upgrade the project target framework to `net8.0`
 
 Upgrade AWSLambda:
 
-- Upgrade the project target framework to `netcoreapp3.1`
-- Change the method invocation on `CommandFunction` and `QueryFunction` from ~~`Handle`~~ to `HandleAsync`
-- Change the argument on `HandleAsync` methods from ~~`ILambdaContext`~~ to `ILambdaLogger`
-- Consider to use the extension methods `AddCommandFunction` and `AddQueryFunction` on `IServiceCollection`
-- Consider to use the `JsonSerializerOptions` constructor argument in `CommandFunction` and `QueryFunction` to configure JSON serialization/deserialization
+- Upgrade the project target framework to `net8.0`
+- Consider to use the `APIGatewayHttpApiV2ProxyRequest` versions of `HandleAsync`
 
 Upgrade AzureFunctions:
 
-- Upgrade the project target framework to `netcoreapp3.1` or `net5.0`
-- Change the method invocation on `CommandFunction` and `QueryFunction` from ~~`Handle`~~ to `HandleAsync`
-- Consider to use the extension methods `AddCommandControllers` and `AddQueryControllers` in `Startup.cs`/`Program.cs`
-- Consider to use the `CancellationToken` argument on `HandleAsync` methods in `netcoreapp3.1` projects
-- Consider to use the `JsonSerializerSettings`/`JsonSerializerOptions` constructor argument in `CommandFunction` and `QueryFunction` to configure JSON serialization/deserialization
+- Upgrade the project target framework to `net8.0`
+- Remove the `logger` argument from `HandleAsync`
+- Consider to use the `HttpRequest` versions of `HandleAsync`
 
-Upgrade Client:
+Upgrade GoogleCloudFunctions:
 
-- Change the method invocation on `CommandClient` and `QueryClient` from ~~`Post`~~ to `PostAsync` and from ~~`Get`~~ to `GetAsync`
-- Consider to use the `AddHttpClient` extension method on `IServiceCollection` to create the `CommandClient` and `QueryClient` (see [sample](https://github.com/hlaueriksson/CommandQuery/blob/master/samples/CommandQuery.Sample.Client/Program.cs))
-- Consider to use the `CancellationToken` argument to methods in `CommandClient` and `QueryClient`
-
-Validation:
-
-- Consider to use the `AssertConfigurationIsValid` method on `CommandProcessor` and `QueryProcessor` to validate handler and type configuration
+- Upgrade the project target framework to `net6.0`
+- Remove the `logger` argument from `HandleAsync`
 
 ## Acknowledgements
 

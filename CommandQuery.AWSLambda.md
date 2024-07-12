@@ -26,6 +26,10 @@
 
 ![New Project - AWS Serverless Application (.NET Core - C#)](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-aws-serverless-application-1.png)
 
+Choose:
+
+* AWS Serverless Application (.NET Core - C#)
+
 ![New AWS Serverless Application - Empty Serverless Application](https://raw.githubusercontent.com/hlaueriksson/CommandQuery/master/vs-new-project-aws-serverless-application-2.png)
 
 Choose:
@@ -35,37 +39,20 @@ Choose:
 ## Commands
 
 ```cs
+using Amazon.Lambda.Annotations;
+using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
-using CommandQuery.Sample.Contracts.Commands;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Commands;
-using Microsoft.Extensions.DependencyInjection;
-
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace CommandQuery.Sample.AWSLambda;
 
-public class Command
+public class Command(ICommandFunction commandFunction)
 {
-    private readonly ICommandFunction _commandFunction;
-
-    public Command()
-    {
-        var services = new ServiceCollection();
-        //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-        services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
-        // Add handler dependencies
-        services.AddTransient<ICultureService, CultureService>();
-
-        var serviceProvider = services.BuildServiceProvider();
-        serviceProvider.GetService<ICommandProcessor>().AssertConfigurationIsValid(); // Validation
-        _commandFunction = serviceProvider.GetService<ICommandFunction>();
-    }
-
-    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
-        await _commandFunction.HandleAsync(request.PathParameters["commandName"], request, context.Logger);
+    [LambdaFunction]
+    [RestApi(LambdaHttpMethod.Post, "/command/{commandName}")]
+    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context, string commandName) =>
+        await commandFunction.HandleAsync(commandName, request, context.Logger);
 }
 ```
 
@@ -82,35 +69,25 @@ Commands with result:
 ## Queries
 
 ```cs
+using Amazon.Lambda.Annotations;
+using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using CommandQuery.AWSLambda;
-using CommandQuery.Sample.Contracts.Queries;
-using CommandQuery.Sample.Handlers;
-using CommandQuery.Sample.Handlers.Queries;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandQuery.Sample.AWSLambda
 {
-    public class Query
+    public class Query(IQueryFunction queryFunction)
     {
-        private readonly IQueryFunction _queryFunction;
+        [LambdaFunction]
+        [RestApi(LambdaHttpMethod.Get, "/query/{queryName}")]
+        public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
+            await queryFunction.HandleAsync(queryName, request, context.Logger);
 
-        public Query()
-        {
-            var services = new ServiceCollection();
-            //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
-            services.AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
-            // Add handler dependencies
-            services.AddTransient<IDateTimeProxy, DateTimeProxy>();
-
-            var serviceProvider = services.BuildServiceProvider();
-            serviceProvider.GetService<IQueryProcessor>().AssertConfigurationIsValid(); // Validation
-            _queryFunction = serviceProvider.GetService<IQueryFunction>();
-        }
-
-        public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context) =>
-            await _queryFunction.HandleAsync(request.PathParameters["queryName"], request, context.Logger);
+        [LambdaFunction]
+        [RestApi(LambdaHttpMethod.Post, "/query/{queryName}")]
+        public async Task<APIGatewayProxyResponse> Post(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
+            await queryFunction.HandleAsync(queryName, request, context.Logger);
     }
 }
 ```
@@ -124,31 +101,87 @@ namespace CommandQuery.Sample.AWSLambda
 
 ## Configuration
 
+Configuration in `Startup.cs`:
+
+```cs
+using Amazon.Lambda.Annotations;
+using Amazon.Lambda.Core;
+using CommandQuery.AWSLambda;
+using CommandQuery.Sample.Contracts.Commands;
+using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Handlers;
+using CommandQuery.Sample.Handlers.Commands;
+using CommandQuery.Sample.Handlers.Queries;
+using Microsoft.Extensions.DependencyInjection;
+
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+
+namespace CommandQuery.Sample.AWSLambda;
+
+[LambdaStartup]
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        //services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        // Add commands and queries
+        services.AddCommandFunction(typeof(FooCommandHandler).Assembly, typeof(FooCommand).Assembly);
+        services.AddQueryFunction(typeof(BarQueryHandler).Assembly, typeof(BarQuery).Assembly);
+
+        // Add handler dependencies
+        services.AddTransient<IDateTimeProxy, DateTimeProxy>();
+        services.AddTransient<ICultureService, CultureService>();
+
+        // Validation
+        var serviceProvider = services.BuildServiceProvider();
+        serviceProvider.GetService<ICommandProcessor>()!.AssertConfigurationIsValid();
+        serviceProvider.GetService<IQueryProcessor>()!.AssertConfigurationIsValid();
+    }
+}
+```
+
+The extension methods `AddCommandFunction` and `AddQueryFunction` will add functions and all command/query handlers in the given assemblies to the IoC container.
+You can pass in a `params` array of `Assembly` arguments if your handlers are located in different projects.
+If you only have one project you can use `typeof(Program).Assembly` as a single argument.
+
 Configuration in `serverless.template`:
 
 ```json
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "An AWS Serverless Application.",
+  "Description": "An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.5.0.0).",
   "Resources": {
-    "Command": {
+    "CommandQuerySampleAWSLambdaCommandHandleGenerated": {
       "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootPost"
+        ],
+        "SyncedEventProperties": {
+          "RootPost": [
+            "Path",
+            "Method"
+          ]
+        }
+      },
       "Properties": {
         "Architectures": [
           "x86_64"
         ],
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command::Handle",
-        "Runtime": "dotnet6",
-        "CodeUri": "",
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Handle_Generated::Handle",
+        "Runtime": "dotnet8",
+        "CodeUri": ".",
         "MemorySize": 256,
         "Timeout": 30,
-        "Role": null,
         "Policies": [
           "AWSLambdaBasicExecutionRole"
         ],
+        "PackageType": "Zip",
         "Events": {
-          "PostResource": {
+          "RootPost": {
             "Type": "Api",
             "Properties": {
               "Path": "/command/{commandName}",
@@ -158,30 +191,73 @@ Configuration in `serverless.template`:
         }
       }
     },
-    "Query": {
+    "CommandQuerySampleAWSLambdaQueryGetGenerated": {
       "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootGet"
+        ],
+        "SyncedEventProperties": {
+          "RootGet": [
+            "Path",
+            "Method"
+          ]
+        }
+      },
       "Properties": {
         "Architectures": [
           "x86_64"
         ],
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query::Handle",
-        "Runtime": "dotnet6",
-        "CodeUri": "",
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query_Get_Generated::Get",
+        "Runtime": "dotnet8",
+        "CodeUri": ".",
         "MemorySize": 256,
         "Timeout": 30,
-        "Role": null,
         "Policies": [
           "AWSLambdaBasicExecutionRole"
         ],
+        "PackageType": "Zip",
         "Events": {
-          "GetResource": {
+          "RootGet": {
             "Type": "Api",
             "Properties": {
               "Path": "/query/{queryName}",
               "Method": "GET"
             }
-          },
-          "PostResource": {
+          }
+        }
+      }
+    },
+    "CommandQuerySampleAWSLambdaQueryPostGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootPost"
+        ],
+        "SyncedEventProperties": {
+          "RootPost": [
+            "Path",
+            "Method"
+          ]
+        }
+      },
+      "Properties": {
+        "Architectures": [
+          "x86_64"
+        ],
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Query_Post_Generated::Post",
+        "Runtime": "dotnet8",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "PackageType": "Zip",
+        "Events": {
+          "RootPost": {
             "Type": "Api",
             "Properties": {
               "Path": "/query/{queryName}",
@@ -205,14 +281,16 @@ Configuration in `serverless.template`:
 
 ## Testing
 
+You can [test](https://github.com/aws/aws-lambda-dotnet/blob/master/Libraries/src/Amazon.Lambda.TestUtilities/README.md) your lambdas with the [Amazon.Lambda.TestUtilities](https://www.nuget.org/packages/Amazon.Lambda.TestUtilities) package.
+
 ```cs
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
+using CommandQuery.AWSLambda;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.AWSLambda.Tests
@@ -224,7 +302,11 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             [SetUp]
             public void SetUp()
             {
-                Subject = new Query();
+                var serviceCollection = new ServiceCollection();
+                new Startup().ConfigureServices(serviceCollection);
+                var serviceProvider = serviceCollection.BuildServiceProvider();
+
+                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
                 Request = GetRequest("POST", content: "{ \"Id\": 1 }");
                 Context = new TestLambdaContext();
             }
@@ -232,8 +314,8 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             [Test]
             public async Task should_work()
             {
-                var result = await Subject.Handle(Request.QueryName("BarQuery"), Context);
-                var value = result.As<Bar>();
+                var result = await Subject.Post(Request, Context, "BarQuery");
+                var value = result.As<Bar>()!;
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
@@ -242,14 +324,14 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             [Test]
             public async Task should_handle_errors()
             {
-                var result = await Subject.Handle(Request.QueryName("FailQuery"), Context);
+                var result = await Subject.Post(Request, Context, "FailQuery");
 
                 result.ShouldBeError("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
-            APIGatewayProxyRequest Request;
-            ILambdaContext Context;
+            Query Subject = null!;
+            APIGatewayProxyRequest Request = null!;
+            ILambdaContext Context = null!;
         }
 
         public class when_using_the_real_function_via_Get
@@ -257,7 +339,11 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             [SetUp]
             public void SetUp()
             {
-                Subject = new Query();
+                var serviceCollection = new ServiceCollection();
+                new Startup().ConfigureServices(serviceCollection);
+                var serviceProvider = serviceCollection.BuildServiceProvider();
+
+                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
                 Request = GetRequest("GET", query: new Dictionary<string, IList<string>> { { "Id", new List<string> { "1" } } });
                 Context = new TestLambdaContext();
             }
@@ -265,8 +351,8 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             [Test]
             public async Task should_work()
             {
-                var result = await Subject.Handle(Request.QueryName("BarQuery"), Context);
-                var value = result.As<Bar>();
+                var result = await Subject.Get(Request, Context, "BarQuery");
+                var value = result.As<Bar>()!;
 
                 value.Id.Should().Be(1);
                 value.Value.Should().NotBeEmpty();
@@ -275,17 +361,17 @@ namespace CommandQuery.Sample.AWSLambda.Tests
             [Test]
             public async Task should_handle_errors()
             {
-                var result = await Subject.Handle(Request.QueryName("FailQuery"), Context);
+                var result = await Subject.Get(Request, Context, "FailQuery");
 
                 result.ShouldBeError("The query type 'FailQuery' could not be found");
             }
 
-            Query Subject;
-            APIGatewayProxyRequest Request;
-            ILambdaContext Context;
+            Query Subject = null!;
+            APIGatewayProxyRequest Request = null!;
+            ILambdaContext Context = null!;
         }
 
-        static APIGatewayProxyRequest GetRequest(string method, string content = null, Dictionary<string, IList<string>> query = null)
+        static APIGatewayProxyRequest GetRequest(string method, string? content = null, Dictionary<string, IList<string>>? query = null)
         {
             var request = new APIGatewayProxyRequest
             {
