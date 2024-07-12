@@ -25,9 +25,9 @@ namespace CommandQuery.AWSLambda
         }
 
         /// <inheritdoc />
-        public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaLogger? logger)
+        public async Task<APIGatewayProxyResponse> HandleAsync(string queryName, APIGatewayProxyRequest request, ILambdaLogger logger)
         {
-            logger?.LogLine($"Handle {queryName}");
+            logger.LogLine($"Handle {queryName}");
 
             if (request is null)
             {
@@ -45,7 +45,7 @@ namespace CommandQuery.AWSLambda
             catch (Exception exception)
             {
                 var payload = request.HttpMethod == "GET" ? request.Path : request.Body;
-                logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
+                logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
             }
@@ -57,9 +57,9 @@ namespace CommandQuery.AWSLambda
         }
 
         /// <inheritdoc />
-        public async Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string queryName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger? logger)
+        public async Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string queryName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger logger)
         {
-            logger?.LogLine($"Handle {queryName}");
+            logger.LogLine($"Handle {queryName}");
 
             if (request is null)
             {
@@ -77,7 +77,7 @@ namespace CommandQuery.AWSLambda
             catch (Exception exception)
             {
                 var payload = request.RequestContext.Http.Method == "GET" ? request.RequestContext.Http.Path : request.Body;
-                logger?.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
+                logger.LogLine($"Handle query failed: {queryName}, {payload}, {exception.Message}");
 
                 return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
             }

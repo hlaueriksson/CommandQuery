@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="CommandQuery.AspNetCore.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <ItemGroup>

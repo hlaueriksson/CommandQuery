@@ -3,6 +3,7 @@ using CommandQuery.Tests;
 using FluentAssertions;
 using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -14,7 +15,7 @@ namespace CommandQuery.AspNetCore.Tests
         public void SetUp()
         {
             FakeCommandProcessor = new Mock<ICommandProcessor>();
-            Subject = new CommandController<FakeCommand>(FakeCommandProcessor.Object, null);
+            Subject = new CommandController<FakeCommand>(FakeCommandProcessor.Object, new Mock<ILogger<CommandController<FakeCommand>>>().Object);
         }
 
         [LoFu, Test]

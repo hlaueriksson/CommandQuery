@@ -12,7 +12,7 @@ namespace CommandQuery.AspNetCore
         where TQuery : IQuery<TResult>
     {
         private readonly IQueryProcessor _queryProcessor;
-        private readonly ILogger? _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryController{TQuery,TResult}"/> class.
@@ -34,7 +34,7 @@ namespace CommandQuery.AspNetCore
         [HttpPost]
         public async Task<IActionResult> HandlePostAsync(TQuery query, CancellationToken cancellationToken)
         {
-            _logger?.LogInformation("Handle {@Query}", query);
+            _logger.LogInformation("Handle {@Query}", query);
 
             try
             {
@@ -44,7 +44,7 @@ namespace CommandQuery.AspNetCore
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception, "Handle query failed: {@Query}", query);
+                _logger.LogError(exception, "Handle query failed: {@Query}", query);
 
                 return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }
@@ -59,7 +59,7 @@ namespace CommandQuery.AspNetCore
         [HttpGet]
         public async Task<IActionResult> HandleGetAsync([FromQuery] TQuery query, CancellationToken cancellationToken)
         {
-            _logger?.LogInformation("Handle {@Query}", query);
+            _logger.LogInformation("Handle {@Query}", query);
 
             try
             {
@@ -69,7 +69,7 @@ namespace CommandQuery.AspNetCore
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception, "Handle query failed: {@Query}", query);
+                _logger.LogError(exception, "Handle query failed: {@Query}", query);
 
                 return exception.IsHandled() ? BadRequest(exception.ToError()) : StatusCode(500, exception.ToError());
             }

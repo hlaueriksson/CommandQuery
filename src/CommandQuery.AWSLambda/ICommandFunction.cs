@@ -16,7 +16,7 @@ namespace CommandQuery.AWSLambda
         /// <param name="logger">An <see cref="ILambdaLogger"/>.</param>
         /// <returns>The result for status code <c>200</c>, or an error for status code <c>400</c> and <c>500</c>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
-        Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaLogger? logger);
+        Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaLogger logger);
 
         /// <summary>
         /// Handle a command.
@@ -26,6 +26,6 @@ namespace CommandQuery.AWSLambda
         /// <param name="logger">An <see cref="ILambdaLogger"/>.</param>
         /// <returns>The result for status code <c>200</c>, or an error for status code <c>400</c> and <c>500</c>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
-        Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string commandName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger? logger);
+        Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string commandName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger logger);
     }
 }

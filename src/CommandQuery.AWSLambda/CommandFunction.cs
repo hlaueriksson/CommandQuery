@@ -26,9 +26,9 @@ namespace CommandQuery.AWSLambda
         }
 
         /// <inheritdoc />
-        public async Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaLogger? logger)
+        public async Task<APIGatewayProxyResponse> HandleAsync(string commandName, APIGatewayProxyRequest request, ILambdaLogger logger)
         {
-            logger?.LogLine($"Handle {commandName}");
+            logger.LogLine($"Handle {commandName}");
 
             if (request is null)
             {
@@ -48,16 +48,16 @@ namespace CommandQuery.AWSLambda
             }
             catch (Exception exception)
             {
-                logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
+                logger.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
                 return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
             }
         }
 
         /// <inheritdoc />
-        public async Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string commandName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger? logger)
+        public async Task<APIGatewayHttpApiV2ProxyResponse> HandleAsync(string commandName, APIGatewayHttpApiV2ProxyRequest request, ILambdaLogger logger)
         {
-            logger?.LogLine($"Handle {commandName}");
+            logger.LogLine($"Handle {commandName}");
 
             if (request is null)
             {
@@ -77,7 +77,7 @@ namespace CommandQuery.AWSLambda
             }
             catch (Exception exception)
             {
-                logger?.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
+                logger.LogLine($"Handle command failed: {commandName}, {request.Body}, {exception.Message}");
 
                 return exception.IsHandled() ? request.BadRequest(exception, _options) : request.InternalServerError(exception, _options);
             }
