@@ -3,13 +3,13 @@
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml)
 [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
+[![CommandQuery](https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery)](https://www.nuget.org/packages/CommandQuery)
+[![CommandQuery.Abstractions](https://img.shields.io/nuget/v/CommandQuery.Abstractions.svg?label=CommandQuery.Abstractions)](https://www.nuget.org/packages/CommandQuery.Abstractions)
+
 [![CommandQuery.AspNetCore](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg?label=CommandQuery.AspNetCore)](https://www.nuget.org/packages/CommandQuery.AspNetCore)
 [![CommandQuery.AWSLambda](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg?label=CommandQuery.AWSLambda)](https://www.nuget.org/packages/CommandQuery.AWSLambda)
 [![CommandQuery.AzureFunctions](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?label=CommandQuery.AzureFunctions)](https://www.nuget.org/packages/CommandQuery.AzureFunctions)
 [![CommandQuery.GoogleCloudFunctions](https://img.shields.io/nuget/v/CommandQuery.GoogleCloudFunctions.svg?label=CommandQuery.GoogleCloudFunctions)](https://www.nuget.org/packages/CommandQuery.GoogleCloudFunctions)
-
-[![CommandQuery](https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery)](https://www.nuget.org/packages/CommandQuery)
-[![CommandQuery.Abstractions](https://img.shields.io/nuget/v/CommandQuery.Abstractions.svg?label=CommandQuery.Abstractions)](https://www.nuget.org/packages/CommandQuery.Abstractions)
 
 [![CommandQuery.Client](https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client)](https://www.nuget.org/packages/CommandQuery.Client)
 
@@ -41,7 +41,6 @@ Available for:
 ⚡ AWS Lambda
 ⚡ Azure Functions
 ⚡ Google Cloud Functions
-🌐 ASP.NET Web API 2
 ```
 
 Command Query Separation?
@@ -84,8 +83,8 @@ The traditional approach that commands *do not return a value* is a bit inconven
 
 - 📃 README: [CommandQuery.AspNetCore.md](CommandQuery.AspNetCore.md)
 - 💁 Samples:
-  - [`CommandQuery.Sample.AspNetCore.V6`](/samples/CommandQuery.Sample.AspNetCore.V6)
-  - [`CommandQuery.Sample.AspNetCore.V6.Tests`](/samples/CommandQuery.Sample.AspNetCore.V6.Tests)
+  - [`CommandQuery.Sample.AspNetCore`](/samples/CommandQuery.Sample.AspNetCore)
+  - [`CommandQuery.Sample.AspNetCore.Tests`](/samples/CommandQuery.Sample.AspNetCore.Tests)
 
 ### `CommandQuery.AWSLambda` ⚡
 
@@ -106,8 +105,8 @@ The traditional approach that commands *do not return a value* is a bit inconven
 
 - 📃 README: [CommandQuery.AzureFunctions.md](CommandQuery.AzureFunctions.md)
 - 💁 Samples:
-  - [`CommandQuery.Sample.AzureFunctions.V6`](/samples/CommandQuery.Sample.AzureFunctions.V6)
-  - [`CommandQuery.Sample.AzureFunctions.V6.Tests`](/samples/CommandQuery.Sample.AzureFunctions.V6.Tests)
+  - [`CommandQuery.Sample.AzureFunctions`](/samples/CommandQuery.Sample.AzureFunctions)
+  - [`CommandQuery.Sample.AzureFunctions.Tests`](/samples/CommandQuery.Sample.AzureFunctions.Tests)
 
 ### `CommandQuery.GoogleCloudFunctions` ⚡
 
@@ -150,7 +149,7 @@ Upgrade AzureFunctions:
 
 Upgrade GoogleCloudFunctions:
 
-- Upgrade the project target framework to `net6.0`
+- Upgrade the project target framework to `net8.0`
 - Remove the `logger` argument from `HandleAsync`
 
 ## Acknowledgements
