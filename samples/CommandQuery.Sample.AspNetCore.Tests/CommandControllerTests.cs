@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
