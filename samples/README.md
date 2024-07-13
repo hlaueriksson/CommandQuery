@@ -50,10 +50,3 @@ Sample code:
 Sample code:
 
 * `CommandQuery.Sample.Client`
-
-## ASP.NET Web API 2
-
-Sample code:
-
-* `CommandQuery.Sample.AspNet.WebApi`
-* `CommandQuery.Sample.AspNet.WebApi.Tests`

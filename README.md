@@ -3,15 +3,15 @@
 [![build](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml/badge.svg)](https://github.com/hlaueriksson/CommandQuery/actions/workflows/build.yml)
 [![CodeFactor](https://codefactor.io/repository/github/hlaueriksson/commandquery/badge)](https://codefactor.io/repository/github/hlaueriksson/commandquery)
 
-[![CommandQuery](https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery)](https://www.nuget.org/packages/CommandQuery)
-[![CommandQuery.Abstractions](https://img.shields.io/nuget/v/CommandQuery.Abstractions.svg?label=CommandQuery.Abstractions)](https://www.nuget.org/packages/CommandQuery.Abstractions)
-[![CommandQuery.Client](https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client)](https://www.nuget.org/packages/CommandQuery.Client)
-
 [![CommandQuery.AspNetCore](https://img.shields.io/nuget/v/CommandQuery.AspNetCore.svg?label=CommandQuery.AspNetCore)](https://www.nuget.org/packages/CommandQuery.AspNetCore)
 [![CommandQuery.AWSLambda](https://img.shields.io/nuget/v/CommandQuery.AWSLambda.svg?label=CommandQuery.AWSLambda)](https://www.nuget.org/packages/CommandQuery.AWSLambda)
 [![CommandQuery.AzureFunctions](https://img.shields.io/nuget/v/CommandQuery.AzureFunctions.svg?label=CommandQuery.AzureFunctions)](https://www.nuget.org/packages/CommandQuery.AzureFunctions)
 [![CommandQuery.GoogleCloudFunctions](https://img.shields.io/nuget/v/CommandQuery.GoogleCloudFunctions.svg?label=CommandQuery.GoogleCloudFunctions)](https://www.nuget.org/packages/CommandQuery.GoogleCloudFunctions)
-[![CommandQuery.AspNet.WebApi](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg?label=CommandQuery.AspNet.WebApi)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
+
+[![CommandQuery](https://img.shields.io/nuget/v/CommandQuery.svg?label=CommandQuery)](https://www.nuget.org/packages/CommandQuery)
+[![CommandQuery.Abstractions](https://img.shields.io/nuget/v/CommandQuery.Abstractions.svg?label=CommandQuery.Abstractions)](https://www.nuget.org/packages/CommandQuery.Abstractions)
+
+[![CommandQuery.Client](https://img.shields.io/nuget/v/CommandQuery.Client.svg?label=CommandQuery.Client)](https://www.nuget.org/packages/CommandQuery.Client)
 
 ## Content<!-- omit in toc -->
 
@@ -23,7 +23,6 @@
   - [`CommandQuery.AzureFunctions` ⚡](#commandqueryazurefunctions-)
   - [`CommandQuery.GoogleCloudFunctions` ⚡](#commandquerygooglecloudfunctions-)
   - [`CommandQuery.Client` 🧰](#commandqueryclient-)
-  - [`CommandQuery.AspNet.WebApi` 🌐](#commandqueryaspnetwebapi-)
 - [Upgrading](#upgrading)
 - [Acknowledgements](#acknowledgements)
 
@@ -131,19 +130,6 @@ The traditional approach that commands *do not return a value* is a bit inconven
 - 💁 Samples:
   - [`CommandQuery.Sample.Client`](/samples/CommandQuery.Sample.Client)
 
-### `CommandQuery.AspNet.WebApi` 🌐
-
-[![NuGet](https://img.shields.io/nuget/v/CommandQuery.AspNet.WebApi.svg) ![NuGet](https://img.shields.io/nuget/dt/CommandQuery.AspNet.WebApi.svg)](https://www.nuget.org/packages/CommandQuery.AspNet.WebApi)
-
-> Command Query Separation for ASP.NET Web API 2
-
-⛔ This package is no longer maintained and new versions will not be published
-
-- 📃 README: [CommandQuery.AspNet.WebApi.md](CommandQuery.AspNet.WebApi.md)
-- 💁 Samples:
-  - [`CommandQuery.Sample.AspNet.WebApi`](/samples/CommandQuery.Sample.AspNet.WebApi)
-  - [`CommandQuery.Sample.AspNet.WebApi.Tests`](/samples/CommandQuery.Sample.AspNet.WebApi.Tests)
-
 ## Upgrading
 
 > ⬆️ Upgrading from version `3.0.0` to `4.0.0`
@@ -155,7 +141,6 @@ Upgrade AspNetCore:
 Upgrade AWSLambda:
 
 - Upgrade the project target framework to `net8.0`
-- Consider to use the `APIGatewayHttpApiV2ProxyRequest` versions of `HandleAsync`
 
 Upgrade AzureFunctions:
 
