@@ -25,6 +25,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandQuery.Sample.AzureFunctions.Tests", "samples\CommandQuery.Sample.AzureFunctions.Tests\CommandQuery.Sample.AzureFunctions.Tests.csproj", "{2D223ADD-F2C9-4DB7-A68D-B04965AB2060}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HttpFiles", "HttpFiles", "{6F3519E3-F0E6-4DFA-86DD-86531529C512}"
+	ProjectSection(SolutionItems) = preProject
+		samples\HttpFiles\GetBarQuery.http = samples\HttpFiles\GetBarQuery.http
+		samples\HttpFiles\GetQuuxQuery.http = samples\HttpFiles\GetQuuxQuery.http
+		samples\HttpFiles\GetQuxQuery.http = samples\HttpFiles\GetQuxQuery.http
+		samples\HttpFiles\http-client.env.json = samples\HttpFiles\http-client.env.json
+		samples\HttpFiles\PostBarQuery.http = samples\HttpFiles\PostBarQuery.http
+		samples\HttpFiles\PostBazCommand.http = samples\HttpFiles\PostBazCommand.http
+		samples\HttpFiles\PostFooCommand.http = samples\HttpFiles\PostFooCommand.http
+		samples\HttpFiles\PostQuuxQuery.http = samples\HttpFiles\PostQuuxQuery.http
+		samples\HttpFiles\PostQuxQuery.http = samples\HttpFiles\PostQuxQuery.http
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

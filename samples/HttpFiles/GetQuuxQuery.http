@@ -1,0 +1,6 @@
+@Id = 1
+@DateTime = 2021-07-15T22%3A12%3A41.0000000Z
+@DayOfWeek = Monday
+
+GET {{QueryUrl}}/QuuxQuery?Id={{Id}}&Corge.DateTime={{DateTime}}&Corge.Grault.DayOfWeek={{DayOfWeek}}
+Content-Type: application/json

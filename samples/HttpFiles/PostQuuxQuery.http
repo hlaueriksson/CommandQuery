@@ -1,0 +1,13 @@
+
+POST {{QueryUrl}}/QuuxQuery
+Content-Type: application/json
+
+{
+  "Id": 1,
+  "Corge": {
+    "DateTime": "2021-07-15T22:12:41.0000000Z",
+    "Grault": {
+      "DayOfWeek": 1
+    }
+  }
+}

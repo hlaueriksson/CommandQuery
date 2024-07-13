@@ -1,0 +1,4 @@
+@Id = 1
+
+GET {{QueryUrl}}/BarQuery?Id={{Id}}
+Content-Type: application/json

@@ -1,0 +1,10 @@
+
+POST {{QueryUrl}}/QuxQuery
+Content-Type: application/json
+
+{
+  "Ids": [
+    "94e4d942-0606-4fba-90df-8604ead81968",
+    "e085c54b-44e4-4478-a28a-25ce3eaa79ce"
+  ]
+}

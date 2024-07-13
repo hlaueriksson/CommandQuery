@@ -1,0 +1,7 @@
+
+POST {{CommandUrl}}/BazCommand
+Content-Type: application/json
+
+{
+  "Value": "sv-SE"
+}

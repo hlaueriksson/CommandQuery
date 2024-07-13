@@ -1,0 +1,7 @@
+
+POST {{QueryUrl}}/BarQuery
+Content-Type: application/json
+
+{
+  "Id": 1
+}
