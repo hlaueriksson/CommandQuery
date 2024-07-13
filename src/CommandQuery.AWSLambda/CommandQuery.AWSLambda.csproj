@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <PackageReleaseNotes>
-- Change TargetFramework to netstandard2.0
-- Bump Amazon.Lambda.Core to 2.1.0
-- Bump Amazon.Lambda.APIGatewayEvents to 2.5.0
+- Bump Amazon.Lambda.Core to 2.2.0
+- Bump Amazon.Lambda.APIGatewayEvents to 2.7.0
+- Make ILambdaLogger parameter required for HandleAsync
+- Add support for APIGatewayHttpApiV2ProxyRequest
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>Command Query Separation for AWS Lambda ⚡

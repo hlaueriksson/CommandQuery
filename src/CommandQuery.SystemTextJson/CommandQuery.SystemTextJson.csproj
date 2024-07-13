@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <PackageReleaseNotes>
-- Bump System.Text.Json to 6.0.7
+- Bump System.Text.Json to 8.0.4
+- Deserialize JSON with sane defaults
     </PackageReleaseNotes>
     <Authors>Henrik Lau Eriksson</Authors>
     <Description>System.Text.Json extensions for CommandQuery</Description>
