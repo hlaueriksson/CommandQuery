@@ -37,16 +37,20 @@ Choose:
 
 ```cs
 using CommandQuery.AzureFunctions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 
 namespace CommandQuery.Sample.AzureFunctions
 {
     public class Command(ICommandFunction commandFunction)
     {
         [Function(nameof(Command))]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequestData req, FunctionContext executionContext, string commandName) =>
-            await commandFunction.HandleAsync(commandName, req, null, executionContext.CancellationToken);
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "command/{commandName}")] HttpRequest req,
+            FunctionContext context,
+            string commandName) =>
+            await commandFunction.HandleAsync(commandName, req, context.CancellationToken);
     }
 }
 ```
@@ -65,16 +69,20 @@ Commands with result:
 
 ```cs
 using CommandQuery.AzureFunctions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 
 namespace CommandQuery.Sample.AzureFunctions
 {
     public class Query(IQueryFunction queryFunction)
     {
         [Function(nameof(Query))]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequestData req, FunctionContext executionContext, string queryName) =>
-            await queryFunction.HandleAsync(queryName, req, null, executionContext.CancellationToken);
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "query/{queryName}")] HttpRequest req,
+            FunctionContext context,
+            string queryName) =>
+            await queryFunction.HandleAsync(queryName, req, context.CancellationToken);
     }
 }
 ```
@@ -142,133 +150,58 @@ If you only have one project you can use `typeof(Program).Assembly` as a single 
 
 ```cs
 using System.Text;
+using System.Text.Json;
 using CommandQuery.AzureFunctions;
-using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.AzureFunctions.Tests
 {
-    public class QueryTests
+    public class CommandTests
     {
-        public class when_using_the_real_function_via_Post
+        [SetUp]
+        public void SetUp()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                serviceCollection.AddScoped<ILoggerFactory, LoggerFactory>();
-                Program.ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+            var serviceCollection = new ServiceCollection();
+            Program.ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                var context = new Mock<FunctionContext>();
-                context.SetupProperty(c => c.InstanceServices, serviceProvider);
-                ExecutionContext = context.Object;
+            Subject = new Command(serviceProvider.GetRequiredService<ICommandFunction>());
 
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "POST", content: "{ \"Id\": 1 }");
-
-                var result = await Subject.Run(req, ExecutionContext, "BarQuery");
-                var value = await result.AsAsync<Bar>();
-
-                value!.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "POST", content: "{ \"Id\": 1 }");
-
-                var result = await Subject.Run(req, ExecutionContext, "FailQuery");
-
-                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
-            }
-
-            FunctionContext ExecutionContext = null!;
-            Query Subject = null!;
+            var context = new Mock<FunctionContext>();
+            context.SetupProperty(c => c.InstanceServices, serviceProvider);
+            Context = context.Object;
         }
 
-        public class when_using_the_real_function_via_Get
+        [Test]
+        public async Task should_handle_command()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                serviceCollection.AddScoped<ILoggerFactory, LoggerFactory>();
-                Program.ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                var context = new Mock<FunctionContext>();
-                context.SetupProperty(c => c.InstanceServices, serviceProvider);
-                ExecutionContext = context.Object;
-
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "GET", url: "http://localhost?Id=1");
-
-                var result = await Subject.Run(req, ExecutionContext, "BarQuery");
-                var value = await result.AsAsync<Bar>();
-
-                value!.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var req = GetHttpRequestData(ExecutionContext, "GET", url: "http://localhost?Id=1");
-
-                var result = await Subject.Run(req, ExecutionContext, "FailQuery");
-
-                await result.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
-            }
-
-            FunctionContext ExecutionContext = null!;
-            Query Subject = null!;
+            var result = await Subject.Run(GetRequest(new FooCommand { Value = "Foo" }), Context, "FooCommand");
+            result.As<IStatusCodeActionResult>().StatusCode.Should().Be(200);
         }
 
-        static HttpRequestData GetHttpRequestData(FunctionContext executionContext, string method, string? content = null, string? url = null)
+        [Test]
+        public async Task should_handle_errors()
         {
-            var request = new Mock<HttpRequestData>(executionContext);
-            request.Setup(r => r.Method).Returns(method);
+            var result = await Subject.Run(GetRequest(new FooCommand()), Context, "FooCommand");
+            result.ShouldBeError("Value cannot be null or empty");
+        }
 
-            if (content != null)
-            {
-                var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
-                request.Setup(r => r.Body).Returns(stream);
-            }
-
-            if (url != null)
-            {
-                request.Setup(r => r.Url).Returns(new Uri(url));
-            }
-
-            request.Setup(r => r.CreateResponse()).Returns(() =>
-            {
-                var response = new Mock<HttpResponseData>(executionContext);
-                response.SetupProperty(r => r.Headers, new HttpHeadersCollection());
-                response.SetupProperty(r => r.StatusCode);
-                response.SetupProperty(r => r.Body, new MemoryStream());
-                return response.Object;
-            });
-
+        HttpRequest GetRequest(object body)
+        {
+            var request = new Mock<HttpRequest>();
+            request.Setup(r => r.Body).Returns(new MemoryStream(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(body))));
             return request.Object;
         }
+
+        Command Subject = null!;
+        FunctionContext Context = null!;
     }
 }
 ```

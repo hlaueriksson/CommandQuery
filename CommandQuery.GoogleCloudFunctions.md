@@ -40,8 +40,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
         public async Task HandleAsync(HttpContext context)
         {
             var commandName = context.Request.Path.Value!.Substring("/api/command/".Length);
-
-            await commandFunction.HandleAsync(commandName, context, null, context.RequestAborted);
+            await commandFunction.HandleAsync(commandName, context, context.RequestAborted);
         }
     }
 }
@@ -73,8 +72,7 @@ namespace CommandQuery.Sample.GoogleCloudFunctions
         public async Task HandleAsync(HttpContext context)
         {
             var queryName = context.Request.Path.Value!.Substring("/api/query/".Length);
-
-            await queryFunction.HandleAsync(queryName, context, null, context.RequestAborted);
+            await queryFunction.HandleAsync(queryName, context, context.RequestAborted);
         }
     }
 }
@@ -138,88 +136,47 @@ If you only have one project you can use `typeof(Startup).Assembly` as a single 
 You can [integration test](https://github.com/GoogleCloudPlatform/functions-framework-dotnet/blob/main/docs/testing.md) your functions with the [Google.Cloud.Functions.Testing](https://www.nuget.org/packages/Google.Cloud.Functions.Testing) package.
 
 ```cs
+using System.Net;
 using System.Net.Http.Json;
-using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
 using Google.Cloud.Functions.Testing;
-using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.GoogleCloudFunctions.Tests
 {
-    public class QueryTests
+    public class CommandTests
     {
-        public class when_using_the_real_function_via_Post
+        [SetUp]
+        public void SetUp()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                Server = new FunctionTestServer<Query>();
-                Client = Server.CreateClient();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                Client.Dispose();
-                Server.Dispose();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var response = await Client.PostAsJsonAsync("/api/query/BarQuery", new BarQuery { Id = 1 });
-                var value = await response.Content.ReadFromJsonAsync<Bar>();
-                value!.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var response = await Client.PostAsJsonAsync("/api/query/FailQuery", new BarQuery { Id = 1 });
-                await response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
-            }
-
-            FunctionTestServer<Query> Server = null!;
-            HttpClient Client = null!;
+            Server = new FunctionTestServer<Command>();
+            Client = Server.CreateClient();
         }
 
-        public class when_using_the_real_function_via_Get
+        [TearDown]
+        public void TearDown()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                Server = new FunctionTestServer<Query>();
-                Client = Server.CreateClient();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                Client.Dispose();
-                Server.Dispose();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var response = await Client.GetAsync("/api/query/BarQuery?Id=1");
-                var value = await response.Content.ReadFromJsonAsync<Bar>();
-                value!.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var response = await Client.GetAsync("/api/query/FailQuery?Id=1");
-                await response.ShouldBeErrorAsync("The query type 'FailQuery' could not be found");
-            }
-
-            FunctionTestServer<Query> Server = null!;
-            HttpClient Client = null!;
+            Client.Dispose();
+            Server.Dispose();
         }
+
+        [Test]
+        public async Task should_handle_command()
+        {
+            var response = await Client.PostAsJsonAsync("/api/command/FooCommand", new FooCommand { Value = "Foo" });
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task should_handle_errors()
+        {
+            var response = await Client.PostAsJsonAsync("/api/command/FooCommand", new FooCommand());
+            await response.ShouldBeErrorAsync("Value cannot be null or empty");
+        }
+
+        FunctionTestServer<Command> Server = null!;
+        HttpClient Client = null!;
     }
 }
 ```

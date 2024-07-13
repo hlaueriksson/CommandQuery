@@ -49,9 +49,12 @@ namespace CommandQuery.Sample.AWSLambda;
 
 public class Command(ICommandFunction commandFunction)
 {
-    [LambdaFunction]
+    [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
     [RestApi(LambdaHttpMethod.Post, "/command/{commandName}")]
-    public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context, string commandName) =>
+    public async Task<APIGatewayProxyResponse> Post(
+        APIGatewayProxyRequest request,
+        ILambdaContext context,
+        string commandName) =>
         await commandFunction.HandleAsync(commandName, request, context.Logger);
 }
 ```
@@ -79,14 +82,20 @@ namespace CommandQuery.Sample.AWSLambda
 {
     public class Query(IQueryFunction queryFunction)
     {
-        [LambdaFunction]
+        [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
         [RestApi(LambdaHttpMethod.Get, "/query/{queryName}")]
-        public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
+        public async Task<APIGatewayProxyResponse> Get(
+            APIGatewayProxyRequest request,
+            ILambdaContext context,
+            string queryName) =>
             await queryFunction.HandleAsync(queryName, request, context.Logger);
 
-        [LambdaFunction]
+        [LambdaFunction(Policies = "AWSLambdaBasicExecutionRole", MemorySize = 256, Timeout = 30)]
         [RestApi(LambdaHttpMethod.Post, "/query/{queryName}")]
-        public async Task<APIGatewayProxyResponse> Post(APIGatewayProxyRequest request, ILambdaContext context, string queryName) =>
+        public async Task<APIGatewayProxyResponse> Post(
+            APIGatewayProxyRequest request,
+            ILambdaContext context,
+            string queryName) =>
             await queryFunction.HandleAsync(queryName, request, context.Logger);
     }
 }
@@ -153,7 +162,7 @@ Configuration in `serverless.template`:
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.5.0.0).",
   "Resources": {
-    "CommandQuerySampleAWSLambdaCommandHandleGenerated": {
+    "CommandQuerySampleAWSLambdaCommandPostGenerated": {
       "Type": "AWS::Serverless::Function",
       "Metadata": {
         "Tool": "Amazon.Lambda.Annotations",
@@ -171,7 +180,7 @@ Configuration in `serverless.template`:
         "Architectures": [
           "x86_64"
         ],
-        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Handle_Generated::Handle",
+        "Handler": "CommandQuery.Sample.AWSLambda::CommandQuery.Sample.AWSLambda.Command_Post_Generated::Post",
         "Runtime": "dotnet8",
         "CodeUri": ".",
         "MemorySize": 256,
@@ -284,104 +293,48 @@ Configuration in `serverless.template`:
 You can [test](https://github.com/aws/aws-lambda-dotnet/blob/master/Libraries/src/Amazon.Lambda.TestUtilities/README.md) your lambdas with the [Amazon.Lambda.TestUtilities](https://www.nuget.org/packages/Amazon.Lambda.TestUtilities) package.
 
 ```cs
+using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
 using CommandQuery.AWSLambda;
-using CommandQuery.Sample.Contracts.Queries;
+using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.AWSLambda.Tests
 {
-    public class QueryTests
+    public class CommandTests
     {
-        public class when_using_the_real_function_via_Post
+        [SetUp]
+        public void SetUp()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+            var serviceCollection = new ServiceCollection();
+            new Startup().ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-                Request = GetRequest("POST", content: "{ \"Id\": 1 }");
-                Context = new TestLambdaContext();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var result = await Subject.Post(Request, Context, "BarQuery");
-                var value = result.As<Bar>()!;
-
-                value.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var result = await Subject.Post(Request, Context, "FailQuery");
-
-                result.ShouldBeError("The query type 'FailQuery' could not be found");
-            }
-
-            Query Subject = null!;
-            APIGatewayProxyRequest Request = null!;
-            ILambdaContext Context = null!;
+            Subject = new Command(serviceProvider.GetRequiredService<ICommandFunction>());
+            Context = new TestLambdaContext();
         }
 
-        public class when_using_the_real_function_via_Get
+        [Test]
+        public async Task should_handle_command()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                var serviceCollection = new ServiceCollection();
-                new Startup().ConfigureServices(serviceCollection);
-                var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                Subject = new Query(serviceProvider.GetRequiredService<IQueryFunction>());
-                Request = GetRequest("GET", query: new Dictionary<string, IList<string>> { { "Id", new List<string> { "1" } } });
-                Context = new TestLambdaContext();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var result = await Subject.Get(Request, Context, "BarQuery");
-                var value = result.As<Bar>()!;
-
-                value.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var result = await Subject.Get(Request, Context, "FailQuery");
-
-                result.ShouldBeError("The query type 'FailQuery' could not be found");
-            }
-
-            Query Subject = null!;
-            APIGatewayProxyRequest Request = null!;
-            ILambdaContext Context = null!;
+            var response = await Subject.Post(GetRequest(new FooCommand { Value = "Foo" }), Context, "FooCommand");
+            response.StatusCode.Should().Be(200);
         }
 
-        static APIGatewayProxyRequest GetRequest(string method, string? content = null, Dictionary<string, IList<string>>? query = null)
+        [Test]
+        public async Task should_handle_errors()
         {
-            var request = new APIGatewayProxyRequest
-            {
-                HttpMethod = method,
-                Body = content,
-                MultiValueQueryStringParameters = query
-            };
-
-            return request;
+            var response = await Subject.Post(GetRequest(new FooCommand()), Context, "FooCommand");
+            response.ShouldBeError("Value cannot be null or empty");
         }
+
+        static APIGatewayProxyRequest GetRequest(object body) => new() { Body = JsonSerializer.Serialize(body) };
+
+        Command Subject = null!;
+        TestLambdaContext Context = null!;
     }
 }
 ```

@@ -159,99 +159,46 @@ You can [integration test](https://docs.microsoft.com/en-us/aspnet/core/test/int
 
 ```cs
 using System.Net;
-using System.Text;
-using CommandQuery.Sample.Contracts.Queries;
+using System.Net.Http.Json;
+using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
 namespace CommandQuery.Sample.AspNetCore.Tests
 {
-    public class QueryControllerTests
+    public class CommandControllerTests
     {
-        public class when_using_the_real_controller_via_Post
+        [SetUp]
+        public void SetUp()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                Factory = new WebApplicationFactory<Program>();
-                Client = Factory.CreateClient();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                Client.Dispose();
-                Factory.Dispose();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var content = new StringContent("{ \"Id\": 1 }", Encoding.UTF8, "application/json");
-
-                var result = await Client.PostAsync("/api/query/BarQuery", content);
-                var value = await result.Content.ReadAsAsync<Bar>();
-
-                result.EnsureSuccessStatusCode();
-                value.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var content = new StringContent("{ \"Id\": 1 }", Encoding.UTF8, "application/json");
-
-                var result = await Client.PostAsync("/api/query/FailQuery", content);
-
-                result.StatusCode.Should().Be(HttpStatusCode.NotFound);
-                (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
-            }
-
-            WebApplicationFactory<Program> Factory = null!;
-            HttpClient Client = null!;
+            Factory = new WebApplicationFactory<Program>();
+            Client = Factory.CreateClient();
         }
 
-        public class when_using_the_real_controller_via_Get
+        [TearDown]
+        public void TearDown()
         {
-            [SetUp]
-            public void SetUp()
-            {
-                Factory = new WebApplicationFactory<Program>();
-                Client = Factory.CreateClient();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                Client.Dispose();
-                Factory.Dispose();
-            }
-
-            [Test]
-            public async Task should_work()
-            {
-                var result = await Client.GetAsync("/api/query/BarQuery?Id=1");
-                var value = await result.Content.ReadAsAsync<Bar>();
-
-                result.EnsureSuccessStatusCode();
-                value.Id.Should().Be(1);
-                value.Value.Should().NotBeEmpty();
-            }
-
-            [Test]
-            public async Task should_handle_errors()
-            {
-                var result = await Client.GetAsync("/api/query/FailQuery?Id=1");
-
-                result.StatusCode.Should().Be(HttpStatusCode.NotFound);
-                (await result.Content.ReadAsStringAsync()).Should().BeEmpty();
-            }
-
-            WebApplicationFactory<Program> Factory = null!;
-            HttpClient Client = null!;
+            Client.Dispose();
+            Factory.Dispose();
         }
+
+        [Test]
+        public async Task should_handle_command()
+        {
+            var response = await Client.PostAsJsonAsync("/api/command/FooCommand", new FooCommand { Value = "Foo" });
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task should_handle_errors()
+        {
+            var response = await Client.PostAsJsonAsync("/api/command/FooCommand", new FooCommand { Value = "" });
+            await response.ShouldBeErrorAsync("Value cannot be null or empty");
+        }
+
+        WebApplicationFactory<Program> Factory = null!;
+        HttpClient Client = null!;
     }
 }
 ```

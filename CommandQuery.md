@@ -27,7 +27,7 @@ public class FooCommandHandler : ICommandHandler<FooCommand>
 
     public async Task HandleAsync(FooCommand command, CancellationToken cancellationToken)
     {
-        if (command.Value == null) throw new FooCommandException("Value cannot be null", 1337, "Try setting the value to 'en-US'");
+        if (string.IsNullOrEmpty(command.Value)) throw new FooCommandException("Value cannot be null or empty", 1337, "Try setting the value to 'en-US'");
 
         _cultureService.SetCurrentCulture(command.Value);
 
