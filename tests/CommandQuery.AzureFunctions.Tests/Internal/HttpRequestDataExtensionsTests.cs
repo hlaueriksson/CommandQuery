@@ -3,8 +3,6 @@ using CommandQuery.Exceptions;
 using FluentAssertions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests.Internal
 {

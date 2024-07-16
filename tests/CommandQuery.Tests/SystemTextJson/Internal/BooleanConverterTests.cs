@@ -1,7 +1,6 @@
 using System.Text.Json;
 using CommandQuery.SystemTextJson;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.SystemTextJson.Internal
 {

@@ -1,9 +1,6 @@
 using CommandQuery.Exceptions;
 using CommandQuery.SystemTextJson;
 using FluentAssertions;
-using LoFuUnit.NUnit;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.SystemTextJson
 {

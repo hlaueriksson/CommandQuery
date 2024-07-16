@@ -1,9 +1,6 @@
 using System.Text;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests.Internal
 {

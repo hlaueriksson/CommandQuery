@@ -1,7 +1,6 @@
 using Amazon.Lambda.APIGatewayEvents;
 using CommandQuery.Exceptions;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests.Internal
 {

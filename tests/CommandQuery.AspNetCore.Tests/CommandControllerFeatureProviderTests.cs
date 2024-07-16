@@ -1,9 +1,7 @@
 using System.Reflection;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using NUnit.Framework;
 
 namespace CommandQuery.AspNetCore.Tests
 {

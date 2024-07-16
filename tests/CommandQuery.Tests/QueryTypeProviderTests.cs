@@ -1,8 +1,6 @@
 using CommandQuery.Exceptions;
 using CommandQuery.Fail;
 using FluentAssertions;
-using LoFuUnit.NUnit;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests
 {

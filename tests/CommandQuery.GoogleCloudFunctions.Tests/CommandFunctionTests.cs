@@ -3,11 +3,7 @@ using System.Text.Json;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.AutoMoq;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.GoogleCloudFunctions.Tests
 {
@@ -17,7 +13,6 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
         public void SetUp()
         {
             Clear();
-            Use<Mock<ICommandProcessor>>();
             Use<JsonSerializerOptions>(null);
             Context = new DefaultHttpContext();
             Context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes("{}"));
@@ -28,7 +23,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
@@ -83,7 +78,7 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
             async Task should_return_the_result_from_the_command_processor()
             {

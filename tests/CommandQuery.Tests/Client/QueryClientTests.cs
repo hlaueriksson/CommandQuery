@@ -2,10 +2,8 @@ using System.Text;
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
-using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client
 {

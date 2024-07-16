@@ -1,7 +1,6 @@
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Queries;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client.Integration
 {

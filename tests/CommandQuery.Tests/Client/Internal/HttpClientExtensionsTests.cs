@@ -1,6 +1,5 @@
 using CommandQuery.Client;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client.Internal
 {

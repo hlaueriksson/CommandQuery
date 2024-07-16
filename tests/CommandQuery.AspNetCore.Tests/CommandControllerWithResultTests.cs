@@ -1,11 +1,8 @@
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AspNetCore.Tests
 {

@@ -4,10 +4,6 @@ using Amazon.Lambda.Core;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.AutoMoq;
-using LoFuUnit.NUnit;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests
 {
@@ -17,11 +13,10 @@ namespace CommandQuery.AWSLambda.Tests
         public void SetUp()
         {
             Clear();
-            Use<Mock<IQueryProcessor>>();
-            Use<JsonSerializerOptions>(null);
-            Logger = new Mock<ILambdaLogger>().Object;
             QueryName = "FakeQuery";
-            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
+            Use<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
+            Use<JsonSerializerOptions>(null);
+            Logger = One<ILambdaLogger>();
         }
 
         [LoFu, Test]
@@ -102,11 +97,10 @@ namespace CommandQuery.AWSLambda.Tests
         public void SetUp()
         {
             Clear();
-            Use<Mock<IQueryProcessor>>();
-            Use<JsonSerializerOptions>(null);
-            Logger = new Mock<ILambdaLogger>().Object;
             QueryName = "FakeQuery";
-            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
+            Use<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
+            Use<JsonSerializerOptions>(null);
+            Logger = One<ILambdaLogger>();
         }
 
         [LoFu, Test]

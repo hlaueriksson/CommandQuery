@@ -1,9 +1,7 @@
 using CommandQuery.Exceptions;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Internal
 {

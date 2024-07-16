@@ -1,10 +1,8 @@
 using System.Reflection;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using NUnit.Framework;
 
 namespace CommandQuery.AspNetCore.Tests
 {

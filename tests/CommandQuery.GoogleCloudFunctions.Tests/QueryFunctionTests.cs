@@ -3,13 +3,9 @@ using System.Text.Json;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.AutoMoq;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.GoogleCloudFunctions.Tests
 {
@@ -20,9 +16,8 @@ namespace CommandQuery.GoogleCloudFunctions.Tests
         {
             Clear();
             QueryName = "FakeQuery";
-            Use<Mock<IQueryProcessor>>();
+            Use<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
             Use<JsonSerializerOptions>(null);
-            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
         }
 
         [LoFu, Test]

@@ -4,10 +4,6 @@ using Amazon.Lambda.Core;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.AutoMoq;
-using LoFuUnit.NUnit;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests
 {
@@ -17,9 +13,8 @@ namespace CommandQuery.AWSLambda.Tests
         public void SetUp()
         {
             Clear();
-            Use<Mock<ICommandProcessor>>();
             Use<JsonSerializerOptions>(null);
-            Logger = new Mock<ILambdaLogger>().Object;
+            Logger = One<ILambdaLogger>();
             Request = new APIGatewayProxyRequest { Body = "{}" };
         }
 
@@ -27,7 +22,7 @@ namespace CommandQuery.AWSLambda.Tests
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
@@ -75,7 +70,7 @@ namespace CommandQuery.AWSLambda.Tests
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
             async Task should_return_the_result_from_the_command_processor()
             {
@@ -100,9 +95,8 @@ namespace CommandQuery.AWSLambda.Tests
         public void SetUp()
         {
             Clear();
-            Use<Mock<ICommandProcessor>>();
             Use<JsonSerializerOptions>(null);
-            Logger = new Mock<ILambdaLogger>().Object;
+            Logger = One<ILambdaLogger>();
             Request = new APIGatewayHttpApiV2ProxyRequest { Body = "{}" };
         }
 
@@ -110,7 +104,7 @@ namespace CommandQuery.AWSLambda.Tests
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
@@ -158,7 +152,7 @@ namespace CommandQuery.AWSLambda.Tests
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
             async Task should_return_the_result_from_the_command_processor()
             {

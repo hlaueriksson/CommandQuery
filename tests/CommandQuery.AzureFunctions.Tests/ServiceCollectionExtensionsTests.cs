@@ -1,7 +1,6 @@
 using CommandQuery.Tests;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests
 {

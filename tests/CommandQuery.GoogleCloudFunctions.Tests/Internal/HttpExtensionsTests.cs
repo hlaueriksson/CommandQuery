@@ -2,8 +2,6 @@ using System.Text;
 using CommandQuery.Exceptions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.GoogleCloudFunctions.Tests.Internal
 {

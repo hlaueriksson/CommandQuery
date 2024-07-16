@@ -1,9 +1,7 @@
 using System.Reflection;
 using CommandQuery.DependencyInjection;
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.DependencyInjection
 {

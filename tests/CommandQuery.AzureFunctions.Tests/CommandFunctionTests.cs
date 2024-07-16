@@ -4,15 +4,11 @@ using System.Text.Json;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.AutoMoq;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests
 {
@@ -22,11 +18,9 @@ namespace CommandQuery.AzureFunctions.Tests
         public async Task SetUp()
         {
             Clear();
-            Use<Mock<ICommandProcessor>>();
             Use<JsonSerializerOptions>(null);
 
-            var context = new Mock<FunctionContext>();
-            Req = new FakeHttpRequestData(context.Object);
+            Req = new FakeHttpRequestData(One<FunctionContext>());
             await Req.Body.WriteAsync(Encoding.UTF8.GetBytes("{}"));
         }
 
@@ -34,7 +28,7 @@ namespace CommandQuery.AzureFunctions.Tests
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
@@ -84,7 +78,7 @@ namespace CommandQuery.AzureFunctions.Tests
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
             async Task should_return_the_result_from_the_command_processor()
             {
@@ -110,7 +104,6 @@ namespace CommandQuery.AzureFunctions.Tests
         public async Task SetUp()
         {
             Clear();
-            Use<Mock<ICommandProcessor>>();
             Use<JsonSerializerOptions>(null);
 
             var mock = new Mock<HttpRequest>();
@@ -122,7 +115,7 @@ namespace CommandQuery.AzureFunctions.Tests
         public async Task when_handling_the_command()
         {
             CommandName = "FakeCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeCommand));
 
             async Task should_invoke_the_command_processor()
             {
@@ -172,7 +165,7 @@ namespace CommandQuery.AzureFunctions.Tests
         public async Task when_handling_the_command_with_result()
         {
             CommandName = "FakeResultCommand";
-            The<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
+            Use<Mock<ICommandProcessor>>().Setup(x => x.GetCommandType(CommandName)).Returns(typeof(FakeResultCommand));
 
             async Task should_return_the_result_from_the_command_processor()
             {

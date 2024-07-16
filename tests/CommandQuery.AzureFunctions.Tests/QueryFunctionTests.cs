@@ -4,15 +4,11 @@ using System.Text.Json;
 using CommandQuery.Exceptions;
 using CommandQuery.Tests;
 using FluentAssertions;
-using LoFuUnit.AutoMoq;
-using LoFuUnit.NUnit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.AzureFunctions.Tests
 {
@@ -23,17 +19,16 @@ namespace CommandQuery.AzureFunctions.Tests
         {
             Clear();
             QueryName = "FakeQuery";
-            Use<Mock<IQueryProcessor>>();
+            Use<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
             Use<JsonSerializerOptions>(null);
-            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
 
-            Context = new Mock<FunctionContext>();
+            Context = One<FunctionContext>();
         }
 
         [LoFu, Test]
         public async Task when_handling_the_query_via_Post()
         {
-            Req = new FakeHttpRequestData(Context.Object, "POST");
+            Req = new FakeHttpRequestData(Context, "POST");
             await Req.Body.WriteAsync(Encoding.UTF8.GetBytes("{}"));
 
             async Task should_return_the_result_from_the_query_processor()
@@ -88,7 +83,7 @@ namespace CommandQuery.AzureFunctions.Tests
         [LoFu, Test]
         public async Task when_handling_the_query_via_Get()
         {
-            Req = new FakeHttpRequestData(Context.Object, "GET", new Uri("http://localhost/api/query/FakeQuery?foo=bar"));
+            Req = new FakeHttpRequestData(Context, "GET", new Uri("http://localhost/api/query/FakeQuery?foo=bar"));
 
             async Task should_return_the_result_from_the_query_processor()
             {
@@ -104,7 +99,7 @@ namespace CommandQuery.AzureFunctions.Tests
 
         HttpRequestData Req;
         string QueryName;
-        Mock<FunctionContext> Context;
+        FunctionContext Context;
     }
 
     public class QueryFunctionTests_HttpRequest : LoFuTest<QueryFunction>
@@ -114,11 +109,10 @@ namespace CommandQuery.AzureFunctions.Tests
         {
             Clear();
             QueryName = "FakeQuery";
-            Use<Mock<IQueryProcessor>>();
+            Use<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
             Use<JsonSerializerOptions>(null);
-            The<Mock<IQueryProcessor>>().Setup(x => x.GetQueryType(QueryName)).Returns(typeof(FakeQuery));
 
-            Context = new Mock<FunctionContext>();
+            Context = One<FunctionContext>();
         }
 
         [LoFu, Test]
@@ -200,6 +194,6 @@ namespace CommandQuery.AzureFunctions.Tests
 
         HttpRequest Req;
         string QueryName;
-        Mock<FunctionContext> Context;
+        FunctionContext Context;
     }
 }

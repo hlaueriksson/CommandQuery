@@ -1,6 +1,5 @@
 using Amazon.Lambda.APIGatewayEvents;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace CommandQuery.AWSLambda.Tests.Internal
 {

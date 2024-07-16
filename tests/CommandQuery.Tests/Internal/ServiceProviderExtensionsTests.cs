@@ -1,8 +1,5 @@
 using FluentAssertions;
-using LoFuUnit.NUnit;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Internal
 {

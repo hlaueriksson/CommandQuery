@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json;
 using CommandQuery.Client;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Client.Internal
 {

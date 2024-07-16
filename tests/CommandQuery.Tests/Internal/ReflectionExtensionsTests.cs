@@ -1,7 +1,5 @@
 using System.Reflection;
 using FluentAssertions;
-using LoFuUnit.NUnit;
-using NUnit.Framework;
 
 namespace CommandQuery.Tests.Internal
 {
