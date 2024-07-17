@@ -1,7 +1,5 @@
 using CommandQuery.Exceptions;
 using FluentAssertions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace CommandQuery.Tests.Internal
 {
@@ -30,8 +28,6 @@ namespace CommandQuery.Tests.Internal
 
             result.Message.Should().Be(exception.Message);
             result.Details.Should().BeNull();
-
-            Console.WriteLine(JsonConvert.SerializeObject(result));
         }
 
         [Test]
@@ -64,8 +60,6 @@ namespace CommandQuery.Tests.Internal
             result.Details.Should().Contain("IEnumerable", exception.IEnumerable);
             result.Details.Should().Contain("List", exception.List);
             result.Details.Should().Contain("Enum", exception.Enum);
-
-            Console.WriteLine(JsonConvert.SerializeObject(result));
 
             new CommandException("").ToError().Details.Should().BeNull();
 
@@ -102,8 +96,6 @@ namespace CommandQuery.Tests.Internal
             result.Details.Should().Contain("IEnumerable", exception.IEnumerable);
             result.Details.Should().Contain("List", exception.List);
             result.Details.Should().Contain("Enum", exception.Enum);
-
-            Console.WriteLine(JsonConvert.SerializeObject(result));
 
             new QueryException("").ToError().Details.Should().BeNull();
 
@@ -147,7 +139,6 @@ namespace CommandQuery.Tests.Internal
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum FakeEnum
     {
         None,

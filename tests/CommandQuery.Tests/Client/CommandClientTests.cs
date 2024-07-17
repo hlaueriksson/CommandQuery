@@ -1,9 +1,9 @@
 using System.Text;
+using System.Text.Json;
 using CommandQuery.Client;
 using CommandQuery.Sample.Contracts.Commands;
 using FluentAssertions;
 using Moq.Protected;
-using Newtonsoft.Json;
 
 namespace CommandQuery.Tests.Client
 {
@@ -54,7 +54,7 @@ namespace CommandQuery.Tests.Client
             var httpResponse = new HttpResponseMessage
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
-                Content = new StringContent(JsonConvert.SerializeObject(expectation), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(expectation), Encoding.UTF8, "application/json")
             };
 
             MockHandler.Protected().Setup<Task<HttpResponseMessage>>("SendAsync",
