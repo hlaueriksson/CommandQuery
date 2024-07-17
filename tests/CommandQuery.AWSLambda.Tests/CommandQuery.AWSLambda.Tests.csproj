@@ -17,6 +17,11 @@
     <PackageReference Include="LoFuUnit.AutoMoq" Version="4.0.0-preview.1" />
     <PackageReference Include="LoFuUnit.NUnit" Version="4.0.0-preview.1" />
     <PackageReference Include="Microsoft.CodeCoverage" Version="17.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
