@@ -34,7 +34,10 @@ namespace CommandQuery.AzureFunctions
         {
             ArgumentNullException.ThrowIfNull(req);
 
-            _logger.LogInformation("Handle {Query}", queryName);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Handle {Query}", queryName);
+            }
 
             try
             {
@@ -67,7 +70,10 @@ namespace CommandQuery.AzureFunctions
         {
             ArgumentNullException.ThrowIfNull(req);
 
-            _logger.LogInformation("Handle {Query}", queryName);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Handle {Query}", queryName);
+            }
 
             try
             {

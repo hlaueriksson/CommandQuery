@@ -34,7 +34,10 @@ namespace CommandQuery.AspNetCore
         [HttpPost]
         public async Task<IActionResult> HandlePostAsync(TQuery query, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handle {@Query}", query);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Handle {@Query}", query);
+            }
 
             try
             {
@@ -59,7 +62,10 @@ namespace CommandQuery.AspNetCore
         [HttpGet]
         public async Task<IActionResult> HandleGetAsync([FromQuery] TQuery query, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handle {@Query}", query);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Handle {@Query}", query);
+            }
 
             try
             {
