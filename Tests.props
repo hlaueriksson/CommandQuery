@@ -4,7 +4,7 @@
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CS1998;CS8321;NU1603</NoWarn>
+    <NoWarn>$(NoWarn);CS1998;CS8321;NU1504;NU1603;Moq1203;Moq1400</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
