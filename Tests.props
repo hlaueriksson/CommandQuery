@@ -1,0 +1,25 @@
+<Project>
+
+  <PropertyGroup>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);CS1998;CS8321;NU1504;NU1603;Moq1203;Moq1400</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="[7.2.0]" />
+    <PackageReference Include="LoFuUnit.AutoMoq" Version="4.0.0-preview.1" />
+    <PackageReference Include="LoFuUnit.NUnit" Version="4.0.0-preview.1" />
+    <PackageReference Include="Moq.Analyzers" Version="0.4.0" />
+    <PackageReference Include="Microsoft.CodeCoverage" Version="18.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.11.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../Tests.props" />
+
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>disable</Nullable>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CS1998;CS8321;NU1603</NoWarn>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,17 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="LoFuUnit.AutoMoq" Version="4.0.0-preview.1" />
-    <PackageReference Include="LoFuUnit.NUnit" Version="4.0.0-preview.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.1.21" />
-    <PackageReference Include="Microsoft.CodeCoverage" Version="17.10.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>

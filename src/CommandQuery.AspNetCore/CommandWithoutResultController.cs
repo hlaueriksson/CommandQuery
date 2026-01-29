@@ -33,7 +33,10 @@ namespace CommandQuery.AspNetCore
         [HttpPost]
         public async Task<IActionResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handle {@Command}", command);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Handle {@Command}", command);
+            }
 
             try
             {
